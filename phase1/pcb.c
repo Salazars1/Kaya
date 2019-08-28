@@ -20,7 +20,7 @@ static pbc_t *pcbList_h;
     Parameters: pcb_t *p
     Return: void*/ 
 void freePcb(pcb_t *p){
-    p->NEXT = pcbList_h;
+    p->next = pcbList_h;
     pcbList_h = p;
 }
 
@@ -29,12 +29,12 @@ void freePcb(pcb_t *p){
     Parameters:
     Return: -Null (if the pcbFree list is empty)
             -Pointer to the removed element (if the pcbFree list is NOT EMPTY)*/
+//TODO:
 pcb_t *allocPcb(){
-    if(pcbFree_h == NULL){
+    if(pcbList_h == NULL){
         return NULL;
     }
-
-    pcb_t * tempPtr = pcbFree_h; // TODO: return the whole node? ptr?
+    pcb_t * temp = pcbList_h; // TODO: return the whole node? ptr?
     pcbFree_h = pcbFree_h-> next;
     return tempPtr; 
 }
@@ -78,18 +78,21 @@ int emptyProcQ(pcb_t *tp){
     Return: Void*/
 void insertProcQ(pcb_t **tp, pcb_t *p){
 
-    if(emptyProQ(*tp)){
+    if(emptyProQ(*tp)){             //Case 1: There is no node. 
         p->NEXT = p;
         p->PREV = p;
-    }else{
-
-    FIXME:
-    pcb_t tempHead = tp -> NEXT;    //Initialize the Queue head
-    tp -> NEXT = p;                 //Adds the new node
-    p -> NEXT = tempHead;           //Fixes Pointers  
-    tempHead -> PREV = p;
-    p -> PREV = tp;
-    tp = p;
+    }else if(tp->NEXT == (*tp)){    //Case 2: There is only one node. 
+        p->NEXT = *tp;
+        p->PREV = *tp;
+        (*tp)->PREV = p;
+        (*tp)->NEXT = p; 
+    }else{                          //Case 3: There is more than one node.
+        pcb_t tempHead = tp -> NEXT;    //Initialize the Queue head
+        tp -> NEXT = p;                 //Adds the new node
+        p -> NEXT = tempHead;           //Fixes Pointers  
+        tempHead -> PREV = p;
+        p -> PREV = tp;
+        tp = p; 
     }
 }
 
@@ -98,13 +101,17 @@ void insertProcQ(pcb_t **tp, pcb_t *p){
     Return: NULL    (if the process queue is empty)
             pcb_t   (if the process queue is NOT empty)*/
 pcb_t *removeProcQ(pcb_t **tp){
-    if(tp-> NEXT == NULL){
+    if(emptyProcQ(*tp)){                    //Case 1: Queue is empty
         return NULL;
-    }else{
-        pcb_t tempHead = tp-> NEXT;
-        tp -> NEXT = tempHead-> NEXT;
-        tempHead -> NEXT -> PREV = tp;
-        return tempHead;
+    }else if(){                             //Case 2: Queue has 1 nodes
+        pcb_t temp = *tp;
+        *tp = mkEmptyProcQ();
+        return temp;
+    }else{                                  //Case 3: Queue has 2 or more nodes
+        pcb_t temp = tp-> NEXT;
+        tp -> NEXT = temp-> NEXT;
+        temp -> NEXT -> PREV = tp;
+        return temp;
     }
 }
 
@@ -134,7 +141,7 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     Return: NULL     (if the process queue is empty)
             tp->Next (if the process queue is NOT empty). */
 pcb_t *headProcQ(pcb_t *tp){
-    if(tp == NULL){
+    if(emptyProQ){
         return NULL;
     }
     return tp->NEXT;
