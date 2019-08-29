@@ -29,13 +29,13 @@ void freePcb(pcb_t *p){
     Parameters:
     Return: -Null (if the pcbFree list is empty)
             -Pointer to the removed element (if the pcbFree list is NOT EMPTY)*/
-//TODO:
+TODO:
 pcb_t *allocPcb(){
     if(pcbList_h == NULL){
         return NULL;
     }
     pcb_t * temp = pcbList_h; // TODO: return the whole node? ptr?
-    pcbFree_h = pcbFree_h-> next;
+    pcbFree_h = pcbFree_h-> NEXT;
     return tempPtr; 
 }
 
@@ -125,7 +125,7 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
             if(temp == p){
                 return temp
             }else{
-                temp = temp -> next; 
+                temp = temp -> NEXT; 
             }
         }
         Process Not in list
@@ -145,6 +145,77 @@ pcb_t *headProcQ(pcb_t *tp){
         return NULL;
     }
     return tp->NEXT;
+}
+
+
+//************************* Process Tree Maintenance *************************************
+
+
+
+/*  Checks wether the Blok queue has Children or not.
+    Parameters: pcb-t * p
+    Return: True        (if the proBlk has no Children)
+            False       (if the proBlk has no Children). */
+int emptyChild(pcb_t *p){
+    return (p->child == NULL)
+}
+
+
+/*  Make the ProcBlk pointed to by p a child of the ProcBlk pointed ro by p_prnt
+    Parameters: pcb-t * p
+    Return: void*/
+void insertChild(pcb_t *prnt, pcb_t *p){
+    if(emptyChild(prnt)){               //There is no childre
+        prnt -> child = p;
+        p -> prnt = prnt;
+        p -> prevSib = NULL;
+        p -> nextSib = NULL;
+    }else{                              //There is 1 or more children
+        p -> prnt = *prnt;
+        prnt -> child -> prevSib = p;
+        p -> nextSib = prnt -> child;
+        p -> prevSib = NULL;
+        prnt ->  child = p;
+    }
+}
+
+
+/*  Make the first child of the ProcBlk pointed to by p no longer a
+    child of p.
+    Parameters: pcb_t
+    Return: Null        (if there is no children)
+            pcb_t * p   (to the removed child of ProcBlk)*/
+pcb_t *removeChild(pcb_t *p){
+    pcb_t temp;
+    if(emptyChild(p)){                             //No Children
+        return NULL;   
+    }else if(p -> child -> nextSib == NULL){       //One Child
+        temp = p -> child;
+
+        temp -> prnt = NULL;
+        temp -> nextSib = NULL;
+        temp -> prevSib = NULL;
+        p -> child = NULL;
+
+        return temp;                                //More than one children
+    }else{
+        temp = p->child;
+        temp -> nextSib -> prevSib = NULL;
+        p-> child = temp -> nextSib;
+        temp -> nextSib = NULL;
+        temp -> prnt = NULL;
+        
+        return temp;
+    }
+}
+
+TODO:
+/* Make the ProcBlk pointed to by p no longer the child of its parent.
+If the ProcBlk pointed to by p has no parent, return NULL; otherwise,
+return p. Note that the element pointed to by p need not be the first
+child of its parent. */
+pcb_t *outChild(pcb_t *p){
+
 }
 
 
