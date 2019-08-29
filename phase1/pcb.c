@@ -28,7 +28,8 @@ void freePcb(pcb_t *p){
             -Pointer to the removed element (if the pcbFree list is NOT EMPTY)*/
 
 pcb_t *allocPcb(){
-   /*If the Head Node is NULL then the list is empty and we return NULL*/
+   /*
+   If the Head Node is NULL then the list is empty and we return NULL*/
     if(pcbList_h == NULL){
         return NULL;
     }
@@ -37,7 +38,7 @@ pcb_t *allocPcb(){
     Then we set all of the temporary pointers values to NULL or 0 
     Return Temp
     */
-    pcb_t * temp = pcbList_h;
+    pcb_t * temp = pcbList_h; // TODO: return the whole node? ptr?
     pcblist_h = pcblist_h-> p_next;
 
     temp -> p_child = NULL; 
@@ -50,20 +51,19 @@ pcb_t *allocPcb(){
 }
 
 /*  Initialize the pcbFree list to contain all the elements of the static array of
-    MAXPROC ProcBlk’s.
-    
-        Set the pcbFree_h to be NULL
-        Then We set the pcbFree_h to be the first item in the array 
-        Then we loop through the array knowing that it is static so we know the size of the array
-        Then We create a temp pointer (Pcb_t * temp) to be pcbFree_h -> p_next
-        Keep setting the p_next value to be the p_next element in the array
-        Return:  
-    */
+    MAXPROC ProcBlk’s.*/
 
 initPcbs(){
-
-    static pcb_t Pcbinitialization[MAXPROC];
-    pcbList_h = NULL;
+    /*  
+    Set the pcbFree_h to be NULL
+    Then We set the pcbFree_h to be the first item in the array 
+    Then we loop through the array knowing that it is static so we know the size of the array
+    Then We create a temp pointer (Pcb_t * temp) to be pcbFree_h -> p_next
+    Keep setting the p_next value to be the p_next element in the array
+    No Return Value 
+    We are done 
+    */
+    static pcb_t Pcbinitialization[MAXPROC(int)];
     for(i = 0; i < MAXPROC(10); i++){
         freePcb(&(pcbinitialization[i]));
     }
@@ -127,22 +127,52 @@ pcb_t *removeProcQ(pcb_t **tp){
     }
 }
 
-TODO:
-pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
-    if(*(tp)==p){
-        
 
-        
-    }else{
-        Pcb_t * temp = *tp; 
-        while(temp != NULL){        //Loop through the linked list
+pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
+
+    /*
+    If the Tail pointer points to NUll then the list is empty
+    Error Condition and should return NULL
+    */
+    if(emptyProcQ(*(tp) == TRUE)){
+        return NULL; 
+
+    }
+    /*
+    if the Tail pointer is the pcb_t that is being removed
+    Then we must rewrite and reassign the tail pointer 
+    as well as rearrange the data structure
+    Tail pointer now equals the previous Node
+    and that that the head Node now points the prev to the tail pointer
+    */
+    else if(*(tp)==p){
+        pcb_t * temp = (*)tp; 
+        *(tp) = temp -> p_prev; 
+        (*)tp->p_next ->p_prev = (*)tp; 
+        *(tp)-> p_next = temp -> p_next; 
+        return temp;
+    }
+    /*
+
+If it is not the tail pointer then we must loop through the structure to find the P pointer
+Simply start with the tails next and contiue looping until we are back at the tail pointer
+if the new node is equal to P thus they both point to Pcb_t 
+then we rearrange the data structure and then return temp
+
+if Not found return NULL
+    */
+    else{
+        pcb_t * temp = *(tp) -> next; 
+        while(temp !=(*)tp){
             if(temp == p){
-                return temp
-            }else{
-                temp = temp -> p_next; 
+                temp -> p_prev -> p_next = temp ->p_next; 
+                temp ->p_next ->p_prev = temp ->p_prev; 
+                return temp; 
             }
+            temp = temp ->next; 
+
         }
-        Process Not in list
+      
         return NULL
         
 
