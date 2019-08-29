@@ -44,6 +44,26 @@ typedef struct {
 	device_t   devreg[DEVINTNUM * DEVPERINT];
 } devregarea_t;
 
+
+/* pcb_t definition */
+typedef struct pcb_t {
+	
+	/* Prock Q nodes*/
+	struct pcb_t *p_next;
+	struct pcb_t *p_prev;	
+
+	/* Tree Node pointers */
+	struct pcb_t *p_prnt;		/* pointer to parent */
+	struct pcb_t *p_child;		/* pointer to 1st child */
+	struct pcb_t *p_nextSib;	/* pointer to next sib */
+	struct pcb_t *p_prevSib; 	/* pointer to prev sib */
+	
+} pcb_t, *pcb_PTR;
+
+
+
+
+
 #define STATEREGNUM	31
 typedef struct state_t {
 	unsigned int	s_asid;
