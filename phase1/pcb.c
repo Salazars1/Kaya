@@ -13,6 +13,10 @@ HIDDEN pbc_t *pcbList_h;
     Parameters: pcb_t *p
     Return: void*/ 
 void freePcb(pcb_t *p){
+    /*
+    Set the Node we are addings Next pointer to the current head
+    Set head to be the new node 
+    */
     p->p_next = pcbList_h;
     pcbList_h = p;
 }
@@ -22,35 +26,46 @@ void freePcb(pcb_t *p){
     Parameters:
     Return: -Null (if the pcbFree list is empty)
             -Pointer to the removed element (if the pcbFree list is NOT EMPTY)*/
-TODO:
+
 pcb_t *allocPcb(){
+   /*
+   If the Head Node is NULL then the list is empty and we return NULL*/
     if(pcbList_h == NULL){
         return NULL;
     }
+    /* We then make a temporary Pointer to the head of the free list 
+    Then we move the head pointer in the free list to be the next process in the list
+    Then we set all of the temporary pointers values to NULL or 0 
+    Return Temp
+    */
     pcb_t * temp = pcbList_h; // TODO: return the whole node? ptr?
-    pcbFree_h = pcbFree_h-> p_next;
-    return tempPtr; 
+    pcblist_h = pcblist_h-> p_next;
+
+    temp -> p_child = NULL; 
+    temp -> p_nextSib = NULL; 
+    temp -> p_prevSib = NULL; 
+    temp -> p_prnt = NULL; 
+    temp -> p_next = NULL; 
+    temp -> p_prev = NULL; 
+    return temp; 
 }
 
 /*  Initialize the pcbFree list to contain all the elements of the static array of
-    MAXPROC ProcBlk’s.
-    Parameters: 
-    Return : 
-    */
-TODO:
+    MAXPROC ProcBlk’s.*/
+
 initPcbs(){
     /*  
-
+    Set the pcbFree_h to be NULL
     Then We set the pcbFree_h to be the first item in the array 
     Then we loop through the array knowing that it is static so we know the size of the array
     Then We create a temp pointer (Pcb_t * temp) to be pcbFree_h -> p_next
     Keep setting the p_next value to be the p_next element in the array
+    No Return Value 
+    We are done 
     */
-    pcbList_h = NULL;                       //Set the pcbFree_h to be NULL
-
-    static pcb_t pcbInitialize[MAXPROC(int)];
-    for(i = 0; i < MAXPROC(20); i++){
-        freePcb(&(pcbInitialize[i]));
+    static pcb_t Pcbinitialization[MAXPROC(int)];
+    for(i = 0; i < MAXPROC(10); i++){
+        freePcb(&(pcbinitialization[i]));
     }
 
 }
@@ -114,7 +129,9 @@ pcb_t *removeProcQ(pcb_t **tp){
 
 TODO:
 pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
-    if(tp==p){
+    if(*(tp)==p){
+        
+
         
     }else{
         Pcb_t * temp = *tp; 
