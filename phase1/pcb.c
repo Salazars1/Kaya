@@ -33,21 +33,24 @@ pcb_t *allocPcb(){
 }
 
 /*  Initialize the pcbFree list to contain all the elements of the static array of
-    MAXPROC ProcBlk’s.*/
+    MAXPROC ProcBlk’s.
+    Parameters: 
+    Return : 
+    */
 TODO:
 initPcbs(){
     /*  
-    Set the pcbFree_h to be NULL
+
     Then We set the pcbFree_h to be the first item in the array 
     Then we loop through the array knowing that it is static so we know the size of the array
     Then We create a temp pointer (Pcb_t * temp) to be pcbFree_h -> p_next
     Keep setting the p_next value to be the p_next element in the array
-    No Return Value 
-    We are done 
     */
-    static pcb_t foo[MAXPROC(int)];
-    for(i = 0; i < MAXPROC(10); i++){
-        freePcb(&(foo[i]));
+    pcbList_h = NULL;                       //Set the pcbFree_h to be NULL
+
+    static pcb_t pcbInitialize[MAXPROC(int)];
+    for(i = 0; i < MAXPROC(20); i++){
+        freePcb(&(pcbInitialize[i]));
     }
 
 }
