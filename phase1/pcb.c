@@ -28,8 +28,7 @@ void freePcb(pcb_t *p){
             -Pointer to the removed element (if the pcbFree list is NOT EMPTY)*/
 
 pcb_t *allocPcb(){
-   /*
-   If the Head Node is NULL then the list is empty and we return NULL*/
+   /*If the Head Node is NULL then the list is empty and we return NULL*/
     if(pcbList_h == NULL){
         return NULL;
     }
@@ -38,7 +37,7 @@ pcb_t *allocPcb(){
     Then we set all of the temporary pointers values to NULL or 0 
     Return Temp
     */
-    pcb_t * temp = pcbList_h; // TODO: return the whole node? ptr?
+    pcb_t * temp = pcbList_h;
     pcblist_h = pcblist_h-> p_next;
 
     temp -> p_child = NULL; 
@@ -51,19 +50,20 @@ pcb_t *allocPcb(){
 }
 
 /*  Initialize the pcbFree list to contain all the elements of the static array of
-    MAXPROC ProcBlk’s.*/
+    MAXPROC ProcBlk’s.
+    
+        Set the pcbFree_h to be NULL
+        Then We set the pcbFree_h to be the first item in the array 
+        Then we loop through the array knowing that it is static so we know the size of the array
+        Then We create a temp pointer (Pcb_t * temp) to be pcbFree_h -> p_next
+        Keep setting the p_next value to be the p_next element in the array
+        Return:  
+    */
 
 initPcbs(){
-    /*  
-    Set the pcbFree_h to be NULL
-    Then We set the pcbFree_h to be the first item in the array 
-    Then we loop through the array knowing that it is static so we know the size of the array
-    Then We create a temp pointer (Pcb_t * temp) to be pcbFree_h -> p_next
-    Keep setting the p_next value to be the p_next element in the array
-    No Return Value 
-    We are done 
-    */
-    static pcb_t Pcbinitialization[MAXPROC(int)];
+
+    static pcb_t Pcbinitialization[MAXPROC];
+    pcbList_h = NULL;
     for(i = 0; i < MAXPROC(10); i++){
         freePcb(&(pcbinitialization[i]));
     }
