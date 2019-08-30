@@ -243,7 +243,7 @@ void insertChild(pcb_t *p_prnt, pcb_t *p){
     Return: Null        (if there is no children)
             pcb_t * p   (to the removed child of ProcBlk)*/
 pcb_t *removeChild(pcb_t *p){
-    pcb_t temp;
+    pcb_t * temp;
     if(emptyChild(p)){                             /*No Children*/
         return NULL;   
     }else if(p -> p_child-> p_nextSib == NULL){       /*One Child*/
