@@ -103,7 +103,7 @@ void insertProcQ(pcb_t **tp, pcb_t *p){
     if(emptyProQ(*tp)){                 /*Case 1: There is no node.*/ 
         p->p_next = p;
         p->p_prev = p;
-    }else if(tp->p_next == (*tp)){      /*Case 2: There is only one node*/
+    }else if(*tp->p_next == (*tp)){      /*Case 2: There is only one node*/
         p->p_next = *tp;
         p->p_prev = *tp;
         *tp->p_prev = p;
@@ -113,7 +113,7 @@ void insertProcQ(pcb_t **tp, pcb_t *p){
         *tp -> p_next = p;                  /*Adds the new node*/
         p -> p_next = tempHead;             /*Fixes Pointers*/  
         tempHead -> p_prev = p;
-        p -> p_prev = tp;
+        p -> p_prev = *tp;
         *tp = p; 
     }
 }
@@ -144,7 +144,7 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     If the Tail pointer points to NUll then the list is empty
     Error Condition and should return NULL
     */
-    if(emptyProcQ(*(tp)) == TRUE || p == NULL){
+    if(emptyProcQ(*tp) == TRUE){
         return NULL; 
     }
     /*
@@ -155,7 +155,7 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     and that that the head Node now points the prev to the tail pointer
     */
     else if(*tp==p){
-        if(*tp->p_next == tp){
+        if(*tp->p_next == *tp){
             pcb_t *temp = (*tp);
             *tp = mkEmptyProcQ();
             return temp;
