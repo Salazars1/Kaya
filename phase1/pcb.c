@@ -147,9 +147,9 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     */
     else if(*(tp)==p){
         pcb_t * temp = (*)tp; 
-        *(tp) = temp -> p_prev; 
-        (*)tp->p_next ->p_prev = (*)tp; 
-        *(tp)-> p_next = temp -> p_next; 
+        (*tp) = temp -> p_prev; 
+        (*tp)->p_next ->p_prev = (*)tp; 
+        (*tp)-> p_next = temp -> p_next; 
         return temp;
     }
     /*
@@ -258,6 +258,40 @@ TODO:
     return p. Note that the element pointed to by p need not be the first
     child of its parent. */
 pcb_t *outChild(pcb_t *p){
+    if(p ->p_prnt == NULL){
+        return NULL; 
+
+    }
+    /*
+        first child
+    */
+    if(p == p->p_prnt ->p_child == TRUE){
+        p -> p_prnt ->p_child = p->p_nextSib;
+        p->p_nextSib ->p_prevSib = NULL; 
+        return p; 
+
+    }
+ 
+  
+    /*
+    
+    Last child 
+    */
+   if(p->p_nextSib == NULL){
+        p->p_prevSib ->p_nextSib = NULL; 
+        return p; 
+
+    }   
+      /*
+    middle child 
+    */
+    else{
+       pcb_t * temp = p; 
+       p-> p_prevSib ->p_nextSib = p->p_nextSib; 
+       p->nextSib -> p_prevSib = p->p_prevSib;
+       return p; 
+
+    }
 
 }
 
