@@ -234,7 +234,7 @@ void insertChild(pcb_t *p_prnt, pcb_t *p){
     }else{                              /*There is 1 or more children*/
         p -> p_prnt = *p_prnt;
         p_prnt -> p_child-> p_prevSib = p;
-        p -> p_nextSib = p_prnt -> child;
+        p -> p_nextSib = p_prnt -> p_child;
         p -> p_prevSib = NULL;
         p_prnt ->  p_child= p;
     }
@@ -251,7 +251,7 @@ pcb_t *removeChild(pcb_t *p){
     if(emptyChild(p)){                             /*No Children*/
         return NULL;   
     }else if(p -> p_child-> p_nextSib == NULL){       /*One Child*/
-        temp = p -> child;
+        temp = p -> p_child;
         temp -> p_prnt = NULL;
         temp -> p_nextSib = NULL;
         temp -> p_prevSib = NULL;
@@ -259,7 +259,7 @@ pcb_t *removeChild(pcb_t *p){
 
         return temp;                                /*More than one children*/
     }else{
-        temp = p->child;
+        temp = p->p_child;
         temp -> p_nextSib -> p_prevSib = NULL;
         p-> p_child= temp -> p_nextSib;
         temp -> p_nextSib = NULL;
@@ -293,7 +293,7 @@ pcb_t *outChild(pcb_t *p){
     */
     else{ 
        p-> p_prevSib ->p_nextSib = p->p_nextSib; 
-       p->nextSib -> p_prevSib = p->p_prevSib;
+       p->p_nextSib -> p_prevSib = p->p_prevSib;
        return p; 
     }
 
