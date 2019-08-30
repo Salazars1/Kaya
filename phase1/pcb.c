@@ -46,7 +46,7 @@ pcb_t *allocPcb(){
     */
 
     temp = pcbList_h;
-    pcblist_h = pcblist_h-> p_next;
+    pcbList_h = pcbList_h-> p_next;
 
     temp->p_child = NULL; 
     temp->p_nextSib = NULL; 
