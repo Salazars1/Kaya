@@ -49,12 +49,12 @@ pcb_t *allocPcb(){
     temp = pcbList_h;
     pcblist_h = pcblist_h-> p_next;
 
-    temp -> p_child = NULL; 
-    temp -> p_nextSib = NULL; 
-    temp -> p_prevSib = NULL; 
-    temp -> p_prnt = NULL; 
-    temp -> p_next = NULL; 
-    temp -> p_prev = NULL; 
+    temp->p_child = NULL; 
+    temp->p_nextSib = NULL; 
+    temp->p_prevSib = NULL; 
+    temp->p_prnt = NULL; 
+    temp->p_next = NULL; 
+    temp->p_prev = NULL; 
     return temp; 
 }
 
@@ -73,7 +73,8 @@ initPcbs(){
     */
     static pcb_t PcbInitialization[MAXPROC];
     pcbList_h = NULL;
-    for(int i = 0; i < MAXPROC; i++){
+    int i =0;
+    for(i = 0; i < MAXPROC; i++){
         freePcb(&(pcbInitialization[i]));
     }
 
