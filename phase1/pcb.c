@@ -65,7 +65,7 @@ initPcbs(){
     We are done 
     */
     static pcb_t PcbInitialization[MAXPROC];
-    for(i = 0; i < MAXPROC; i++){
+    for(int i = 0; i < MAXPROC; i++){
         freePcb(&(pcbInitialization[i]));
     }
 
