@@ -74,7 +74,7 @@ initPcbs(){
     pcbList_h = NULL;
     int i;
     for(i = 0; i < MAXPROC; i++){
-        freePcb(&(pcbInitialization[i]));
+        freePcb(&(PcbInitialization[i]));
     }
 
 }
