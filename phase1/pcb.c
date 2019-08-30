@@ -159,6 +159,8 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
         return temp;
         }
     }
+
+    return NULL;
     /*
 
     If it is not the tail pointer then we must loop through the structure to find the P pointer

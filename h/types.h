@@ -58,7 +58,7 @@ typedef struct pcb_t {
 	struct pcb_t *p_nextSib;	/* pointer to next sib */
 	struct pcb_t *p_prevSib; 	/* pointer to prev sib */
 	
-} pcb_t, *pcb_PTR;
+} pcb_t;
 
 
 
