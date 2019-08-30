@@ -34,6 +34,9 @@ void freePcb(pcb_t *p){
 
 pcb_t *allocPcb(){
    /*   If the Head Node is NULL then the list is empty and we return NULL*/
+    
+    pcb_t temp;
+    
     if(pcbList_h == NULL){
         return NULL;
     }
@@ -42,6 +45,8 @@ pcb_t *allocPcb(){
     Then we set all of the temporary pointers values to NULL or 0 
     Return Temp
     */
+
+    temp = pcbList_h;
     pcblist_h = pcblist_h-> p_next;
 
     temp -> p_child = NULL; 
@@ -67,6 +72,7 @@ initPcbs(){
     We are done 
     */
     static pcb_t PcbInitialization[MAXPROC];
+    pcbList_h = NULL;
     for(int i = 0; i < MAXPROC; i++){
         freePcb(&(pcbInitialization[i]));
     }
