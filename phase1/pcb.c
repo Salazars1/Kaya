@@ -102,7 +102,7 @@ void insertProcQ(pcb_t **tp, pcb_t *p){
     if(emptyProQ(*tp)){                 /*Case 1: There is no node.*/ 
         p->p_next = p;
         p->p_prev = p;
-    }else if(*tp->p_next == (*tp)){      /*Case 2: There is only one node*/
+    }else if((*tp)->p_next == (*tp)){      /*Case 2: There is only one node*/
         p->p_next = (*tp);
         p->p_prev = (*tp);
         (*tp)->p_prev = p;
