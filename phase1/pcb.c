@@ -38,7 +38,7 @@ pcb_t *allocPcb(){
     Then we set all of the temporary pointers values to NULL or 0 
     Return Temp
     */
-    pcb_t * temp = pcbList_h; // TODO: return the whole node? ptr?
+    pcb_t * temp = pcbList_h; 
     pcblist_h = pcblist_h-> p_next;
 
     temp -> p_child = NULL; 
@@ -134,9 +134,8 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     If the Tail pointer points to NUll then the list is empty
     Error Condition and should return NULL
     */
-    if(emptyProcQ(*(tp) == TRUE)){
+    if(emptyProcQ(*(tp)) == TRUE || p == NULL){
         return NULL; 
-
     }
     /*
     if the Tail pointer is the pcb_t that is being removed
@@ -145,12 +144,18 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     Tail pointer now equals the previous Node
     and that that the head Node now points the prev to the tail pointer
     */
-    else if(*(tp)==p){
-        pcb_t * temp = (*)tp; 
-        (*tp) = temp -> p_prev; 
-        (*tp)->p_next ->p_prev = (*)tp; 
-        (*tp)-> p_next = temp -> p_next; 
+    else if(*tp==p){
+        if(*tp->p_next == tp){
+            pcb_t *temp = (*tp);
+            *tp = mkEmptyProcQ();
+            return temp;
+        }else{
+            pcb_t * temp = (*tp); 
+            (*tp) = temp -> p_prev; 
+            (*tp)->p_next ->p_prev = (*tp); 
+            (*tp)-> p_next = temp -> p_next; 
         return temp;
+        }
     }
     /*
 
@@ -252,7 +257,6 @@ pcb_t *removeChild(pcb_t *p){
     }
 }
 
-TODO:
 /* Make the ProcBlk pointed to by p no longer the child of its parent.
     If the ProcBlk pointed to by p has no parent, return NULL; otherwise,
     return p. Note that the element pointed to by p need not be the first
@@ -260,37 +264,25 @@ TODO:
 pcb_t *outChild(pcb_t *p){
     if(p ->p_prnt == NULL){
         return NULL; 
-
     }
-    /*
-        first child
-    */
-    if(p == p->p_prnt ->p_child == TRUE){
+    /*first child*/
+    if(p == p->p_prnt ->p_child){
         p -> p_prnt ->p_child = p->p_nextSib;
         p->p_nextSib ->p_prevSib = NULL; 
         return p; 
-
     }
- 
-  
-    /*
-    
-    Last child 
-    */
+    /*Last child */
    if(p->p_nextSib == NULL){
         p->p_prevSib ->p_nextSib = NULL; 
         return p; 
-
     }   
       /*
     middle child 
     */
-    else{
-       pcb_t * temp = p; 
+    else{ 
        p-> p_prevSib ->p_nextSib = p->p_nextSib; 
        p->nextSib -> p_prevSib = p->p_prevSib;
        return p; 
-
     }
 
 }
