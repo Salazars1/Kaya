@@ -1,4 +1,3 @@
-
 /*  PHASE 1
     NICK STONE AND SANTIAGO SALAZAR
     PROFESSOR MIKEY G */
@@ -35,7 +34,7 @@ void freePcb(pcb_t *p){
 pcb_t *allocPcb(){
    /*   If the Head Node is NULL then the list is empty and we return NULL*/
     
-    pcb_t temp;
+    pcb_t * temp;
     
     if(pcbList_h == NULL){
         return NULL;
@@ -168,12 +167,10 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
         }
     }
     /*
-
     If it is not the tail pointer then we must loop through the structure to find the P pointer
     Simply start with the tails next and contiue looping until we are back at the tail pointer
     if the new node is equal to P thus they both point to Pcb_t 
     then we rearrange the data structure and then return temp
-
     if Not found return NULL
     */
     else{
@@ -297,4 +294,3 @@ pcb_t *outChild(pcb_t *p){
     }
 
 }
-
