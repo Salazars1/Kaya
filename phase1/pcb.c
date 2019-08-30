@@ -167,8 +167,6 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
         return temp;
         }
     }
-
-    return NULL;
     /*
 
     If it is not the tail pointer then we must loop through the structure to find the P pointer
@@ -180,8 +178,8 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     */
     else{
         pcb_t * temp;
-        temp= *(tp) -> next; 
-        while(temp !=(*)tp){
+        temp = *tp -> next; 
+        while(temp !=*tp){
             if(temp == p){
                 temp -> p_prev -> p_next = temp ->p_next; 
                 temp ->p_next ->p_prev = temp ->p_prev; 
@@ -219,7 +217,7 @@ pcb_t *headProcQ(pcb_t *tp){
     Return: True        (if the proBlk has no Children)
             False       (if the proBlk has no Children). */
 int emptyChild(pcb_t *p){
-    return (p->p_child== NULL)
+    return (p->p_child== NULL);
 }
 
 
