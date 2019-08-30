@@ -103,16 +103,16 @@ void insertProcQ(pcb_t **tp, pcb_t *p){
         p->p_next = p;
         p->p_prev = p;
     }else if(*tp->p_next == (*tp)){      /*Case 2: There is only one node*/
-        p->p_next = *tp;
-        p->p_prev = *tp;
-        *tp->p_prev = p;
-        *tp->p_next = p; 
+        p->p_next = (*tp);
+        p->p_prev = (*tp);
+        (*tp)->p_prev = p;
+        (*tp)->p_next = p; 
     }else{                              /*Case 3: There is more than one node.*/
         pcb_t tempHead = *tp -> p_next;     /*Initialize the Queue head*/
         *tp -> p_next = p;                  /*Adds the new node*/
         p -> p_next = tempHead;             /*Fixes Pointers*/  
         tempHead -> p_prev = p;
-        p -> p_prev = *tp;
+        p -> p_prev = (*tp);
         *tp = p; 
     }
 }
