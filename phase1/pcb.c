@@ -1,6 +1,7 @@
-// PHASE 1
-// NICK STONE AND SANTIAGO SALAZAR
-// PROFESSOR MIKEY G.
+
+/*  PHASE 1
+    NICK STONE AND SANTIAGO SALAZAR
+    PROFESSOR MIKEY G */
 
 /*********************************************************************************************
                             Module Comment Section
@@ -9,7 +10,7 @@
 #include "../h/types.h"
 
 
-//Globally defines pcbList_h.
+/*Globally defines pcbList_h.*/
 HIDDEN pcb_t *pcbList_h;
 
 /*  Insert the element pointed to by p into the pcbFree list
@@ -91,18 +92,18 @@ int emptyProcQ(pcb_t *tp){
     Return: Void*/
 void insertProcQ(pcb_t **tp, pcb_t *p){
 
-    if(emptyProQ(*tp)){                 //Case 1: There is no node. 
+    if(emptyProQ(*tp)){                 /*Case 1: There is no node.*/ 
         p->p_next = p;
         p->p_prev = p;
-    }else if(tp->p_next == (*tp)){      //Case 2: There is only one node. 
+    }else if(tp->p_next == (*tp)){      /*Case 2: There is only one node*/
         p->p_next = *tp;
         p->p_prev = *tp;
         *tp->p_prev = p;
         *tp->p_next = p; 
-    }else{                              //Case 3: There is more than one node.
-        pcb_t tempHead = *tp -> p_next;     //Initialize the Queue head
-        *tp -> p_next = p;                  //Adds the new node
-        p -> p_next = tempHead;             //Fixes Pointers  
+    }else{                              /*Case 3: There is more than one node.*/
+        pcb_t tempHead = *tp -> p_next;     /*Initialize the Queue head*/
+        *tp -> p_next = p;                  /*Adds the new node*/
+        p -> p_next = tempHead;             /*Fixes Pointers*/  
         tempHead -> p_prev = p;
         p -> p_prev = tp;
         *tp = p; 
@@ -114,13 +115,13 @@ void insertProcQ(pcb_t **tp, pcb_t *p){
     Return: NULL    (if the process queue is empty)
             pcb_t   (if the process queue is NOT empty)*/
 pcb_t *removeProcQ(pcb_t **tp){
-    if(emptyProcQ(*tp)){                    //Case 1: Queue is empty
+    if(emptyProcQ(*tp)){                    /*Case 1: Queue is empty*/
         return NULL;
-    }else if(tp->p_next == (*tp)){            //Case 2: Queue has 1 nodes
+    }else if(tp->p_next == (*tp)){            /*Case 2: Queue has 1 nodes*/
         pcb_t temp = *tp;
         *tp = mkEmptyProcQ();
         return temp;
-    }else{                                  //Case 3: Queue has 2 or more nodes
+    }else{                                  /*Case 3: Queue has 2 or more nodes*/
         pcb_t temp = *tp-> p_next;
         *tp -> p_next = temp-> p_next;
         temp -> p_next -> p_prev = *tp;
@@ -217,12 +218,12 @@ int emptyChild(pcb_t *p){
     Parameters: pcb-t * p
     Return: void*/
 void insertChild(pcb_t *p_prnt, pcb_t *p){
-    if(emptyChild(p_prnt)){               //There is no childre
+    if(emptyChild(p_prnt)){               /*There is no children*/
         p_prnt -> p_child= p;
         p -> p_prnt = p_prnt;
         p -> p_prevSib = NULL;
         p -> p_nextSib = NULL;
-    }else{                              //There is 1 or more children
+    }else{                              /*There is 1 or more children*/
         p -> p_prnt = *p_prnt;
         p_prnt -> p_child-> p_prevSib = p;
         p -> p_nextSib = p_prnt -> child;
@@ -239,16 +240,16 @@ void insertChild(pcb_t *p_prnt, pcb_t *p){
             pcb_t * p   (to the removed child of ProcBlk)*/
 pcb_t *removeChild(pcb_t *p){
     pcb_t temp;
-    if(emptyChild(p)){                             //No Children
+    if(emptyChild(p)){                             /*No Children*/
         return NULL;   
-    }else if(p -> p_child-> p_nextSib == NULL){       //One Child
+    }else if(p -> p_child-> p_nextSib == NULL){       /*One Child*/
         temp = p -> child;
         temp -> p_prnt = NULL;
         temp -> p_nextSib = NULL;
         temp -> p_prevSib = NULL;
         p -> p_child= NULL;
 
-        return temp;                                //More than one children
+        return temp;                                /*More than one children*/
     }else{
         temp = p->child;
         temp -> p_nextSib -> p_prevSib = NULL;
