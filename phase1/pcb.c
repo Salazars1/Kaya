@@ -124,7 +124,7 @@ void insertProcQ(pcb_t **tp, pcb_t *p){
 pcb_t *removeProcQ(pcb_t **tp){
     if(emptyProcQ(*tp)){                    /*Case 1: Queue is empty*/
         return NULL;
-    }else if(tp->p_next == (*tp)){            /*Case 2: Queue has 1 nodes*/
+    }else if((*tp)->p_next == (*tp)){            /*Case 2: Queue has 1 nodes*/
         pcb_t *temp = *tp;
         *tp = mkEmptyProcQ();
         return temp;
