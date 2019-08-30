@@ -31,8 +31,7 @@ void freePcb(pcb_t *p){
             -Pointer to the removed element (if the pcbFree list is NOT EMPTY)*/
 
 pcb_t *allocPcb(){
-   /*
-   If the Head Node is NULL then the list is empty and we return NULL*/
+   /*   If the Head Node is NULL then the list is empty and we return NULL*/
     if(pcbList_h == NULL){
         return NULL;
     }
@@ -66,9 +65,9 @@ initPcbs(){
     No Return Value 
     We are done 
     */
-    static pcb_t Pcbinitialization[MAXPROC(int)];
-    for(i = 0; i < MAXPROC(10); i++){
-        freePcb(&(pcbinitialization[i]));
+    static pcb_t PcbInitialization[MAXPROC];
+    for(i = 0; i < MAXPROC; i++){
+        freePcb(&(pcbInitialization[i]));
     }
 
 }
@@ -162,12 +161,12 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     }
     /*
 
-If it is not the tail pointer then we must loop through the structure to find the P pointer
-Simply start with the tails next and contiue looping until we are back at the tail pointer
-if the new node is equal to P thus they both point to Pcb_t 
-then we rearrange the data structure and then return temp
+    If it is not the tail pointer then we must loop through the structure to find the P pointer
+    Simply start with the tails next and contiue looping until we are back at the tail pointer
+    if the new node is equal to P thus they both point to Pcb_t 
+    then we rearrange the data structure and then return temp
 
-if Not found return NULL
+    if Not found return NULL
     */
     else{
         pcb_t * temp = *(tp) -> next; 

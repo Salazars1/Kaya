@@ -15,6 +15,8 @@
 #include "../h/const.h"
 #include "../h/types.h"
 
+#include "../phase1/pcb.c"
+
 #include "/usr/local/include/umps2/umps/libumps.e"
 #include "../e/pcb.e"
 #include "../e/asl.e"
