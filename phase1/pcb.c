@@ -10,7 +10,7 @@
 
 
 //Globally defines pcbList_h.
-HIDDEN pbc_t *pcbList_h;
+HIDDEN pcb_t *pcbList_h;
 
 /*  Insert the element pointed to by p into the pcbFree list
     Parameters: pcb_t *p
