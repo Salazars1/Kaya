@@ -40,7 +40,6 @@ pcb_t *allocPcb(){
     Then we set all of the temporary pointers values to NULL or 0 
     Return Temp
     */
-    pcb_t * temp = pcbList_h; 
     pcblist_h = pcblist_h-> p_next;
 
     temp -> p_child = NULL; 
