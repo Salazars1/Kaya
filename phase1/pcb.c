@@ -8,6 +8,7 @@
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
+#include "../e/pcb.e"
 
 
 /*Globally defines pcbList_h.*/
