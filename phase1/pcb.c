@@ -73,7 +73,7 @@ initPcbs(){
     */
     static pcb_t PcbInitialization[MAXPROC];
     pcbList_h = NULL;
-    int i =0;
+    int i;
     for(i = 0; i < MAXPROC; i++){
         freePcb(&(pcbInitialization[i]));
     }
@@ -179,7 +179,8 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     if Not found return NULL
     */
     else{
-        pcb_t * temp = *(tp) -> next; 
+        pcb_t * temp;
+        temp= *(tp) -> next; 
         while(temp !=(*)tp){
             if(temp == p){
                 temp -> p_prev -> p_next = temp ->p_next; 
