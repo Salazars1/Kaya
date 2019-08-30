@@ -125,11 +125,11 @@ pcb_t *removeProcQ(pcb_t **tp){
     if(emptyProcQ(*tp)){                    /*Case 1: Queue is empty*/
         return NULL;
     }else if(tp->p_next == (*tp)){            /*Case 2: Queue has 1 nodes*/
-        pcb_t temp = *tp;
+        pcb_t *temp = *tp;
         *tp = mkEmptyProcQ();
         return temp;
     }else{                                  /*Case 3: Queue has 2 or more nodes*/
-        pcb_t temp = *tp-> p_next;
+        pcb_t * temp = *tp-> p_next;
         *tp -> p_next = temp-> p_next;
         temp -> p_next -> p_prev = *tp;
         return temp;
