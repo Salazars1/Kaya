@@ -252,7 +252,7 @@ void main() {
 /*
 	initASL();
 	addokbuf("Initialized active semaphore list   \n");
-
+*/
 	/* check removeBlocked and insertBlocked */
 /*
 	addokbuf("insertBlocked test #1 started  \n");
