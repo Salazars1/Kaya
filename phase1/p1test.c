@@ -15,8 +15,6 @@
 #include "../h/const.h"
 #include "../h/types.h"
 
-#include "../phase1/pcb.c"
-
 #include "/usr/local/include/umps2/umps/libumps.e"
 #include "../e/pcb.e"
 #include "../e/asl.e"
@@ -249,12 +247,12 @@ void main() {
 	for (i = 0; i < 10; i++) 
 		freePcb(procp[i]);
 
-	/*_______________________________________________________________________________________________
-	//check ASL
+
+	/* check ASL */
 	initASL();
 	addokbuf("Initialized active semaphore list   \n");
 
-	//check removeBlocked and insertBlocked
+	/* check removeBlocked and insertBlocked */
 	addokbuf("insertBlocked test #1 started  \n");
 	for (i = 10; i < MAXPROC; i++) {
 		procp[i] = allocPcb();
@@ -268,7 +266,7 @@ void main() {
 			adderrbuf("insertBlocked(2): unexpected TRUE   ");
 	}
 
-	//check if semaphore descriptors are returned to free list
+	/* check if semaphore descriptors are returned to free list */
 	p = removeBlocked(&sem[11]);
 	if (insertBlocked(&sem[11],p))
 		adderrbuf("removeBlocked: fails to return to free list   ");
@@ -316,6 +314,5 @@ void main() {
 	addokbuf("ASL module ok   \n");
 	addokbuf("So Long and Thanks for All the Fish\n");
 
-	______________________________________________________________________________*/
 }
 
