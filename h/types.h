@@ -46,6 +46,22 @@ typedef struct state_t {
 
 } state_t, *state_PTR;
 
+typedef struct pcb_t {
+	
+	/* Prock Q nodes*/
+	struct pcb_t *p_next;
+	struct pcb_t *p_prev;	
+
+	/* Tree Node pointers */
+	struct pcb_t *p_prnt;		/* pointer to parent */
+	struct pcb_t *p_child;		/* pointer to 1st child */
+	struct pcb_t *p_nextSib;	/* pointer to next sib */
+	struct pcb_t *p_prevSib; 	/* pointer to prev sib */
+	
+} pcb_t, *pcb_PTR;
+
+
+
 #define	s_at	s_reg[0]
 #define	s_v0	s_reg[1]
 #define s_v1	s_reg[2]
