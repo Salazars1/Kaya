@@ -1,7 +1,7 @@
 #ifndef TYPES
 #define TYPES
 
-
+#include "const.h"
  /**************************************************************************** 
  *
  * This header file contains utility types definitions.
