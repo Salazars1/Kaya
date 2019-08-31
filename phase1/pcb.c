@@ -200,7 +200,7 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     Return: NULL     (if the process queue is empty)
             tp->p_next (if the process queue is NOT empty). */
 pcb_t *headProcQ(pcb_t *tp){
-    if(emptyProQ()){
+    if(emptyProQ(tp)){
         return NULL;
     }
     return tp->p_next;
@@ -230,7 +230,7 @@ void insertChild(pcb_t *p_prnt, pcb_t *p){
         p -> p_prevSib = NULL;
         p -> p_nextSib = NULL;
     }else{                              /*There is 1 or more children*/
-        p -> p_prnt = *p_prnt;
+        p -> p_prnt = p_prnt;
         p_prnt -> p_child-> p_prevSib = p;
         p -> p_nextSib = p_prnt -> p_child;
         p -> p_prevSib = NULL;
