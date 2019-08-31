@@ -1,13 +1,13 @@
 #ifndef TYPES
 #define TYPES
 
-#include "const.h"
+
  /**************************************************************************** 
  *
  * This header file contains utility types definitions.
  * 
  ****************************************************************************/
-typedef signed int cpu_t;
+/*typedef signed int cpu_t;*/
 
 
 typedef unsigned int memaddr;
