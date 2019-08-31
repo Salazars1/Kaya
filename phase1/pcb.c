@@ -81,7 +81,9 @@ initPcbs(){
 
 /* This method is used to initialize a variable to be tail pointer to a
     process queue.
-    Return a pointer to the tail of an empty process queue; i.e. NULL. */
+    Return a pointer to the tail of an empty process queue; i.e. NULL.
+    
+ */
 pcb_t *mkEmptyProcQ(){
     return NULL; 
 }
