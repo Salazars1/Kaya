@@ -155,10 +155,10 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     Tail pointer now equals the previous Node
     and that that the head Node now points the prev to the tail pointer
     */
-    else if(*tp==p){
-        if(*tp->p_next == *tp){
+    else if((*tp)==p){
+        if((*tp)->p_next == *tp){
             pcb_t *temp = (*tp);
-            *tp = mkEmptyProcQ();
+            (*tp) = mkEmptyProcQ();
             return temp;
         }else{
             pcb_t * temp = (*tp); 
@@ -177,18 +177,18 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     */
     else{
         pcb_t * temp;
-        temp = *tp -> next; 
+        temp = (*tp) -> p_next; 
         while(temp !=*tp){
             if(temp == p){
                 temp -> p_prev -> p_next = temp ->p_next; 
                 temp ->p_next ->p_prev = temp ->p_prev; 
                 return temp; 
             }
-            temp = temp ->next; 
+            temp = temp ->p_next; 
 
         }
       
-        return NULL
+        return NULL;
         
 
     }
