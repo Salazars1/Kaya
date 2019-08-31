@@ -6,7 +6,7 @@ typedef signed int cpu_t;
 typedef unsigned int memaddr;
 
 
-typedef struct {
+typedef struct device_t {
 	unsigned int d_status;
 	unsigned int d_command;
 	unsigned int d_data0;
@@ -20,7 +20,7 @@ typedef struct {
 
 #define DEVINTNUM 5
 #define DEVPERINT 8
-typedef struct {
+typedef struct devregarea_t{
 	unsigned int rambase;
 	unsigned int ramsize;
 	unsigned int execbase;
