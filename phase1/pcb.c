@@ -12,7 +12,7 @@
 
 /*Globally defines pcbList_h.*/
 HIDDEN pcb_t *pcbList_h;
-HIDDEN int count = 0; 
+
 
 /*  Insert the element pointed to by p into the pcbFree list
     Parameters: pcb_t *p
@@ -45,8 +45,8 @@ pcb_t *allocPcb(){
     Then we set all of the temporary pointers values to NULL or 0 
     Return Temp
     */
-    count = count + 1; 
-    addokbuf(count);
+    
+    addokbuf("re \n");
 
     temp = pcbList_h;
     pcbList_h = pcbList_h-> p_next;
