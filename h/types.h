@@ -1,13 +1,5 @@
 #ifndef TYPES
 #define TYPES
-
-/**************************************************************************** 
- *
- * This header file contains utility types definitions.
- * 
- ****************************************************************************/
-
-
 typedef signed int cpu_t;
 
 
