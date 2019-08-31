@@ -200,7 +200,7 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     Return: NULL     (if the process queue is empty)
             tp->p_next (if the process queue is NOT empty). */
 pcb_t *headProcQ(pcb_t *tp){
-    if(emptyProQ(tp)){
+    if(emptyProcQ(tp)){
         return NULL;
     }
     return tp->p_next;
