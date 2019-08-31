@@ -108,12 +108,12 @@ void insertProcQ(pcb_t **tp, pcb_t *p){
         (*tp)->p_prev = p;
         (*tp)->p_next = p; 
     }else{                              /*Case 3: There is more than one node.*/
-        pcb_t tempHead = *tp -> p_next;     /*Initialize the Queue head*/
-        *tp -> p_next = p;                  /*Adds the new node*/
+        pcb_t tempHead = (*tp) -> p_next;     /*Initialize the Queue head*/
+        (*tp) -> p_next = p;                  /*Adds the new node*/
         p -> p_next = tempHead;             /*Fixes Pointers*/  
         tempHead -> p_prev = p;
         p -> p_prev = (*tp);
-        *tp = p; 
+        (*tp) = p; 
     }
 }
 
@@ -122,7 +122,7 @@ void insertProcQ(pcb_t **tp, pcb_t *p){
     Return: NULL    (if the process queue is empty)
             pcb_t   (if the process queue is NOT empty)*/
 pcb_t *removeProcQ(pcb_t **tp){
-    if(emptyProcQ(*tp)){                    /*Case 1: Queue is empty*/
+    if(emptyProcQ((*tp))){                    /*Case 1: Queue is empty*/
         return NULL;
     }else if((*tp)->p_next == (*tp)){            /*Case 2: Queue has 1 nodes*/
         pcb_t *temp = *tp;
