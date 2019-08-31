@@ -35,7 +35,7 @@ pcb_t *allocPcb(){
    /*   If the Head Node is NULL then the list is empty and we return NULL*/
     
     pcb_t * temp;
-    
+    HIDDEN int count; 
     if(pcbList_h == NULL){
         return NULL;
     }
@@ -44,6 +44,8 @@ pcb_t *allocPcb(){
     Then we set all of the temporary pointers values to NULL or 0 
     Return Temp
     */
+   count = count + 1; 
+    addokbuf(count);
 
     temp = pcbList_h;
     pcbList_h = pcbList_h-> p_next;
