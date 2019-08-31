@@ -129,9 +129,9 @@ pcb_t *removeProcQ(pcb_t **tp){
         *tp = mkEmptyProcQ();
         return temp;
     }else{                                  /*Case 3: Queue has 2 or more nodes*/
-        pcb_t * temp = *tp-> p_next;
-        *tp -> p_next = temp-> p_next;
-        temp -> p_next -> p_prev = *tp;
+        pcb_t * temp = (*tp)-> p_next;
+        (*tp) -> p_next = temp-> p_next;
+        temp -> p_next -> p_prev = (*tp);
         return temp;
     }
 }
