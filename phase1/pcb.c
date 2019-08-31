@@ -60,7 +60,7 @@ pcb_t *allocPcb(){
 /*  Initialize the pcbFree list to contain all the elements of the static array of
     MAXPROC ProcBlk’s.*/
 
-initPcbs(){
+void initPcbs(){
     /*  
     Set the pcbFree_h to be NULL
     Then We set the pcbFree_h to be the first item in the array 
