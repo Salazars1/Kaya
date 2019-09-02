@@ -105,6 +105,7 @@ int emptyProcQ(pcb_t *tp){
 void insertProcQ(pcb_t **tp, pcb_t *p){
 
     if(emptyProcQ(*tp)){                 /*Case 1: There is no node.*/ 
+        addokbuf("empty");
         p->p_next = p;
         p->p_prev = p;
     }else if((*tp)->p_next == (*tp)){      /*Case 2: There is only one node*/
