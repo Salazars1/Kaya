@@ -121,6 +121,7 @@ void insertProcQ(pcb_t **tp, pcb_t *p){
         p -> p_prev = (*tp);
         (*tp) = p; 
     }
+    (*tp) = p; 
 }
 
 /*  Remove the first (i.e. head) element from the process queue
