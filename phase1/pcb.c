@@ -101,7 +101,7 @@ int emptyProcQ(pcb_t *tp){
 
 /*  Inserts the ProcBlk pointed to by p into the process queue
     Parameters: **tp, *p
-    Return: Void*/
+    Return: Void */
 void insertProcQ(pcb_t **tp, pcb_t *p){
 
     if(emptyProcQ(*tp)){                 /*Case 1: There is no node.*/ 
