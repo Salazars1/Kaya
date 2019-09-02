@@ -46,7 +46,7 @@ pcb_t *allocPcb(){
     Return Temp
     */
 
-    addokbuf("re \n");
+    
 
     temp = pcbList_h;
     pcbList_h = pcbList_h-> p_next;
