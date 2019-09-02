@@ -45,7 +45,7 @@ pcb_t *allocPcb(){
     Then we set all of the temporary pointers values to NULL or 0 
     Return Temp
     */
-    
+
     addokbuf("re \n");
 
     temp = pcbList_h;
