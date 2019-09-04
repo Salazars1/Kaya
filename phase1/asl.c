@@ -117,7 +117,7 @@ pcb_t *headBlocked(int *semAdd){
 
 
 initASL(){
-    static pcb_t ASLInitialization[MAXPROC+2];
+    static semd_t ASLInitialization[MAXPROC+2];
     
     semd_h = NULL; 
     semdFree_h = NULL;
@@ -125,6 +125,16 @@ initASL(){
     for(i = 0; i < MAXPROC; i++){
         freeASL(&(ASLInitialization[i]));
     }
+    semd_t *first = &ASLInitialization[20];
+    semd_t *two = &ASLInitialization[21];
+    first ->s_semAdd = NULL; 
+    two -> s_semAdd = MAXINT; 
+    first ->s_next = two; 
+    two -> s_next = NULL; 
+    first -> s_procQ = NULL;
+    two ->s_procQ = NULL; 
+
+
 
 
 }
