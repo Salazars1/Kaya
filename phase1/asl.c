@@ -86,6 +86,22 @@ return p. */
 TODO:
 pcb_t *outBlocked(pcb_t *p){
 
+    semd_t *parentNode;
+    parentNode = searchForParent(semAdd);
+
+    pcb_t * returnValue;
+
+    if(parentNode -> s_next -> s_semAdd == semAdd){       /*ID is in the ASL*/
+        returnValue  = outProcQ(&(parentNode->s_next->s_procQ),p);
+        if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
+            parentNode -> s_next = parentNode -> s_next -> s_next;
+        }
+        FreeASL(parentNode->s_next);
+        returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
+        return returnValue;
+    }else{
+        return NULL;
+    }
 
 }
 
@@ -151,7 +167,8 @@ HIDDEN semd_t *searchForParent(int *semAdd){
 
 HIDDEN void freeASL(semd_t *s){
     if(semdFree_h==NULL){
-        
+        semdFree_h = s;
+        semdFree -> s_next = NULL;
     }else{
         s->s_next = semdFree_h;
         semdFree_h = s;
