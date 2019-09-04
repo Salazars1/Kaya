@@ -60,7 +60,7 @@ typedef struct pcb_t {
 	struct pcb_t *p_prevSib; 	/* pointer to prev sib */
 
 	/* Active SemaphoreList  */
-	struct int *p_semAdd;			/* ASL ID*/
+	int *p_semAdd;			/* ASL ID*/
 	
 } pcb_t, *pcb_PTR;
 
@@ -68,7 +68,7 @@ typedef struct pcb_t {
 typedef struct semd_t {
 	
 	int* s_semAdd;			/*Semaphore List ID*/
-	pcb_t* s_procQ;
+	pcb_t * s_procQ;
 	semd_t* s_next;
 	
 } semd_t;
