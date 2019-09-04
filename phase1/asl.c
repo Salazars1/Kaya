@@ -122,17 +122,20 @@ initASL(){
     semd_h = NULL; 
     semdFree_h = NULL;
     int i;
-    for(i = 0; i < MAXPROC; i++){
+    for(i = 2; i < MAXPROC+2; i++){
         freeASL(&(ASLInitialization[i]));
     }
-    semd_t *first = &ASLInitialization[20];
-    semd_t *two = &ASLInitialization[21];
+    semd_t *first = &ASLInitialization[0];
+    semd_t *two = &ASLInitialization[1];
     first ->s_semAdd = NULL; 
     two -> s_semAdd = MAXINT; 
     first ->s_next = two; 
     two -> s_next = NULL; 
     first -> s_procQ = NULL;
     two ->s_procQ = NULL; 
+
+    semd_h = first; 
+    
 
 
 
@@ -173,11 +176,10 @@ HIDDEN semd_t *allocASL(){
 
 HIDDEN semd_t *searchForParent(int *semAdd){
 	semd_t *temp = semd_h;
-	if(semAdd == NULL){
-		semAdd = (int*) MAXINT;
-	}
+	
 	while(semAdd > (temp -> s_next -> s_semAdd)){
 		temp = temp -> s_next;
+        
 	}
 	return temp;
 }
