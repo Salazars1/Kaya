@@ -28,7 +28,7 @@ to semAdd, and s procq to mkEmptyProcQ()), and proceed as
 above. If a new semaphore descriptor needs to be allocated and the
 semdFree list is empty, return TRUE. In all other cases return FALSE.
 */
-FIXME:
+
 int insertBlocked(int *semAdd, pcb_t *p){
     semd_t * temp;
     temp = searchForParent(semAdd);
@@ -59,7 +59,7 @@ found, return NULL; otherwise, remove the first (i.e. head) ProcBlk
 from the process queue of the found semaphore descriptor and return a pointer to it. If the process queue for this semaphore becomes
 empty (emptyProcQ(s procq) is TRUE), remove the semaphore
 descriptor from the ASL and return it to the semdFree list. */
-TODO:
+
 pcb_t *removeBlocked(int *semAdd){
     semd_t *parentNode;
     parentNode = searchForParent(semAdd);
@@ -83,7 +83,7 @@ pcb_t *removeBlocked(int *semAdd){
 pointed to by p does not appear in the process queue associated with
 p’s semaphore, which is an error condition, return NULL; otherwise,
 return p. */
-TODO:
+
 pcb_t *outBlocked(pcb_t *p){
 
     semd_t *parentNode;
@@ -107,7 +107,7 @@ pcb_t *outBlocked(pcb_t *p){
 
 /* Return a pointer to the ProcBlk that is at the head of the process queue associated with the semaphore semAdd. Return NULL
 if semAdd is not found on the ASL or if the process queue associated with semAdd is empty. */
-TODO:
+
 pcb_t *headBlocked(int *semAdd){
 
 
@@ -115,8 +115,16 @@ pcb_t *headBlocked(int *semAdd){
 
 /*Initialize the semdFree list to contain all the elements of the array*/
 
-TODO:
+
 initASL(){
+    static pcb_t PcbInitialization[MAXPROC+2];
+    
+    semd_h = NULL; 
+    semdFree_h = NULL;
+    int i;
+    for(i = 0; i < MAXPROC; i++){
+        freeASL(&(PcbInitialization[i]));
+    }
 
 
 }
