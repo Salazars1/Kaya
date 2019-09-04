@@ -67,7 +67,7 @@ pcb_t *removeBlocked(int *semAdd){
     pcb_t * returnValue;
 
     if(parentNode -> s_next -> s_semAdd == semAdd){       /*ID is in the ASL*/
-        returnValue  = removeProcQ(&(parentNode->s_next->s_procQ),p);
+        returnValue  = removeProcQ(&(parentNode->s_next->s_procQ));
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
             parentNode -> s_next = parentNode -> s_next -> s_next;
         }
@@ -87,11 +87,11 @@ return p. */
 pcb_t *outBlocked(pcb_t *p){
 
     semd_t *parentNode;
-    parentNode = searchForParent(semAdd);
+    parentNode = searchForParent(p ->p_semAdd);
 
     pcb_t * returnValue;
 
-    if(parentNode -> s_next -> s_semAdd == semAdd){       /*ID is in the ASL*/
+    if(parentNode -> s_next -> s_semAdd == p->p_semAdd){       /*ID is in the ASL*/
         returnValue  = outProcQ(&(parentNode->s_next->s_procQ),p);
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
             parentNode -> s_next = parentNode -> s_next -> s_next;
@@ -141,7 +141,7 @@ HIDDEN semd_t *allocASL(){
     
     semd_t * temp;
     
-    if(pcbList_h == NULL){
+    if(semdFree_h == NULL){
         return NULL;
     }
     /* We then make a temporary Pointer to the head of the free list 
