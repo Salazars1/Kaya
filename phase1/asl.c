@@ -71,7 +71,7 @@ pcb_t *removeBlocked(int *semAdd){
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
             parentNode -> s_next = parentNode -> s_next -> s_next;
         }
-        FreeASL(parentNode->s_next);
+        freeASL(parentNode->s_next);
         returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
         return returnValue;
     }else{
@@ -96,7 +96,7 @@ pcb_t *outBlocked(pcb_t *p){
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
             parentNode -> s_next = parentNode -> s_next -> s_next;
         }
-        FreeASL(parentNode->s_next);
+        freeASL(parentNode->s_next);
         returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
         return returnValue;
     }else{
