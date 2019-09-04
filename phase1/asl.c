@@ -151,7 +151,7 @@ HIDDEN semd_t *allocASL(){
     */
 
     temp = semdFree_h;
-    semdFree_h = semdFree_h-> p_next;
+    semdFree_h = semdFree_h-> s_next;
 
     temp->s_next = NULL; 
     temp->s_semAdd = NULL; 
