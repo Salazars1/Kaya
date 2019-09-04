@@ -68,8 +68,8 @@ typedef struct pcb_t {
 typedef struct semd_t {
 	
 	int* s_semAdd;			/*Semaphore List ID*/
-	struct pcb_t * s_procQ;
-	semd_t* s_next;
+	pcb_t * s_procQ;
+	struct semd_t* s_next;
 	
 } semd_t;
 
