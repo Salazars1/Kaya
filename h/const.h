@@ -87,6 +87,7 @@
 
 
 #define MAXPROC 20
+#define MAXINT  0xFFFFFFFF
 
 
 #endif

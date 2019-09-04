@@ -46,6 +46,7 @@ typedef struct state_t {
 
 } state_t, *state_PTR;
 
+/*Defines pcb_t*/
 typedef struct pcb_t {
 	
 	/* Prock Q nodes*/
@@ -57,10 +58,20 @@ typedef struct pcb_t {
 	struct pcb_t *p_child;		/* pointer to 1st child */
 	struct pcb_t *p_nextSib;	/* pointer to next sib */
 	struct pcb_t *p_prevSib; 	/* pointer to prev sib */
+
+	/* Active SemaphoreList  */
+	struct int *p_semAdd;			/* ASL ID*/
 	
 } pcb_t, *pcb_PTR;
 
-
+/*Defines semd_t*/
+typedef struct semd_t {
+	
+	int* s_semAdd;			/*Semaphore List ID*/
+	pcb_t* s_procQ;
+	semd_t* s_next;
+	
+} semd_t;
 
 #define	s_at	s_reg[0]
 #define	s_v0	s_reg[1]
