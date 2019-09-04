@@ -37,7 +37,7 @@ int insertBlocked(int *semAdd, pcb_t *p){
         insertProcQ(&(temp->s_next->s_procQ),p);       
         return FALSE;
     }else{                                          /*ID is not in the ASL*/
-        semd_t *newSemd = allocSemd();              /*Create new node*/
+        semd_t *newSemd = allocASL();              /*Create new node*/
         if(newSemd == NULL){
             return TRUE;            /*More than 20 (MAXPROC) Processes*/
         }else{
