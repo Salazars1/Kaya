@@ -32,14 +32,14 @@ semdFree list is empty, return TRUE. In all other cases return FALSE.
 int insertBlocked(int *semAdd, pcb_t *p){
     semd_t * temp;
     temp = searchForParent(semAdd);
-    if(temp -> s_next -> s_semAdd == semAdd){         //ID is in the ASL
+    if(temp -> s_next -> s_semAdd == semAdd){         /*ID is in the ASL*/
         p->p_semAdd = semAdd;
         insertProcQ(&(temp->s_next->s_procQ),p);       
         return FALSE;
-    }else{                                          //ID is not in the ASL
-        semd_t *newSemd = allocSemd();              //Create new node
+    }else{                                          /*ID is not in the ASL*/
+        semd_t *newSemd = allocSemd();              /*Create new node*/
         if(newSemd == NULL){
-            return TRUE;            //More than 20 (MAXPROC) Processes
+            return TRUE;            /*More than 20 (MAXPROC) Processes*/
         }else{
             newSemd -> s_next = temp -> s_next;
             temp->s_next = newSemd;
