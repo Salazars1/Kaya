@@ -117,13 +117,13 @@ pcb_t *headBlocked(int *semAdd){
 
 
 initASL(){
-    static pcb_t PcbInitialization[MAXPROC+2];
+    static pcb_t ASLInitialization[MAXPROC+2];
     
     semd_h = NULL; 
     semdFree_h = NULL;
     int i;
     for(i = 0; i < MAXPROC; i++){
-        freeASL(&(PcbInitialization[i]));
+        freeASL(&(ASLInitialization[i]));
     }
 
 
