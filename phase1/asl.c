@@ -176,7 +176,7 @@ HIDDEN semd_t *searchForParent(int *semAdd){
 HIDDEN void freeASL(semd_t *s){
     if(semdFree_h==NULL){
         semdFree_h = s;
-        semdFree -> s_next = NULL;
+        semdFree_h -> s_next = NULL;
     }else{
         s->s_next = semdFree_h;
         semdFree_h = s;
