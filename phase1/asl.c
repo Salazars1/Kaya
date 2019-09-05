@@ -20,15 +20,14 @@ HIDDEN semd_t *semdFree_h;              /* Globally define free semaphore list *
     with the semaphore (semAdd) and sets the semaphore address of p to semAdd. 
     Parameteres: semAdd, pcb_t
     Return:     -False (if the node was inserted succesfully and the lists where updated )
-                -True (if semFree is empty and the node wasnt inserted sucesfully)
-*/
+                -True (if semFree is empty and the node wasnt inserted sucesfully)*/
 
 int insertBlocked(int *semAdd, pcb_t *p){
     semd_t * temp;
     temp = searchForParent(semAdd);
-    if(temp -> s_next -> s_semAdd == semAdd){            /*ID is in the ASL*/
+    if(temp -> s_next -> s_semAdd == semAdd){           /*ID is in the ASL*/
         p->p_semAdd = semAdd;
-        insertProcQ(&(temp->s_next->s_procQ),p);         /*Calls pcb to insert pcb*/  
+        insertProcQ(&(temp->s_next->s_procQ),p);        /*Calls pcb to insert pcb*/  
         return FALSE;
     }else{                                              /*ID is not in the ASL*/
         semd_t *newSemd = allocASL();                   /*Creates new node*/
@@ -48,66 +47,63 @@ int insertBlocked(int *semAdd, pcb_t *p){
     }
 }
 
-/* Search the ASL for a descriptor of this semaphore. If none is
-found, return NULL; otherwise, remove the first (i.e. head) ProcBlk
-from the process queue of the found semaphore descriptor and return a pointer to it. If the process queue for this semaphore becomes
-empty (emptyProcQ(s procq) is TRUE), remove the semaphore
-descriptor from the ASL and return it to the semdFree list. */
+/*  Searches the ASL list for a descriptor of this semaphore and returns the pointer
+    to the the removed node. It removes the node by using removeProcQ from pcb. 
+    Parameters: semAdd
+    Return:     - NULL (if no node with the semAdd is found)
+                - pcb_t (if the node was found in the list)*/
 
 pcb_t *removeBlocked(int *semAdd){
     semd_t *parentNode;
-    parentNode = searchForParent(semAdd);
+    parentNode = searchForParent(semAdd);                 /*Gets the parent of the node whose semAdd equals the parameters*/
 
     pcb_t * returnValue;
-
-   
     if(parentNode -> s_next -> s_semAdd == semAdd){       /*ID is in the ASL*/
-  
         returnValue  = removeProcQ(&parentNode ->s_next ->s_procQ);
-        if(returnValue == NULL){
-            return NULL; 
+        if(returnValue == NULL){                          /*SemAdd was not found in the list*/
+            return NULL;  
         }
-        if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
-            semd_t *removedNode = parentNode -> s_next; 
-            parentNode -> s_next = parentNode -> s_next -> s_next;
-            deAllocASL(removedNode);
-        }
-        returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
-        return returnValue;
-    }else{
-       
-        return NULL;
-    }
-}
 
-/* Remove the ProcBlk pointed to by p from the process queue associated with p’s semaphore (p→ p semAdd) on the ASL. If ProcBlk
-pointed to by p does not appear in the process queue associated with
-p’s semaphore, which is an error condition, return NULL; otherwise,
-return p. */
-
-pcb_t *outBlocked(pcb_t *p){
-
-    semd_t *parentNode;
-    parentNode = searchForParent(p->p_semAdd);
-   
-    pcb_t * returnValue;
-
-   
-    if(parentNode -> s_next -> s_semAdd == p->p_semAdd){       /*ID is in the ASL*/
-  
-        returnValue  = outProcQ(&(parentNode ->s_next ->s_procQ) ,p);
-        if(returnValue == NULL){
-            return NULL; 
-        }
-        if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
-           
+        if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Fixes pointers*/
             semd_t *removedNode = parentNode -> s_next; 
             parentNode -> s_next = parentNode -> s_next -> s_next;
             deAllocASL(removedNode);
         }
         
-        returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
+        returnValue -> p_semAdd = NULL;                     /*semAdd in node is not neccessary*/
         return returnValue;
+    
+    }else{   
+        return NULL;
+    }
+}
+
+/*  Searches the ASL list for an specifi pcb node pointer and returns the pointer to the the 
+    removed node. It removes the node by using outprocQ from pcb. 
+    Parameters: semAdd
+    Return:     - NULL (if no node with the semAdd is found)
+                - pcb_t (if the node was found in the list)*/
+pcb_t *outBlocked(pcb_t *p){
+
+    semd_t *parentNode;
+    parentNode = searchForParent(p->p_semAdd);                 /*Gets the parent of the node whose semAdd equals the parameters*/   
+    pcb_t * returnValue;
+
+    if(parentNode -> s_next -> s_semAdd == p->p_semAdd){       /*ID is in the ASL*/
+        returnValue  = outProcQ(&(parentNode ->s_next ->s_procQ) ,p);
+        if(returnValue == NULL){                               /*SemAdd was not found in the list*/ 
+            return NULL; 
+        }
+
+        if(emptyProcQ(parentNode ->s_next ->s_procQ)){         /*Fixes pointers*/ 
+            semd_t *removedNode = parentNode -> s_next; 
+            parentNode -> s_next = parentNode -> s_next -> s_next;
+            deAllocASL(removedNode);
+        }
+        
+        returnValue -> p_semAdd = NULL;                         /*semAdd in node is not neccessary*/
+        return returnValue;
+    
     }else{
         return NULL;
     }
