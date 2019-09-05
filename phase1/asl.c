@@ -124,7 +124,7 @@ pcb_t *headBlocked(int *semAdd){
     if(temp ->s_next ->s_procQ == NULL){
         return NULL; 
     } 
-    return temp;
+    return temp ->s_procQ;
 
 }
 
