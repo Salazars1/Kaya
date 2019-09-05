@@ -76,6 +76,7 @@ pcb_t *removeBlocked(int *semAdd){
         returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
         return returnValue;
     }else{
+        addokbuf("WE are here and we probably shouldnt be");
         return NULL;
     }
 }
