@@ -121,14 +121,14 @@ pcb_t *headBlocked(int *semAdd){
 	semd_t *temp;
     temp = searchForParent(semAdd);
     if(temp ->s_semAdd == MAXINT){
-        addokbuf("First Round we have the MAX INT \n");
+        
         return NULL;
     }
-    if(temp -> s_semAdd == NULL){
-        addokbuf("First Test we get here");
+    else if(temp -> s_semAdd == NULL){
+       
         return NULL; 
     }
-    if(temp ->s_next ->s_procQ == NULL){
+    else if(temp ->s_next ->s_procQ == NULL){
         addokbuf("WE are in the Tail pointer is NULL");
         return NULL; 
     } 
