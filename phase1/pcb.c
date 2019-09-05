@@ -11,7 +11,7 @@
 
 
 /*Globally defines pcbList_h.*/
-HIDDEN pcb_t *pcbList_h;
+HIDDEN pcb_PTR pcbList_h;
 
 
 /*  Insert the element pointed to by p into the pcbFree list
@@ -117,7 +117,7 @@ void insertProcQ(pcb_PTR *tp, pcb_PTR p){
         (*tp)->p_prev = p;
         (*tp)->p_next = p; 
     }else{                              /*Case 3: There is more than one node.*/
-        pcb_t * tempHead = (*tp) -> p_next;     /*Initialize the Queue head*/
+        pcb_PTR tempHead = (*tp) -> p_next;     /*Initialize the Queue head*/
         (*tp) -> p_next = p;                  /*Adds the new node*/
         p -> p_next = tempHead;             /*Fixes Pointers*/  
         tempHead -> p_prev = p;
@@ -131,7 +131,7 @@ void insertProcQ(pcb_PTR *tp, pcb_PTR p){
     Parameters: **tp
     Return: NULL    (if the process queue is empty)
             pcb_t   (if the process queue is NOT empty)*/
-pcb_t *removeProcQ(pcb_PTR *tp){
+pcb_PTR removeProcQ(pcb_PTR *tp){
     if(emptyProcQ((*tp))){                    /*Case 1: Queue is empty*/
         return NULL;
     }else if((*tp)->p_next == (*tp)){            /*Case 2: Queue has 1 nodes*/
@@ -139,7 +139,7 @@ pcb_t *removeProcQ(pcb_PTR *tp){
         *tp = mkEmptyProcQ();
         return temp;
     }else{                                  /*Case 3: Queue has 2 or more nodes*/
-        pcb_t * temp = (*tp)-> p_next;
+        pcb_PTR temp = (*tp)-> p_next;
         (*tp) -> p_next = temp-> p_next;
         temp -> p_next -> p_prev = (*tp);
         return temp;
@@ -147,7 +147,7 @@ pcb_t *removeProcQ(pcb_PTR *tp){
 }
 
 
-pcb_t *outProcQ(pcb_PTR *tp, pcb_PTR p){
+pcb_PTR outProcQ(pcb_PTR *tp, pcb_PTR p){
 
     /*
     If the Tail pointer points to NUll then the list is empty
@@ -207,7 +207,7 @@ pcb_t *outProcQ(pcb_PTR *tp, pcb_PTR p){
     Parameters: pcb-t * tp
     Return: NULL     (if the process queue is empty)
             tp->p_next (if the process queue is NOT empty). */
-pcb_t *headProcQ(pcb_PTR tp){
+pcb_PTR headProcQ(pcb_PTR tp){
     if(emptyProcQ(tp)){
         return NULL;
     }
