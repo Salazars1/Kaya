@@ -17,7 +17,7 @@ HIDDEN pcb_t *pcbList_h;
 /*  Insert the element pointed to by p into the pcbFree list
     Parameters: pcb_t *p
     Return: void*/ 
-void freePcb(pcb_t *p){
+void freePcb(pcb_PTR p){
     /*
     Set the Node we are addings Next pointer to the current head
     Set head to be the new node 
@@ -32,10 +32,10 @@ void freePcb(pcb_t *p){
     Return: -Null (if the pcbFree list is empty)
             -Pointer to the removed element (if the pcbFree list is NOT EMPTY)*/
 
-pcb_t *allocPcb(){
+pcb_PTR allocPcb(){
    /*   If the Head Node is NULL then the list is empty and we return NULL*/
     
-    pcb_t * temp;
+    pcb_PTR temp;
     
     if(pcbList_h == NULL){
         return NULL;
