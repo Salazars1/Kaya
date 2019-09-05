@@ -105,6 +105,7 @@ pcb_t *outBlocked(pcb_t *p){
             parentNode -> s_next = parentNode -> s_next -> s_next;
             deAllocASL(removedNode);
         }
+        
         returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
         return returnValue;
     }else{
