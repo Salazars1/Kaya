@@ -121,11 +121,23 @@ void insertProcQ(pcb_PTR *tp, pcb_PTR p){
         p->p_prev = p;
     }
     else if((*tp)->p_next == (*tp)){      /*Case 2: There is only one node*/
+    /*If there is only One Node then the following Logic is executed
+    *THe New Nodes Next is assigned to be the tail Pointer as well as its previous
+    * Then the Tails New Previous is the new Node and the Next is also the new node
+    * Being added
+    */
         p->p_next = (*tp);
         p->p_prev = (*tp);
         (*tp)->p_prev = p;
         (*tp)->p_next = p; 
     }else{                              /*Case 3: There is more than one node.*/
+    /* We set a New Node to be the Head node of the list
+    *Then we set the Tail pointers Next pointer to be the new node
+    * THen we set the new nodes next pointer to be the head
+    * Then we set the Heads previous pointer to be the new node
+    * Then we set the new Nodes previous to point to the old tail
+    * update the tail pointer 
+    */
         pcb_PTR tempHead = (*tp) -> p_next;     /*Initialize the Queue head*/
         (*tp) -> p_next = p;                  /*Adds the new node*/
         p -> p_next = tempHead;             /*Fixes Pointers*/  
@@ -133,6 +145,7 @@ void insertProcQ(pcb_PTR *tp, pcb_PTR p){
         p -> p_prev = (*tp);
         (*tp) = p; 
     }
+    /*New Tail Is updated to be the New Node*/
     (*tp) = p; 
 }
 
@@ -141,6 +154,7 @@ void insertProcQ(pcb_PTR *tp, pcb_PTR p){
     Return: NULL    (if the process queue is empty)
             pcb_t   (if the process queue is NOT empty)*/
 pcb_PTR removeProcQ(pcb_PTR *tp){
+    
     if(emptyProcQ((*tp))){                    /*Case 1: Queue is empty*/
         return NULL;
     }else if((*tp)->p_next == (*tp)){            /*Case 2: Queue has 1 nodes*/
