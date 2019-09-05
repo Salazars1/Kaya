@@ -239,6 +239,9 @@ pcb_PTR outProcQ(pcb_PTR *tp, pcb_PTR p){
     Return: NULL     (if the process queue is empty)
             tp->p_next (if the process queue is NOT empty). */
 pcb_PTR headProcQ(pcb_PTR tp){
+    /*If the list is empty there is no Head so return NULL
+    *Else Return the Tail pointers next (Head)
+    */
     if(emptyProcQ(tp)){
         return NULL;
     }
@@ -255,6 +258,7 @@ pcb_PTR headProcQ(pcb_PTR tp){
     Return: True        (if the proBlk has no Children)
             False       (if the proBlk has no Children). */
 int emptyChild(pcb_PTR p){
+    
     return (p->p_child== NULL);
 }
 
