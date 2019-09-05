@@ -70,6 +70,7 @@ pcb_t *removeBlocked(int *semAdd){
     addokbuf("YO YO YO \n");
         returnValue  = removeProcQ(&(parentNode->s_next->s_procQ));
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
+            addokbuf("Free asl is fucked");
             parentNode -> s_next = parentNode -> s_next -> s_next;
             freeASL(parentNode->s_next);
         }
