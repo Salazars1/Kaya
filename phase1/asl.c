@@ -205,10 +205,10 @@ HIDDEN semd_t *searchForParent(int *semAdd){
     }
 	while(semAdd > (temp -> s_next -> s_semAdd)){
 		temp = temp -> s_next;
-        count = count + 1; 
+        count++; 
 	}
     addokbuf(count);
-        addokbuf("\n");
+    addokbuf("\n");
 	return temp;
 }
 
