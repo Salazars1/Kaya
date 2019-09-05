@@ -154,14 +154,22 @@ void insertProcQ(pcb_PTR *tp, pcb_PTR p){
     Return: NULL    (if the process queue is empty)
             pcb_t   (if the process queue is NOT empty)*/
 pcb_PTR removeProcQ(pcb_PTR *tp){
-    
+    /*If the List is Empty then we return NULL*/
     if(emptyProcQ((*tp))){                    /*Case 1: Queue is empty*/
         return NULL;
-    }else if((*tp)->p_next == (*tp)){            /*Case 2: Queue has 1 nodes*/
+    }
+    /**/
+    else if((*tp)->p_next == (*tp)){            /*Case 2: Queue has 1 nodes*/
         pcb_t *temp = *tp;
         *tp = mkEmptyProcQ();
         return temp;
-    }else{                                  /*Case 3: Queue has 2 or more nodes*/
+    }
+    /*We make a temp to point to the head Node
+    *We then set the tails pointer to point to the head nodes next
+    * we then set the heads next nodes previous pointer to point to the tail 
+    * Then we return the head
+    */
+    else{                                  /*Case 3: Queue has 2 or more nodes*/
         pcb_PTR temp = (*tp)-> p_next;
         (*tp) -> p_next = temp-> p_next;
         temp -> p_next -> p_prev = (*tp);
