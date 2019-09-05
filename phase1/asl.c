@@ -98,7 +98,7 @@ pcb_t *outBlocked(pcb_t *p){
    
     if(parentNode -> s_next -> s_semAdd == p->p_semAdd){       /*ID is in the ASL*/
   
-        returnValue  = outProcQ(&parentNode ->s_next ->s_procQ);
+        returnValue  = outProcQ(&parentNode ->s_next ->s_procQ,p);
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
             semd_t *testing = parentNode -> s_next; 
             parentNode -> s_next = parentNode -> s_next -> s_next;
