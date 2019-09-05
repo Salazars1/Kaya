@@ -199,14 +199,16 @@ HIDDEN semd_t *allocASL(){
 
 HIDDEN semd_t *searchForParent(int *semAdd){
 	semd_t *temp = semd_h;
+    int count; 
 	if(semAdd == NULL){
         semAdd = MAXINT; 
     }
 	while(semAdd > (temp -> s_next -> s_semAdd)){
 		temp = temp -> s_next;
-        addokbuf(&temp ->s_semAdd);
-        addokbuf("\n");
+        count = count + 1; 
 	}
+    addokbuf(count);
+        addokbuf("\n");
 	return temp;
 }
 
