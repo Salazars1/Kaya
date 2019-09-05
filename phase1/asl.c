@@ -71,9 +71,9 @@ pcb_t *removeBlocked(int *semAdd){
   
         returnValue  = removeProcQ(&parentNode ->s_next ->s_procQ);
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
-            semd_t *testing = parentNode -> s_next; 
+            semd_t *removedNode = parentNode -> s_next; 
             parentNode -> s_next = parentNode -> s_next -> s_next;
-            freeASL(testing);
+            deAllocASL(removedNode);
         }
         returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
         return returnValue;
@@ -100,9 +100,9 @@ pcb_t *outBlocked(pcb_t *p){
   
         returnValue  = outProcQ(&parentNode ->s_next ->s_procQ,p);
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
-            semd_t *testing = parentNode -> s_next; 
+            semd_t *removedNode = parentNode -> s_next; 
             parentNode -> s_next = parentNode -> s_next -> s_next;
-            freeASL(testing);
+            deAllocASL(removedNode);
         }
         returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
         return returnValue;
@@ -117,13 +117,12 @@ pcb_t *outBlocked(pcb_t *p){
 if semAdd is not found on the ASL or if the process queue associated with semAdd is empty. */
 
 pcb_t *headBlocked(int *semAdd){
-   semd_t * temp; 
-   temp = searchForParent(semAdd);
-   if(temp ->s_next ->s_semAdd == MAXINT){
-       return NULL; 
-   }
-  return headProcQ(temp->s_next->s_procQ);
 
+	semd_t *temp = searchForParent(semAdd);
+	if(temp -> s_next -> s_semAdd == semAdd){
+		return headProcQ(temp -> s_next -> s_procQ);
+	}
+	return NULL;
 
 }
 
@@ -137,7 +136,7 @@ initASL(){
     semdFree_h = NULL;
     int i;
     for(i = 2; i < MAXPROC+2; i++){
-        freeASL(&(ASLInitialization[i]));
+        deAllocASL(&(ASLInitialization[i]));
     }
     semd_t *firstSent = &ASLInitialization[0];
     semd_t *lastSent = &ASLInitialization[1];
@@ -190,7 +189,9 @@ HIDDEN semd_t *allocASL(){
 
 HIDDEN semd_t *searchForParent(int *semAdd){
 	semd_t *temp = semd_h;
-	
+	if(semAdd == NULL){
+        semAdd = MAXINT; 
+    }
 	while(semAdd > (temp -> s_next -> s_semAdd)){
 		temp = temp -> s_next;
         
@@ -199,7 +200,7 @@ HIDDEN semd_t *searchForParent(int *semAdd){
 }
 
 
-HIDDEN void freeASL(semd_t *s){
+HIDDEN void deAllocASL(semd_t *s){
     if(semdFree_h==NULL){
         semdFree_h = s;
         semdFree_h -> s_next = NULL;
