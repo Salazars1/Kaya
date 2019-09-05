@@ -11,35 +11,29 @@
 #include "../e/pcb.e"
 
 
-HIDDEN semd_t *semd_h;                  /* active list*/
-HIDDEN semd_t *semdFree_h;              /* free semaphore list */
+HIDDEN semd_t *semd_h;                  /* Globally defines active list*/
+HIDDEN semd_t *semdFree_h;              /* Globally define free semaphore list */
 
 
 
-/* Insert the ProcBlk pointed to by p at the tail of the process queue
-associated with the semaphore whose physical address is semAdd
-and set the semaphore address of p to semAdd. 
-
-If the semaphore is currently not active (i.e. there is no descriptor for it in the ASL), 
-allocate a new descriptor from the semdFree list, insert it in the ASL (at
-12 CHAPTER 2. PHASE 1 - LEVEL 2: THE QUEUES MANAGER
-the appropriate position), initialize all of the fields (i.e. set s semAdd
-to semAdd, and s procq to mkEmptyProcQ()), and proceed as
-above. If a new semaphore descriptor needs to be allocated and the
-semdFree list is empty, return TRUE. In all other cases return FALSE.
+/*  Insert the ProcBlk pointed to by p at the tail of the process queue associated 
+    with the semaphore (semAdd) and sets the semaphore address of p to semAdd. 
+    Parameteres: semAdd, pcb_t
+    Return:     -False (if the node was inserted succesfully and the lists where updated )
+                -True (if semFree is empty and the node wasnt inserted sucesfully)
 */
 
 int insertBlocked(int *semAdd, pcb_t *p){
     semd_t * temp;
     temp = searchForParent(semAdd);
-    if(temp -> s_next -> s_semAdd == semAdd){         /*ID is in the ASL*/
+    if(temp -> s_next -> s_semAdd == semAdd){            /*ID is in the ASL*/
         p->p_semAdd = semAdd;
-        insertProcQ(&(temp->s_next->s_procQ),p);       
+        insertProcQ(&(temp->s_next->s_procQ),p);         /*Calls pcb to insert pcb*/  
         return FALSE;
-    }else{                                          /*ID is not in the ASL*/
-        semd_t *newSemd = allocASL();              /*Create new node*/
+    }else{                                              /*ID is not in the ASL*/
+        semd_t *newSemd = allocASL();                   /*Creates new node*/
         if(newSemd == NULL){
-            return TRUE;            /*More than 20 (MAXPROC) Processes*/
+            return TRUE;                                /*More than 20 (MAXPROC) Processes*/
         }else{
             newSemd -> s_next = temp -> s_next;
             temp->s_next = newSemd;
@@ -135,7 +129,7 @@ pcb_t *headBlocked(int *semAdd){
         
         return NULL; 
     } 
-    
+
     return headProcQ(temp->s_next->s_procQ);
 
 }
