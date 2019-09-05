@@ -94,7 +94,9 @@ pcb_t *outBlocked(pcb_t *p){
     parentNode = searchForParent(p->p_semAdd);
    
     pcb_t * returnValue;
-
+    if(p == NULL){
+        return NULL; 
+    }
    
     if(parentNode -> s_next -> s_semAdd == p->p_semAdd){       /*ID is in the ASL*/
   
