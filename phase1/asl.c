@@ -125,8 +125,8 @@ pcb_t *headBlocked(int *semAdd){
         addokbuf("WE are in the Tail pointer is NULL \n");
         return NULL; 
     } 
-    addokbuf("This Executes Before or after \n");
-    return temp;
+    addokbuf("This Executes Second \n");
+    return temp -> s_next;
 
 }
 
