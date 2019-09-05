@@ -122,10 +122,10 @@ pcb_t *headBlocked(int *semAdd){
     temp = searchForParent(semAdd);
    
     if(temp ->s_next ->s_procQ == NULL){
-        addokbuf("WE are in the Tail pointer is NULL");
+        addokbuf("WE are in the Tail pointer is NULL \n");
         return NULL; 
     } 
-    
+    addokbuf("This Executes Before or after \n");
     return temp;
 
 }
