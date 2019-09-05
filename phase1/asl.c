@@ -69,7 +69,7 @@ pcb_t *removeBlocked(int *semAdd){
    
     if(parentNode -> s_next -> s_semAdd == semAdd){       /*ID is in the ASL*/
   
-        returnValue  = removeProcQ(&parentNode ->s_next ->s_procQ->p_next);
+        returnValue  = removeProcQ(&parentNode ->s_next ->s_procQ);
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
             semd_t *testing = parentNode -> s_next; 
             parentNode -> s_next = parentNode -> s_next -> s_next;
