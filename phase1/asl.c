@@ -66,6 +66,9 @@ pcb_t *removeBlocked(int *semAdd){
 
     pcb_t * returnValue;
 
+    if(parentNode -> s_next -> s_semAdd != semAdd){ 
+        return NULL; 
+    }
     if(parentNode -> s_next -> s_semAdd == semAdd){       /*ID is in the ASL*/
     addokbuf("YO YO YO \n");
         returnValue  = removeProcQ(&(headprocQ(parentNode->s_next)));
