@@ -134,7 +134,7 @@ initASL(){
     firstSent -> s_procQ = NULL;
     lastSent ->s_procQ = NULL; 
 
-    semd_h = first; 
+    semd_h = firstSent; 
     
 
 
