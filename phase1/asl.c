@@ -116,8 +116,8 @@ pcb_t *outBlocked(pcb_t *p){
 /* Return a pointer to the ProcBlk that is at the head of the process queue associated with the semaphore semAdd. Return NULL
 if semAdd is not found on the ASL or if the process queue associated with semAdd is empty. */
 
-pcb_t *headBlocked(int *semAdd){
-	semd_t *temp = searchForParent(semAdd);
+pcb_PTR headBlocked(int *semAdd){
+	semd_t *temp = search(semAdd);
 	if(temp -> s_next -> s_semAdd == semAdd){
 		return headProcQ(temp -> s_next -> s_procQ);
 	}
