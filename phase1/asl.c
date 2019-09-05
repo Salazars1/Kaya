@@ -68,7 +68,7 @@ pcb_t *removeBlocked(int *semAdd){
 
     if(parentNode -> s_next -> s_semAdd == semAdd){       /*ID is in the ASL*/
     addokbuf("YO YO YO \n");
-        returnValue  = removeProcQ(&(parentNode->s_next->s_procQ -> p_next));
+        returnValue  = removeProcQ(&(parentNode->s_next->s_procQ));
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
             parentNode -> s_next = parentNode -> s_next -> s_next;
             freeASL(parentNode->s_next);
