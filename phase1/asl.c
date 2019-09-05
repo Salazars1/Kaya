@@ -125,9 +125,11 @@ pcb_t *headBlocked(int *semAdd){
         return NULL;
     }
     if(temp -> s_semAdd == NULL){
+        addokbuf("First Test we get here");
         return NULL; 
     }
     if(temp ->s_next ->s_procQ == NULL){
+        addokbuf("WE are in the Tail pointer is NULL");
         return NULL; 
     } 
     return temp ->s_next -> s_procQ ->p_next;
