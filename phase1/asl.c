@@ -118,7 +118,7 @@ pcb_t *outBlocked(pcb_t *p){
 if semAdd is not found on the ASL or if the process queue associated with semAdd is empty. */
 
 pcb_t *headBlocked(int *semAdd){
-    addokbuf(semAdd);
+    
 	semd_t *temp;
     temp = searchForParent(semAdd);
    
@@ -126,13 +126,13 @@ pcb_t *headBlocked(int *semAdd){
        return NULL; 
    }
     if(temp ->s_next ->s_procQ == NULL){
-        addokbuf("WE are in the Tail pointer is NULL \n");
+        
         return NULL; 
     } 
     if(temp -> s_semAdd == MAXINT){
         return NULL;
     }
-    addokbuf("This Executes Second \n");
+    
     
     return headProcQ(temp->s_next->s_procQ);
 
