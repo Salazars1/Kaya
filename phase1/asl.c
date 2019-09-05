@@ -120,11 +120,13 @@ pcb_t *headBlocked(int *semAdd){
 
 	semd_t *temp;
     temp = searchForParent(semAdd);
-  
+    if(temp ->s_semAdd == MAXINT){
+        return NULL;
+    }
     if(temp ->s_next ->s_procQ == NULL){
         return NULL; 
     } 
-    return temp ->s_procQ ->p_next;
+    return temp ->s_next -> s_procQ ->p_next;
 
 }
 
