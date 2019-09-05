@@ -100,6 +100,7 @@ pcb_t *outBlocked(pcb_t *p){
   
         returnValue  = outProcQ(&(parentNode ->s_next ->s_procQ) ,p);
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
+            addokbuf("We hit this shitty if statement \n");
             semd_t *removedNode = parentNode -> s_next; 
             parentNode -> s_next = parentNode -> s_next -> s_next;
             deAllocASL(removedNode);
