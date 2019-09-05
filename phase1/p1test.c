@@ -287,6 +287,7 @@ void main() {
 		if (insertBlocked(&sem[i-10], q))
 			adderrbuf("insertBlocked(3): unexpected TRUE   ");
 	}
+	
 	if (removeBlocked(&sem[11]) != NULL)
 		adderrbuf("removeBlocked: removed nonexistent blocked proc   ");
 	addokbuf("insertBlocked and removeBlocked ok   \n");
