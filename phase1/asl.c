@@ -91,19 +91,23 @@ return p. */
 pcb_t *outBlocked(pcb_t *p){
 
     semd_t *parentNode;
-    parentNode = searchForParent(p ->p_semAdd);
+    parentNode = searchForParent(p->p_semAdd);
 
     pcb_t * returnValue;
 
+   
     if(parentNode -> s_next -> s_semAdd == p->p_semAdd){       /*ID is in the ASL*/
-        returnValue  = outProcQ(&(parentNode->s_next->s_procQ),p);
+  
+        returnValue  = outProcQ(&parentNode ->s_next ->s_procQ);
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
+            semd_t *testing = parentNode -> s_next; 
             parentNode -> s_next = parentNode -> s_next -> s_next;
+            freeASL(testing);
         }
-        freeASL(parentNode->s_next);
         returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
         return returnValue;
     }else{
+       
         return NULL;
     }
 
