@@ -102,6 +102,7 @@ pcb_PTR mkEmptyProcQ(){
     Return  TRUE (if the queue whose tail is pointed to by tp is empty.)
             FALSE (if the queue whose tail is pointed to by tp is NOT empty.)*/
 int emptyProcQ(pcb_PTR tp){
+    /*It the Tail pointer is Empty Return True if Not Return False*/ 
     return (tp == NULL);
 }
 
@@ -110,11 +111,16 @@ int emptyProcQ(pcb_PTR tp){
     Return: Void */
 void insertProcQ(pcb_PTR *tp, pcb_PTR p){
 
+/*The Tail Pointer pointed too is Empty */
     if(emptyProcQ(*tp)){                 /*Case 1: There is no node.*/ 
         
+        /*Take the Proc Block that is being passed in and Since it is the only node set the values
+        * To be itself
+        */
         p->p_next = p;
         p->p_prev = p;
-    }else if((*tp)->p_next == (*tp)){      /*Case 2: There is only one node*/
+    }
+    else if((*tp)->p_next == (*tp)){      /*Case 2: There is only one node*/
         p->p_next = (*tp);
         p->p_prev = (*tp);
         (*tp)->p_prev = p;
