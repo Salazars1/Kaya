@@ -121,7 +121,7 @@ pcb_t *headBlocked(int *semAdd){
 	semd_t *temp;
     temp = searchForParent(semAdd);
     if(temp ->s_semAdd == MAXINT){
-
+        addokbuf("First Round we have the MAX INT \n");
         return NULL;
     }
     if(temp -> s_semAdd == NULL){
