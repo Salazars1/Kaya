@@ -73,7 +73,7 @@ pcb_t *removeBlocked(int *semAdd){
             parentNode -> s_next = parentNode -> s_next -> s_next;
             freeASL(parentNode->s_next);
         }
-        /*returnValue -> p_semAdd = NULL;*/             /*semAdd in node is not neccessary*/
+        returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
         return returnValue;
     }else{
         return NULL;
