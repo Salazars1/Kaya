@@ -115,7 +115,6 @@ pcb_t *outBlocked(pcb_t *p){
         returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
         return returnValue;
     }else{
-       addokbuf("We are reaching the else statement and returning NULL \n");
         return NULL;
     }
 
@@ -136,10 +135,6 @@ pcb_t *headBlocked(int *semAdd){
         
         return NULL; 
     } 
-    if(temp -> s_semAdd == MAXINT){
-        return NULL;
-    }
-    
     
     return headProcQ(temp->s_next->s_procQ);
 
