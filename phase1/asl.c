@@ -125,14 +125,14 @@ initASL(){
     for(i = 2; i < MAXPROC+2; i++){
         freeASL(&(ASLInitialization[i]));
     }
-    semd_t *first = &ASLInitialization[0];
-    semd_t *two = &ASLInitialization[1];
-    first ->s_semAdd = NULL; 
-    two -> s_semAdd = MAXINT; 
-    first ->s_next = two; 
-    two -> s_next = NULL; 
-    first -> s_procQ = NULL;
-    two ->s_procQ = NULL; 
+    semd_t *firstSent = &ASLInitialization[0];
+    semd_t *lastSent = &ASLInitialization[1];
+    firstSent ->s_semAdd = NULL; 
+    lastSent -> s_semAdd = MAXINT; 
+    firstSent ->s_next = lastSent; 
+    lastSent -> s_next = NULL; 
+    firstSent -> s_procQ = NULL;
+    lastSent ->s_procQ = NULL; 
 
     semd_h = first; 
     
