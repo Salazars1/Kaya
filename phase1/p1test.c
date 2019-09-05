@@ -306,11 +306,11 @@ void main() {
 		adderrbuf("headBlocked(2): NULL for an existent queue   ");
 	if (q != procp[19])
 		adderrbuf("headBlocked(2): wrong process returned   ");
-	addokbuf("We are making it to the First Outblock");
+	
 	p = outBlocked(q);
 	if (p != q)
 		adderrbuf("outBlocked(2): couldn't remove from valid queue   ");
-	addokbuf("We are on the last Out block");
+
 	p = outBlocked(q);
 	if (p != NULL)
 		adderrbuf("outBlocked: removed same process twice.");
