@@ -132,7 +132,7 @@ pcb_t *headBlocked(int *semAdd){
         return NULL;
     }
     addokbuf("This Executes Second \n");
-    return temp; 
+    
     return headProcQ(temp->s_next->s_procQ);
 
 }
