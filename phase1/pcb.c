@@ -36,7 +36,7 @@ pcb_PTR allocPcb(){
    /*   If the Head Node is NULL then the list is empty and we return NULL*/
     
     pcb_PTR temp;
-    
+    /*If the Free List has no room to Allocate Return NULL*/
     if(pcbList_h == NULL){
         return NULL;
     }
@@ -45,12 +45,9 @@ pcb_PTR allocPcb(){
     Then we set all of the temporary pointers values to NULL or 0 
     Return Temp
     */
-
-    
-
     temp = pcbList_h;
     pcbList_h = pcbList_h-> p_next;
-
+    /*Setting the Fields of the New PCB*/
     temp->p_child = NULL; 
     temp->p_nextSib = NULL; 
     temp->p_prevSib = NULL; 
@@ -60,6 +57,8 @@ pcb_PTR allocPcb(){
 
 
     temp->p_semAdd = NULL; 
+
+    /*Return this Node */
     return temp; 
 }
 
@@ -77,8 +76,11 @@ void initPcbs(){
     We are done 
     */
     static pcb_t PcbInitialization[MAXPROC];
+    /*Set the Free List Value to be NULL*/
     pcbList_h = NULL;
+    
     int i;
+    /*Create 20 Proc blocks and Put them on the Free List*/
     for(i = 0; i < MAXPROC; i++){
         freePcb(&(PcbInitialization[i]));
     }
@@ -91,6 +93,7 @@ void initPcbs(){
     
  */
 pcb_PTR mkEmptyProcQ(){
+    /*Make an Empty Queue... Null */
     return NULL; 
 }
 
