@@ -92,7 +92,7 @@ pcb_t *outBlocked(pcb_t *p){
 
     semd_t *parentNode;
     parentNode = searchForParent(p->p_semAdd);
-
+    addokbuf("Reach outblock \n");
     pcb_t * returnValue;
 
    
