@@ -123,7 +123,7 @@ pcb_t *headBlocked(int *semAdd){
         return NULL;
     }
     else{
-        return headprocQ(temp -> s_next -> s_procQ);
+        return headProcQ(temp -> s_next -> s_procQ);
     }
 }
 
