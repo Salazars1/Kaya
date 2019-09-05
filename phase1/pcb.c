@@ -90,7 +90,7 @@ void initPcbs(){
     Return a pointer to the tail of an empty process queue; i.e. NULL.
     
  */
-pcb_t *mkEmptyProcQ(){
+pcb_PTR mkEmptyProcQ(){
     return NULL; 
 }
 
@@ -98,14 +98,14 @@ pcb_t *mkEmptyProcQ(){
     Paramater: pcb_t 
     Return  TRUE (if the queue whose tail is pointed to by tp is empty.)
             FALSE (if the queue whose tail is pointed to by tp is NOT empty.)*/
-int emptyProcQ(pcb_t *tp){
+int emptyProcQ(pcb_PTR tp){
     return (tp == NULL);
 }
 
 /*  Inserts the ProcBlk pointed to by p into the process queue
     Parameters: **tp, *p
     Return: Void */
-void insertProcQ(pcb_t **tp, pcb_t *p){
+void insertProcQ(pcb_PTR *tp, pcb_PTR p){
 
     if(emptyProcQ(*tp)){                 /*Case 1: There is no node.*/ 
         
@@ -131,7 +131,7 @@ void insertProcQ(pcb_t **tp, pcb_t *p){
     Parameters: **tp
     Return: NULL    (if the process queue is empty)
             pcb_t   (if the process queue is NOT empty)*/
-pcb_t *removeProcQ(pcb_t **tp){
+pcb_t *removeProcQ(pcb_PTR *tp){
     if(emptyProcQ((*tp))){                    /*Case 1: Queue is empty*/
         return NULL;
     }else if((*tp)->p_next == (*tp)){            /*Case 2: Queue has 1 nodes*/
@@ -147,7 +147,7 @@ pcb_t *removeProcQ(pcb_t **tp){
 }
 
 
-pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
+pcb_t *outProcQ(pcb_PTR *tp, pcb_PTR p){
 
     /*
     If the Tail pointer points to NUll then the list is empty
@@ -184,7 +184,7 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     if Not found return NULL
     */
     else{
-        pcb_t * temp;
+        pcb_PTR temp;
         temp = (*tp) -> p_next; 
         while(temp !=*tp){
             if(temp == p){
@@ -207,7 +207,7 @@ pcb_t *outProcQ(pcb_t **tp, pcb_t *p){
     Parameters: pcb-t * tp
     Return: NULL     (if the process queue is empty)
             tp->p_next (if the process queue is NOT empty). */
-pcb_t *headProcQ(pcb_t *tp){
+pcb_t *headProcQ(pcb_PTR tp){
     if(emptyProcQ(tp)){
         return NULL;
     }
@@ -223,7 +223,7 @@ pcb_t *headProcQ(pcb_t *tp){
     Parameters: pcb-t * p
     Return: True        (if the proBlk has no Children)
             False       (if the proBlk has no Children). */
-int emptyChild(pcb_t *p){
+int emptyChild(pcb_PTR p){
     return (p->p_child== NULL);
 }
 
@@ -231,7 +231,7 @@ int emptyChild(pcb_t *p){
 /*  Make the ProcBlk pointed to by p a child of the ProcBlk pointed to by prnt
     Parameters: pcb-t * p
     Return: void*/
-void insertChild(pcb_t *p_prnt, pcb_t *p){
+void insertChild(pcb_PTR p_prnt, pcb_PTR p){
     if(emptyChild(p_prnt)){               /*There is no children*/
         p_prnt -> p_child= p;
         p -> p_prnt = p_prnt;
@@ -252,8 +252,8 @@ void insertChild(pcb_t *p_prnt, pcb_t *p){
     Parameters: pcb_t
     Return: Null        (if there is no children)
             pcb_t * p   (to the removed child of ProcBlk)*/
-pcb_t *removeChild(pcb_t *p){
-    pcb_t * temp;
+pcb_PTR removeChild(pcb_PTR p){
+    pcb_PTR temp;
     if(emptyChild(p)){                             /*No Children*/
         return NULL;   
     }else if(p -> p_child-> p_nextSib == NULL){       /*One Child*/
@@ -279,7 +279,7 @@ pcb_t *removeChild(pcb_t *p){
     If the ProcBlk pointed to by p has no parent, return NULL; otherwise,
     return p. Note that the element pointed to by p need not be the first
     child of its parent. */
-pcb_t *outChild(pcb_t *p){
+pcb_PTR outChild(pcb_PTR p){
     if(p ->p_prnt == NULL){
         return NULL; 
     }
