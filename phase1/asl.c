@@ -119,12 +119,7 @@ if semAdd is not found on the ASL or if the process queue associated with semAdd
 pcb_t *headBlocked(int *semAdd){
     semd_t * temp;
     temp = searchForParent(semAdd);
-    if(temp->s_procQ == NULL){
-        return NULL;
-    }
-    else{
-        return headProcQ(temp ->s_procQ);
-    }
+    return headProcQ(temp ->s_procQ);
 }
 
 /*Initialize the semdFree list to contain all the elements of the array*/
