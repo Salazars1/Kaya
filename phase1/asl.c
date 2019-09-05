@@ -71,9 +71,9 @@ pcb_t *removeBlocked(int *semAdd){
   
         returnValue  = removeProcQ(&parentNode ->s_next ->s_procQ);
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
-            semd_t *testing = parentNode -> s_next; 
+            semd_t *removedNode = parentNode -> s_next; 
             parentNode -> s_next = parentNode -> s_next -> s_next;
-            freeASL(testing);
+            deAllocASL(removedNode);
         }
         returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
         return returnValue;
@@ -100,9 +100,9 @@ pcb_t *outBlocked(pcb_t *p){
   
         returnValue  = outProcQ(&parentNode ->s_next ->s_procQ,p);
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){    /*Need to fix pointers*/
-            semd_t *testing = parentNode -> s_next; 
+            semd_t *removedNode = parentNode -> s_next; 
             parentNode -> s_next = parentNode -> s_next -> s_next;
-            freeASL(testing);
+            deAllocASL(removedNode);
         }
         returnValue -> p_semAdd = NULL;             /*semAdd in node is not neccessary*/
         return returnValue;
@@ -134,7 +134,7 @@ initASL(){
     semdFree_h = NULL;
     int i;
     for(i = 2; i < MAXPROC+2; i++){
-        freeASL(&(ASLInitialization[i]));
+        deAllocASL(&(ASLInitialization[i]));
     }
     semd_t *firstSent = &ASLInitialization[0];
     semd_t *lastSent = &ASLInitialization[1];
@@ -196,7 +196,7 @@ HIDDEN semd_t *searchForParent(int *semAdd){
 }
 
 
-HIDDEN void freeASL(semd_t *s){
+HIDDEN void deAllocASL(semd_t *s){
     if(semdFree_h==NULL){
         semdFree_h = s;
         semdFree_h -> s_next = NULL;
