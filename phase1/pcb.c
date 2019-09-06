@@ -1,9 +1,17 @@
 /*  PHASE 1
-    NICK STONE AND SANTIAGO SALAZAR
-    PROFESSOR MIKEY G */
+    Written by NICK STONE AND SANTIAGO SALAZAR
+    Base code and Comments from PROFESSOR MIKEY G 
+    Finished ojn 9/5/2019 
+*/
 
 /*********************************************************************************************
                             Module Comment Section
+pcb.c is a program that is designed to be a Queues manager. This program is designed to start by creating
+a doubley linked Circular tail pointer data structure of pcb_t which is contained in the types.h. This program
+is also designed to track the tree maintenance of the tree's of pcb_t as well as the allocation and deallocation
+of the pcb_t. It is important to note that pcb_t in this module may be referred to as 'Nodes' as well as 
+ProcBlks which is short hand for process blocks. This Module is also implemented by asl.c and is tested in 
+p1test.c 
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
@@ -121,11 +129,23 @@ void insertProcQ(pcb_PTR *tp, pcb_PTR p){
         p->p_prev = p;
     }
     else if((*tp)->p_next == (*tp)){      /*Case 2: There is only one node*/
+    /*If there is only One Node then the following Logic is executed
+    *THe New Nodes Next is assigned to be the tail Pointer as well as its previous
+    * Then the Tails New Previous is the new Node and the Next is also the new node
+    * Being added
+    */
         p->p_next = (*tp);
         p->p_prev = (*tp);
         (*tp)->p_prev = p;
         (*tp)->p_next = p; 
     }else{                              /*Case 3: There is more than one node.*/
+    /* We set a New Node to be the Head node of the list
+    *Then we set the Tail pointers Next pointer to be the new node
+    * THen we set the new nodes next pointer to be the head
+    * Then we set the Heads previous pointer to be the new node
+    * Then we set the new Nodes previous to point to the old tail
+    * update the tail pointer 
+    */
         pcb_PTR tempHead = (*tp) -> p_next;     /*Initialize the Queue head*/
         (*tp) -> p_next = p;                  /*Adds the new node*/
         p -> p_next = tempHead;             /*Fixes Pointers*/  
@@ -133,6 +153,7 @@ void insertProcQ(pcb_PTR *tp, pcb_PTR p){
         p -> p_prev = (*tp);
         (*tp) = p; 
     }
+    /*New Tail Is updated to be the New Node*/
     (*tp) = p; 
 }
 
@@ -141,13 +162,22 @@ void insertProcQ(pcb_PTR *tp, pcb_PTR p){
     Return: NULL    (if the process queue is empty)
             pcb_t   (if the process queue is NOT empty)*/
 pcb_PTR removeProcQ(pcb_PTR *tp){
+    /*If the List is Empty then we return NULL*/
     if(emptyProcQ((*tp))){                    /*Case 1: Queue is empty*/
         return NULL;
-    }else if((*tp)->p_next == (*tp)){            /*Case 2: Queue has 1 nodes*/
+    }
+    /**/
+    else if((*tp)->p_next == (*tp)){            /*Case 2: Queue has 1 nodes*/
         pcb_t *temp = *tp;
         *tp = mkEmptyProcQ();
         return temp;
-    }else{                                  /*Case 3: Queue has 2 or more nodes*/
+    }
+    /*We make a temp to point to the head Node
+    *We then set the tails pointer to point to the head nodes next
+    * we then set the heads next nodes previous pointer to point to the tail 
+    * Then we return the head
+    */
+    else{                                  /*Case 3: Queue has 2 or more nodes*/
         pcb_PTR temp = (*tp)-> p_next;
         (*tp) -> p_next = temp-> p_next;
         temp -> p_next -> p_prev = (*tp);
@@ -217,6 +247,9 @@ pcb_PTR outProcQ(pcb_PTR *tp, pcb_PTR p){
     Return: NULL     (if the process queue is empty)
             tp->p_next (if the process queue is NOT empty). */
 pcb_PTR headProcQ(pcb_PTR tp){
+    /*If the list is empty there is no Head so return NULL
+    *Else Return the Tail pointers next (Head)
+    */
     if(emptyProcQ(tp)){
         return NULL;
     }
@@ -233,6 +266,7 @@ pcb_PTR headProcQ(pcb_PTR tp){
     Return: True        (if the proBlk has no Children)
             False       (if the proBlk has no Children). */
 int emptyChild(pcb_PTR p){
+
     return (p->p_child== NULL);
 }
 
