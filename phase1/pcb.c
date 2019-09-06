@@ -258,7 +258,7 @@ pcb_PTR headProcQ(pcb_PTR tp){
     Return: True        (if the proBlk has no Children)
             False       (if the proBlk has no Children). */
 int emptyChild(pcb_PTR p){
-    
+
     return (p->p_child== NULL);
 }
 
