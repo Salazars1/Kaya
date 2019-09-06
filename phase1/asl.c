@@ -6,8 +6,14 @@
 
 /*********************************************************************************************
                             Module Comment Section
-
-
+asl.c is a program that is responsible to maintainning and creating the active semaphore list. 
+It is important to know that this module uses Pcb.c but also uses the structs pcb_t and semd_t
+from types.h and a few constants from const.h. This program also has a few helper functions that 
+are used thoughout the ASL and are actively called by each function. In the high level the ASL 
+is responsible for allocating and freeing semd_t and maintains two singley linked NUll terminated
+linked lists. It is important to note that in this module we will refer to Semd_t structs as Nodes 
+and that pcb_t may be referred to as Procblks and represent process blocks. Each active semaphore 
+list has a corresponding doubley linked circular tail pointer data structure of process blocks
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"

@@ -11,7 +11,7 @@ a doubley linked Circular tail pointer data structure of pcb_t which is containe
 is also designed to track the tree maintenance of the tree's of pcb_t as well as the allocation and deallocation
 of the pcb_t. It is important to note that pcb_t in this module may be referred to as 'Nodes' as well as 
 ProcBlks which is short hand for process blocks. This Module is also implemented by asl.c and is tested in 
-p1test.c 
+p1test.c. this module also uses a few constants from const.h.
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
