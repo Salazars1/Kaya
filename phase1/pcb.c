@@ -1,7 +1,7 @@
 /*  PHASE 1
     Written by NICK STONE AND SANTIAGO SALAZAR
     Base code and Comments from PROFESSOR MIKEY G 
-    Finished ojn 9/5/2019 
+    Finished on 9/5/2019 
 */
 
 /*********************************************************************************************

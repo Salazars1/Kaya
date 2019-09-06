@@ -1,12 +1,13 @@
 
-/*  PHASE 1
-    NICK STONE AND SANTIAGO SALAZAR
-    PROFESSOR MIKEY G */
+/* PHASE 1
+    Written by NICK STONE AND SANTIAGO SALAZAR
+    Base code and Comments from PROFESSOR MIKEY G 
+    Finished on 9/5/2019 */
 
 /*********************************************************************************************
                             Module Comment Section
 
-                            
+
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
