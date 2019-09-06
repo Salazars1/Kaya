@@ -110,31 +110,30 @@ pcb_t *outBlocked(pcb_t *p){
 
 }
 
-/* Return a pointer to the ProcBlk that is at the head of the process queue associated with the semaphore semAdd. Return NULL
-if semAdd is not found on the ASL or if the process queue associated with semAdd is empty. */
+/*  Returns a pointer to the ProcBlk that is at the head of the process queue associated with
+    the semaphore semAdd. It uses headProckQ in pcb
+    Parameters: semAdd
+    Return:     - NULL (if semAdd is not found on the ASL)
+                - NULL  (if the process queue of semAdd is empty) 
+                - pcb_t* (if the was found in the list)*/
 
 pcb_t *headBlocked(int *semAdd){
     
 	semd_t *temp;
-    temp = searchForParent(semAdd);
+    temp = searchForParent(semAdd);                         /*Gets the parent of the node whose semAdd equals the parameters*/
    
-   if(temp->s_semAdd == NULL){
+   if(temp->s_semAdd == NULL){                              /*New node doesnt have a semAdd*/
        return NULL; 
-   }
-    if(temp ->s_next ->s_procQ == NULL){
-        
+   }else if(temp ->s_next ->s_procQ == NULL){               /*Node whose semAdd equals the parameter and s_procQ is NULL*/
         return NULL; 
     } 
 
-    return headProcQ(temp->s_next->s_procQ);
-
+    return headProcQ(temp->s_next->s_procQ);            
 }
 
-/*Initialize the semdFree list to contain all the elements of the array*/
-
-
+/*Initialize the semdFree list to contain all the elements of the list*/
 initASL(){
-    static semd_t ASLInitialization[MAXPROC+2];
+    static semd_t ASLInitialization[MAXPROC+2];                 /*Sets up the size to include the two dummie nodes*/
     
     semd_h = NULL; 
     semdFree_h = NULL;
@@ -142,35 +141,32 @@ initASL(){
     for(i = 2; i < MAXPROC+2; i++){
         deAllocASL(&(ASLInitialization[i]));
     }
-    semd_t *firstSent = &ASLInitialization[0];
-    semd_t *lastSent = &ASLInitialization[1];
-    firstSent ->s_semAdd = NULL; 
-    lastSent -> s_semAdd = MAXINT; 
-    firstSent ->s_next = lastSent; 
-    lastSent -> s_next = NULL; 
-    firstSent -> s_procQ = NULL;
-    lastSent ->s_procQ = NULL; 
 
-    semd_h = firstSent; 
-    
+    semd_t *firstSent = &ASLInitialization[0];                  /*Sets the first dummy node to be the first node ([0]) in the arary*/
+    semd_t *lastSent = &ASLInitialization[1];                   /*Sets the first dummy node to be the second node ([1]) in the arary*/
 
+    firstSent ->s_semAdd = NULL;                                /*First Dummy node semAdd is 0*/
+    lastSent -> s_semAdd = MAXINT;                              /*Last dummy node semAdd is 0xFFFFFFFF*/
+    firstSent ->s_next = lastSent;                              
+    lastSent -> s_next = NULL;                                  
+    firstSent -> s_procQ = NULL;                                
+    lastSent ->s_procQ = NULL;                                  
 
-
-
+    semd_h = firstSent;                                         /*Sets semd List to include de dummy nodes */
 }
 
 
+/******************************************HELPER FUCTION**********************************************/
+/*  This set of functions despite not having a crucial importance are created to simplify code
+    (easier to read) and avoid repeating the same code over and over again*/
 
 
 
-
-/************************HELPER FUCTION******************************/
+/*   If the Head Node is NULL then the list is empty and we return NULL*/
 
 HIDDEN semd_t *allocASL(){
-   /*   If the Head Node is NULL then the list is empty and we return NULL*/
-    
     semd_t * temp;
-    
+
     if(semdFree_h == NULL){
         return NULL;
     }
@@ -190,7 +186,7 @@ HIDDEN semd_t *allocASL(){
     return temp; 
 }
 
-
+/*  This function goes through the pcb*/
 HIDDEN semd_t *searchForParent(int *semAdd){
 	semd_t *temp = semd_h;
     
@@ -205,7 +201,7 @@ HIDDEN semd_t *searchForParent(int *semAdd){
 	return temp;
 }
 
-
+/*  */
 HIDDEN void deAllocASL(semd_t *s){
     if(semdFree_h==NULL){
         semdFree_h = s;
