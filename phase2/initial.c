@@ -70,7 +70,7 @@ int main()
 
     /* iniltialize semaphores to 0*/
     int i;
-    for (i = 0; i < SEMNUM; ++i)
+    for (i = 0; i < SEMNUM; i++)
     {
         semD[i] = 0;
     }
