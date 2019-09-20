@@ -83,14 +83,17 @@
 #define MAXINT 0xFFFFFFFF
 
 
-/*  Explanation of the SEMNUM number. (48)
+/*  Explanation of the SEMNUM number. (49)
         There are 8 terminals (x2 (each terminal its schizophrenic))
-        There are 8 tapes (x2)
-        There are 8 memory (x2)
+        There are 8 tapes
+        There are 8 printers
+        There are 8 Networks
+        There are 8 disks
+        1 timer
 
-        ARR LAYOUT: TERMINAL1a|TERMINAL1b|TAPE1a|TAPE1b|MEMORY1a|MEMORY1b|TERMINAL2a ... 
+        ARR LAYOUT: TERMINAL1a|TERMINAL1b|TAPE1|PRINTER1|NETWORK1|DISK1|TERMINAL2a ... 
         */
-#define SEMNUM 48
+#define SEMNUM 49
 
 /* NEW Processor State Areas */
     /* SYSCALL BREAK*/
@@ -109,8 +112,11 @@
 /* ON/OFF bit manipulation*/
 #define ALLOFF  0x00000000
 #define VMOFF   0xFDFFFFFF     /* Virtual Memory OFF*/
+#define VMON    0x               /* Virtual Memory ON*/
 #define UMOFF   0x00000008     /* User Mode Off (Kernel Mode ON)*/
-#define IMON    0x0000FF00     /* Interrupt Masked ON */
+#define UMON    0x               /* User Mode ON (Kernel Mode OFF)*/
+#define IMOFF   0x               /* Interrupt UNMasked */
+#define IMON    0x0000FF00     /* Interrupt Masked */
 
 
 #endif
