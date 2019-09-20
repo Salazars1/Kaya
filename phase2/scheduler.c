@@ -29,12 +29,9 @@ void scheduler()
 
     /*  Process was running and either was blocked or its pointer got 
         removed from readyQue */
-    if (currProc != NULL)
-    {
-        /*DO STUFF*/
-    }
 
-    else if () /*  Starts next process in Queue*/
+
+    if (!emptyProcQ(readyQue)) /*  Starts next process in Queue*/
     {
         currentProcess = removeProcQ(&readyQue);
     }
@@ -47,11 +44,11 @@ void scheduler()
         { /* Everything finished running correctly */
             HALT();
         }
-        else if (procCount > 0 && sftBlkCount == 0)
+        else if (sftBlkCount == 0)
         { /* DEADLOCK CASE */
             PANIC();
         }
-        else if (procCount > 0 && sftBlkCount > 0)
+        else
         { /* Processor is twiddling its thumbs */
             WAIT();
         }

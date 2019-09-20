@@ -9,35 +9,58 @@
 
 **********************************************************************************************/
 #include "../h/const.h"
-#include "../h/types.h" 
+#include "../h/types.h"
 #include "../e/asl.e"
 #include "../e/pcb.e"
+#include "../e/initial.e"
+#include "../e/interrupts.e"
+#include "../e/exceptions.e"
+#include "../e/scheduler.e"
+#include "p2test.e"
 
 /* Global Variables*/
 int processCount;
 int softBlockCount;
-pcb_t* currentProcess;
-pcb_t* readyQue;
-
-
+pcb_t *currentProcess;
+pcb_t *readyQue;
+int semD[SEMNUM];
 
 /*LET THE OS KNOW WHERE TO START!*/
-int main(){
+int main()
+{
+    devregarea_t deviceBus = (devregarea_t*) RAMBASEADDR;
+    memaddr RAMTOP; /* Defines RAMTOP as an unsigned integer*/
+    RAMTOP = (deviceBus->rambase) + (deviceBus->ramsize); /*Sets RAMTOP according to the hardware memory*/
 
-    /*  populate the four new areas in low memory
-            -set the stack pointer(last page of physical)
-            -set PC
-            -set the status:    - VM off
-                                - Interrupts masked
-                                - Supervisor mode on
-    */
+    state_t *newLocation; /* Initialize the new Processor State Areas */
 
+    /* SYSCALL BREAK*/
+    newLocation = (state_t *)SYSCALLNEWAREA;
+    newLocation->s_pc = SyscallBreakExc(); FIXME:    /* LAST PAGE OF PHYSICAL MEMORY*/
+    newLocation->s_sp = RAMTOP;
+    newLocation->s_status = ALLOFF | VMOFF | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
+    /* PROGRAM TRAP */
+    newLocation = (state_t *)PRGMTRAPNEWAREA;
+    newLocation->s_pc = ProgramTrapExc(); FIXME:  
+    newLocation->s_sp = RAMTOP;
+    newLocation->s_status = ALLOFF | VMOFF | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
+
+    /* TLB MANAGEMENT */
+    newLocation = (state_t *)TBLMGMTNEWAREA;
+    newLocation->s_pc = TBLMgmtExc(); FIXME:  
+    newLocation->s_sp = RAMTOP;
+    newLocation->s_status = ALLOFF | VMOFF | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
+
+    /* INTERRUPTS */
+    newLocation = (state_t *)INTERRUPTNEWAREA;
+    newLocation->s_sp = InterruptExc(); FIXME:  
+    newLocation->s_pc = RAMTOP;
+    newLocation->s_status = ALLOFF | VMOFF | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
     /*  Initialize the PCB and ASL lists  */
     initPcbs();
     initASL();
-
 
     /*  Initialize phase2 global variables  */
     processCount = 0;
@@ -45,34 +68,30 @@ int main(){
     currentProcess = NULL;
     readyQue = mkEmptyProcQ();
 
+    /* iniltialize semaphores to 0*/
+    int i;
+    for (i = 0; i < SEMNUM; ++i)
+    {
+        semD[i] = 0;
+    }
 
+    /* Create initial process (alloc PCB)*/
+    pcb_t *p;
+    p = allocPcb();
 
+    /* Initialize p_s with all the requirements */
+    p->p_s.s_sp = (RAMTOP - PAGESIZE);
+    p->p_s.s_pc = (memaddr)test;
+    p->p_s.s_t9 = (memaddr)test;
+    p->p_s.s_status = ALLOFF | VMOFF | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
-    /*  p = allocatePCB()
-            -initialize the p_s
-            -stack pointer to the penultimate page of physical memory
-            -PC(p2test)
-            -status:    -VM off
-                        -Interupts Enabled
-                        -Supervisor Mode on
-            
-    */
+    processCount++;           /* Adds one more process to the process count */
+    insertProQ(&readyQue, p); /* Inserts the proces into the pcb data structure */
 
+    p = NULL;
 
-
-
-
-    processCount++;              /* Adds one more process to the process count */
-    insertProQ(&readyQue, p);    /* Inserts the proces into the pcb data structure */
-    
-    currentProcess = NULL;
-    
     /* Lets the scheduler file take over.*/
     scheduler();
-        
+
     return 0;
-    
-
-
-
 }

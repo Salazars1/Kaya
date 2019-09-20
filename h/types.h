@@ -60,7 +60,10 @@ typedef struct pcb_t {
 	struct pcb_t *p_prevSib; 	/* pointer to prev sib */
 
 	/* Active SemaphoreList  */
-	int *p_semAdd;			/* ASL ID*/
+	int *p_semAdd;				/* ASL ID*/
+	state_t	p_s;				/* processor state */
+
+	
 	
 } pcb_t, *pcb_PTR;
 
