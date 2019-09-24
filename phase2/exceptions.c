@@ -14,7 +14,6 @@
 #include "../e/initial.e"
 #include "../e/pcb.e"
 
-
 /*  Declaration of helper fucntions. Further documentation will be provided
     in the actual method.*/
 HIDDEN void Syscall1();
@@ -26,69 +25,88 @@ HIDDEN void Syscall6();
 HIDDEN void Syscall7();
 HIDDEN void Syscall8();
 
-
 /*Commenting the Logic of the some of the functions */
-void SYSCALLHandler(){
-/**
+void SYSCALLHandler()
+{
+    /**
  * There are 8 System calls that our Handler must look out for 
  * Of these first 8 System calls the Kernel Mode must be active
  * In order for these commands to execute 
  * 
 */
-state_t PTR PrevState = (state_t PTR) SYSCALLOLDAREA;
+    state_t PTR PrevState = (state_t PTR)SYSCALLOLDAREA;
 
-
-
-if(PrevState->s_a0 > 9){
-    PassUpOrDie();
-/*Pass up Or Die */
-
-
-}
-
-if(PrevState -> s_a0 <= 8){
-    if(PrevState -> s_status == UMOFF){
-        /*Not Privileged Die*/
+    /*The SYs call is not one of the first 8 sys calls*/
+    if (PrevState->s_a0 > 9)
+    {
+        PassUpOrDie();
+        /*Pass up Or Die */
     }
-    else{
-        /*Switch Statement for the first 8 Sys calls begins */
 
+    /*The Sys call is one of the first 8 Sys Calls */
+    if (PrevState->s_a0 <= 8)
+    {
+        if (PrevState->s_status == UMOFF)
+        {
+            /*Not Privileged Die*/
+            PrgTrapHandler();
+        }
+        else
+        {
+            /*Switch Statement for the first 8 Sys calls begins */
+            switch (8)
+            {
 
+            case 1:
 
+                break;
 
+            case 2:
 
+                break;
+
+            case 3:
+                break;
+
+            case 4:
+                
+                break; 
+            
+            case 5:
+                
+                break; 
+
+            case 6:
+                
+                break; 
+            
+            case 7:
+                
+                break; 
+
+            case 8:
+                
+                break; 
+
+            }
+        }
     }
-}
 
-
-
-/**
+    /**
  * If the System Call is 9 -255 Meaning that it is not one of the Sys calls that we are implementing
  * Then we are going to Pass up or Die 
  * Then we know that if the sys call numbers are values 1-8 then we need to be in kernel mode to execute 
 */
-
-
-
-
-
-
-
-
-
 }
 
-
-void PrgTrapHandler(){
-
-
+void PrgTrapHandler()
+{
 }
 
-void TLBTrapHandler(){
-
-    
+void TLBTrapHandler()
+{
 }
 
-void PassUpOrDie(){
-
+void PassUpOrDie()
+{
 }
