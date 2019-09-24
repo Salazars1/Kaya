@@ -90,7 +90,7 @@ void SYSCALLHandler()
                 break; 
             default: 
                 break; 
-                
+
 
             }
         }
@@ -117,6 +117,10 @@ void TLBTrapHandler()
 
 
 }
+/*
+WE WAIT 
+
+*/
 
 void PassUpOrDie()
 {
