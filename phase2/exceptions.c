@@ -58,35 +58,39 @@ void SYSCALLHandler()
             {
 
             case 1:
-
+                /*SYS CALL*/
                 break;
 
             case 2:
-
+/*SYS CALL*/
                 break;
 
             case 3:
+            /*SYS CALL*/
                 break;
 
             case 4:
-                
+                /*SYS CALL*/
                 break; 
             
             case 5:
-                
+                /*SYS CALL*/
                 break; 
 
             case 6:
-                
+                /*SYS CALL*/
                 break; 
             
             case 7:
-                
+                /*SYS CALL*/
                 break; 
 
             case 8:
-                
+                /*SYS CALL*/
                 break; 
+            default: 
+                break; 
+                
 
             }
         }
@@ -101,12 +105,23 @@ void SYSCALLHandler()
 
 void PrgTrapHandler()
 {
+
+
+
+
 }
 
 void TLBTrapHandler()
 {
+
+
+
 }
 
 void PassUpOrDie()
 {
+
+
+
+
 }
