@@ -36,13 +36,13 @@ int main()
 
     /* SYSCALL BREAK*/
     newLocation = (state_t *)SYSCALLNEWAREA;
-    newLocation->s_pc = (memaddr) SyscallBreakExc();        
+    newLocation->s_pc = (memaddr) SYSCALLHandler();     
     newLocation->s_sp = RAMTOP;
     newLocation->s_status = ALLOFF | VMOFF | IMON | UMOFF;  /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
     /* PROGRAM TRAP */
     newLocation = (state_t *)PRGMTRAPNEWAREA;
-    newLocation->s_pc = (memaddr) ProgramTrapExc(); 
+    newLocation->s_pc = (memaddr) PrgTrapHandler();
     newLocation->s_sp = RAMTOP;
     newLocation->s_status = ALLOFF | VMOFF | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
@@ -54,7 +54,7 @@ int main()
 
     /* INTERRUPTS */
     newLocation = (state_t *)INTERRUPTNEWAREA;
-    newLocation->s_pc = (memaddr) InterruptInt();
+    newLocation->s_pc = (memaddr) TLBTrapHandler();
     newLocation->s_sp = RAMTOP;
     newLocation->s_status = ALLOFF | VMOFF | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 

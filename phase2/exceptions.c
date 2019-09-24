@@ -20,17 +20,17 @@
 
 
 /*Commenting the Logic of the some of the functions */
-void sysCallHandler(){
+void SYSCALLHandler(){
 
 }
 
 
-void prgTrapHandler(){
+void PrgTrapHandler(){
 
 
 }
 
-void tlbTrapHandler(){
+void TLBTrapHandler(){
 
     
 }
