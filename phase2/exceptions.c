@@ -17,3 +17,22 @@
 
 
 /*Commenting Logic for the Following Functions */
+
+
+/*Commenting the Logic of the some of the functions */
+void sysCallHandler(){
+
+}
+
+
+void prgTrapHandler(){
+
+
+}
+
+void tlbTrapHandler(){
+
+    
+}
+
+
