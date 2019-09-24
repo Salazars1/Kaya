@@ -13,11 +13,16 @@
 #include "../e/initial.e"
 #include "../e/pcb.e"
 
+/* Variables for maintaining CPU time*/
+cpu_t currentTOD;
+cpu_t TODStart;
+
+
 /* Variables that the scheduler uses from initial.c*/
 int processCount;
 int softBlockCount;
 pcb_t *currentProcess;
-pcb_t *readyQue;
+pcb_t *readyQueue;
 
 /*  Nucleus guarantees finite progress (NO STARVATION), therefore, every ready process
     will have an opportunity to execute. For simplicity’s sake this will be a simple round-robin
@@ -30,26 +35,34 @@ void scheduler()
     /*  Process was running and either was blocked or its pointer got 
         removed from readyQue */
 
+    STCK(currentTOD);        /* Get start time */
+    currentProcess->cpu_time = (currentProcess->cpu_time) + (currentTOD - TODStart); /* save how much time current process used on CPU */
 
-    if (!emptyProcQ(readyQue)) /*  Starts next process in Queue*/
+    if (!emptyProcQ(readyQueue)) /*  Starts next process in Queue*/
     {
-        currentProcess = removeProcQ(&readyQue);
+        currentProcess = removeProcQ(&readyQueue);    /* Remove process from Queue */
+        STCK(TODStart);        /* Get start time */
+
+        SetTIMER (QUANTUM);
+
+        LDST(&(currentProcess -> p_s));
     }
-
     else
-    {
+    {   /* There is nothing on the ReadyQueue */
+        
         currentProcess = NULL; /* no process is running*/
 
         if (processCount == 0)
         { /* Everything finished running correctly */
             HALT();
         }
-        else if (sftBlkCount == 0)
+        else if (softBlockCount == 0)
         { /* DEADLOCK CASE */
             PANIC();
         }
-        else
-        { /* Processor is twiddling its thumbs */
+        else 
+        { /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
+            SetSTATUS(ALLOFF|); FIXME:
             WAIT();
         }
     }

@@ -81,6 +81,7 @@
 
 #define MAXPROC 20
 #define MAXINT 0xFFFFFFFF
+#define QUANTUM 5000
 
 
 /*  Explanation of the SEMNUM number. (49)
@@ -112,10 +113,10 @@
 /* ON/OFF bit manipulation*/
 #define ALLOFF  0x00000000
 #define VMOFF   0xFDFFFFFF     /* Virtual Memory OFF*/
-#define VMON    0x               /* Virtual Memory ON*/
-#define UMOFF   0x00000008     /* User Mode Off (Kernel Mode ON)*/
-#define UMON    0x               /* User Mode ON (Kernel Mode OFF)*/
-#define IMOFF   0x               /* Interrupt UNMasked */
+#define VMON    0x02000000     /* Virtual Memory ON*/
+#define UMONFF  0xFFFFFFF7     /* User Mode OFF (Kernel Mode ON)*/
+#define UMON    0x00000008     /* User Mode ON (Kernel Mode OFF)*/
+#define IMOFF   0xFFFF00FF     /* Interrupt UNMasked */
 #define IMON    0x0000FF00     /* Interrupt Masked */
 
 
