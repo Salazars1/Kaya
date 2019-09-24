@@ -1,8 +1,7 @@
-/**
- * 
- * 
- * 
- * 
+/*  PHASE 2
+    Written by NICK STONE AND SANTIAGO SALAZAR
+    Base code and Comments from PROFESSOR MIKEY G 
+    Finished on 
 */
 
 /*********************************************************************************************
