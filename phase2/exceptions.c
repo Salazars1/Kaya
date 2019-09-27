@@ -28,12 +28,10 @@ HIDDEN void Syscall8(state_t* caller);
 /*Commenting the Logic of the some of the functions */
 void SYSCALLHandler()
 {
-    /**
- * There are 8 System calls that our Handler must look out for 
- * Of these first 8 System calls the Kernel Mode must be active
- * In order for these commands to execute 
- * 
-    */
+/*
+    There are 8 System calls that our Handler must look out for 
+    Of these first 8 System calls the Kernel Mode must be active
+    In order for these commands to execute */
 
    state_t* caller;
    int sysRequest;
