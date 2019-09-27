@@ -92,7 +92,7 @@
         There are 8 disks
         1 timer
 
-        ARR LAYOUT: TERMINAL1a|TERMINAL1b|TAPE1|PRINTER1|NETWORK1|DISK1|TERMINAL2a ... 
+        ARR LAYOUT: DISKS, TAPES, NETWORKS, PRINTERS, TERMINALS READ, TERMINALS WRITE, PSEUDOCLOCK 
         */
 #define SEMNUM 49
 
@@ -112,12 +112,13 @@
 
 /* ON/OFF bit manipulation*/
 #define ALLOFF  0x00000000
-#define VMOFF   0xFDFFFFFF     /* Virtual Memory OFF*/
-#define VMON    0x02000000     /* Virtual Memory ON*/
-#define UMOFF   0xFFFFFFF7     /* User Mode OFF (Kernel Mode ON)*/
-#define UMON    0x00000008     /* User Mode ON (Kernel Mode OFF)*/
-#define IMOFF   0xFFFF00FF     /* Interrupt UNMasked */
-#define IMON    0x0000FF00     /* Interrupt Masked */
-
+#define VMOFF   0xFDFFFFFF      /* Virtual Memory OFF*/
+#define VMON    0x02000000      /* Virtual Memory ON*/
+#define UMOFF   0xFFFFFFF7      /* User Mode OFF (Kernel Mode ON)*/
+#define UMON    0x00000008      /* User Mode ON (Kernel Mode OFF)*/
+#define IMOFF   0xFFFF00FF      /* Interrupt UNMasked */
+#define IMON    0x0000FF00      /* Interrupt Masked */
+#define IEON	0x00000004      /* Turn interrupts ON*/
+#define IECON	0x00000001      /* Turn interrupts current ON */
 
 #endif

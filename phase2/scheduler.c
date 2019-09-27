@@ -62,7 +62,7 @@ void scheduler()
         }
         else 
         { /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
-            SetSTATUS(ALLOFF|); FIXME:
+            SetSTATUS(ALLOFF|IEON|IECON|IMON);IEC because of the off state. Timer off FIXME:
             WAIT();
         }
     }
