@@ -14,6 +14,15 @@
 #include "../e/initial.e"
 #include "../e/pcb.e"
 
+
+
+extern int processCount;
+extern int softBlockCount;
+extern pcb_t *currentProcess;
+extern pcb_t *readyQue;
+extern int semD[SEMNUM];
+
+
 /*  Declaration of helper fucntions. Further documentation will be provided
     in the actual method.*/
 HIDDEN void Syscall1(state_t* caller);
@@ -134,18 +143,26 @@ void PassUpOrDie()
 
 }
 
-
+/**/
 HIDDEN void Syscall1(state_t* caller){
 
-    pcb_t * temp = allocPcb();
-    if(temp == NULL){
-        
+    pcb_t * birthedproc = allocPcb();
+    
+    if(emptyProcQ(birthedproc) == TRUE){ /*Check space in the ready queue to make sure we have room to allocate*/ 
+        /*We did not have any more processses able to be made so we send back a -1*/
         caller -> s_v0 = -1; 
         
     }
     else { 
+        processCount++; 
+        /* INserts the new process into the Ready Queue*/
+        insertProcQ(currentProcess, birthedproc);
+        /*Makes the new process a child of the currently running process calling the sys call */
+        insertChild(currentProcess, birthedproc);
+        /**/
         caller -> s_v0 = 0; 
         int SYSCALL (1, caller);
+        
         
 
     }
@@ -154,6 +171,9 @@ HIDDEN void Syscall1(state_t* caller){
 }
 
 HIDDEN void Syscall2(){
+
+
+
 
 }
 
@@ -178,5 +198,17 @@ HIDDEN void Syscall7(state_t* caller){
 }
 
 HIDDEN void Syscall8(state_t* caller){
+
+}
+
+
+
+
+/*This state will copy all of the contents of the old state into the new state*/
+void CtrlPlusc(state_PTR OldState, state_PTR NewState){
+
+
+
+
 
 }
