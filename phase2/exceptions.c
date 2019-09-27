@@ -159,8 +159,11 @@ HIDDEN void Syscall1(state_t* caller){
         insertProcQ(currentProcess, birthedproc);
         /*Makes the new process a child of the currently running process calling the sys call */
         insertChild(currentProcess, birthedproc);
-        /**/
+        /*WE were able to allocate thus we put 0 in the v0 register*/
         caller -> s_v0 = 0; 
+        /*Copy the calling state into the new processes state*/
+        CtrlPlusc(caller, birthedproc->p_s);
+
         int SYSCALL (1, caller);
         
         
@@ -202,11 +205,31 @@ HIDDEN void Syscall8(state_t* caller){
 }
 
 
-
+/**
+ * unsigned int	s_asid;
+	unsigned int	s_cause;
+	unsigned int	s_status;
+	unsigned int 	s_pc;
+	int	 			s_reg[STATEREGNUM];
+ * 
+ * 
+ * 
+ * 
+*/
 
 /*This state will copy all of the contents of the old state into the new state*/
 void CtrlPlusc(state_PTR OldState, state_PTR NewState){
+    /*Move all of the contents from the old state into the new*/
+    NewState -> s_asid = OldState -> s_asid; 
+    NewState -> s_status = OldState -> s_status; 
+    NewState -> s_pc = OldState -> s_pc; 
+    /*Loop through all of the registers in the old state and write them into the new state*/
+    int i;
+    for(i = 0; i < STATEREGNUM; i++){
+        NewState ->s_reg[i] = OldState ->s_reg[i];
 
+
+    }
 
 
 
