@@ -51,7 +51,7 @@ void SYSCALLHandler()
     /*The Sys call is one of the first 8 Sys Calls */
     if (PrevState->s_a0 <= 8)
     {
-        if (PrevState->s_status == UMOFF) INCORRECT SYNTAX SEE IF A PARTICULAR BIT IS ON LOGICAL AND       {
+        if (PrevState->s_status == UMOFF) {
             /*Not Privileged Die*/
             PrgTrapHandler();
         }
@@ -136,6 +136,20 @@ void PassUpOrDie()
 
 
 HIDDEN void Syscall1(state_t* caller){
+
+    pcb_t * temp = allocPcb();
+    if(temp == NULL){
+        
+        caller -> s_v0 = -1; 
+        
+    }
+    else { 
+        caller -> s_v0 = 0; 
+        int SYSCALL (1, caller);
+        
+
+    }
+    
 
 }
 
