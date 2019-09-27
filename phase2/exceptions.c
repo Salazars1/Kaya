@@ -174,6 +174,45 @@ HIDDEN void Syscall1(state_t* caller){
 }
 
 HIDDEN void Syscall2(){
+    pcb_t * temp = currentProcess; 
+
+    
+    while(temp ->p_child != NULL){
+        temp = temp -> p_child;
+    }
+    /*We are at the bottom Most child
+      Kill every child in list. Rinse and Repeat
+    
+    */
+   pcb_t * temp2; 
+   while(temp -> p_next != NULL){
+    temp2 = temp -> p_next;
+    removeChild(temp);
+    freePcb(temp);
+    temp = temp2; 
+    processCount--; 
+   
+   }
+
+   if(currentProcess->p_child != NULL){
+   /*You still got kids? Ill fucking do it again*/
+    Syscall2();
+   }
+   else{
+   /*Batter up mother fucker its time to die */
+   
+   /*WE have one less process to worry about 
+    We remove the process from the ready queue 
+    We then free the pcb now we can allocate a new pcb 
+   
+   */
+    processCount--; 
+   removeProcQ(currentProcess); 
+   freePcb(currentProcess);
+  
+   
+   
+   }
 
 
 
