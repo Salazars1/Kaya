@@ -71,11 +71,13 @@ void SYSCALLHandler()
             {
 
             case 1:
+                Syscall1(currentProcess);
+
                 /*SYS CALL*/
                 break;
 
             case 2:
-/*SYS CALL*/
+/*SYS CALL*/    Syscall2();
                 break;
 
             case 3:
