@@ -11,10 +11,11 @@
 
 #include "../h/const.h"
 #include "../h/types.h"
-#include "../e/initial.e"
 #include "../e/pcb.e"
-
-
+#include "../e/asl.e"
+#include "../e/initial.e"
+#include "../e/scheduler.e"
+#include "../e/pcb.e"
 
 extern int processCount;
 extern int softBlockCount;
@@ -22,93 +23,81 @@ extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
 extern int semD[SEMNUM];
 
-
 /*  Declaration of helper fucntions. Further documentation will be provided
     in the actual method.*/
-HIDDEN void Syscall1(state_t* caller);
+HIDDEN void Syscall1(state_t *caller);
 HIDDEN void Syscall2();
-HIDDEN void Syscall3(state_t* caller);
-HIDDEN void Syscall4(state_t* caller);
-HIDDEN void Syscall5(state_t* caller);
-HIDDEN void Syscall6(state_t* caller);
-HIDDEN void Syscall7(state_t* caller);
-HIDDEN void Syscall8(state_t* caller);
+HIDDEN void Syscall3(state_t *caller);
+HIDDEN void Syscall4(state_t *caller);
+HIDDEN void Syscall5(state_t *caller);
+HIDDEN void Syscall6(state_t *caller);
+HIDDEN void Syscall7(state_t *caller);
+HIDDEN void Syscall8(state_t *caller);
+HIDDEN void CtrlPlusC(state_t *oldState, state_t *newState);
 
 /*Commenting the Logic of the some of the functions */
 void SYSCALLHandler()
 {
-/*
+    /*
     There are 8 System calls that our Handler must look out for 
     Of these first 8 System calls the Kernel Mode must be active
     In order for these commands to execute */
 
-   state_t* caller;
-   int sysRequest;
+    state_t *prevState;
+    state_t *pgm;
+    (memaddr) prevStatus;
 
-
-
-
-    state_t PTR PrevState = (state_t PTR)SYSCALLOLDAREA;
+    prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
+    prevStatus = prevState->s_status;
 
     /*The SYs call is not one of the first 8 sys calls*/
-    if (PrevState->s_a0 > 8)
-    {
-        PassUpOrDie();
-        /*Pass up Or Die */
-    }
+    if ((prevState->s_a0 > 0) && (prevState->s_a0 < 9) && (prevStatus = !ALLOFF))
+        ? ? ? ? ? ? ? ? ? ? ? ? how to include UMOFF ? &in the codition ? ? ? ?
+        {
+            PrgTrapHandler(); /*Trap Handler */
+            ......            //YET TO BE CODED STUFF
+                ...
+        }
+
+    prevState->s_pc = prevState->s_pc + 4; /*  Executes new instruction (PC+4)*/
 
     /*The Sys call is one of the first 8 Sys Calls */
-    if (PrevState->s_a0 <= 8)
+    switch (prevState->s_a0)
     {
-        if (PrevState->s_status == UMOFF) {
-            /*Not Privileged Die*/
-            PrgTrapHandler();
-        }
-        else
-        {
-            /*Switch Statement for the first 8 Sys calls begins */
-            switch (8)
-            {
 
-            case 1:
-                Syscall1(currentProcess);
+    case 1:
+        Syscall1(currentProcess);
 
-                /*SYS CALL*/
-                break;
+        /*SYS CALL*/
+        break;
 
-            case 2:
-/*SYS CALL*/    Syscall2();
-                break;
+    case 2:
+        /*SYS CALL*/ Syscall2();
+        break;
 
-            case 3:
-            /*SYS CALL*/
-                break;
+    case 3:
+        /*SYS CALL*/
+        break;
 
-            case 4:
-                /*SYS CALL*/
-                break; 
-            
-            case 5:
-                /*SYS CALL*/
-                break; 
+    case 4:
+        /*SYS CALL*/
+        break;
 
-            case 6:
-                /*SYS CALL*/
-                break; 
-            
-            case 7:
-                /*SYS CALL*/
-                break; 
+    case 5:
+        /*SYS CALL*/
+        break;
 
-            case 8:
-                /*SYS CALL*/
-                break; 
-            default: 
-                break; 
+    case 6:
+        /*SYS CALL*/
+        break;
 
+    case 7:
+        /*SYS CALL*/
+        break;
 
-            }
-        }
+    case 8:
+        /*SYS CALL*/
+        break;
     }
 
     /**
@@ -120,17 +109,10 @@ void SYSCALLHandler()
 
 void PrgTrapHandler()
 {
-
-
-
-
 }
 
 void TLBTrapHandler()
 {
-
-
-
 }
 /*
 WE WAIT 
@@ -139,112 +121,100 @@ WE WAIT
 
 void PassUpOrDie()
 {
-
-
-
-
 }
 
 /**/
-HIDDEN void Syscall1(state_t* caller){
+HIDDEN void Syscall1(state_t *caller)
+{
 
-    pcb_t * birthedproc = allocPcb();
-    
-    if(emptyProcQ(birthedproc) == TRUE){ /*Check space in the ready queue to make sure we have room to allocate*/ 
+    pcb_t *birthedproc = allocPcb();
+
+    if (emptyProcQ(birthedproc) == TRUE)
+    { /*Check space in the ready queue to make sure we have room to allocate*/
         /*We did not have any more processses able to be made so we send back a -1*/
-        caller -> s_v0 = -1; 
-        
+        caller->s_v0 = -1;
     }
-    else { 
-        processCount++; 
+    else
+    {
+        processCount++;
         /* INserts the new process into the Ready Queue*/
         insertProcQ(currentProcess, birthedproc);
         /*Makes the new process a child of the currently running process calling the sys call */
         insertChild(currentProcess, birthedproc);
         /*WE were able to allocate thus we put 0 in the v0 register*/
-        caller -> s_v0 = 0; 
+        caller->s_v0 = 0;
         /*Copy the calling state into the new processes state*/
         CtrlPlusc(caller, birthedproc->p_s);
 
-        int SYSCALL (1, caller);
-        
-        
-
+        int SYSCALL(1, caller);
     }
-    
-
 }
 
-HIDDEN void Syscall2(){
-    pcb_t * temp = currentProcess; 
+HIDDEN void Syscall2()
+{
+    pcb_t *temp = currentProcess;
 
-    
-    while(temp ->p_child != NULL){
-        temp = temp -> p_child;
+    while (temp->p_child != NULL)
+    {
+        temp = temp->p_child;
     }
     /*We are at the bottom Most child
       Kill every child in list. Rinse and Repeat
     
     */
-   pcb_t * temp2; 
-   while(temp -> p_next != NULL){
-    temp2 = temp -> p_next;
-    removeChild(temp);
-    freePcb(temp);
-    temp = temp2; 
-    processCount--; 
-   
-   }
+    pcb_t *temp2;
+    while (temp->p_next != NULL)
+    {
+        temp2 = temp->p_next;
+        removeChild(temp);
+        freePcb(temp);
+        temp = temp2;
+        processCount--;
+    }
 
-   if(currentProcess->p_child != NULL){
-   /*You still got kids? Ill fucking do it again*/
-    Syscall2();
-   }
-   else{
-   /*Batter up mother fucker its time to die */
-   
-   /*WE have one less process to worry about 
+    if (currentProcess->p_child != NULL)
+    {
+        /*You still got kids? Ill fucking do it again*/
+        Syscall2();
+    }
+    else
+    {
+        /*Batter up mother fucker its time to die */
+
+        /*WE have one less process to worry about 
     We remove the process from the ready queue 
     We then free the pcb now we can allocate a new pcb 
    
    */
-    processCount--; 
-   removeProcQ(currentProcess); 
-   freePcb(currentProcess);
-  
-   
-   
-   }
-
-
-
-
+        processCount--;
+        removeProcQ(currentProcess);
+        freePcb(currentProcess);
+    }
 }
 
-HIDDEN void Syscall3(state_t* caller){
-    
+HIDDEN void Syscall3(state_t *caller)
+{
 }
 
-HIDDEN void Syscall4(state_t* caller){
-
+HIDDEN void Syscall4(state_t *caller)
+{
 }
 
-HIDDEN void Syscall5(state_t* caller){
-
+HIDDEN void Syscall5(state_t *caller)
+{
 }
 
-HIDDEN void Syscall6(state_t* caller){
-
+HIDDEN void Syscall6(state_t *caller)
+{
 }
 
-HIDDEN void Syscall7(state_t* caller){
-
+HIDDEN void Syscall7(state_t *caller)
+{
 }
 
-HIDDEN void Syscall8(state_t* caller){
-
+HIDDEN void Syscall8(state_t *caller)
+{
 }
-
 
 /**
  * unsigned int	s_asid;
@@ -259,20 +229,16 @@ HIDDEN void Syscall8(state_t* caller){
 */
 
 /*This state will copy all of the contents of the old state into the new state*/
-void CtrlPlusc(state_PTR OldState, state_PTR NewState){
+void CtrlPlusC(state_t *oldState, state_t *newState)
+{
     /*Move all of the contents from the old state into the new*/
-    NewState -> s_asid = OldState -> s_asid; 
-    NewState -> s_status = OldState -> s_status; 
-    NewState -> s_pc = OldState -> s_pc; 
+    NewState->s_asid = OldState->s_asid;
+    NewState->s_status = OldState->s_status;
+    NewState->s_pc = OldState->s_pc;
     /*Loop through all of the registers in the old state and write them into the new state*/
     int i;
-    for(i = 0; i < STATEREGNUM; i++){
-        NewState ->s_reg[i] = OldState ->s_reg[i];
-
-
+    for (i = 0; i < STATEREGNUM; i++)
+    {
+        NewState->s_reg[i] = OldState->s_reg[i];
     }
-
-
-
-
 }
