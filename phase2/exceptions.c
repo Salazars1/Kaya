@@ -51,8 +51,7 @@ void SYSCALLHandler()
     prevStatus = prevState->s_status;
 
     /*The SYs call is not one of the first 8 sys calls*/
-    if ((prevState->s_a0 > 0) && (prevState->s_a0 < 9) && (prevStatus = !ALLOFF))
-        ? ? ? ? ? ? ? ? ? ? ? ? how to include UMOFF ? &in the codition ? ? ? ?
+    if ((prevState->s_a0 > 0) && (prevState->s_a0 < 9) && (prevStatus = !ALLOFF))??????????? how to include UMOFF ? &in the codition ? ? ? ?
         {
             PrgTrapHandler(); /*Trap Handler */
             ......            //YET TO BE CODED STUFF
@@ -61,7 +60,7 @@ void SYSCALLHandler()
 
     prevState->s_pc = prevState->s_pc + 4; /*  Executes new instruction (PC+4)*/
 
-    /*The Sys call is one of the first 8 Sys Calls */
+    /*Switch statement to determine which Syscall we are about to do. If there is no case, we execute the default case */
     switch (prevState->s_a0)
     {
 
@@ -100,6 +99,9 @@ void SYSCALLHandler()
         break;
     }
 
+    /*We should NEVER GET HERE. IF WE DO, WE DIE*/
+    
+
     /**
  * If the System Call is 9 -255 Meaning that it is not one of the Sys calls that we are implementing
  * Then we are going to Pass up or Die 
@@ -127,9 +129,9 @@ void PassUpOrDie()
 HIDDEN void Syscall1(state_t *caller)
 {
 
-    pcb_t *birthedproc = allocPcb();
+    pcb_t *birthedProc = allocPcb();
 
-    if (emptyProcQ(birthedproc) == TRUE)
+    if (emptyProcQ(birthedProc) == TRUE)
     { /*Check space in the ready queue to make sure we have room to allocate*/
         /*We did not have any more processses able to be made so we send back a -1*/
         caller->s_v0 = -1;
@@ -137,16 +139,20 @@ HIDDEN void Syscall1(state_t *caller)
     else
     {
         processCount++;
-        /* INserts the new process into the Ready Queue*/
-        insertProcQ(currentProcess, birthedproc);
+
         /*Makes the new process a child of the currently running process calling the sys call */
-        insertChild(currentProcess, birthedproc);
+        insertChild(currentProcess, birthedProc);
+        
+        /* Inserts the new process into the Ready Queue*/
+        insertProcQ(currentProcess, birthedProc);
+        
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
-        /*Copy the calling state into the new processes state*/
-        CtrlPlusc(caller, birthedproc->p_s);
 
-        int SYSCALL(1, caller);
+        /*Copy the calling state into the new processes state*/
+        CtrlPlusc(caller, birthedProc->p_s);
+
+        LDST(caller);
     }
 }
 
