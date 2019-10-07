@@ -58,28 +58,27 @@ void SYSCALLHandler()
                 ...
         }
 
-    prevState->s_pc = prevState->s_pc + 4; /*  Executes new instruction (PC+4)*/
-
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we execute the default case */
     switch (prevState->s_a0)
     {
 
-    case 1:
+    case 1: /* SYSCALL 1 (BIRTH) ITS ABOUT TO BE CALLED)*/ ???????????? DO I NEED TO DECLARE THE STATE IN CONSTANTS.H?????
         Syscall1(currentProcess);
-
-        /*SYS CALL*/
         break;
 
     case 2:
-        /*SYS CALL*/ Syscall2();
+        /*SYS CALL*/ 
+        Syscall2();
         break;
 
     case 3:
         /*SYS CALL*/
+        Syscall3(prevState->s_a0);
         break;
 
     case 4:
         /*SYS CALL*/
+        Syscall4(prevState->s_a0)
         break;
 
     case 5:
@@ -200,10 +199,34 @@ HIDDEN void Syscall2()
 
 HIDDEN void Syscall3(state_t *caller)
 {
+    pcb_t* newProc = NULL;
+    int* semV = (int*) caller->s_a1;
+	(*semV)++;              /* increment semaphore  */
+	
+    
+    if((*semV) <= 0) {      /* waiting in the semaphore */
+		
+		newProc = removeBlocked(semV);
+		
+        if(newProc != NULL){     /* add it to the ready queue */
+			insertProcQ(&readyQueue, newProc);
+		}
+	}
+	
+	LDST(caller);   /* returns control to caller */
 }
 
 HIDDEN void Syscall4(state_t *caller)
 {
+    int* semV = (int*) caller->s_a1;
+	(*semV)--;              /* decrement semaphore */
+	if((*semV) < 0){        /* there is something controlling the semaphore */
+		CtrlPlusC(caller, &(currProc -> p_s));
+		insertBlocked(semV, currProc);
+		scheduler();
+	}
+	/* nothing had control of the sem, return control to caller */
+	LDST(caller);
 }
 
 HIDDEN void Syscall5(state_t *caller)
