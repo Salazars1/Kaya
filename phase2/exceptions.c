@@ -96,7 +96,7 @@ void SYSCALLHandler()
         break;
 
     case 8:
-        Syscall5(prevState);
+        Syscall8(prevState);
         break;
     }
 
