@@ -11,7 +11,8 @@ It is important to know that this module uses Pcb.c but also uses the structs pc
 from types.h and a few constants from const.h. This program also has a few helper functions that 
 are used thoughout the ASL and are actively called by each function. In the high level the ASL 
 is responsible for allocating and freeing semd_t and maintains two singley linked NUll terminated
-linked lists. It is important to note that in this module we will refer to Semd_t structs as Nodes 
+linked lists. The active semaphore list contains two sentinnel nodes
+ It is important to note that in this module we will refer to Semd_t structs as Nodes 
 and that pcb_t may be referred to as Procblks and represent process blocks. Each active semaphore 
 list has a corresponding doubley linked circular tail pointer data structure of process blocks
 **********************************************************************************************/
@@ -171,7 +172,10 @@ initASL(){
 
 
 
-/*   If the Head Node is NULL then the list is empty and we return NULL*/
+/*  Helper Function to allocate values in ASL (likewise in pcb). This sets everything within the node pointer
+    semd_t.
+    Parameter:
+    Return:     -NULL (If the Head Node is is empty)*/
 
 HIDDEN semd_t *allocASL(){
     semd_t * temp;
@@ -179,10 +183,9 @@ HIDDEN semd_t *allocASL(){
     if(semdFree_h == NULL){
         return NULL;
     }
-    /* We then make a temporary Pointer to the head of the free list 
-    Then we move the head pointer in the free list to be the next process in the list
-    Then we set all of the temporary pointers values to NULL or 0 
-    Return Temp
+
+    /* We then make a temporary Pointer to the head of the free list. Then we move the head pointer in the free
+    list to be the next process in the list. Then we set all of the temporary pointers values to NULL or 0 
     */
 
     temp = semdFree_h;
@@ -192,31 +195,41 @@ HIDDEN semd_t *allocASL(){
     temp->s_semAdd = NULL; 
     temp->s_procQ = mkEmptyProcQ(); 
 
-    return temp; 
+    return temp;                                /*Returns the created node*/
 }
 
-/*  This function goes through the pcb*/
+/*  This function is a helper function goes that through the asl node to determine if the next node has 
+    semAdd equal to the one in the parameter. To keep the list sorted compares whether next semAdd is greater
+    than the semd_t sempahore address. If semadd is null, then it sets it up to be the 0xFFFFFFF.
+    Parameter: semAdd
+    Return:         -semAdd parent: if semAdd is found
+                    -dummy node parent: if semAdd is not found.*/
+    
 HIDDEN semd_t *searchForParent(int *semAdd){
 	semd_t *temp = semd_h;
     
 	if(semAdd == NULL){
         semAdd = MAXINT; 
     }
-	while(semAdd > (temp -> s_next -> s_semAdd)){
-		temp = temp -> s_next;
-        
+
+	while(semAdd > (temp -> s_next -> s_semAdd)){               /*Checks the semaphore with an greater than sign to keep the list organized*/
+		temp = temp -> s_next;   
 	}
     
 	return temp;
 }
 
-/*  */
+/*  Helper Function to deallocate values in ASL (likewise in pcb). This adds the nodes into the free semaphore
+    list, to keep track of how many free semaphore we have. Note, this process depends inderectly on the MAX PROC
+    value. 
+    Parameter:  semd_t
+    Return:     */
 HIDDEN void deAllocASL(semd_t *s){
-    if(semdFree_h==NULL){
-        semdFree_h = s;
-        semdFree_h -> s_next = NULL;
-    }else{
-        s->s_next = semdFree_h;
-        semdFree_h = s;
+    if(semdFree_h==NULL){                           /*semdFreeList was empty*/
+        semdFree_h = s;                             /*adds the node pointer to semdFreeList*/
+        semdFree_h -> s_next = NULL;                
+    }else{                                          /*semdFreeList was empty*/
+        s->s_next = semdFree_h;                     
+        semdFree_h = s;                             /*adds the node pointer to semdFreeList*/
     }
 }

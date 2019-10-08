@@ -6,10 +6,11 @@
 
 /*********************************************************************************************
                             Module Comment Section
-pcb.c is a program that is designed to be a Queues manager. This program is designed to start by creating
+pcb.c is a Queues manager. This program is designed to start by creating
 a doubley linked Circular tail pointer data structure of pcb_t which is contained in the types.h. This program
-is also designed to track the tree maintenance of the tree's of pcb_t as well as the allocation and deallocation
-of the pcb_t. It is important to note that pcb_t in this module may be referred to as 'Nodes' as well as 
+is also designed to track the Child tree maintenance of the child tree's of pcb_t as well as the allocation and deallocation
+of the pcb_t. These children trees are doubley linked linear linked list with no sentinnel nodes
+It is important to note that pcb_t in this module may be referred to as 'Nodes' as well as 
 ProcBlks which is short hand for process blocks. This Module is also implemented by asl.c and is tested in 
 p1test.c. this module also uses a few constants from const.h.
 **********************************************************************************************/
@@ -65,6 +66,14 @@ pcb_PTR allocPcb(){
 
 
     temp->p_semAdd = NULL; 
+
+    /*Syscall5 exceptions pointes are going to be defined*/
+    temp->oldSys = NULL;
+    temp->newSys = NULL;
+    temp->oldTLB = NULL;
+    temp->newTLB = NULL;
+    temp->oldProgramTrap = NULL;
+    temp->newProgramTrap = NULL;
 
     /*Return this Node */
     return temp; 
