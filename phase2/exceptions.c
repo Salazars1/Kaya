@@ -74,17 +74,17 @@ void SYSCALLHandler()
 
     case 3:
         /*SYS CALL*/
-        Syscall3(prevState->s_a0);
+        Syscall3(prevState);
         break;
 
     case 4:
         /*SYS CALL*/
-        Syscall4(prevState->s_a0);
+        Syscall4(prevState);
         break;
 
     case 5:
         /*SYS CALL*/
-        Syscall5(prevState->s_a0);
+        Syscall5(prevState);
         break;
 
     case 6:
@@ -96,7 +96,7 @@ void SYSCALLHandler()
         break;
 
     case 8:
-        Syscall5(prevState->s_a0);
+        Syscall5(prevState);
         break;
     }
 
