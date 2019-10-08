@@ -46,10 +46,11 @@ void SYSCALLHandler()
     state_t *prevState;
     state_t *pgm;
     (memaddr) prevStatus;
+    int case; 
 
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;
-
+    case = prevState->s_a0;
     /*The SYs call is not one of the first 8 sys calls*/
     if ((prevState->s_a0 > 0) && (prevState->s_a0 < 9) && (prevStatus = !ALLOFF))? ? ? ? ? ? ? ? ? ? ? how to include UMOFF ? &in the codition ? ? ? ?
         {
@@ -59,7 +60,7 @@ void SYSCALLHandler()
         }
 
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we execute the default case */
-    switch (prevState->s_a0)
+    switch (case)
     {
 
     case 1: /* SYSCALL 1 (BIRTH) ITS ABOUT TO BE CALLED)*/
