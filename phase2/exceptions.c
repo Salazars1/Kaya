@@ -37,7 +37,7 @@ HIDDEN void CtrlPlusC(state_t *oldState, state_t *newState);
 
 /*Commenting the Logic of the some of the functions */
 void SYSCALLHandler()
-{
+{FIXME:
     /*
     There are 8 System calls that our Handler must look out for 
     Of these first 8 System calls the Kernel Mode must be active
@@ -51,8 +51,7 @@ void SYSCALLHandler()
     prevStatus = prevState->s_status;
 
     /*The SYs call is not one of the first 8 sys calls*/
-    if ((prevState->s_a0 > 0) && (prevState->s_a0 < 9) && (prevStatus = !ALLOFF))
-        ? ? ? ? ? ? ? ? ? ? ? how to include UMOFF ? &in the codition ? ? ? ?
+    if ((prevState->s_a0 > 0) && (prevState->s_a0 < 9) && (prevStatus = !ALLOFF))? ? ? ? ? ? ? ? ? ? ? how to include UMOFF ? &in the codition ? ? ? ?
         {
             PrgTrapHandler(); /*Trap Handler */
             ......            //TODO:
@@ -96,7 +95,7 @@ void SYSCALLHandler()
         break;
 
     case 8:
-        /*SYS CALL*/
+        Syscall5(prevState->s_a0);
         break;
     }
 
@@ -261,8 +260,7 @@ HIDDEN void Syscall5(state_t *caller)
             syscall2(); /* already called sys5 */
         }
         /* assign exception values */
-        cur
-            currentProcess->newSys = (state_t *)caller->s_a3;
+        currentProcess->newSys = (state_t *)caller->s_a3;
         currentProcess->oldSys = (state_t *)caller->s_a2;
     }
 
@@ -277,7 +275,6 @@ HIDDEN void Syscall7(state_t *caller)
 {
 }
 
-FIXME:
 HIDDEN void Syscall8(state_t *caller)
 {
     int intlNo;
@@ -291,12 +288,6 @@ HIDDEN void Syscall8(state_t *caller)
     dnum = caller->s_a2;
     waitforTermRead = caller->s_a3; /* terminal read  or write */
 
-
-    if (lineNo < DISKINT || lineNo > TERMINT)
-    {
-        syscall2(); /* illegal IO request */
-    }
-
     /* what device is going to be computed*/
     if (lineNo == TERMINT && waitforTermRead == TRUE)
     {
@@ -309,10 +300,10 @@ HIDDEN void Syscall8(state_t *caller)
         index = DEVPERINT * (lineNo - DEVWOSEM) + dnum;
     }
 
-    sem = &(semD[index]);
-    (*sem)--;
+    semD[index]--;
+    
 
-    if ((*sem) < 0)
+    if (semD[index] < 0)
     {
 
         insertBlocked(sem, currentProcess);
@@ -325,7 +316,6 @@ HIDDEN void Syscall8(state_t *caller)
         scheduler();
     }
 
-    LDST(caller);
 }
 
 /*This state will copy all of the contents of the old state into the new state*/
