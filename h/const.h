@@ -95,6 +95,7 @@
         ARR LAYOUT: DISKS, TAPES, NETWORKS, PRINTERS, TERMINALS READ, TERMINALS WRITE, PSEUDOCLOCK 
         */
 #define SEMNUM 49
+#define DEVWOSEM 3  /*Device without Semaphore. First 3 devices doesnt have semaphores (disks, tapes, nerworks)*/
 
 /* NEW Processor State Areas */
     /* SYSCALL BREAK*/

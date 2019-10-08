@@ -51,10 +51,11 @@ void SYSCALLHandler()
     prevStatus = prevState->s_status;
 
     /*The SYs call is not one of the first 8 sys calls*/
-    if ((prevState->s_a0 > 0) && (prevState->s_a0 < 9) && (prevStatus = !ALLOFF))??????????? how to include UMOFF ? &in the codition ? ? ? ?
+    if ((prevState->s_a0 > 0) && (prevState->s_a0 < 9) && (prevStatus = !ALLOFF))
+        ? ? ? ? ? ? ? ? ? ? ? how to include UMOFF ? &in the codition ? ? ? ?
         {
             PrgTrapHandler(); /*Trap Handler */
-            ......            //YET TO BE CODED STUFF
+            ......            //TODO:
                 ...
         }
 
@@ -62,12 +63,12 @@ void SYSCALLHandler()
     switch (prevState->s_a0)
     {
 
-    case 1: /* SYSCALL 1 (BIRTH) ITS ABOUT TO BE CALLED)*/ ???????????? DO I NEED TO DECLARE THE STATE IN CONSTANTS.H?????
+    case 1: /* SYSCALL 1 (BIRTH) ITS ABOUT TO BE CALLED)*/
         Syscall1(currentProcess);
         break;
 
     case 2:
-        /*SYS CALL*/ 
+        /*SYS CALL*/
         Syscall2();
         break;
 
@@ -78,11 +79,12 @@ void SYSCALLHandler()
 
     case 4:
         /*SYS CALL*/
-        Syscall4(prevState->s_a0)
+        Syscall4(prevState->s_a0);
         break;
 
     case 5:
         /*SYS CALL*/
+        Syscall5(prevState->s_a0);
         break;
 
     case 6:
@@ -99,7 +101,6 @@ void SYSCALLHandler()
     }
 
     /*We should NEVER GET HERE. IF WE DO, WE DIE*/
-    
 
     /**
  * If the System Call is 9 -255 Meaning that it is not one of the Sys calls that we are implementing
@@ -124,7 +125,6 @@ void PassUpOrDie()
 {
 }
 
-/**/
 HIDDEN void Syscall1(state_t *caller)
 {
 
@@ -141,10 +141,10 @@ HIDDEN void Syscall1(state_t *caller)
 
         /*Makes the new process a child of the currently running process calling the sys call */
         insertChild(currentProcess, birthedProc);
-        
+
         /* Inserts the new process into the Ready Queue*/
         insertProcQ(currentProcess, birthedProc);
-        
+
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
 
@@ -155,6 +155,7 @@ HIDDEN void Syscall1(state_t *caller)
     }
 }
 
+/*FIXME:*/
 HIDDEN void Syscall2()
 {
     pcb_t *temp = currentProcess;
@@ -199,63 +200,133 @@ HIDDEN void Syscall2()
 
 HIDDEN void Syscall3(state_t *caller)
 {
-    pcb_t* newProc = NULL;
-    int* semV = (int*) caller->s_a1;
-	(*semV)++;              /* increment semaphore  */
-	
-    
-    if((*semV) <= 0) {      /* waiting in the semaphore */
-		
-		newProc = removeBlocked(semV);
-		
-        if(newProc != NULL){     /* add it to the ready queue */
-			insertProcQ(&readyQueue, newProc);
-		}
-	}
-	
-	LDST(caller);   /* returns control to caller */
+    pcb_t *newProccess = NULL;
+    int *semV = (int *)caller->s_a1;
+    semV++; /* increment semaphore  */
+
+    if ((*semV) <= 0)
+    { /* waiting in the semaphore */
+        newProccess = removeBlocked(semV);
+        if (newProccess != NULL)
+        { /* add it to the ready queue */
+            insertProcQ(&readyQueue, newProccess);
+        }
+    }
+
+    LDST(caller); /* returns control to caller */
 }
 
 HIDDEN void Syscall4(state_t *caller)
 {
-    int* semV = (int*) caller->s_a1;
-	(*semV)--;              /* decrement semaphore */
-	if((*semV) < 0){        /* there is something controlling the semaphore */
-		CtrlPlusC(caller, &(currProc -> p_s));
-		insertBlocked(semV, currProc);
-		scheduler();
-	}
-	/* nothing had control of the sem, return control to caller */
-	LDST(caller);
+    int *semV = (int *)caller->s_a1;
+    semV--; /* decrement semaphore */
+    if ((*semV) < 0)
+    { /* there is something controlling the semaphore */
+        CtrlPlusC(caller, &(currentProcess->p_s));
+        insertBlocked(semV, currentProcess);
+        scheduler();
+    }
+    /* nothing had control of the sem, return control to caller */
+    LDST(caller);
 }
 
 HIDDEN void Syscall5(state_t *caller)
 {
-}
+    if (caller->s_a1 == 0)
+    { /*TLB TRAP*/
+        if (currentProcess->newTLB != NULL)
+        {
+            syscall2(); /* already called sys5 */
+        }
+        /* assign exception values */
+        currentProcess->newTLB = (state_t *)caller->s_a3;
+        currentProcess->oldTLB = (state_t *)caller->s_a2;
+    }
 
+    if (caller->s_a1 == 1)
+    {
+        if (currentProcess->newProgramTrap != NULL)
+        {
+            syscall2(); /* already called sys5 */
+        }
+        /* assign exception values */
+        currentProcess->newProgramTrap = (state_t *)caller->s_a3;
+        currentProcess->oldProgramTrap = (state_t *)caller->s_a2;
+    }
+
+    else
+    {
+        if (currentProcess->newSys != NULL)
+        {
+            syscall2(); /* already called sys5 */
+        }
+        /* assign exception values */
+        cur
+            currentProcess->newSys = (state_t *)caller->s_a3;
+        currentProcess->oldSys = (state_t *)caller->s_a2;
+    }
+
+    LDST(caller);
+}
+/*TODO:*/
 HIDDEN void Syscall6(state_t *caller)
 {
 }
-
+/*TODO:*/
 HIDDEN void Syscall7(state_t *caller)
 {
 }
 
+FIXME:
 HIDDEN void Syscall8(state_t *caller)
 {
-}
+    int intlNo;
+    int dnum;
+    int waitforTermRead;
 
-/**
- * unsigned int	s_asid;
-	unsigned int	s_cause;
-	unsigned int	s_status;
-	unsigned int 	s_pc;
-	int	 			s_reg[STATEREGNUM];
- * 
- * 
- * 
- * 
-*/
+    int index;
+    int *sem;
+
+    lineNo = caller->s_a1;
+    dnum = caller->s_a2;
+    waitforTermRead = caller->s_a3; /* terminal read  or write */
+
+
+    if (lineNo < DISKINT || lineNo > TERMINT)
+    {
+        syscall2(); /* illegal IO request */
+    }
+
+    /* what device is going to be computed*/
+    if (lineNo == TERMINT && waitforTermRead == TRUE)
+    {
+        /* terminal read */
+        index = DEVPERINT * (lineNo - DEVWOSEM + waitforTermRead) + dnum;
+    }
+    else
+    {
+        /* anything else */
+        index = DEVPERINT * (lineNo - DEVWOSEM) + dnum;
+    }
+
+    sem = &(semD[index]);
+    (*sem)--;
+
+    if ((*sem) < 0)
+    {
+
+        insertBlocked(sem, currentProcess);
+        CtrlPlusC(caller, &(currentProcess->p_s));
+        sftBlkCount++;
+
+        /*DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
+        Keeps the overall flow of the program and since there is no starvation, eventually that process
+        will get its turn to play with the processor*/
+        scheduler();
+    }
+
+    LDST(caller);
+}
 
 /*This state will copy all of the contents of the old state into the new state*/
 void CtrlPlusC(state_t *oldState, state_t *newState)
