@@ -109,6 +109,7 @@ void SYSCALLHandler()
 */
 }
 
+/**/
 void PrgTrapHandler()
 {
     /*Call Pass Up Or Die*/
@@ -130,14 +131,32 @@ void PassUpOrDie()
     state_PTR memloc; 
     state_PTR NameThatState; 
 
+FIXME:
     NameThatState = currentProcess -> Oldsys; 
 
+
+    /*This process has no Handler.... It must be Nuked from Orbit*/
     if(NameThatState == NULL){
         syscall2();
     }
 
+/*0 is TLB EXCEPTIONS!*/
+    if(currentProcess -> s_a1 == 0 ){
+        memloc = currentProcess -> oldTLB;
 
-    LoadState(state);
+    }
+    /*1 is Program Trap Exceptions*/
+    if(currentProcess -> s_a1 == 1){
+        memloc = currentProcess ->  oldProgramTrap;
+    }
+
+/*2 is SYS Exception!*/
+    if(currentProcess->s_a1 == 2){
+        memloc = currentProcess -> Oldsys; 
+    }
+
+    /*Load this new state!*/
+    LoadState(memloc);
 
 }
 
