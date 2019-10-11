@@ -37,7 +37,8 @@ HIDDEN void CtrlPlusC(state_t *oldState, state_t *newState);
 
 /*Commenting the Logic of the some of the functions */
 void SYSCALLHandler()
-{FIXME:
+{
+FIXME:
     /*
     There are 8 System calls that our Handler must look out for 
     Of these first 8 System calls the Kernel Mode must be active
@@ -46,63 +47,61 @@ void SYSCALLHandler()
     state_t *prevState;
     state_t *pgm;
     (memaddr) prevStatus;
-    int case; 
+    int case;
 
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;
-    case = prevState->s_a0;
+case = prevState->s_a0;
     /*The SYs call is not one of the first 8 sys calls*/
-    if ((prevState->s_a0 > 0) && (prevState->s_a0 < 9) && (prevStatus = !ALLOFF))? ? ? ? ? ? ? ? ? ? ? how to include UMOFF ? &in the codition ? ? ? ?
-        {
-            PrgTrapHandler(); /*Trap Handler */
-            ......            //TODO:
-                ...
-        }
-
-    /*Switch statement to determine which Syscall we are about to do. If there is no case, we execute the default case */
-    switch (case)
-    {
-
-    case 1: /* SYSCALL 1 (BIRTH) ITS ABOUT TO BE CALLED)*/
-        Syscall1(currentProcess);
-        break;
-
-    case 2:
-        /*SYS CALL*/
-        Syscall2();
-        break;
-
-    case 3:
-        /*SYS CALL*/
-        Syscall3(prevState);
-        break;
-
-    case 4:
-        /*SYS CALL*/
-        Syscall4(prevState);
-        break;
-
-    case 5:
-        /*SYS CALL*/
-        Syscall5(prevState);
-        break;
-
-    case 6:
-        /*SYS CALL*/
-        break;
-
-    case 7:
-        /*SYS CALL*/
-        break;
-
-    case 8:
-        Syscall8(prevState);
-        break;
+    if ((prevState->s_a0 > 0) && (prevState->s_a0 < 9) && (prevStatus = !ALLOFF)) ? ? ? ? ? ? ? ? ? ? ? how to include UMOFF ? &in the codition ? ? ? ? {
+        PrgTrapHandler(); /*Trap Handler */
+        ......            //TODO:
+        ...
     }
 
-    /*We should NEVER GET HERE. IF WE DO, WE DIE*/
+/*Switch statement to determine which Syscall we are about to do. If there is no case, we execute the default case */
+switch (case) {
 
-    /**
+    case 1: /* SYSCALL 1 (BIRTH) ITS ABOUT TO BE CALLED)*/
+    Syscall1(currentProcess);
+    break;
+
+case 2:
+    /*SYS CALL*/
+    Syscall2();
+    break;
+
+case 3:
+    /*SYS CALL*/
+    Syscall3(prevState);
+    break;
+
+case 4:
+    /*SYS CALL*/
+    Syscall4(prevState);
+    break;
+
+case 5:
+    /*SYS CALL*/
+    Syscall5(prevState);
+    break;
+
+case 6:
+    /*SYS CALL*/
+    break;
+
+case 7:
+    /*SYS CALL*/
+    break;
+
+case 8:
+    Syscall8(prevState);
+    break;
+}
+
+/*We should NEVER GET HERE. IF WE DO, WE DIE*/
+
+/**
  * If the System Call is 9 -255 Meaning that it is not one of the Sys calls that we are implementing
  * Then we are going to Pass up or Die 
  * Then we know that if the sys call numbers are values 1-8 then we need to be in kernel mode to execute 
@@ -118,7 +117,7 @@ void PrgTrapHandler()
 
 void TLBTrapHandler()
 {
-      /*Call Pass Up Or Die*/
+    /*Call Pass Up Or Die*/
     PassUpOrDie();
 }
 /*
@@ -128,36 +127,37 @@ WE WAIT
 
 void PassUpOrDie()
 {
-    state_PTR memloc; 
-    state_PTR NameThatState; 
+    state_PTR memloc;
+    state_PTR NameThatState;
 
-    FIXME:
-    NameThatState = currentProcess -> Oldsys; 
-
+FIXME:
+    NameThatState = currentProcess->Oldsys;
 
     /*This process has no Handler.... It must be Nuked from Orbit*/
-    if(NameThatState == NULL){
+    if (NameThatState == NULL)
+    {
         syscall2();
     }
 
     /*0 is TLB EXCEPTIONS!*/
-    if(currentProcess -> s_a1 == 0 ){
-        memloc = currentProcess -> oldTLB;
-
+    if (currentProcess->s_a1 == 0)
+    {
+        memloc = currentProcess->oldTLB;
     }
     /*1 is Program Trap Exceptions*/
-    if(currentProcess -> s_a1 == 1){
-        memloc = currentProcess ->  oldProgramTrap;
+    if (currentProcess->s_a1 == 1)
+    {
+        memloc = currentProcess->oldProgramTrap;
     }
 
     /*2 is SYS Exception!*/
-    if(currentProcess->s_a1 == 2){
-        memloc = currentProcess -> Oldsys; 
+    if (currentProcess->s_a1 == 2)
+    {
+        memloc = currentProcess->Oldsys;
     }
 
     /*Load this new state!*/
     LoadState(memloc);
-
 }
 
 HIDDEN void Syscall1(state_t *caller)
@@ -267,7 +267,7 @@ HIDDEN void Syscall4(state_t *caller)
 
 HIDDEN void Syscall5(state_t *caller)
 {
-    
+
     if (caller->s_a1 == 0)
     { /*TLB TRAP*/
         if (currentProcess->newTLB != NULL)
@@ -338,7 +338,6 @@ HIDDEN void Syscall8(state_t *caller)
     }
 
     semD[index]--;
-    
 
     if (semD[index] < 0)
     {
@@ -352,7 +351,6 @@ HIDDEN void Syscall8(state_t *caller)
         will get its turn to play with the processor*/
         scheduler();
     }
-
 }
 
 /*This state will copy all of the contents of the old state into the new state*/
@@ -372,4 +370,4 @@ void CtrlPlusC(state_t *oldState, state_t *newState)
 
 /*Function that is designed for ME to be able to read that LDST is Load State*/
 
-void LoadState(state_PTR s){LDST(s);}
+void LoadState(state_PTR s) { LDST(s); }
