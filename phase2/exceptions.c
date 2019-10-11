@@ -127,9 +127,17 @@ WE WAIT
 
 void PassUpOrDie()
 {
-    state_PTR Location; 
-    state_PTR state; 
+    state_PTR memloc; 
+    state_PTR NameThatState; 
 
+    NameThatState = currentProcess -> Oldsys; 
+
+    if(NameThatState == NULL){
+        syscall2();
+    }
+
+
+    LoadState(state);
 
 }
 
