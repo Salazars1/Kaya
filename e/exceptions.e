@@ -12,6 +12,9 @@ EXTERN void Syscall7(state_t *caller);
 EXTERN void Syscall8(state_t *caller);
 EXTERN void CtrlPlusC(state_t *oldState, state_t *newState);
 
+EXTERN void passUpOrDie();
+EXTERN void PrgTrapHandler();
+EXTERN void TLBTrapHandler();
 
 
 
