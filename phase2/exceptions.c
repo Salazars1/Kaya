@@ -131,7 +131,7 @@ void PassUpOrDie()
     state_PTR memloc; 
     state_PTR NameThatState; 
 
-FIXME:
+    FIXME:
     NameThatState = currentProcess -> Oldsys; 
 
 
@@ -140,7 +140,7 @@ FIXME:
         syscall2();
     }
 
-/*0 is TLB EXCEPTIONS!*/
+    /*0 is TLB EXCEPTIONS!*/
     if(currentProcess -> s_a1 == 0 ){
         memloc = currentProcess -> oldTLB;
 
@@ -150,7 +150,7 @@ FIXME:
         memloc = currentProcess ->  oldProgramTrap;
     }
 
-/*2 is SYS Exception!*/
+    /*2 is SYS Exception!*/
     if(currentProcess->s_a1 == 2){
         memloc = currentProcess -> Oldsys; 
     }
