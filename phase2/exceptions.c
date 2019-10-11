@@ -36,9 +36,7 @@ HIDDEN void Syscall8(state_t *caller);
 HIDDEN void CtrlPlusC(state_t *oldState, state_t *newState);
 
 /*Commenting the Logic of the some of the functions */
-void SYSCALLHandler()
-{
-FIXME:
+void SYSCALLHandler(){
     /*
     There are 8 System calls that our Handler must look out for 
     Of these first 8 System calls the Kernel Mode must be active
@@ -48,87 +46,82 @@ FIXME:
     state_t *program;
     (memaddr) prevStatus;
     int case;
+    int mode;
 
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;   
     case = prevState->s_a0;
-    /*The SYs call is not one of the first 8 sys calls*/
-    FIXME:
-    if (((prevStatus) != ALLOFF)) ? ? ? ? ? ? ? ? ? ? ? how to include UMOFF ? &in the codition ? ? ? ? {
+    mode = (prevState & UMOFF); /*Uses the compliment to determine the mode I'm in*/
+    
+    if (mode != ALLOFF){  /* It is User Mode*/
         
-        TODO:
-        
+        /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
+        prevState->s_cause = prevState->s_cause | (10 << 2);
 
-		/* syscall is 1-8 and in not kernel mode */
-		CtrlPlusC(caller, program);
+        program = (state_t*) PRGMTRAPOLDAREA;
+		CtrlPlusC(prevState, program);
 		
-        /*Trap Handler */
-		PrgTrapHandler(); 
+        /*Program Trap Handler */
+		PrgTrapHandler(prevState); 
     }
 
-/*Switch statement to determine which Syscall we are about to do. If there is no case, we execute the default case */
-switch (case) {
+    /*Switch statement to determine which Syscall we are about to do. If there is no case, we execute the default case */
+    switch (case) {
 
-    case 1: /* SYSCALL 1 (BIRTH) ITS ABOUT TO BE CALLED)*/
-    Syscall1(currentProcess);
-    break;
+        case 1: /* SYSCALL 1 (BIRTH) ITS ABOUT TO BE CALLED)*/
+            Syscall1(currentProcess);
+        break;
 
-case 2:
-    /*SYS CALL*/
-    Syscall2();
-    break;
+        case 2:
+        /*SYS CALL*/
+            Syscall2();
+        break;
 
-case 3:
-    /*SYS CALL*/
-    Syscall3(prevState);
-    break;
+        case 3:
+            /*SYS CALL*/
+            Syscall3(prevState);
+        break;
 
-case 4:
-    /*SYS CALL*/
-    Syscall4(prevState);
-    break;
+        case 4:
+            /*SYS CALL*/
+            Syscall4(prevState);
+        break;
 
-case 5:
-    /*SYS CALL*/
-    Syscall5(prevState);
-    break;
+        case 5:
+            /*SYS CALL*/
+            Syscall5(prevState);
+        break;
 
-case 6:
-    /*SYS CALL*/
-    break;
+        case 6:
+            /*SYS CALL*/
+        break;
 
-case 7:
-    /*SYS CALL*/
-    break;
+        case 7:
+            /*SYS CALL*/
+        break;
 
-case 8:
-    /*SYS CALL*/
-    Syscall8(prevState);
-    break;
+        case 8:
+            /*SYS CALL*/
+            Syscall8(prevState);
+        break;
 
-default:
-    /*FIXME: Need to tell it what is going through pass uo or die*/
-    PassUpOrDie(prevState);
-}
+        default:
+            /*FIXME: Need to tell it what is going through pass uo or die*/
+            PassUpOrDie(prevState);
+        break;
+    }
 
-/*We should NEVER GET HERE. IF WE DO, WE DIE*/
+    /*We should NEVER GET HERE. IF WE DO, WE DIE*/
 
-/**
- * If the System Call is 9 -255 Meaning that it is not one of the Sys calls that we are implementing
- * Then we are going to Pass up or Die 
- * Then we know that if the sys call numbers are values 1-8 then we need to be in kernel mode to execute 
-*/
 }
 
 /**/
-void PrgTrapHandler()
-{
+void PrgTrapHandler(){
     /*Call Pass Up Or Die*/
     PassUpOrDie();
 }
 
-void TLBTrapHandler()
-{
+void TLBTrapHandler(){
     /*Call Pass Up Or Die*/
     PassUpOrDie();
 }
@@ -137,8 +130,7 @@ WE WAIT
 
 */
 
-void PassUpOrDie(state_t *caller))
-{
+void PassUpOrDie(state_t *caller)){
     state_PTR memloc;
     state_PTR NameThatState;
 
@@ -172,8 +164,7 @@ void PassUpOrDie(state_t *caller))
     LoadState(memloc);
 }
 
-HIDDEN void Syscall1(state_t *caller)
-{
+HIDDEN void Syscall1(state_t *caller){
 
     pcb_t *birthedProc = allocPcb();
 
@@ -203,8 +194,7 @@ HIDDEN void Syscall1(state_t *caller)
 }
 
 /*FIXME:*/
-HIDDEN void Syscall2()
-{
+HIDDEN void Syscall2(){
     pcb_t *temp = currentProcess;
 
     while (temp->p_child != NULL)
@@ -245,8 +235,7 @@ HIDDEN void Syscall2()
     }
 }
 
-HIDDEN void Syscall3(state_t *caller)
-{
+HIDDEN void Syscall3(state_t *caller){
     pcb_t *newProccess = NULL;
     (caller->s_a1)++; /* increment semaphore  */
 
@@ -262,8 +251,7 @@ HIDDEN void Syscall3(state_t *caller)
     LoadState(caller); /* returns control to caller */
 }
 
-HIDDEN void Syscall4(state_t *caller)
-{
+HIDDEN void Syscall4(state_t *caller){
     (caller->s_a1)--; /* decrement semaphore */
     if ((caller->s_a1) < 0)
     { /* there is something controlling the semaphore */
@@ -275,8 +263,7 @@ HIDDEN void Syscall4(state_t *caller)
     LoadState(caller);
 }
 
-HIDDEN void Syscall5(state_t *caller)
-{
+HIDDEN void Syscall5(state_t *caller){
 
     if (caller->s_a1 == 0)
     { /*TLB TRAP*/
@@ -313,33 +300,32 @@ HIDDEN void Syscall5(state_t *caller)
 
     LoadState(caller);
 }
+
 /*TODO:*/
-HIDDEN void Syscall6(state_t *caller)
-{
-}
-/*TODO:*/
-HIDDEN void Syscall7(state_t *caller)
-{
+HIDDEN void Syscall6(state_t *caller){
 }
 
-HIDDEN void Syscall8(state_t *caller)
-{
-    int intlNo;
-    int dnum;
-    int waitforTermRead;
+/*TODO:*/
+HIDDEN void Syscall7(state_t *caller){
+}
+
+HIDDEN void Syscall8(state_t *caller){
+    int lineNo;             /*  line number*/
+    int dnum;               /*  device number*/
+    int termRead;    
 
     int index;
     int *sem;
 
     lineNo = caller->s_a1;
     dnum = caller->s_a2;
-    waitforTermRead = caller->s_a3; /* terminal read  or write */
+    termRead = caller->s_a3; /* terminal read  or write */
 
     /* what device is going to be computed*/
-    if (lineNo == TERMINT && waitforTermRead == TRUE)
+    if (lineNo == TERMINT && termRead == TRUE)
     {
         /* terminal read */
-        index = DEVPERINT * (lineNo - DEVWOSEM + waitforTermRead) + dnum;
+        index = DEVPERINT * (lineNo - DEVWOSEM + termRead) + dnum;
     }
     else
     {
@@ -351,8 +337,7 @@ HIDDEN void Syscall8(state_t *caller)
 
     if (semD[index] < 0)
     {
-
-        insertBlocked(sem, currentProcess);
+        insertBlocked(semD[index], currentProcess);
         CtrlPlusC(caller, &(currentProcess->p_s));
         sftBlkCount++;
 
@@ -363,9 +348,12 @@ HIDDEN void Syscall8(state_t *caller)
     }
 }
 
+
+/**************************  HELPER FUNCTIONS    ******************************/
+
+
 /*This state will copy all of the contents of the old state into the new state*/
-void CtrlPlusC(state_t *oldState, state_t *newState)
-{
+void CtrlPlusC(state_t *oldState, state_t *newState){
     /*Move all of the contents from the old state into the new*/
     NewState->s_asid = OldState->s_asid;
     NewState->s_status = OldState->s_status;
@@ -379,4 +367,6 @@ void CtrlPlusC(state_t *oldState, state_t *newState)
 }
 
 /*Function that is designed for ME to be able to read that LDST is Load State*/
-void LoadState(state_PTR s) { LDST(s); }
+void LoadState(state_t* s) { 
+    LDST(s); 
+}
