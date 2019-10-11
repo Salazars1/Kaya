@@ -45,18 +45,25 @@ FIXME:
     In order for these commands to execute */
 
     state_t *prevState;
-    state_t *pgm;
+    state_t *program;
     (memaddr) prevStatus;
     int case;
 
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
-    prevStatus = prevState->s_status;
-case = prevState->s_a0;
+    prevStatus = prevState->s_status;   
+    case = prevState->s_a0;
     /*The SYs call is not one of the first 8 sys calls*/
-    if ((prevState->s_a0 > 0) && (prevState->s_a0 < 9) && (prevStatus = !ALLOFF)) ? ? ? ? ? ? ? ? ? ? ? how to include UMOFF ? &in the codition ? ? ? ? {
-        PrgTrapHandler(); /*Trap Handler */
-        ......            //TODO:
-        ...
+    FIXME:
+    if (((prevStatus) != ALLOFF)) ? ? ? ? ? ? ? ? ? ? ? how to include UMOFF ? &in the codition ? ? ? ? {
+        
+        TODO:
+        
+
+		/* syscall is 1-8 and in not kernel mode */
+		CtrlPlusC(caller, program);
+		
+        /*Trap Handler */
+		PrgTrapHandler(); 
     }
 
 /*Switch statement to determine which Syscall we are about to do. If there is no case, we execute the default case */
@@ -95,8 +102,13 @@ case 7:
     break;
 
 case 8:
+    /*SYS CALL*/
     Syscall8(prevState);
     break;
+
+default:
+    /*FIXME: Need to tell it what is going through pass uo or die*/
+    PassUpOrDie(prevState);
 }
 
 /*We should NEVER GET HERE. IF WE DO, WE DIE*/
@@ -125,12 +137,12 @@ WE WAIT
 
 */
 
-void PassUpOrDie()
+void PassUpOrDie(state_t *caller))
 {
     state_PTR memloc;
     state_PTR NameThatState;
 
-FIXME:
+    FIXME:
     NameThatState = currentProcess->Oldsys;
 
     /*This process has no Handler.... It must be Nuked from Orbit*/
@@ -236,12 +248,11 @@ HIDDEN void Syscall2()
 HIDDEN void Syscall3(state_t *caller)
 {
     pcb_t *newProccess = NULL;
-    int *semV = (int *)caller->s_a1;
-    semV++; /* increment semaphore  */
+    (caller->s_a1)++; /* increment semaphore  */
 
-    if ((*semV) <= 0)
+    if ((caller->s_a1) <= 0)
     { /* waiting in the semaphore */
-        newProccess = removeBlocked(semV);
+        newProccess = removeBlocked(caller->s_a1);
         if (newProccess != NULL)
         { /* add it to the ready queue */
             insertProcQ(&readyQueue, newProccess);
@@ -253,9 +264,8 @@ HIDDEN void Syscall3(state_t *caller)
 
 HIDDEN void Syscall4(state_t *caller)
 {
-    int *semV = (int *)caller->s_a1;
-    semV--; /* decrement semaphore */
-    if ((*semV) < 0)
+    (caller->s_a1)--; /* decrement semaphore */
+    if ((caller->s_a1) < 0)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(semV, currentProcess);
@@ -369,5 +379,4 @@ void CtrlPlusC(state_t *oldState, state_t *newState)
 }
 
 /*Function that is designed for ME to be able to read that LDST is Load State*/
-
 void LoadState(state_PTR s) { LDST(s); }
