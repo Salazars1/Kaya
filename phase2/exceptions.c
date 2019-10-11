@@ -111,10 +111,14 @@ void SYSCALLHandler()
 
 void PrgTrapHandler()
 {
+    /*Call Pass Up Or Die*/
+    PassUpOrDie();
 }
 
 void TLBTrapHandler()
 {
+      /*Call Pass Up Or Die*/
+    PassUpOrDie();
 }
 /*
 WE WAIT 
@@ -123,6 +127,10 @@ WE WAIT
 
 void PassUpOrDie()
 {
+    state_PTR Location; 
+    state_PTR state; 
+
+
 }
 
 HIDDEN void Syscall1(state_t *caller)
@@ -151,7 +159,7 @@ HIDDEN void Syscall1(state_t *caller)
         /*Copy the calling state into the new processes state*/
         CtrlPlusc(caller, birthedProc->p_s);
 
-        LDST(caller);
+        LoadState(caller);
     }
 }
 
@@ -213,7 +221,7 @@ HIDDEN void Syscall3(state_t *caller)
         }
     }
 
-    LDST(caller); /* returns control to caller */
+    LoadState(caller); /* returns control to caller */
 }
 
 HIDDEN void Syscall4(state_t *caller)
@@ -227,11 +235,12 @@ HIDDEN void Syscall4(state_t *caller)
         scheduler();
     }
     /* nothing had control of the sem, return control to caller */
-    LDST(caller);
+    LoadState(caller);
 }
 
 HIDDEN void Syscall5(state_t *caller)
 {
+    
     if (caller->s_a1 == 0)
     { /*TLB TRAP*/
         if (currentProcess->newTLB != NULL)
@@ -265,7 +274,7 @@ HIDDEN void Syscall5(state_t *caller)
         currentProcess->oldSys = (state_t *)caller->s_a2;
     }
 
-    LDST(caller);
+    LoadState(caller);
 }
 /*TODO:*/
 HIDDEN void Syscall6(state_t *caller)
@@ -333,3 +342,7 @@ void CtrlPlusC(state_t *oldState, state_t *newState)
         NewState->s_reg[i] = OldState->s_reg[i];
     }
 }
+
+/*Function that is designed for ME to be able to read that LDST is Load State*/
+
+void LoadState(state_PTR s){LDST(s);}
