@@ -78,6 +78,10 @@ else if((OffendingLine & TERMINALDEVICE) == TERMINALDEVICE )
 /*Terminal Device is on */
     Linenumber = TERMINALI; 
 }
+else{
+
+    PANIC();
+}
 
 /**
  * Given Line Number fine the Device Number knowing that It is also a bit map ;
@@ -109,7 +113,7 @@ for(i = 0; i < 8; i++ ){
 
 
 
-    CallScehduluer();
+    CallScehduler();
 }
 
 HIDDEN void StoreTime(cpu_t t){
@@ -117,12 +121,15 @@ HIDDEN void StoreTime(cpu_t t){
 }
 
 
-HIDDEN void CallScheduluer(){
+HIDDEN void CallScheduler(){
 
-
+    if(currentProcess == NULL){
+        scheduler();
+    }
+    else{
 
     scheduler();
-
+    }
 
 
 
