@@ -154,4 +154,11 @@
 #define TERMINALI 7; 
 
 
+#define diskdevice 
+
+/*Acknowledge a interrupt*/
+#define ACK 1; 
+
+
+
 #endif

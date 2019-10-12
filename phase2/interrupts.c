@@ -21,12 +21,13 @@ extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
 void IOTrapHandler(){
 
 unsigned int OffendingLine;
-OffendingLine = CALLERADDRESS -> s_cause << 8 | 2; 
 int Linenumber; 
 int devicenumber; 
 cpu_t timeInterruptOccurs; 
-
-
+device_t * OffendingDevice;
+state_PTR caller; 
+caller = (state_t *) INTERRUPTOLDAREA;
+OffendingLine = caller -> s_cause << 8 | 2; 
 StoreTime(timeInterruptOccurs);
 
 
@@ -51,6 +52,7 @@ else if((OffendingLine & DISKDEVICE) == DISKDEVICE )
 {
 /*Disk Device is on  */
     Linenumber = DI; 
+    OffendingDevice = (device_t *) 0x1000003c;
 
 
 }
@@ -80,31 +82,42 @@ else if((OffendingLine & TERMINALDEVICE) == TERMINALDEVICE )
 /**
  * Given Line Number fine the Device Number knowing that It is also a bit map ;
 */
-devicearea_t * OffendingDevice = ; 
+/*This Device belongs to some memory WHere is unknown*/
+
 
 int i; 
-unsigned int bit = interrupt_dev[Linenumber];
-for(i = 0; i < ){
+unsigned int bit = OffendingDevice -> interrupt_dev[Linenumber];
+for(i = 0; i < 8; i++ ){
     if(){
+
+        devicenumber = i; 
 
 
 
     }
-
 else{ 
 
 i = i + 1; 
-/*BitSHift*/
-
-}
+bit << 1; 
 }
 
+}
 
 
+}
 
 HIDDEN void StoreTime(cpu_t t){
     STCK(t);
 }
+
+
+HIDDEN void CallScheduluer(){
+
+
+
+    scheduler();
+
+
 
 
 }
