@@ -145,6 +145,13 @@
 #define TERMINALDEVICE 0x00000080;
 
 
+#define C1I 1; 
+#define C2I 2; 
+#define DI 3; 
+#define TI 4; 
+#define NETWORKI 5; 
+#define PRINTERI 6; 
+#define TERMINALI 7; 
 
 
 #endif
