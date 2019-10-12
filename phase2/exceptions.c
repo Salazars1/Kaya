@@ -69,39 +69,39 @@ void SYSCALLHandler(){
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we execute the default case */
     switch (case) {
 
-        case 1: /* SYSCALL 1 (BIRTH) ITS ABOUT TO BE CALLED)*/
+        case SYSCALL1: /* SYSCALL 1 (BIRTH) ITS ABOUT TO BE CALLED)*/
             Syscall1(currentProcess);
         break;
 
-        case 2:
+        case SYSCALL2:
         /*SYS CALL*/
             Syscall2();
         break;
 
-        case 3:
+        case SYSCALL3:
             /*SYS CALL*/
             Syscall3(prevState);
         break;
 
-        case 4:
+        case SYSCALL4:
             /*SYS CALL*/
             Syscall4(prevState);
         break;
 
-        case 5:
+        case SYSCALL5:
             /*SYS CALL*/
             Syscall5(prevState);
         break;
 
-        case 6:
+        case SYSCALL6:
             /*SYS CALL*/
         break;
 
-        case 7:
+        case SYSCALL7:
             /*SYS CALL*/
         break;
 
-        case 8:
+        case SYSCALL8:
             /*SYS CALL*/
             Syscall8(prevState);
         break;

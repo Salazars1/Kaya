@@ -122,4 +122,17 @@
 #define IEON	0x00000004      /* Turn interrupts ON*/
 #define IECON	0x00000001      /* Turn interrupts current ON */
 
+/*Define Sys Call Exceptions*/
+
+#define SYSCALL1 1; 
+#define SYSCALL2 2; 
+#define SYSCALL3 3; 
+#define SYSCALL4 4; 
+#define SYSCALL5 5; 
+#define SYSCALL6 6; 
+#define SYSCALL7 7; 
+#define SYSCALL8 8; 
+
+
+
 #endif
