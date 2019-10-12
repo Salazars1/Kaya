@@ -18,14 +18,14 @@
 extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
 
 
-void IOTrapHandler(state_PTR caller){
+void IOTrapHandler(){
 
-unsigned int OffendingLine = caller -> s_cause; 
+unsigned int OffendingLine; 
 int Linenumber; 
 int devicenumber; 
 cpu_t timeInterruptOccurs; 
 
-
+OffendingLine = caller -> s_cause;
 
 
 
