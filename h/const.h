@@ -154,7 +154,7 @@
 #define TERMINALI 7; 
 
 
-#define diskdevice 
+#define DEVPHYS 0x10000000;
 
 /*Acknowledge a interrupt*/
 #define ACK 1; 

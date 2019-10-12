@@ -24,7 +24,7 @@ unsigned int OffendingLine;
 int Linenumber; 
 int devicenumber; 
 cpu_t timeInterruptOccurs; 
-device_t * OffendingDevice;
+devregarea_t * OffendingDevice;
 state_PTR caller; 
 caller = (state_t *) INTERRUPTOLDAREA;
 OffendingLine = caller -> s_cause << 8 | 2; 
@@ -86,24 +86,30 @@ else if((OffendingLine & TERMINALDEVICE) == TERMINALDEVICE )
 
 
 int i; 
+OffendingDevice = (devregarea_t *)DEVPHYS;
 unsigned int bit = OffendingDevice -> interrupt_dev[Linenumber];
 for(i = 0; i < 8; i++ ){
-    if(){
+    if((bit & 0x00000001) == 0x00000001){
 
         devicenumber = i; 
 
 
 
     }
-else{ 
+    else{ 
 
-i = i + 1; 
-bit << 1; 
-}
+        i = i + 1; 
+        bit << 1; 
+        }
 
-}
+    }
 
 
+
+
+
+
+    CallScehduluer();
 }
 
 HIDDEN void StoreTime(cpu_t t){
