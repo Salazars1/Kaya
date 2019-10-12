@@ -17,6 +17,7 @@
 #include "../e/scheduler.e"
 #include "../e/pcb.e"
 
+/* Global Variables*/
 extern int processCount;
 extern int softBlockCount;
 extern pcb_t *currentProcess;
@@ -51,7 +52,7 @@ void SYSCALLHandler(){
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;   
     case = prevState->s_a0;
-    mode = (prevState & UMOFF); /*Uses the compliment to determine the mode I'm in*/
+    mode = (prevState & UMOFF);             /*Uses the compliment to determine the mode I'm in*/
     
     if (mode != ALLOFF){  /* It is User Mode*/
         
@@ -208,7 +209,7 @@ HIDDEN void Syscall4(state_t *caller){
     if ((caller->s_a1) < 0)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
-        insertBlocked(semV, currentProcess);
+        insertBlocked((caller->s_a1), currentProcess);
         scheduler();
     }
     /* nothing had control of the sem, return control to caller */
@@ -309,24 +310,24 @@ void PassUpOrDie(state_t *caller){
     state_t* newState;
     
     int triggerReason;
-    triggerReason = currentProcess->s_a1;
+    triggerReason = caller->s_a1;
 
     switch (triggerReason)
     {
         
         case TLBTRAP:/*0 is TLB EXCEPTIONS!*/
-            oldState = currentProcess->oldTLB;
-            newState = currentProcess->newTLB;    
+            oldState = caller->oldTLB;
+            newState = caller->newTLB;    
         break;
     
         case PROGTRAP:/*1 is Program Trap Exceptions*/
-            oldState = currentProcess->oldProgramTrap;
-            newState = currentProcess->newProgramTrap;
+            oldState = caller->oldProgramTrap;
+            newState = caller->newProgramTrap;
         break;
     
         case SYSTRAP:/*2 is SYS Exception!*/
-            oldState = currentProcess->oldSys;
-            newState = currentProcess->newSys;
+            oldState = caller->oldSys;
+            newState = caller->newSys;
         break;
 
         default:

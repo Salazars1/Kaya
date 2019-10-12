@@ -17,8 +17,8 @@
 #include "../e/pcb.e"
 
 /* Variables for maintaining CPU time*/
-cpu_t currentTOD;
-cpu_t TODStart;
+extern cpu_t currentTOD;
+extern cpu_t TODStart;
 
 /* Variables that the scheduler uses from initial.c*/
 extern int processCount;
@@ -27,7 +27,7 @@ extern pcb_t *currentProcess;
 extern pcb_t *readyQueue;
 
 /*  Round Robin algorithm that schedules each process that it is going to be executed by the system.
-    Under certain conditions, it PANICS or perform the appropiate function call. */
+    Under certain conditions, it PANICS or performs the appropiate function call. */
 void scheduler()
 {
 

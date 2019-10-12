@@ -9,7 +9,7 @@
     Every program needs a main. This module is the entry point of our Kaya Implementation 
     Operative System. This module populates new areas in the ROM Reserved Frame, initializes
     phase 1 code, as well as nucleus maintained variables, the nucleus maintained semaphores,
-    instantes a single process in the Ready Queue, and calls the scheduler
+    instantes a single process in the Ready Queue, and calls the scheduler.
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
