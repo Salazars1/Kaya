@@ -20,51 +20,53 @@ extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
 
 void IOTrapHandler(state_PTR caller){
 
-unsigned int OffendingLine = caller -> s_cause; 
+unsigned int OffendingLine;
+OffendingLine= caller -> s_cause << 8 | 2; 
 int Linenumber; 
 int devicenumber; 
 cpu_t timeInterruptOccurs; 
 
 
+StoreTime(timeInterruptOccurs);
 
 
 
-if(OffendingLine &  MULTICORE == MULTICORE ){
+if((OffendingLine &  MULTICORE) == MULTICORE ){
     /*Mutli Core is on */
 
 
 }
-else if(OffendingLine &  CLOCK1 == CLOCK1 )
+else if((OffendingLine &  CLOCK1) == CLOCK1 )
 {
 /*Clock 1 Has an Interrupt */
 
 }
-else if(OffendingLine & CLOCK2 == CLOCK2 ){
+else if((OffendingLine & CLOCK2) == CLOCK2 ){
     /*Clock 2 is on */
 
     
 }
-else if(OffendingLine & DISKDEVICE == DISKDEVICE )
+else if((OffendingLine & DISKDEVICE) == DISKDEVICE )
 {
 /*Disk Device is on  */
 
 }
-else if(OffendingLine & TAPEDEVICE  == TAPEDEVICE ){
+else if((OffendingLine & TAPEDEVICE)  == TAPEDEVICE ){
     /*Tape Device is on */
 
 }
     
-else if(OffendingLine & NETWORKDEVICE == NETWORKDEVICE )
+else if((OffendingLine & NETWORKDEVICE) == NETWORKDEVICE )
 {
 /*Network Device is on */
 
 }
-else if(OffendingLine & PRINTERDEVICE == PRINTERDEVICE ){
+else if((OffendingLine & PRINTERDEVICE) == PRINTERDEVICE ){
     /*Printer Device is on */
 
     
 }
-else if(OffendingLine & TERMINALDEVICE == TERMINALDEVICE )
+else if((OffendingLine & TERMINALDEVICE) == TERMINALDEVICE )
 {
 /*Terminal Device is on */
 
@@ -106,5 +108,9 @@ HALT();
  * 
  * 
 */
-    
+HIDDEN void StoreTime(cpu_t t){
+    STCK(t);
+}
+
+
 }
