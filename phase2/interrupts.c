@@ -29,42 +29,42 @@ cpu_t timeInterruptOccurs;
 
 
 
-if(OffendingLine &  MutliCore == MultiCore ){
+if(OffendingLine &  MULTICORE == MultiCore ){
     /*Mutli Core is on */
 
 
 }
-else if(OffendingLine &  Clock1 == Clock1 )
+else if(OffendingLine &  CLOCK1 == CLOCK1 )
 {
 /*Clock 1 Has an Interrupt */
 
 }
-else if(OffendingLine & Clock2 == Clock2 ){
+else if(OffendingLine & CLOCK2 == CLOCK2 ){
     /*Clock 2 is on */
 
     
 }
-else if(OffendingLine & DiskDevice == DiskDevice )
+else if(OffendingLine & DISCDEVICE == DISCDEVICE )
 {
 /*Disk Device is on  */
 
 }
-else if(OffendingLine & TapeDevice  == TapeDevice ){
+else if(OffendingLine & TAPEDEVICE  == TAPEDEVICE ){
     /*Tape Device is on */
 
 }
     
-else if(OffendingLine & NetworkDevice == NetworkDevice )
+else if(OffendingLine & NETWORKDEVICE == NETWORKDEVICE )
 {
 /*Network Device is on */
 
 }
-else if(OffendingLine & PrinterDevice == PrinterDevice ){
+else if(OffendingLine & PRINTERDEVICE == PRINTERDEVICE ){
     /*Printer Device is on */
 
     
 }
-else if(OffendingLine & TerminalDevice == TerminalDevice )
+else if(OffendingLine & TERMINALDEVICE == TERMINALDEVICE )
 {
 /*Terminal Device is on */
 
