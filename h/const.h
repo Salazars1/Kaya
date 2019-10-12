@@ -135,14 +135,14 @@
 
 
 /* Define Interrupts  */ 
-#define MultiCore 0x00000001;
-#define Clock1 0x00000002;
-#define Clock2 0x00000004;
-#define DiskDevice 0x00000008;
-#define TapeDevice 0x00000010;
-#define NetworkDevice 0x00000020;
-#define PrinterDevice 0x00000040;
-#define TerminalDevice 0x00000080;
+#define MULTICORE 0x00000001;
+#define CLOCK1 0x00000002;
+#define CLOCK2 0x00000004;
+#define DISKDEVICE 0x00000008;
+#define TAPEDEVICE 0x00000010;
+#define NETWORKDEVICE 0x00000020;
+#define PRINTERDEVICE 0x00000040;
+#define TERMINALDEVICE 0x00000080;
 
 
 
