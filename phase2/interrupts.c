@@ -27,40 +27,44 @@ if(OffendingLine| (8 << 2) == 1){
 
 
 }
-if(OffendingLine| (9 << 2) == 1)
+else if(OffendingLine| (9 << 2) == 1)
 {
 /*Clock 1 Has an Interrupt */
 
 }
-if(OffendingLine| (10 << 2) == 1){
+else if(OffendingLine| (10 << 2) == 1){
     /*Clock 2 is on */
 
     
 }
-if(OffendingLine| (11 << 2) == 1)
+else if(OffendingLine| (11 << 2) == 1)
 {
 /*Disk Device is on  */
 
 }
-if(OffendingLine| (12 << 2) == 1){
+else if(OffendingLine| (12 << 2) == 1){
     /*Tape Device is on */
 
-    
 }
-if(OffendingLine| (13 << 2) == 1)
+    
+else if(OffendingLine| (13 << 2) == 1)
 {
 /*Network Device is on */
 
 }
-if(OffendingLine| (14 << 2) == 1){
+else if(OffendingLine| (14 << 2) == 1){
     /*Printer Device is on */
 
     
 }
-if(OffendingLine| (15 << 2) == 1)
+else if(OffendingLine| (15 << 2) == 1)
 {
 /*Terminal Device is on */
 
+}
+else{
+/*We Interrupted with No interrupt Being on Stop the Program */
+HALT();
 }
 
 
