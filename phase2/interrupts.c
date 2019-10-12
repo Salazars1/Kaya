@@ -22,22 +22,22 @@ void IOTrapHandler(state_PTR caller){
 
 unsigned int OffendingLine = caller -> s_cause; 
 
-if(OffendingLine| (8 << 2) == 1){
+if(OffendingLine &  == ){
     /*Mutli Core is on */
 
 
 }
-else if(OffendingLine| (9 << 2) == 1)
+else if(OffendingLine &  == )
 {
 /*Clock 1 Has an Interrupt */
 
 }
-else if(OffendingLine| (10 << 2) == 1){
+else if(OffendingLine &  == ){
     /*Clock 2 is on */
 
     
 }
-else if(OffendingLine| (11 << 2) == 1)
+else if(OffendingLine &  == )
 {
 /*Disk Device is on  */
 

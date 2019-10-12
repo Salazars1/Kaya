@@ -134,5 +134,17 @@
 #define SYSCALL8 8; 
 
 
+/* Define Interrupts  */ 
+#define MultiCore 0x00000010;
+#define Clock1 0x00000020;
+#define Clock2 0x00000040;
+#define DiskDevice 0x00000080;
+#define TapeDevice 0x0000000;
+#define NetworkDevice 0x00000000;
+#define PrinterDevice 0x00000000;
+#define TerminalDevice 0x00000000;
+
+
+
 
 #endif
