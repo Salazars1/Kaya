@@ -106,7 +106,6 @@ void SYSCALLHandler(){
         break;
 
         default:
-            /*FIXME: Need to tell it what is going through pass uo or die*/
             PassUpOrDie(prevState);
         break;
     }
@@ -118,50 +117,49 @@ void SYSCALLHandler(){
 /**/
 void PrgTrapHandler(){
     /*Call Pass Up Or Die*/
-    PassUpOrDie();
+    state_t* caller = (state_t*) PRGMTRAPOLDAREA;
+    PassUpOrDie(caller);
 }
 
 void TLBTrapHandler(){
     /*Call Pass Up Or Die*/
-    PassUpOrDie();
+    state_t* caller = (state_t*) TBLMGMTOLDAREA;
+    PassUpOrDie(caller);
 }
-/*
-WE WAIT 
 
-*/
+void PassUpOrDie(state_t *caller){
+    state_t* oldState;
+    state_t* newState;
+    
+    int triggerReason;
+    triggerReason = currentProcess->s_a1;
 
-void PassUpOrDie(state_t *caller)){
-    state_PTR memloc;
-    state_PTR NameThatState;
-
-    FIXME:
-    NameThatState = currentProcess->Oldsys;
-
-    /*This process has no Handler.... It must be Nuked from Orbit*/
-    if (NameThatState == NULL)
+    switch (triggerReason)
     {
-        syscall2();
+        
+        case TLBTRAP:/*0 is TLB EXCEPTIONS!*/
+            oldState = currentProcess->oldTLB;
+            newState = currentProcess->newTLB;    
+        break;
+    
+        case PROGTRAP:/*1 is Program Trap Exceptions*/
+            oldState = currentProcess->oldProgramTrap;
+            newState = currentProcess->newProgramTrap;
+        break;
+    
+        case SYSTRAP:/*2 is SYS Exception!*/
+            oldState = currentProcess->oldSys;
+            newState = currentProcess->newSys;
+        break;
+
+        default:
+            syscall2(); /*No vector is defined. Nuke it till it pukes*/
+        break; 
     }
 
-    /*0 is TLB EXCEPTIONS!*/
-    if (currentProcess->s_a1 == 0)
-    {
-        memloc = currentProcess->oldTLB;
-    }
-    /*1 is Program Trap Exceptions*/
-    if (currentProcess->s_a1 == 1)
-    {
-        memloc = currentProcess->oldProgramTrap;
-    }
+    CtrlPlusC(caller, oldState);
+    LoadState(newState);
 
-    /*2 is SYS Exception!*/
-    if (currentProcess->s_a1 == 2)
-    {
-        memloc = currentProcess->Oldsys;
-    }
-
-    /*Load this new state!*/
-    LoadState(memloc);
 }
 
 HIDDEN void Syscall1(state_t *caller){
@@ -353,7 +351,7 @@ HIDDEN void Syscall8(state_t *caller){
 
 
 /*This state will copy all of the contents of the old state into the new state*/
-void CtrlPlusC(state_t *oldState, state_t *newState){
+HIDDEN void CtrlPlusC(state_t *oldState, state_t *newState){
     /*Move all of the contents from the old state into the new*/
     NewState->s_asid = OldState->s_asid;
     NewState->s_status = OldState->s_status;
@@ -367,6 +365,6 @@ void CtrlPlusC(state_t *oldState, state_t *newState){
 }
 
 /*Function that is designed for ME to be able to read that LDST is Load State*/
-void LoadState(state_t* s) { 
+HIDDEN void LoadState(state_t* s) { 
     LDST(s); 
 }
