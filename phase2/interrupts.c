@@ -21,43 +21,50 @@ extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
 void IOTrapHandler(state_PTR caller){
 
 unsigned int OffendingLine = caller -> s_cause; 
+int Linenumber; 
+int devicenumber; 
+cpu_t timeInterruptOccurs; 
 
-if(OffendingLine &  == ){
+
+
+
+
+if(OffendingLine &  MutliCore == MultiCore ){
     /*Mutli Core is on */
 
 
 }
-else if(OffendingLine &  == )
+else if(OffendingLine &  Clock1 == Clock1 )
 {
 /*Clock 1 Has an Interrupt */
 
 }
-else if(OffendingLine &  == ){
+else if(OffendingLine & Clock2 == Clock2 ){
     /*Clock 2 is on */
 
     
 }
-else if(OffendingLine &  == )
+else if(OffendingLine & DiskDevice == DiskDevice )
 {
 /*Disk Device is on  */
 
 }
-else if(OffendingLine| (12 << 2) == 1){
+else if(OffendingLine & TapeDevice  == TapeDevice ){
     /*Tape Device is on */
 
 }
     
-else if(OffendingLine| (13 << 2) == 1)
+else if(OffendingLine & NetworkDevice == NetworkDevice )
 {
 /*Network Device is on */
 
 }
-else if(OffendingLine| (14 << 2) == 1){
+else if(OffendingLine & PrinterDevice == PrinterDevice ){
     /*Printer Device is on */
 
     
 }
-else if(OffendingLine| (15 << 2) == 1)
+else if(OffendingLine & TerminalDevice == TerminalDevice )
 {
 /*Terminal Device is on */
 
