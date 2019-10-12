@@ -4,6 +4,6 @@
 
 #include "../h/types.h"
 
-EXTERN void scheduler();
+extern void scheduler();
 
 #endif
