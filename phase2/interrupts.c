@@ -29,7 +29,7 @@ cpu_t timeInterruptOccurs;
 
 
 
-if(OffendingLine &  MULTICORE == MultiCore ){
+if(OffendingLine &  MULTICORE == MULTICORE ){
     /*Mutli Core is on */
 
 
@@ -44,7 +44,7 @@ else if(OffendingLine & CLOCK2 == CLOCK2 ){
 
     
 }
-else if(OffendingLine & DISCDEVICE == DISCDEVICE )
+else if(OffendingLine & DISKDEVICE == DISKDEVICE )
 {
 /*Disk Device is on  */
 
