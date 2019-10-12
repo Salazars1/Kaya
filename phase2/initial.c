@@ -57,7 +57,7 @@ int main()
 
     /* INTERRUPTS */
     newLocation = (state_t *)INTERRUPTNEWAREA;
-    newLocation->s_pc = (memaddr) TLBTrapHandler();
+    newLocation->s_pc = (memaddr) IOTrapHandler();
     newLocation->s_sp = RAMTOP;
     newLocation->s_status = ALLOFF | VMOFF | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
