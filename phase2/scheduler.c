@@ -1,12 +1,15 @@
 /*  PHASE 2
     Written by NICK STONE AND SANTIAGO SALAZAR
-    Base code and Comments from PROFESSOR MIKEY G 
+    Base comments and some assitance from PROFESSOR MIKEY G 
     Finished on  
 */
 
 /*********************************************************************************************
                             Module Comment Section
-
+    Nucleus guarantees finite progress (NO STARVATION), therefore, every ready process will
+    have an opportunity to execute. For simplicity’s sake this will be a simple round-robin
+    scheduler with a time slice value of 5 milliseconds. Also performs some simple deadlock
+    detention and executes the correct procedure. 
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
@@ -17,39 +20,35 @@
 cpu_t currentTOD;
 cpu_t TODStart;
 
-
 /* Variables that the scheduler uses from initial.c*/
-int processCount;
-int softBlockCount;
-pcb_t *currentProcess;
-pcb_t *readyQueue;
+extern int processCount;
+extern int softBlockCount;
+extern pcb_t *currentProcess;
+extern pcb_t *readyQueue;
 
-/*  Nucleus guarantees finite progress (NO STARVATION), therefore, every ready process
-    will have an opportunity to execute. For simplicity’s sake this will be a simple round-robin
-    scheduler with a time slice value of 5 milliseconds.
-    Parameters: 
-    Retrun:     */
+/*  Round Robin algorithm that schedules each process that it is going to be executed by the system.
+    Under certain conditions, it PANICS or perform the appropiate function call. */
 void scheduler()
 {
 
-    /*  Process was running and either was blocked or its pointer got 
-        removed from readyQue */
+    /*  Process was running and either was blocked or its pointer got removed from readyQue */
 
-    STCK(currentTOD);        /* Get start time */
-    currentProcess->cpu_time = (currentProcess->cpu_time) + (currentTOD - TODStart); /* save how much time current process used on CPU */
+    /* Get start time */
+    STCK(currentTOD);
 
-    if (!emptyProcQ(readyQueue)) /*  Starts next process in Queue*/
-    {
-        currentProcess = removeProcQ(&readyQueue);    /* Remove process from Queue */
-        STCK(TODStart);        /* Get start time */
+    /* save how much time current process used on CPU */          
+    currentProcess->cpu_time = (currentProcess->cpu_time) + (currentTOD - TODStart); 
 
-        SetTIMER (QUANTUM);
+    if (!emptyProcQ(readyQueue)) 
+    {/*  Starts next process in Queue*/
+        currentProcess = removeProcQ(&readyQueue);      /* Remove process from Queue */
+        STCK(TODStart);                                 /* Gets start time */
 
+        SetTIMER (QUANTUM);                             /* Defines Quantum to 5 ms */
         LDST(&(currentProcess -> p_s));
     }
     else
-    {   /* There is nothing on the ReadyQueue */
-        
+    {/* There is nothing on the ReadyQueue */
         currentProcess = NULL; /* no process is running*/
 
         if (processCount == 0)
@@ -61,8 +60,7 @@ void scheduler()
             PANIC();
         }
         else 
-        { /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
-            
+        { /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */            
             SetSTATUS(ALLOFF|IEON|IECON|IMON);
             WAIT();
         }

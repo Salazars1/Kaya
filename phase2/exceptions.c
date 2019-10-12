@@ -23,8 +23,8 @@ extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
 extern int semD[SEMNUM];
 
-/*  Declaration of helper fucntions. Further documentation will be provided
-    in the actual method.*/
+/*  Declaration of exceptions and helper fucntions. Further documentation will be provided
+    in the actual function.*/
 HIDDEN void Syscall1(state_t *caller);
 HIDDEN void Syscall2();
 HIDDEN void Syscall3(state_t *caller);
@@ -35,7 +35,7 @@ HIDDEN void Syscall7(state_t *caller);
 HIDDEN void Syscall8(state_t *caller);
 HIDDEN void CtrlPlusC(state_t *oldState, state_t *newState);
 
-/*Commenting the Logic of the some of the functions */
+/* */
 void SYSCALLHandler(){
     /*
     There are 8 System calls that our Handler must look out for 
@@ -114,53 +114,7 @@ void SYSCALLHandler(){
 
 }
 
-/**/
-void PrgTrapHandler(){
-    /*Call Pass Up Or Die*/
-    state_t* caller = (state_t*) PRGMTRAPOLDAREA;
-    PassUpOrDie(caller);
-}
-
-void TLBTrapHandler(){
-    /*Call Pass Up Or Die*/
-    state_t* caller = (state_t*) TBLMGMTOLDAREA;
-    PassUpOrDie(caller);
-}
-
-void PassUpOrDie(state_t *caller){
-    state_t* oldState;
-    state_t* newState;
-    
-    int triggerReason;
-    triggerReason = currentProcess->s_a1;
-
-    switch (triggerReason)
-    {
-        
-        case TLBTRAP:/*0 is TLB EXCEPTIONS!*/
-            oldState = currentProcess->oldTLB;
-            newState = currentProcess->newTLB;    
-        break;
-    
-        case PROGTRAP:/*1 is Program Trap Exceptions*/
-            oldState = currentProcess->oldProgramTrap;
-            newState = currentProcess->newProgramTrap;
-        break;
-    
-        case SYSTRAP:/*2 is SYS Exception!*/
-            oldState = currentProcess->oldSys;
-            newState = currentProcess->newSys;
-        break;
-
-        default:
-            syscall2(); /*No vector is defined. Nuke it till it pukes*/
-        break; 
-    }
-
-    CtrlPlusC(caller, oldState);
-    LoadState(newState);
-
-}
+/**************************  SYSCALL 1 THROUGH 8 FUNCTIONS    ******************************/
 
 HIDDEN void Syscall1(state_t *caller){
 
@@ -347,8 +301,59 @@ HIDDEN void Syscall8(state_t *caller){
 }
 
 
-/**************************  HELPER FUNCTIONS    ******************************/
+/**************************  HANDLERS FUNCTIONS    ******************************/
 
+
+void PassUpOrDie(state_t *caller){
+    state_t* oldState;
+    state_t* newState;
+    
+    int triggerReason;
+    triggerReason = currentProcess->s_a1;
+
+    switch (triggerReason)
+    {
+        
+        case TLBTRAP:/*0 is TLB EXCEPTIONS!*/
+            oldState = currentProcess->oldTLB;
+            newState = currentProcess->newTLB;    
+        break;
+    
+        case PROGTRAP:/*1 is Program Trap Exceptions*/
+            oldState = currentProcess->oldProgramTrap;
+            newState = currentProcess->newProgramTrap;
+        break;
+    
+        case SYSTRAP:/*2 is SYS Exception!*/
+            oldState = currentProcess->oldSys;
+            newState = currentProcess->newSys;
+        break;
+
+        default:
+            syscall2(); /*No vector is defined. Nuke it till it pukes*/
+        break; 
+    }
+
+    CtrlPlusC(caller, oldState);
+    LoadState(newState);
+
+}
+
+void PrgTrapHandler(){
+    /*Call Pass Up Or Die*/
+    state_t* caller = (state_t*) PRGMTRAPOLDAREA;
+    PassUpOrDie(caller);
+}
+
+void TLBTrapHandler(){
+    /*Call Pass Up Or Die*/
+    state_t* caller = (state_t*) TBLMGMTOLDAREA;
+    PassUpOrDie(caller);
+}
+
+
+
+/**************************  HELPER FUNCTIONS    ******************************/
 
 /*This state will copy all of the contents of the old state into the new state*/
 HIDDEN void CtrlPlusC(state_t *oldState, state_t *newState){

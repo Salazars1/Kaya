@@ -1,12 +1,15 @@
 /*  PHASE 2
     Written by NICK STONE AND SANTIAGO SALAZAR
-    Base code and Comments from PROFESSOR MIKEY G 
+    Base comments and some assitance from PROFESSOR MIKEY G 
     Finished on  
 */
 
 /*********************************************************************************************
                             Module Comment Section
-
+    Every program needs a main. This module is the entry point of our Kaya Implementation 
+    Operative System. This module populates new areas in the ROM Reserved Frame, initializes
+    phase 1 code, as well as nucleus maintained variables, the nucleus maintained semaphores,
+    instantes a single process in the Ready Queue, and calls the scheduler
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
@@ -29,8 +32,8 @@ int semD[SEMNUM];
 int main()
 {
     devregarea_t deviceBus = (devregarea_t*) RAMBASEADDR;
-    memaddr RAMTOP; /* Defines RAMTOP as an unsigned integer*/
-    RAMTOP = (deviceBus->rambase) + (deviceBus->ramsize); /*Sets RAMTOP according to the hardware memory*/
+    memaddr RAMTOP;                                         /* Defines RAMTOP as an unsigned integer*/
+    RAMTOP = (deviceBus->rambase) + (deviceBus->ramsize);   /*Sets RAMTOP according to the hardware memory*/
 
     state_t *newLocation; /* Initialize the new Processor State Areas */
 
@@ -87,7 +90,6 @@ int main()
 
     processCount++;           /* Adds one more process to the process count */
     insertProQ(&readyQue, p); /* Inserts the proces into the pcb data structure */
-
     p = NULL;
 
     /* Lets the scheduler file take over.*/

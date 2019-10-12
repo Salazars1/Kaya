@@ -9,8 +9,6 @@
 
 **********************************************************************************************/
 
-CHAPETER ABOUT DEVICES IN YELLOW BOOK
-
 #include "../h/const.h"
 #include "../h/types.h"
 #include "../e/initial.e"
