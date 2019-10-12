@@ -77,8 +77,27 @@ else if((OffendingLine & TERMINALDEVICE) == TERMINALDEVICE )
     Linenumber = TERMINALI; 
 }
 
+/**
+ * Given Line Number fine the Device Number knowing that It is also a bit map ;
+*/
+devicearea_t * OffendingDevice = ; 
+
+int i; 
+unsigned int bit = interrupt_dev[Linenumber];
+for(i = 0; i < ){
+    if(){
 
 
+
+    }
+
+else{ 
+
+i = i + 1; 
+/*BitSHift*/
+
+}
+}
 
 
 
