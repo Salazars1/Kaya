@@ -16,7 +16,54 @@
 
 
 
-void IOTrapHandler(){
+void IOTrapHandler(state_PTR caller){
+
+unsigned int OffendingLine = caller -> s_cause; 
+
+if(OffendingLine| (8 << 2) == 1){
+    /*Mutli Core is on */
+
+
+}
+if(OffendingLine| (9 << 2) == 1)
+{
+/*Clock 1 Has an Interrupt */
+
+}
+if(OffendingLine| (10 << 2) == 1){
+    /*Mutli Core is on */
+
+    
+}
+if(OffendingLine| (11 << 2) == 1)
+{
+/*Clock 1 Has an Interrupt */
+
+}
+if(OffendingLine| (12 << 2) == 1){
+    /*Mutli Core is on */
+
+    
+}
+if(OffendingLine| (13 << 2) == 1)
+{
+/*Clock 1 Has an Interrupt */
+
+}
+if(OffendingLine| (14 << 2) == 1){
+    /*Mutli Core is on */
+
+    
+}
+if(OffendingLine| (15 << 2) == 1)
+{
+/*Clock 1 Has an Interrupt */
+
+}
+
+
+
+
 
 /**
  * Step 1 in the Interrupt handler is to Find which Line is causing the Interrupt. 
@@ -29,13 +76,22 @@ void IOTrapHandler(){
  * Line 6 Printer Device 
  * Line 7 Terminal Device 
  * 
+ * To Determine the Cause Register Bit Manipulation must be done on an 8 Bit field
+ * 
+ * 
+ * Want to find which bit has a 1 (Meaning On) In the lowest to highest priority 
+ * Little Endian so from Right to Left (Backwards) 8 - 15
+ * 
+ * Line 1 and 2 Handled DIfferently
+ * 
+ * Devices 3-7 
+ * How to handle this
+ * 
+ * 
+ * Given the Line Number and Device Number we can determine that
+ * 
  * 
  * 
 */
-
-
-
-
-
     
 }
