@@ -357,7 +357,7 @@ void TLBTrapHandler(){
 /**************************  HELPER FUNCTIONS    ******************************/
 
 /*This state will copy all of the contents of the old state into the new state*/
-HIDDEN void CtrlPlusC(state_t *oldState, state_t *newState){
+extern HIDDEN void CtrlPlusC(state_t *oldState, state_t *newState){
     /*Move all of the contents from the old state into the new*/
     NewState->s_asid = OldState->s_asid;
     NewState->s_status = OldState->s_status;

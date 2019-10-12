@@ -15,6 +15,8 @@
 #include "../e/pcb.e"
 
 
+extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
+
 
 void IOTrapHandler(state_PTR caller){
 
@@ -31,33 +33,33 @@ if(OffendingLine| (9 << 2) == 1)
 
 }
 if(OffendingLine| (10 << 2) == 1){
-    /*Mutli Core is on */
+    /*Clock 2 is on */
 
     
 }
 if(OffendingLine| (11 << 2) == 1)
 {
-/*Clock 1 Has an Interrupt */
+/*Disk Device is on  */
 
 }
 if(OffendingLine| (12 << 2) == 1){
-    /*Mutli Core is on */
+    /*Tape Device is on */
 
     
 }
 if(OffendingLine| (13 << 2) == 1)
 {
-/*Clock 1 Has an Interrupt */
+/*Network Device is on */
 
 }
 if(OffendingLine| (14 << 2) == 1){
-    /*Mutli Core is on */
+    /*Printer Device is on */
 
     
 }
 if(OffendingLine| (15 << 2) == 1)
 {
-/*Clock 1 Has an Interrupt */
+/*Terminal Device is on */
 
 }
 
