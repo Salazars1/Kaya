@@ -283,7 +283,7 @@ HIDDEN void Syscall6(state_t *caller)
     TimeSpentProcessing = currentTOD - TODStart; 
     */
 
-   
+
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
     currentProcess -> Timeproc = currentProcess ->Timeproc +  (currentTOD -TODStart); 
     /*Store the new updated time spent processing into the v0 register of the process state*/
@@ -297,10 +297,25 @@ HIDDEN void Syscall6(state_t *caller)
 
 }
 
-/*TODO:*/
+/*Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
+  Knowing that this clock also has a syscall 3 performing on it every 100 milliseconds
+
+*/
 HIDDEN void Syscall7(state_t *caller)
 {
+    int * sem = /*I dont know which semaphore belongs to the clock*/
 
+    if(sem < 0){
+        /*Sem is less than 0 block the current process*/
+        insertBlocked(sem,currentProcess);
+
+        /*Increment that we have another process soft block so that it does not starve*/
+        softBlockCount++;
+
+    }
+
+    /*Process is soft blocked call to run another process*/
+    scheduler();
 
     
 }
@@ -420,17 +435,20 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
 {
     while (emptyChild(headPtr))
     {
+        processCount--;
         /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
         NukeThemTillTheyPuke(removeChild(headPtr));
     }
 
     if (headPtr == currentProcess)
     {
+        processCount--;
         /*  Children services comes for you and take your child*/
         outChild(currentProcess);
     }
     else if (headPtr->p_semAdd == NULL)
     {
+        processCount--;
         /*  remove process from readyQueue*/
         outProcQ(&readyQue, headPtr);
     }
