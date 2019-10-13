@@ -37,7 +37,7 @@ void scheduler()
     STCK(currentTOD);
 
     /* save how much time current process used on CPU */          
-    currentProcess->cpu_time = (currentProcess->cpu_time) + (currentTOD - TODStart); 
+    currentProcess->Timeproc = (currentProcess->Timeproc) + (currentTOD - TODStart); 
 
     if (!emptyProcQ(readyQueue)) 
     {/*  Starts next process in Queue*/

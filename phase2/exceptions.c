@@ -402,7 +402,7 @@ void PassUpOrDie(state_t *caller)
     }
 
     CtrlPlusC(caller, oldState);
-    LoadState(newState);
+    LoadState(&newState);
 }
 
 /*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is 
@@ -435,20 +435,20 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
 {
     while (emptyChild(headPtr))
     {
-        processCount--;
+        
         /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
         NukeThemTillTheyPuke(removeChild(headPtr));
     }
 
     if (headPtr == currentProcess)
     {
-        processCount--;
+        
         /*  Children services comes for you and take your child*/
         outChild(currentProcess);
     }
     else if (headPtr->p_semAdd == NULL)
     {
-        processCount--;
+        
         /*  remove process from readyQueue*/
         outProcQ(&readyQue, headPtr);
     }
