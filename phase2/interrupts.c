@@ -82,39 +82,71 @@ else{
 
     PANIC();
 }
+int devn; 
 
+devn = finddevice(Linenumber);
+/*with Dev Reg and Line number Do literal magic*/
+
+/*To Continue Watch Part 2 and 3 of Interrupts but I have alot of questions to ask */
+
+
+callscheduler();
+
+
+
+}
 /**
  * Given Line Number fine the Device Number knowing that It is also a bit map ;
 */
 /*This Device belongs to some memory WHere is unknown*/
 
 
-int i; 
-OffendingDevice = (devregarea_t *)DEVPHYS;
-unsigned int bit = OffendingDevice -> interrupt_dev[Linenumber];
-for(i = 0; i < 8; i++ ){
-    if((bit & 0x00000001) == 0x00000001){
-
-        devicenumber = i; 
 
 
+/**
+ * Need to completely Refactor this shit show that I have right now 
+ * 
+ * We need to build helper functions that should probably do the following
+ * Function: Finish the program and call the scheduler
+ * Function: Find the device number given the line number 
+ * Function: Store time 
+ * Function: Copy State? 
+ * Function: 
+ * 
+ *
+ * 
+ * 
+ * 
+ * 
+*/
 
-    }
-    else{ 
 
-        i = i + 1; 
-        bit << 1; 
+
+/*HELPER FUNCTIONS*/
+
+int finddevice(int linenumber){
+    int i; 
+    OffendingDevice = (devregarea_t *)DEVPHYS;
+    unsigned int bit = OffendingDevice -> interrupt_dev[linenumber];
+    for(i = 0; i < 8; i++ ){
+        if((bit & 0x00000001) == 0x00000001){
+
+            devicenumber = i; 
+
+
+
+        }
+        else{ 
+
+            i = i + 1; 
+            bit << 1; 
+            }
+
         }
 
-    }
-
-
-
-
-
-
-    CallScehduler();
+        return devicenumber; 
 }
+
 
 HIDDEN void StoreTime(cpu_t t){
     STCK(t);
