@@ -304,11 +304,12 @@ HIDDEN void Syscall6(state_t *caller)
 HIDDEN void Syscall7(state_t *caller)
 {
     int * sem = /*I dont know which semaphore belongs to the clock*/
+    (*sem)--;
 
     if(sem < 0){
         /*Sem is less than 0 block the current process*/
         insertBlocked(sem,currentProcess);
-
+        CtrlPlusC(caller, currentProcess->p_s);
         /*Increment that we have another process soft block so that it does not starve*/
         softBlockCount++;
 
@@ -446,7 +447,7 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
         /*  Children services comes for you and take your child*/
         outChild(currentProcess);
     }
-    else if (headPtr->p_semAdd == NULL)
+    if (headPtr->p_semAdd == NULL)
     {
         
         /*  remove process from readyQueue*/
