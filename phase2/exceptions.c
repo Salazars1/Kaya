@@ -6,7 +6,12 @@
 
 /*********************************************************************************************
                             Module Comment Section
-
+    A SYSCALL exception occurs when a SYSCALL assembler instruction is executed. After
+    the processor and ROM-Exception handler actions when a SYSCALL point exception is 
+    raised, continued executing the nucleus Exception handler. This nreakpoints, are 
+    distinguidhed from a Breakpoint, exceptions by the contents of Cause.ExcCode in the
+    SYSOldArea. There are 8 Sys calls, which are going to be defined with more detail in 
+    each function documentation.
 **********************************************************************************************/
 
 #include "../h/const.h"
@@ -34,15 +39,20 @@ HIDDEN void Syscall5(state_t *caller);
 HIDDEN void Syscall6(state_t *caller);
 HIDDEN void Syscall7(state_t *caller);
 HIDDEN void Syscall8(state_t *caller);
-HIDDEN void CtrlPlusC(state_t *oldState, state_t *newState);
 
-/* */
-void SYSCALLHandler(){
-    /*
-    There are 8 System calls that our Handler must look out for 
-    Of these first 8 System calls the Kernel Mode must be active
-    In order for these commands to execute */
+void PassUpOrDie(state_t *caller);
+void PrgTrapHandler();
+void TLBTrapHandler();
 
+extern void CtrlPlusC(state_t *oldState, state_t *newState);
+HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr);
+HIDDEN void LoadState(state_t *s);
+
+/*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
+    for these first 8 System calls the Kernel Mode must be active in order for these commands
+    to execute. If this is not the case, then the appropiate program trap would be execute.  */
+void SYSCALLHandler()
+{
     state_t *prevState;
     state_t *program;
     (memaddr) prevStatus;
@@ -50,74 +60,77 @@ void SYSCALLHandler(){
     int mode;
 
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
-    prevStatus = prevState->s_status;   
+    prevStatus = prevState->s_status;
     case = prevState->s_a0;
-    mode = (prevState & UMOFF);             /*Uses the compliment to determine the mode I'm in*/
-    
-    if (mode != ALLOFF){  /* It is User Mode*/
-        
+    mode = (prevState & UMOFF); /*Uses the compliment to determine the mode I'm in*/
+
+    if (mode != ALLOFF) { /* It is User Mode*/
+
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         prevState->s_cause = prevState->s_cause | (10 << 2);
 
-        program = (state_t*) PRGMTRAPOLDAREA;
-		CtrlPlusC(prevState, program);
-		
+        program = (state_t *)PRGMTRAPOLDAREA;
+        CtrlPlusC(prevState, program);
+
         /*Program Trap Handler */
-		PrgTrapHandler(prevState); 
+        PrgTrapHandler(prevState);
     }
 
-    /*Switch statement to determine which Syscall we are about to do. If there is no case, we execute the default case */
+    /*Switch statement to determine which Syscall we are about to do. If there is no case, we
+    execute the default case */
     switch (case) {
 
-        case SYSCALL1: /* SYSCALL 1 (BIRTH) ITS ABOUT TO BE CALLED)*/
+        case SYSCALL1:
             Syscall1(currentProcess);
-        break;
+            break;
 
         case SYSCALL2:
-        /*SYS CALL*/
             Syscall2();
-        break;
+            break;
 
         case SYSCALL3:
-            /*SYS CALL*/
             Syscall3(prevState);
-        break;
+            break;
 
         case SYSCALL4:
-            /*SYS CALL*/
             Syscall4(prevState);
-        break;
+            break;
 
         case SYSCALL5:
-            /*SYS CALL*/
             Syscall5(prevState);
-        break;
+            break;
 
         case SYSCALL6:
-            /*SYS CALL*/
-        break;
+            /*TODO:*/
+            break;
 
         case SYSCALL7:
-            /*SYS CALL*/
-        break;
+            /*TODO:*/
+            break;
 
         case SYSCALL8:
-            /*SYS CALL*/
             Syscall8(prevState);
-        break;
+            break;
 
         default:
             PassUpOrDie(prevState);
-        break;
+            break;
     }
 
     /*We should NEVER GET HERE. IF WE DO, WE DIE*/
-
 }
 
 /**************************  SYSCALL 1 THROUGH 8 FUNCTIONS    ******************************/
 
-HIDDEN void Syscall1(state_t *caller){
+/*  This service creates a new process (progeny) of the caller process. a1 contains the physical
+    address of a processor state area at the rime instruction is executed. The processsor state
+    is uded as the initial state of the newly birth child.
+    Parameter:  state* caller
+    Return:     -0 in V0 if the process was done effectively
+                -1 in V0 if the process was NOT done because of lack of resources.*/
+
+HIDDEN void Syscall1(state_t *caller)
+{
 
     pcb_t *birthedProc = allocPcb();
 
@@ -146,49 +159,37 @@ HIDDEN void Syscall1(state_t *caller){
     }
 }
 
-/*FIXME:*/
-HIDDEN void Syscall2(){
+/*  This services causes the executing process to be anihilated along with all its children, grand
+    children and so on. Execution of this instruction does not complete until everyone has been
+    exterminated*/
+HIDDEN void Syscall2()
+{
     pcb_t *temp = currentProcess;
 
-    while (temp->p_child != NULL)
-    {
-        temp = temp->p_child;
-    }
-    /*We are at the bottom Most child
-      Kill every child in list. Rinse and Repeat
-    
-    */
-    pcb_t *temp2;
-    while (temp->p_next != NULL)
-    {
-        temp2 = temp->p_next;
-        removeChild(temp);
+    if (emptyChild(temp))
+    { /*current process has no children*/
+        outChild(temp);
         freePcb(temp);
-        temp = temp2;
         processCount--;
-    }
-
-    if (currentProcess->p_child != NULL)
-    {
-        /*You still got kids? Ill fucking do it again*/
-        Syscall2();
     }
     else
     {
-        /*Batter up mother fucker its time to die */
-
-        /*WE have one less process to worry about 
-    We remove the process from the ready queue 
-    We then free the pcb now we can allocate a new pcb 
-   
-   */
-        processCount--;
-        removeProcQ(currentProcess);
-        freePcb(currentProcess);
+        /*Helper Function*/
+        NukeThemTillTheyPuke(temp);
     }
+
+    /*  Clean up after myself*/
+    currentProcess = NULL;
+
+    /*call scheduler*/
+    scheduler();
 }
 
-HIDDEN void Syscall3(state_t *caller){
+/*  When this service is requested, it is interpreted by the nucleus to request to perform a Verhogen
+    (V) operation on a sempahore. This is requested by placing 3 in a0, abd Verhogened in a1.
+    Parameter:  state* caller*/
+HIDDEN void Syscall3(state_t *caller)
+{
     pcb_t *newProccess = NULL;
     (caller->s_a1)++; /* increment semaphore  */
 
@@ -204,7 +205,11 @@ HIDDEN void Syscall3(state_t *caller){
     LoadState(caller); /* returns control to caller */
 }
 
-HIDDEN void Syscall4(state_t *caller){
+/*  When this service is requested, it is interpreted by the nucleus to request to perform a Passeren
+    (P) operation on a sempahore. This is requested by placing 4 in a0, and Passerened in a1.
+    Parameter:  state* caller*/
+HIDDEN void Syscall4(state_t *caller)
+{
     (caller->s_a1)--; /* decrement semaphore */
     if ((caller->s_a1) < 0)
     { /* there is something controlling the semaphore */
@@ -216,13 +221,19 @@ HIDDEN void Syscall4(state_t *caller){
     LoadState(caller);
 }
 
-HIDDEN void Syscall5(state_t *caller){
+/*  When this service is requested, it will save the contentes of a2 and a3 and pass them to handle the
+    respective exceptions (TLB, PGMTRAP, SYS) while this process is executing. Each process may request
+    a SYS5 only ONCE for each of the exceptions types, more than one call will trigger SYS2 and Nuke the
+    process (error occured).
+    Parameter:  state* caller*/
+HIDDEN void Syscall5(state_t *caller)
+{
 
     if (caller->s_a1 == 0)
     { /*TLB TRAP*/
         if (currentProcess->newTLB != NULL)
-        {
-            syscall2(); /* already called sys5 */
+        { /* already called sys5 */
+            syscall2();
         }
         /* assign exception values */
         currentProcess->newTLB = (state_t *)caller->s_a3;
@@ -232,8 +243,8 @@ HIDDEN void Syscall5(state_t *caller){
     if (caller->s_a1 == 1)
     {
         if (currentProcess->newProgramTrap != NULL)
-        {
-            syscall2(); /* already called sys5 */
+        { /* already called sys5 */
+            syscall2();
         }
         /* assign exception values */
         currentProcess->newProgramTrap = (state_t *)caller->s_a3;
@@ -243,8 +254,8 @@ HIDDEN void Syscall5(state_t *caller){
     else
     {
         if (currentProcess->newSys != NULL)
-        {
-            syscall2(); /* already called sys5 */
+        { /* already called sys5 */
+            syscall2();
         }
         /* assign exception values */
         currentProcess->newSys = (state_t *)caller->s_a3;
@@ -255,17 +266,25 @@ HIDDEN void Syscall5(state_t *caller){
 }
 
 /*TODO:*/
-HIDDEN void Syscall6(state_t *caller){
+HIDDEN void Syscall6(state_t *caller)
+{
 }
 
 /*TODO:*/
-HIDDEN void Syscall7(state_t *caller){
+HIDDEN void Syscall7(state_t *caller)
+{
 }
 
-HIDDEN void Syscall8(state_t *caller){
-    int lineNo;             /*  line number*/
-    int dnum;               /*  device number*/
-    int termRead;    
+/*  This service perofroms a Syscall 5 operation on the semaphore that the nucles maintains for the IO 
+    device by the values in a1, a2, and a3 (optionally). The nucleus performs a V operation on the
+    semaphore whenever that device generates an interrupt. 
+    Return:     Device Status in v0 (Once the process resumes after the occurrence of the anticipated
+                interrupt)*/
+HIDDEN void Syscall8(state_t *caller)
+{
+    int lineNo; /*  line number*/
+    int dnum;   /*  device number*/
+    int termRead;
 
     int index;
     int *sem;
@@ -301,63 +320,112 @@ HIDDEN void Syscall8(state_t *caller){
     }
 }
 
-
 /**************************  HANDLERS FUNCTIONS    ******************************/
 
+/*If an exception has been encountered, it passes the error to the appropiate handler, if no exception
+    is found, it Nukes the procees till it pukes.
+    Parameters: state_t *caller*/
+void PassUpOrDie(state_t *caller)
+{
+    state_t *oldState;
+    state_t *newState;
 
-void PassUpOrDie(state_t *caller){
-    state_t* oldState;
-    state_t* newState;
-    
     int triggerReason;
     triggerReason = caller->s_a1;
 
     switch (triggerReason)
     {
-        
-        case TLBTRAP:/*0 is TLB EXCEPTIONS!*/
-            oldState = caller->oldTLB;
-            newState = caller->newTLB;    
-        break;
-    
-        case PROGTRAP:/*1 is Program Trap Exceptions*/
-            oldState = caller->oldProgramTrap;
-            newState = caller->newProgramTrap;
-        break;
-    
-        case SYSTRAP:/*2 is SYS Exception!*/
-            oldState = caller->oldSys;
-            newState = caller->newSys;
+
+    case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
+        oldState = caller->oldTLB;
+        newState = caller->newTLB;
         break;
 
-        default:
-            syscall2(); /*No vector is defined. Nuke it till it pukes*/
-        break; 
+    case PROGTRAP: /*1 is Program Trap Exceptions*/
+        oldState = caller->oldProgramTrap;
+        newState = caller->newProgramTrap;
+        break;
+
+    case SYSTRAP: /*2 is SYS Exception!*/
+        oldState = caller->oldSys;
+        newState = caller->newSys;
+        break;
+
+    default:
+        syscall2(); /*No vector is defined. Nuke it till it pukes*/
+        break;
     }
 
     CtrlPlusC(caller, oldState);
     LoadState(newState);
-
 }
 
-void PrgTrapHandler(){
+/*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is 
+    triggered when a PgmTrap exception is raised, execution continues with the nucleus’s PgmTrap exception
+    handler. The cause of the PgmTrap exception will be set in Cause.ExcCode in the PgmTrap Old Area. */
+void PrgTrapHandler()
+{
+    state_t *caller = (state_t *)PRGMTRAPOLDAREA;
     /*Call Pass Up Or Die*/
-    state_t* caller = (state_t*) PRGMTRAPOLDAREA;
     PassUpOrDie(caller);
 }
 
-void TLBTrapHandler(){
+/*Gets triggered when μMPS2 fails in an attempt to translate a virtual address into its corresponding 
+    physical address. Therefore, since  this is triggered when a TLB exception is raised, execution
+    continues with the nucleus’s TLB exception handler. The cause of the TLB exception will be set in
+     Cause.ExcCode in the TLB Old Area. */
+void TLBTrapHandler()
+{
+    state_t *caller = (state_t *)TBLMGMTOLDAREA;
     /*Call Pass Up Or Die*/
-    state_t* caller = (state_t*) TBLMGMTOLDAREA;
     PassUpOrDie(caller);
 }
-
-
 
 /**************************  HELPER FUNCTIONS    ******************************/
 
+/*Recursively removes all the children of the head, and starts hunting them down one by one. 
+    It kills them if they are in the ASL, ReadyQueue or currentProcess. Adjust the process count
+    as the process are being terminated.*/
+HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
+{
+    while (emptyChild(headPtr))
+    {
+        /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
+        NukeThemTillTheyPuke(removeChild(headPtr));
+    }
+
+    if (headPtr == currentProcess)
+    {
+        /*  Children services comes for you and take your child*/
+        outChild(currentProcess);
+    }
+    else if (headPtr->p_semAdd == NULL)
+    {
+        /*  remove process from readyQueue*/
+        outProcQ(&readyQue, headPtr);
+    }
+    else
+    {
+        /*  remove process from ASL*/
+        outBlocked(headPtr);
+        if ((headPtr->p_semAdd > &(semD[0])) && (headPtr->p_semAdd < &(semD[SEMNUM - 1])))
+        {   /*SemAdd count is somewhere in between the SemD array*/
+            softBlockCount--;
+        }
+        else
+        {
+            /*  Increment Semaphore*/
+            (headPtr->p_semAdd)++;
+        }
+    }
+    /*  We have no more children! Good to go*/
+    processCount--;
+    freePcb(headPtr);
+}
+
 /*This state will copy all of the contents of the old state into the new state*/
-extern HIDDEN void CtrlPlusC(state_t *oldState, state_t *newState){
+extern void CtrlPlusC(state_t *oldState, state_t *newState)
+{
     /*Move all of the contents from the old state into the new*/
     NewState->s_asid = OldState->s_asid;
     NewState->s_status = OldState->s_status;
@@ -371,6 +439,7 @@ extern HIDDEN void CtrlPlusC(state_t *oldState, state_t *newState){
 }
 
 /*Function that is designed for ME to be able to read that LDST is Load State*/
-HIDDEN void LoadState(state_t* s) { 
-    LDST(s); 
+HIDDEN void LoadState(state_t *s)
+{
+    LDST(s);
 }
