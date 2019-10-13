@@ -6,13 +6,10 @@
 
 /*********************************************************************************************
                             Module Comment Section
-pcb.c is a Queues manager. This program is designed to start by creating
-a doubley linked Circular tail pointer data structure of pcb_t which is contained in the types.h. This program
-is also designed to track the Child tree maintenance of the child tree's of pcb_t as well as the allocation and deallocation
-of the pcb_t. These children trees are doubley linked linear linked list with no sentinnel nodes
-It is important to note that pcb_t in this module may be referred to as 'Nodes' as well as 
-ProcBlks which is short hand for process blocks. This Module is also implemented by asl.c and is tested in 
-p1test.c. this module also uses a few constants from const.h.
+This Modules is the Queues Manager of the Operating System. The data Structure is a double linked
+list with a tail pointer. Furthermore each process has an associated tree of child processes which
+the Manager maintains. The child process Data structure is a double linked linear list that is 
+Null terminated. Pcb_t is located in Types.h
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
