@@ -127,7 +127,13 @@ HIDDEN void CallScheduler(){
         scheduler();
     }
     else{
+        /*CurrentProcess is Not Null*/
+        /*StoreTime(Tim)*/
+        cpu_t timespent; 
+        StoreTime(timespent);
+        
 
+    
     scheduler();
     }
 
