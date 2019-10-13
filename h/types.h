@@ -70,6 +70,8 @@ typedef struct pcb_t {
 	state_t * oldTLB; 
 	state_t * newTLB; 
 
+
+	cpu_t Timeproc; 
 	
 	
 } pcb_t, *pcb_PTR;

@@ -266,13 +266,43 @@ HIDDEN void Syscall5(state_t *caller)
 }
 
 /*TODO:*/
+
+/*Syscall6  "Get_CPU_Time"
+This service is in charge of making sure that the amount of time spent being processed is tracked by 
+each Process Block that is running. 
+
+*/
 HIDDEN void Syscall6(state_t *caller)
 {
+    CtrlPlusC(caller, &currentProcess);
+    StoreTime(currentTOD);
+    /*
+    Might need to do it this way; 
+    cpu_t TimeSpentProcessing; 
+
+    TimeSpentProcessing = currentTOD - TODStart; 
+    */
+
+   
+    /*Track the amout of time spent processing and add this to the previous amount of process time*/
+    currentProcess -> Timeproc = currentProcess ->Timeproc +  (currentTOD -TODStart); 
+    /*Store the new updated time spent processing into the v0 register of the process state*/
+    currentProcess -> p_s->s_v0 = currentProcess ->Timeproc; 
+
+    /*Load the Current Processes State*/
+    LoadState(&currentProcess->p_s);
+
+
+
+
 }
 
 /*TODO:*/
 HIDDEN void Syscall7(state_t *caller)
 {
+
+
+    
 }
 
 /*  This service perofroms a Syscall 5 operation on the semaphore that the nucles maintains for the IO 
@@ -442,4 +472,8 @@ extern void CtrlPlusC(state_t *oldState, state_t *newState)
 HIDDEN void LoadState(state_t *s)
 {
     LDST(s);
+}
+
+HIDDEN void StoreTime(cpu_t t){
+    STCK(t);
 }
