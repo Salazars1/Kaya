@@ -50,7 +50,10 @@ HIDDEN void LoadState(state_t *s);
 
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
     for these first 8 System calls the Kernel Mode must be active in order for these commands
-    to execute. If this is not the case, then the appropiate program trap would be execute.  */
+    to execute. If this is not the case, then the appropiate program trap would be execute. 
+    Parameters: None
+    Return: Void
+     */
 void SYSCALLHandler()
 {
     state_t *prevState;
@@ -161,7 +164,9 @@ HIDDEN void Syscall1(state_t *caller)
 
 /*  This services causes the executing process to be anihilated along with all its children, grand
     children and so on. Execution of this instruction does not complete until everyone has been
-    exterminated*/
+    exterminated
+    Parameters: None
+    Return: Void*/
 HIDDEN void Syscall2()
 {
     pcb_t *temp = currentProcess;
@@ -187,7 +192,9 @@ HIDDEN void Syscall2()
 
 /*  When this service is requested, it is interpreted by the nucleus to request to perform a Verhogen
     (V) operation on a sempahore. This is requested by placing 3 in a0, abd Verhogened in a1.
-    Parameter:  state* caller*/
+    Parameter:  state* caller
+    Return: Void
+    */
 HIDDEN void Syscall3(state_t *caller)
 {
     pcb_t *newProccess = NULL;
@@ -207,7 +214,9 @@ HIDDEN void Syscall3(state_t *caller)
 
 /*  When this service is requested, it is interpreted by the nucleus to request to perform a Passeren
     (P) operation on a sempahore. This is requested by placing 4 in a0, and Passerened in a1.
-    Parameter:  state* caller*/
+    Parameter:  state* caller
+    Return: Void
+    */
 HIDDEN void Syscall4(state_t *caller)
 {
     (caller->s_a1)--; /* decrement semaphore */
@@ -225,7 +234,9 @@ HIDDEN void Syscall4(state_t *caller)
     respective exceptions (TLB, PGMTRAP, SYS) while this process is executing. Each process may request
     a SYS5 only ONCE for each of the exceptions types, more than one call will trigger SYS2 and Nuke the
     process (error occured).
-    Parameter:  state* caller*/
+    Parameter:  state* caller
+    Return: Void
+    */
 HIDDEN void Syscall5(state_t *caller)
 {
 
@@ -270,7 +281,8 @@ HIDDEN void Syscall5(state_t *caller)
 /*Syscall6  "Get_CPU_Time"
 This service is in charge of making sure that the amount of time spent being processed is tracked by 
 each Process Block that is running. 
-
+Parameters: State_t * caller
+    Return: Void
 */
 HIDDEN void Syscall6(state_t *caller)
 {
@@ -299,7 +311,8 @@ HIDDEN void Syscall6(state_t *caller)
 
 /*Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
   Knowing that this clock also has a syscall 3 performing on it every 100 milliseconds
-
+Parameters: State_t* Caller
+    Return: Void
 */
 HIDDEN void Syscall7(state_t *caller)
 {
@@ -370,7 +383,9 @@ HIDDEN void Syscall8(state_t *caller)
 
 /*If an exception has been encountered, it passes the error to the appropiate handler, if no exception
     is found, it Nukes the procees till it pukes.
-    Parameters: state_t *caller*/
+    Parameters: state_t *caller
+    Return: Void 
+    */
 void PassUpOrDie(state_t *caller)
 {
     state_t *oldState;
@@ -408,7 +423,10 @@ void PassUpOrDie(state_t *caller)
 
 /*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is 
     triggered when a PgmTrap exception is raised, execution continues with the nucleus’s PgmTrap exception
-    handler. The cause of the PgmTrap exception will be set in Cause.ExcCode in the PgmTrap Old Area. */
+    handler. The cause of the PgmTrap exception will be set in Cause.ExcCode in the PgmTrap Old Area.
+    Parameters: None
+    Return: Void
+     */
 void PrgTrapHandler()
 {
     state_t *caller = (state_t *)PRGMTRAPOLDAREA;
@@ -419,7 +437,10 @@ void PrgTrapHandler()
 /*Gets triggered when μMPS2 fails in an attempt to translate a virtual address into its corresponding 
     physical address. Therefore, since  this is triggered when a TLB exception is raised, execution
     continues with the nucleus’s TLB exception handler. The cause of the TLB exception will be set in
-     Cause.ExcCode in the TLB Old Area. */
+     Cause.ExcCode in the TLB Old Area. 
+     Parameters: None
+    Return: Void
+     */
 void TLBTrapHandler()
 {
     state_t *caller = (state_t *)TBLMGMTOLDAREA;
@@ -431,7 +452,10 @@ void TLBTrapHandler()
 
 /*Recursively removes all the children of the head, and starts hunting them down one by one. 
     It kills them if they are in the ASL, ReadyQueue or currentProcess. Adjust the process count
-    as the process are being terminated.*/
+    as the process are being terminated.
+    Parameters: pcb_t * HeadPtr
+    Return: Void
+    */
 HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
 {
     while (emptyChild(headPtr))
@@ -472,7 +496,11 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
     freePcb(headPtr);
 }
 
-/*This state will copy all of the contents of the old state into the new state*/
+/*This state will copy all of the contents of the old state into the new state
+Parameters: State_t * oldstate, State_t* NewState
+    Return: Void
+*/
+
 extern void CtrlPlusC(state_t *oldState, state_t *newState)
 {
     /*Move all of the contents from the old state into the new*/
@@ -487,11 +515,19 @@ extern void CtrlPlusC(state_t *oldState, state_t *newState)
     }
 }
 
-/*Function that is designed for ME to be able to read that LDST is Load State*/
+/*Function that is designed for ME to be able to read that LDST is Load State 
+Parameters: state_t * s
+    Return: Void
+*/
 HIDDEN void LoadState(state_t *s)
 {
     LDST(s);
 }
+/*
+Track the Time
+Parameters: Cpu_t t
+    Return: Void
+*/
 
 HIDDEN void StoreTime(cpu_t t){
     STCK(t);

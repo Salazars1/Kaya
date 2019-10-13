@@ -27,7 +27,10 @@ extern pcb_t *currentProcess;
 extern pcb_t *readyQueue;
 
 /*  Round Robin algorithm that schedules each process that it is going to be executed by the system.
-    Under certain conditions, it PANICS or performs the appropiate function call. */
+    Under certain conditions, it PANICS or performs the appropiate function call. 
+    Parameters: None
+    Return: Void
+    */
 void scheduler()
 {
 
