@@ -29,6 +29,10 @@ extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
 extern int semD[SEMNUM];
 
+/* Variables for maintaining CPU time*/
+extern cpu_t currentTOD;
+extern cpu_t TODStart;
+
 /*  Declaration of exceptions and helper fucntions. Further documentation will be provided
     in the actual function.*/
 HIDDEN void Syscall1(state_t *caller);
