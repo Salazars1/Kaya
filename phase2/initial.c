@@ -79,18 +79,20 @@ int main()
     }
 
     /* Create initial process (alloc PCB)*/
-    pcb_t *p;
-    p = allocPcb();
+    currentProcess = allocPcb();
+    processCount++;           /* Adds one more process to the process count */
 
     /* Initialize p_s with all the requirements */
-    p->p_s.s_sp = (RAMTOP - PAGESIZE);
-    p->p_s.s_pc = (memaddr)test;
-    p->p_s.s_t9 = (memaddr)test;
-    p->p_s.s_status = ALLOFF | VMOFF | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
+    currentProcess->p_s.s_sp = (RAMTOP - PAGESIZE);
+    currentProcess->p_s.s_pc = (memaddr)test;
+    currentProcess->p_s.s_t9 = (memaddr)test;
+    currentProcess->p_s.s_status = ALLOFF | VMOFF | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
-    processCount++;           /* Adds one more process to the process count */
+    
     insertProQ(&readyQue, p); /* Inserts the proces into the pcb data structure */
-    p = NULL;
+    currentProcess = NULL;
+    
+    LDIT(IOCLOCK);  /*Sets the semaphore pseudoclock*/
 
     /* Lets the scheduler file take over.*/
     scheduler();

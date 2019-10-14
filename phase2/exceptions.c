@@ -104,11 +104,11 @@ void SYSCALLHandler()
             break;
 
         case SYSCALL6:
-            /*TODO:*/
+            Syscall6(prevState);
             break;
 
         case SYSCALL7:
-            /*TODO:*/
+            Syscall7(prevState);
             break;
 
         case SYSCALL8:
@@ -276,47 +276,35 @@ HIDDEN void Syscall5(state_t *caller)
     LoadState(caller);
 }
 
-/*TODO:*/
-
-/*Syscall6  "Get_CPU_Time"
-This service is in charge of making sure that the amount of time spent being processed is tracked by 
-each Process Block that is running. 
-Parameters: State_t * caller
-    Return: Void
-*/
+/*Syscall6:  "Get_CPU_Time"
+    This service is in charge of making sure that the amount of time spent being processed is tracked by 
+    each Process Block that is running. 
+        Parameters: State_t * caller
+        Return: Void*/
 HIDDEN void Syscall6(state_t *caller)
 {
-    CtrlPlusC(caller, &currentProcess);
-    StoreTime(currentTOD);
-    /*
-    Might need to do it this way; 
-    cpu_t TimeSpentProcessing; 
-
-    TimeSpentProcessing = currentTOD - TODStart; 
-    */
-
+    cpu_t timeSpentProcessing;
+    STCK(timeSpentProcessing);
 
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
-    currentProcess -> Timeproc = currentProcess ->Timeproc +  (currentTOD -TODStart); 
+    (currentProcess->timeProc) = (currentProcess->timeProc) +  (timeSpentProcessing -TODStart); 
     /*Store the new updated time spent processing into the v0 register of the process state*/
-    currentProcess -> p_s->s_v0 = currentProcess ->Timeproc; 
+    (caller->s_v0) = (currentProcess->timeProc); 
 
+    /*Updates start time*/
+    StoreTime(TODStart);
     /*Load the Current Processes State*/
-    LoadState(&currentProcess->p_s);
-
-
-
-
+    LoadState(caller);
 }
 
-/*Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
-  Knowing that this clock also has a syscall 3 performing on it every 100 milliseconds
-Parameters: State_t* Caller
-    Return: Void
-*/
+/*  Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
+    Knowing that this clock also has a syscall 3 performing on it every 100 milliseconds
+    Parameters: State_t* Caller
+    Return: Void*/
 HIDDEN void Syscall7(state_t *caller)
 {
-    int * sem = /*I dont know which semaphore belongs to the clock*/
+    int * sem;
+    sem = (int*) &(semD[MAGICNUM-1]);
     (*sem)--;
 
     if(sem < 0){
@@ -325,7 +313,6 @@ HIDDEN void Syscall7(state_t *caller)
         CtrlPlusC(caller, currentProcess->p_s);
         /*Increment that we have another process soft block so that it does not starve*/
         softBlockCount++;
-
     }
 
     /*Process is soft blocked call to run another process*/
@@ -496,11 +483,9 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
     freePcb(headPtr);
 }
 
-/*This state will copy all of the contents of the old state into the new state
-Parameters: State_t * oldstate, State_t* NewState
-    Return: Void
-*/
-
+/*  This state will copy all of the contents of the old state into the new state
+    Parameters: State_t * oldstate, State_t* NewState
+    Return: Void*/
 extern void CtrlPlusC(state_t *oldState, state_t *newState)
 {
     /*Move all of the contents from the old state into the new*/
@@ -523,11 +508,10 @@ HIDDEN void LoadState(state_t *s)
 {
     LDST(s);
 }
-/*
-Track the Time
-Parameters: Cpu_t t
-    Return: Void
-*/
+
+/*Track the Time
+    Parameters: Cpu_t t
+    Return: Void*/
 
 HIDDEN void StoreTime(cpu_t t){
     STCK(t);

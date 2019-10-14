@@ -36,12 +36,6 @@ void scheduler()
 
     /*  Process was running and either was blocked or its pointer got removed from readyQue */
 
-    /* Get start time */
-    STCK(currentTOD);
-
-    /* save how much time current process used on CPU */          
-    currentProcess->Timeproc = (currentProcess->Timeproc) + (currentTOD - TODStart); 
-
     if (!emptyProcQ(readyQueue)) 
     {/*  Starts next process in Queue*/
         currentProcess = removeProcQ(&readyQueue);      /* Remove process from Queue */

@@ -82,6 +82,7 @@
 #define MAXPROC 20
 #define MAXINT 0xFFFFFFFF
 #define QUANTUM 5000
+#define IOCLOCK 100000
 
 
 /*  Explanation of the SEMNUM number. (49)
