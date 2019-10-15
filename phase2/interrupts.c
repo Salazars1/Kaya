@@ -37,6 +37,7 @@ void IOTrapHandler()
 {
 
     unsigned int offendingLine;    
+    unsigned int status; 
     int lineNumber;
     int devicenumber;
     int deviceRegisterNumber;
@@ -122,12 +123,41 @@ void IOTrapHandler()
         PANIC();
     }
 
+/**/
 
-    
+    if(lineNumber == TERMINT){
+        if(status &0x0F) != 0){
 
 
-    /*To Continue Watch Part 2 and 3 of Interrupts but I have alot of questions to ask */
+        }
 
+
+    }
+    else{
+
+
+    }
+
+
+
+
+
+
+
+
+    /*Now to find the device register*/
+    semaphoreaddress = semD[];
+    (*semaphoreaddress)++;
+    if(semaphoreaddress < 0){
+
+        t = removeBlocked(semaphoreaddress);
+        if(t != NULL){
+            softBlockCount--;
+            insertProcQ(readyQue, t); 
+        }
+
+
+    }
     /*Interrupt has been Handled!*/
     CallScheduler();
 }
@@ -141,7 +171,7 @@ int finddevice(int linenumber)
     OffendingDevice = (devregarea_t *)DEVPHYS;
     unsigned int map = OffendingDevice->interrupt_dev[linenumber];
     int devn;
-    for (i = 0; i < 8; i++)
+    for (i = 0; i < TOTALDEVICES; i++)
     {
         if ((map & FIRSTBIT) != ZERO)
         {
