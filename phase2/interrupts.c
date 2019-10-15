@@ -52,42 +52,47 @@ void IOTrapHandler()
     OffendingLine = caller->s_cause << 8 | 2;
     
 
-    if ((OffendingLine & MULTICORE) == MULTICORE)
+    if ((OffendingLine & MULTICORE) != ZERO)
     {   /*Mutli Core is on */
         PANIC();
     }
-    else if ((OffendingLine & CLOCK1) == CLOCK1)
+    else if ((OffendingLine & CLOCK1) != ZERO)
     {
+        /*The process has spent its quantum. Its time to start a new process .*/
+        CallScheduler();
         /*Clock 1 Has an Interrupt */
     }
-    else if ((OffendingLine & CLOCK2) == CLOCK2)
+    else if ((OffendingLine & CLOCK2) != ZERO)
     {
-        /*Clock 2 is on */
+        /*Load the clock with 100 Milliseconds*/
+        LDIT(PSUEDOCLOCKTIME);
+
+        
     }
-    else if ((OffendingLine & DISKDEVICE) == DISKDEVICE)
+    else if ((OffendingLine & DISKDEVICE) != ZERO)
     {
         /*Disk Device is on  */
         lineNumber = DI;
         OffendingDevice = (device_t *)0x1000003c;
     }
-    else if ((OffendingLine & TAPEDEVICE) == TAPEDEVICE)
+    else if ((OffendingLine & TAPEDEVICE) != ZERO)
     {
         /*Tape Device is on */
         lineNumber = TI;
     }
 
-    else if ((OffendingLine & NETWORKDEVICE) == NETWORKDEVICE)
+    else if ((OffendingLine & NETWORKDEVICE) != ZERO)
     {
         /*Network Device is on */
         lineNumber = NETWORKI;
     }
-    else if ((OffendingLine & PRINTERDEVICE) == PRINTERDEVICE)
+    else if ((OffendingLine & PRINTERDEVICE) != ZERO)
     {
         /*Printer Device is on */
 
         lineNumber = PRINTERI;
     }
-    else if ((OffendingLine & TERMINALDEVICE) == TERMINALDEVICE)
+    else if ((OffendingLine & TERMINALDEVICE) != ZERO)
     {
         /*Terminal Device is on */
         lineNumber = TERMINALI;
@@ -97,43 +102,23 @@ void IOTrapHandler()
         PANIC();
     }
     
-    int devn;
-
-    devn = finddevice(Linenumber);
+    devicenumber = finddevice(Linenumber);
     /*with Dev Reg and Line number Do literal magic*/
 
-    if(devn == -1){
+    if(devicenumber == -1){
         PANIC();
     }
 
+
     
+
 
     /*To Continue Watch Part 2 and 3 of Interrupts but I have alot of questions to ask */
 
     /*Interrupt has been Handled!*/
-    callscheduler();
+    CallScheduler();
 }
-/**
- * Given Line Number fine the Device Number knowing that It is also a bit map ;
-*/
-/*This Device belongs to some memory WHere is unknown*/
 
-/**
- * Need to completely Refactor this shit show that I have right now 
- * 
- * We need to build helper functions that should probably do the following
- * Function: Finish the program and call the scheduler
- * Function: Find the device number given the line number 
- * Function: Store time 
- * Function: Copy State? 
- * Function: 
- * 
- *
- * 
- * 
- * 
- * 
-*/
 
 /*HELPER FUNCTIONS*/
 
@@ -141,23 +126,24 @@ int finddevice(int linenumber)
 {
     int i;
     OffendingDevice = (devregarea_t *)DEVPHYS;
-    unsigned int bit = OffendingDevice->interrupt_dev[linenumber];
+    unsigned int map = OffendingDevice->interrupt_dev[linenumber];
+    int devn;
     for (i = 0; i < 8; i++)
     {
-        if ((bit & 0x00000001) == 0x00000001)
+        if ((map & FIRSTBIT) != ZERO)
         {
 
-            devicenumber = i;
+            devn = i;
         }
-        else
         {
+        else
 
             i = i + 1;
-            bit << 1;
+            map << 1;
         }
     }
 
-    return devicenumber;
+    return devn;
 }
 
 HIDDEN void StoreTime(cpu_t t)
@@ -167,7 +153,7 @@ HIDDEN void StoreTime(cpu_t t)
 
 HIDDEN void CallScheduler()
 {
-
+    state_t * temp = (state_t *) INTERRUPTOLDAREA
     if (currentProcess == NULL)
     {
         scheduler();
@@ -176,9 +162,13 @@ HIDDEN void CallScheduler()
     {
         /*CurrentProcess is Not Null*/
         /*StoreTime(Tim)*/
-        cpu_t timespent;
-        StoreTime(timespent);
-
+       /*if the process is still around need to copy its contents over*/
+    
+     
+       CtrlPlusC(temp, currentProcess ->p_s);
+   /*Then reinsert the process back onto the ready Queue!*/
+       insertProcQ(readyQueue, currentProcess);
+    /*Call the scheduler to start the next process*/
         scheduler();
     }
 }

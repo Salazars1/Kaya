@@ -63,15 +63,15 @@ typedef struct pcb_t {
 	int *p_semAdd;				/* ASL ID*/
 	struct state_t	*p_s;				/* processor state */
 
-	state_t * oldSys; 
-	state_t * newSys; 
-	state_t * oldProgramTrap; 
-	state_t * newProgramTrap; 
-	state_t * oldTLB; 
-	state_t * newTLB; 
+	state_t * p_oldSys; 
+	state_t * p_newSys; 
+	state_t * p_oldProgramTrap; 
+	state_t * p_newProgramTrap; 
+	state_t * p_oldTLB; 
+	state_t * p_newTLB; 
 
 
-	cpu_t timeProc; 
+	cpu_t p_timeProc; 
 	
 	
 } pcb_t, *pcb_PTR;
