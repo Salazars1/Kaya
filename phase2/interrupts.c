@@ -37,13 +37,12 @@ void IOTrapHandler()
 {
 
     unsigned int offendingLine;    
-    unsigned int status; 
     int lineNumber;
     int devsemnum;
     int devicenumber;
     int deviceRegisterNumber;
-    int temp;  
     int semaphoreaddress; 
+    unsigned int Devicestatus; 
     cpu_t timeInterruptOccurs;
     devregarea_t *OffendingDevice;
     
@@ -115,52 +114,78 @@ void IOTrapHandler()
         PANIC();
     }
     
+
+
     devicenumber = finddevice(Linenumber);
     /*with Dev Reg and Line number Do literal magic*/
     devregarea_t * temporary = (devregarea_t *)DEVPHYS;
 
-    status = temporary ->devreg[(devsemnum)].d_status;
+
+
 
     if(devicenumber == -1){
         PANIC();
     }
 
-/**/
+
+  
 
 
+/*Need to Determine Device Address and the Device semaphore number*/
+int templinenum; 
+/*Offest the Line number*/
+templinenum = lineNumber - 3; 
+
+/* 8 devices per line number*/
+devsemnum = lineNumber * 8; 
+/*We know which device it is */
+devsemnum = devsemnum + devicenumber;
+
+/*The base + 32 (4 words in the device + the size of each register * the register number*/
+deviceRegisterNumber = (device_t *)temporary ->rambase +32 + (devsemnum * DEVREGSIZE);
 
 
-    if(lineNumber == TERMINT){
-        if(status &0x0F) != READY){
-            temporary ->devreg[(devsemnum)].d_status = ACK;
+  if(lineNumber == TERMINT){
+
+        if(deviceRegisterNumber -> t_transm_status &0x0F) != READY){
+            /*Acknowledge*/
+           Devicestatus = deviceRegisterNumber ->t_transm_status;
+           /*Acknowledge*/
+           deviceRegisterNumber -> t_transm_command = ACK;
 
         }
         else{
-            status = temporary ->devreg[(devsemnum)];
+            /*Save the status*/
+            Devicestatus = deviceRegisterNumber ->t_recv_status; 
+            /*Acknowledge*/
+            deviceRegisterNumber ->t_recv_command = ACK;
+            /*fix the semaphore number for terminal readers sub device */
+            devsemnum = devsemnum + DEVPERINT;
 
 
          }       
 
 
     }
-    
+    else{
+        /*Non terminal Interrupt*/
+        Devicestatus = deviceRegisterNumber ->d_status;
+        /*Acknowledge the interrupt*/ 
+        deviceRegisterNumber ->d_command = ACK;
 
 
+    }
 
-
-
-
-
-
-    /*Now to find the device register*/
-    semaphoreaddress = semD[];
+/*V op */
+    semaphoreaddress = semD[devsemnum];
     (*semaphoreaddress)++;
-    if(semaphoreaddress < 0){
+    if(semaphoreaddress <= 0){
 
         t = removeBlocked(semaphoreaddress);
         if(t != NULL){
+            t->p_s.s_v0 = temporary ->devreg ->d_status; 
             softBlockCount--;
-            insertProcQ(readyQue, t); 
+            insertProcQ(&readyQue, t); 
         }
 
 
@@ -174,12 +199,16 @@ void IOTrapHandler()
 
 int finddevice(int linenumber)
 {
+    /*Set some local variables*/
     int i;
     OffendingDevice = (devregarea_t *)DEVPHYS;
+    /*make a copy of the bit map */
     unsigned int map = OffendingDevice->interrupt_dev[linenumber];
     int devn;
+    /*8 Total devices to look through */
     for (i = 0; i < TOTALDEVICES; i++)
     {
+        /*Bit wise and if the value is not 0 Device is interrupting */
         if ((map & FIRSTBIT) != ZERO)
         {
 
@@ -187,12 +216,12 @@ int finddevice(int linenumber)
         }
         {
         else
-
+            /*Increment both the index and shift the bits 1 */
             i = i + 1;
             map << 1;
         }
     }
-
+/*Return the device number*/
     return devn;
 }
 
@@ -203,19 +232,16 @@ HIDDEN void CallScheduler()
     state_t * temp = (state_t *) INTERRUPTOLDAREA
     if (currentProcess == NULL)
     {
+        /*Get the next Job */
         scheduler();
     }
     else
     {
-        /*CurrentProcess is Not Null*/
-        /*StoreTime(Tim)*/
        /*if the process is still around need to copy its contents over*/
     
      
        CtrlPlusC(temp, currentProcess ->p_s);
-   /*Then reinsert the process back onto the ready Queue!*/
-       insertProcQ(readyQue, currentProcess);
-    /*Call the scheduler to start the next process*/
-        scheduler();
+       /*Load the state back */
+       LDST(temp);
     }
 }
