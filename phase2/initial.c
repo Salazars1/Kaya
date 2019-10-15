@@ -31,7 +31,7 @@ int semD[SEMNUM];
 /*LET THE OS KNOW WHERE TO START!*/
 int main()
 {
-    devregarea_t deviceBus;
+    devregarea_t* deviceBus;
     deviceBus = (devregarea_t*) RAMBASEADDR;
     memaddr RAMTOP;                                         /* Defines RAMTOP as an unsigned integer*/
     RAMTOP = (deviceBus->rambase) + (deviceBus->ramsize);   /*Sets RAMTOP according to the hardware memory*/
