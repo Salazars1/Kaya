@@ -39,6 +39,7 @@ void IOTrapHandler()
     unsigned int offendingLine;    
     unsigned int status; 
     int lineNumber;
+    int devsemnum;
     int devicenumber;
     int deviceRegisterNumber;
     int temp;  
@@ -49,8 +50,6 @@ void IOTrapHandler()
     state_PTR caller;
     caller = (state_t *)INTERRUPTOLDAREA;
     
-    
-    StoreTime(timeInterruptOccurs);
 
     OffendingLine = caller->s_cause << 8 | 2;
     
@@ -87,7 +86,7 @@ void IOTrapHandler()
     {
         /*Disk Device is on  */
         lineNumber = DI;
-        OffendingDevice = (device_t *)0x1000003c;
+        
     }
     else if ((OffendingLine & TAPEDEVICE) != ZERO)
     {
@@ -118,6 +117,9 @@ void IOTrapHandler()
     
     devicenumber = finddevice(Linenumber);
     /*with Dev Reg and Line number Do literal magic*/
+    devregarea_t * temporary = (devregarea_t *)DEVPHYS;
+
+    status = temporary ->devreg[(devsemnum)].d_status;
 
     if(devicenumber == -1){
         PANIC();
@@ -125,18 +127,23 @@ void IOTrapHandler()
 
 /**/
 
-    if(lineNumber == TERMINT){
-        if(status &0x0F) != 0){
 
+
+
+    if(lineNumber == TERMINT){
+        if(status &0x0F) != READY){
+            temporary ->devreg[(devsemnum)].d_status = ACK;
 
         }
+        else{
+            status = temporary ->devreg[(devsemnum)];
+
+
+         }       
 
 
     }
-    else{
-
-
-    }
+    
 
 
 
@@ -189,10 +196,7 @@ int finddevice(int linenumber)
     return devn;
 }
 
-HIDDEN void StoreTime(cpu_t t)
-{
-    STCK(t);
-}
+
 
 HIDDEN void CallScheduler()
 {
