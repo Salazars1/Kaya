@@ -31,7 +31,8 @@ int semD[SEMNUM];
 /*LET THE OS KNOW WHERE TO START!*/
 int main()
 {
-    devregarea_t deviceBus = (devregarea_t*) RAMBASEADDR;
+    devregarea_t deviceBus;
+    deviceBus = (devregarea_t*) RAMBASEADDR;
     memaddr RAMTOP;                                         /* Defines RAMTOP as an unsigned integer*/
     RAMTOP = (deviceBus->rambase) + (deviceBus->ramsize);   /*Sets RAMTOP according to the hardware memory*/
 
@@ -44,7 +45,7 @@ int main()
     newLocation->s_status = ALLOFF | VMOFF | IMON | UMOFF;  /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
     /* PROGRAM TRAP */
-    newLocation = (state_t *)PRGMTRAPNEWAREA;
+    newLocation = (state_t*) PRGMTRAPNEWAREA;
     newLocation->s_pc = (memaddr) PrgTrapHandler();
     newLocation->s_sp = RAMTOP;
     newLocation->s_status = ALLOFF | VMOFF | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
