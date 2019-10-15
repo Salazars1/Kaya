@@ -28,33 +28,30 @@ extern int semD[SEMNUM];
 extern cpu_t currentTOD;
 extern cpu_t TODStart;
 
-
 extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
 HIDDEN int findDevice(int lineNumber);
-
 
 void IOTrapHandler()
 {
 
-    unsigned int offendingLine;    
+    unsigned int offendingLine;
     int lineNumber;
     int devsemnum;
     int devicenumber;
     int deviceRegisterNumber;
-    int semaphoreaddress; 
-    unsigned int Devicestatus; 
+    int semaphoreAddress;
+    unsigned int deviceStatus;
     cpu_t timeInterruptOccurs;
+    cpu_t timeInterruptEnds;
     devregarea_t *OffendingDevice;
-    
+
     state_PTR caller;
     caller = (state_t *)INTERRUPTOLDAREA;
-    
 
     OffendingLine = caller->s_cause << 8 | 2;
-    
 
     if ((OffendingLine & MULTICORE) != ZERO)
-    {   /*Mutli Core is on */
+    { /*Mutli Core is on */
         PANIC();
     }
     else if ((OffendingLine & CLOCK1) != ZERO)
@@ -68,31 +65,34 @@ void IOTrapHandler()
         /*Load the clock with 100 Milliseconds*/
         LDIT(PSUEDOCLOCKTIME);
         /*Access the Last clock which is the psuedo clock*/
-        semaphoreaddress = (int*) semD[SEMNUM];
-        pcb_t * t; 
-        while(headBlocked(semadd) != NULL){
+        semaphoreAddress = (int *) &(semD[SEMNUM-1]);
+       
+        pcb_t *t;
+        while (headBlocked(semaphoreAddress) != NULL)
+        {
             t = removeBlocked(semadd);
-            
-            insertProcQ(readyQue,t );
-            softBlockCount--; 
-        }   
+            STCK(timeInterruptEnds);
 
-        (*semaphoreaddress) = 0; 
-        CallScheduler();
+            if(t != NULL){
+                insertProcQ(readyQue, t);
+                (t->p_timeProc) =  (t->p_timeProc) + (timeInterruptEnds - timeInterruptOccurs);
+                softBlockCount--;
+            }
+        }
 
+        (*semaphoreaddress) = 0;
+        CallScheduler(timeInterruptOccurs);
     }
     else if ((OffendingLine & DISKDEVICE) != ZERO)
     {
         /*Disk Device is on  */
         lineNumber = DI;
-        
     }
     else if ((OffendingLine & TAPEDEVICE) != ZERO)
     {
         /*Tape Device is on */
         lineNumber = TI;
     }
-
     else if ((OffendingLine & NETWORKDEVICE) != ZERO)
     {
         /*Network Device is on */
@@ -113,87 +113,79 @@ void IOTrapHandler()
     {
         PANIC();
     }
-    
 
-
-    devicenumber = finddevice(Linenumber);
+    devicenumber = finddevice(lineNumber);
     /*with Dev Reg and Line number Do literal magic*/
-    devregarea_t * temporary = (devregarea_t *)DEVPHYS;
+    devregarea_t *temporary = (devregarea_t *)DEVPHYS;
 
-
-
-
-    if(devicenumber == -1){
+    if (devicenumber == -1)
+    {
         PANIC();
     }
 
+    /*Need to Determine Device Address and the Device semaphore number*/
+    int templinenum;
+    /*Offest the Line number*/
+    templinenum = lineNumber - 3;
 
-  
+    /* 8 devices per line number*/
+    devsemnum = lineNumber * 8;
+    /*We know which device it is */
+    devsemnum = devsemnum + devicenumber;
 
-
-/*Need to Determine Device Address and the Device semaphore number*/
-int templinenum; 
-/*Offest the Line number*/
-templinenum = lineNumber - 3; 
-
-/* 8 devices per line number*/
-devsemnum = lineNumber * 8; 
-/*We know which device it is */
-devsemnum = devsemnum + devicenumber;
-
-/*The base + 32 (4 words in the device + the size of each register * the register number*/
-deviceRegisterNumber = (device_t *)temporary ->rambase +32 + (devsemnum * DEVREGSIZE);
+    /*The base + 32 (4 words in the device + the size of each register * the register number*/
+    deviceRegisterNumber = (device_t *)temporary->rambase + 32 + (devsemnum * DEVREGSIZE);
 
 
-  if(lineNumber == TERMINT){
+    FIXME:
 
-        if(deviceRegisterNumber -> t_transm_status &0x0F) != READY){
-            /*Acknowledge*/
-           Devicestatus = deviceRegisterNumber ->t_transm_status;
-           /*Acknowledge*/
-           deviceRegisterNumber -> t_transm_command = ACK;
+    if (lineNumber == TERMINT)
+    {/*Terminal*/
 
-        }
-        else{
+        if (deviceRegisterNumber->t_transm_status & 0x0F) != READY)
+            {
+                
+                /*Acknowledge*/
+                deviceStatus = deviceRegisterNumber->t_transm_status;
+                /*Acknowledge*/
+                deviceRegisterNumber->t_transm_command = ACK;
+            }
+        else
+        {
+            
             /*Save the status*/
-            Devicestatus = deviceRegisterNumber ->t_recv_status; 
+            deviceStatus = deviceRegisterNumber->t_recv_status;
             /*Acknowledge*/
-            deviceRegisterNumber ->t_recv_command = ACK;
+            deviceRegisterNumber->t_recv_command = ACK;
             /*fix the semaphore number for terminal readers sub device */
             devsemnum = devsemnum + DEVPERINT;
-
-
-         }       
-
-
-    }
-    else{
-        /*Non terminal Interrupt*/
-        Devicestatus = deviceRegisterNumber ->d_status;
-        /*Acknowledge the interrupt*/ 
-        deviceRegisterNumber ->d_command = ACK;
-
-
-    }
-
-/*V op */
-    semaphoreaddress = semD[devsemnum];
-    (*semaphoreaddress)++;
-    if(semaphoreaddress <= 0){
-
-        t = removeBlocked(semaphoreaddress);
-        if(t != NULL){
-            t->p_s.s_v0 = temporary ->devreg ->d_status; 
-            softBlockCount--;
-            insertProcQ(&readyQue, t); 
         }
+    }
+    else
+    {
+        /*Non terminal Interrupt*/
+        deviceStatus = deviceRegisterNumber->d_status;
+        /*Acknowledge the interrupt*/
+        deviceRegisterNumber->d_command = ACK;
+    }
 
-
+    FIXME:
+    /*V op */
+    (semD[devsemnum])++;
+    if ((semD[devsemnum]) <= 0)
+    {
+        t = removeBlocked(semaphoreaddress);
+        if (t != NULL)
+        {
+            t->p_s.s_v0 = deviceStatus;
+            insertProcQ(&readyQue, t);
+            softBlockCount--;
+            
+        }
     }
     /*Interrupt has been Handled!*/
     CallScheduler();
 }
-
 
 /*HELPER FUNCTIONS*/
 
@@ -215,21 +207,21 @@ int finddevice(int linenumber)
             devn = i;
         }
         {
-        else
-            /*Increment both the index and shift the bits 1 */
-            i = i + 1;
+            else
+                /*Increment both the index and shift the bits 1 */
+                i = i + 1;
             map << 1;
         }
     }
-/*Return the device number*/
+    /*Return the device number*/
     return devn;
 }
 
-
-
-HIDDEN void CallScheduler()
+HIDDEN void CallScheduler(cpu_t timeInterruptOccurs)
 {
-    state_t * temp = (state_t *) INTERRUPTOLDAREA
+    cpu_t timeInterruptEnds;
+    state_t *temp = (state_t *)INTERRUPTOLDAREA;
+    
     if (currentProcess == NULL)
     {
         /*Get the next Job */
@@ -237,11 +229,15 @@ HIDDEN void CallScheduler()
     }
     else
     {
-       /*if the process is still around need to copy its contents over*/
-    
-     
-       CtrlPlusC(temp, currentProcess ->p_s);
-       /*Load the state back */
-       LDST(temp);
+        STCK(timeInterruptEnds);
+        TODStart = TODStart + timeInterruptEnds - timeInterruptOccurs;
+        
+        /*if the process is still around need to copy its contents over*/
+        CtrlPlusC(temp, &(currentProcess->p_s));
+        insertProcQ(&readyQue, currentProcess);
+        /*Load the state back */
+        LDST(temp);
+
+        scheduler();
     }
 }
