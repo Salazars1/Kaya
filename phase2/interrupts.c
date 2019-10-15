@@ -41,6 +41,7 @@ void IOTrapHandler()
     int devicenumber;
     int deviceRegisterNumber;
     int temp;  
+    int semaphoreaddress; 
     cpu_t timeInterruptOccurs;
     devregarea_t *OffendingDevice;
     
@@ -67,8 +68,19 @@ void IOTrapHandler()
     {
         /*Load the clock with 100 Milliseconds*/
         LDIT(PSUEDOCLOCKTIME);
+        /*Access the Last clock which is the psuedo clock*/
+        semaphoreaddress = (int*) semD[SEMNUM];
+        pcb_t * t; 
+        while(headBlocked(semadd) != NULL){
+            t = removeBlocked(semadd);
+            
+            insertProcQ(readyQue,t );
+            softBlockCount--; 
+        }   
 
-        
+        (*semaphoreaddress) = 0; 
+        CallScheduler();
+
     }
     else if ((OffendingLine & DISKDEVICE) != ZERO)
     {
@@ -168,7 +180,7 @@ HIDDEN void CallScheduler()
      
        CtrlPlusC(temp, currentProcess ->p_s);
    /*Then reinsert the process back onto the ready Queue!*/
-       insertProcQ(readyQueue, currentProcess);
+       insertProcQ(readyQue, currentProcess);
     /*Call the scheduler to start the next process*/
         scheduler();
     }
