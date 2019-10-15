@@ -39,7 +39,8 @@ void IOTrapHandler()
     unsigned int offendingLine;    
     int lineNumber;
     int devicenumber;
-
+    int deviceRegisterNumber;
+    int temp;  
     cpu_t timeInterruptOccurs;
     devregarea_t *OffendingDevice;
     
