@@ -51,7 +51,7 @@ void IOTrapHandler()
     state_PTR caller;
     caller = (state_t *)INTERRUPTOLDAREA;
 
-    offendingLine = caller->s_cause << 8 | 2;
+    offendingLine = (caller->s_cause) << 8 | 2;
 
     if ((offendingLine & MULTICORE) != ZERO)
     { /*Mutli Core is on */
@@ -146,13 +146,13 @@ void IOTrapHandler()
     {/*Terminal*/
 
         if (deviceRegisterNumber->t_transm_status & 0x0F) != READY)
-            {
+        {
                 
                 /*Acknowledge*/
                 deviceStatus = deviceRegisterNumber->t_transm_status;
                 /*Acknowledge*/
                 deviceRegisterNumber->t_transm_command = ACK;
-            }
+        }
         else
         {
             
