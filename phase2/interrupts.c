@@ -8,14 +8,15 @@
                             Module Comment Section
 
 **********************************************************************************************/
-
+#include "../e/interrupts.e"
 #include "../h/const.h"
 #include "../h/types.h"
 #include "../e/initial.e"
 #include "../e/scheduler.e"
 #include "../e/pcb.e"
 #include "../e/asl.e"
-#include "/usr/local/include/umps2/umps/libumps.e"
+
+//#include "/usr/local/include/umps2/umps/libumps.e"
 
 /* Global Variables*/
 extern int processCount;
@@ -48,19 +49,19 @@ void IOTrapHandler()
     state_PTR caller;
     caller = (state_t *)INTERRUPTOLDAREA;
 
-    OffendingLine = caller->s_cause << 8 | 2;
+    offendingLine = caller->s_cause << 8 | 2;
 
-    if ((OffendingLine & MULTICORE) != ZERO)
+    if ((offendingLine & MULTICORE) != ZERO)
     { /*Mutli Core is on */
         PANIC();
     }
-    else if ((OffendingLine & CLOCK1) != ZERO)
+    else if ((offendingLine & CLOCK1) != ZERO)
     {
         /*The process has spent its quantum. Its time to start a new process .*/
         CallScheduler();
         /*Clock 1 Has an Interrupt */
     }
-    else if ((OffendingLine & CLOCK2) != ZERO)
+    else if ((offendingLine & CLOCK2) != ZERO)
     {
         /*Load the clock with 100 Milliseconds*/
         LDIT(PSUEDOCLOCKTIME);
@@ -83,28 +84,28 @@ void IOTrapHandler()
         (*semaphoreaddress) = 0;
         CallScheduler(timeInterruptOccurs);
     }
-    else if ((OffendingLine & DISKDEVICE) != ZERO)
+    else if ((offendingLine & DISKDEVICE) != ZERO)
     {
         /*Disk Device is on  */
         lineNumber = DI;
     }
-    else if ((OffendingLine & TAPEDEVICE) != ZERO)
+    else if ((offendingLine & TAPEDEVICE) != ZERO)
     {
         /*Tape Device is on */
         lineNumber = TI;
     }
-    else if ((OffendingLine & NETWORKDEVICE) != ZERO)
+    else if ((offendingLine & NETWORKDEVICE) != ZERO)
     {
         /*Network Device is on */
         lineNumber = NETWORKI;
     }
-    else if ((OffendingLine & PRINTERDEVICE) != ZERO)
+    else if ((offendingLine & PRINTERDEVICE) != ZERO)
     {
         /*Printer Device is on */
 
         lineNumber = PRINTERI;
     }
-    else if ((OffendingLine & TERMINALDEVICE) != ZERO)
+    else if ((offendingLine & TERMINALDEVICE) != ZERO)
     {
         /*Terminal Device is on */
         lineNumber = TERMINALI;
