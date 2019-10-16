@@ -19,7 +19,7 @@
 #include "../e/interrupts.e"
 #include "../e/exceptions.e"
 #include "../e/scheduler.e"
-/*include "p2test.e"*/
+#include "p2test.c"
 
 /* Global Variables*/
 int processCount;
