@@ -209,8 +209,11 @@ int finddevice(int linenumber)
 
             devn = i;
         }
-        {
+        
             else
+            {
+
+            
                 /*Increment both the index and shift the bits 1 */
                 i = i + 1;
             map << 1;
