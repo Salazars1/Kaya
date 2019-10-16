@@ -73,7 +73,7 @@ void IOTrapHandler()
        
         while(headBlocked(semaphoreAddress) != NULL)
         {
-            t = removeBlocked(semadd);
+            t = removeBlocked(semaphoreAddress);
             
 
             if(t != NULL){
@@ -146,22 +146,22 @@ void IOTrapHandler()
     {
         /*Terminal*/
 
-        if ((deviceRegisterNumber->t_transm_status & 0x0F) != READY)
+        if ((deviceRegisterNumber.t_transm_status & 0x0F) != READY)
         {
                 
                 /*Acknowledge*/
             
-                deviceStatus = deviceRegisterNumber->t_recv_status;
+                deviceStatus = deviceRegisterNumber.t_recv_status;
                 /*Acknowledge*/
-                deviceRegisterNumber->t_transm_command = ACK;
+                deviceRegisterNumber.t_transm_command = ACK;
         }
         else
         {
             
             /*Save the status*/
-            deviceStatus = deviceRegisterNumber->t_recv_status;
+            deviceStatus = deviceRegisterNumber.t_recv_status;
             /*Acknowledge*/
-            deviceRegisterNumber->t_recv_command = ACK;
+            deviceRegisterNumber.t_recv_command = ACK;
             /*fix the semaphore number for terminal readers sub device */
             devsemnum = devsemnum + DEVPERINT;
         }
