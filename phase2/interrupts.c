@@ -42,7 +42,7 @@ void IOTrapHandler()
     int devsemnum;
     int devicenumber;
     int deviceRegisterNumber;
-    int semaphoreAddress;
+    int* semaphoreAddress;
     unsigned int deviceStatus;
     cpu_t timeInterruptOccurs;
     cpu_t timeInterruptEnds;
