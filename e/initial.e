@@ -1,8 +1,9 @@
+#include "../h/types.h"
+#include "../h/const.h"
 #ifndef initial
 #define initial
 
-#include "../h/types.h"
-#include "../h/const.h"
+
 
 
 extern int processCount;

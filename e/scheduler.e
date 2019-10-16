@@ -1,9 +1,9 @@
+#include "../h/types.h"
+#include "../h/const.h"
 #ifndef scheduler
 #define scheduler
 
 
-#include "../h/types.h"
-#include "../h/const.h"
 
 extern void scheduler();
 
