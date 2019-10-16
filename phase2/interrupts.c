@@ -78,7 +78,7 @@ void IOTrapHandler()
 
             if(t != NULL){
                 insertProcQ(readyQue, t);
-                (t->p_timeProc) =  (t->p_timeProc) + (timeInterruptEnds - timeInterruptOccurs);
+                (t->p_timeProc) =  (t->p_timeProc + (timeInterruptEnds - timeInterruptOccurs));
                 softBlockCount--;
             }
         }
