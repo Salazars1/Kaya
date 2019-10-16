@@ -44,8 +44,7 @@ void IOTrapHandler()
     int deviceRegisterNumber;
     int* semaphoreAddress;
     unsigned int deviceStatus;
-    cpu_t timeInterruptOccurs;
-    cpu_t timeInterruptEnds;
+   
     devregarea_t *OffendingDevice;
     pcb_t *t;
     state_PTR caller;
@@ -60,7 +59,7 @@ void IOTrapHandler()
     else if ((offendingLine & CLOCK1) != ZERO)
     {
         /*The process has spent its quantum. Its time to start a new process .*/
-        CallScheduler(timeInterruptOccurs);
+        CallScheduler();
         /*Clock 1 Has an Interrupt */
     }
     else if ((offendingLine & CLOCK2) != ZERO)
@@ -74,17 +73,17 @@ void IOTrapHandler()
         while(headBlocked(semaphoreAddress) != NULL)
         {
             t = removeBlocked(semadd);
-            STCK(timeInterruptEnds);
+            
 
             if(t != NULL){
                 insertProcQ(readyQue, t);
-                (t->p_timeProc) =  (t->p_timeProc + (timeInterruptEnds - timeInterruptOccurs));
+                (t->p_timeProc) =  t->p_timeProc;
                 softBlockCount--;
             }
         }
 
         (*semaphoreAddress) = 0;
-        CallScheduler(timeInterruptOccurs);
+        CallScheduler();
     }
     else if ((offendingLine & DISKDEVICE) != ZERO)
     {
@@ -186,7 +185,7 @@ void IOTrapHandler()
             
         }
     }
-    CallScheduler(timeInterruptOccurs);
+    CallScheduler();
     /*Interrupt has been Handled!*/
 }
 
@@ -221,9 +220,9 @@ int finddevice(int linenumber)
     return devn;
 }
 
-HIDDEN void CallScheduler(cpu_t timeInterruptOccurs)
+HIDDEN void CallScheduler()
 {
-    cpu_t timeInterruptEnds;
+    
     state_t *temp = (state_t *)INTERRUPTOLDAREA;
     
     if (currentProcess == NULL)
@@ -233,8 +232,7 @@ HIDDEN void CallScheduler(cpu_t timeInterruptOccurs)
     }
     else
     {
-        STCK(timeInterruptEnds);
-        TODStart = TODStart + timeInterruptEnds - timeInterruptOccurs;
+        
         
         /*if the process is still around need to copy its contents over*/
         CtrlPlusC(temp, &(currentProcess->p_s));
