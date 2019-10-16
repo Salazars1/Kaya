@@ -1,7 +1,7 @@
 #include "../h/types.h"
 #include "../h/const.h"
-#ifndef initial
-#define initial
+#ifndef INITIAL
+#define INITIAL
 
 
 

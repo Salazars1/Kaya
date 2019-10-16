@@ -1,7 +1,7 @@
 #include "../h/types.h"
 #include "../h/const.h"
-#ifndef interrupts
-#define interrupts
+#ifndef INTERRUPTS
+#define INTERRUPTS
 
 
 extern void IOTrapHandler();

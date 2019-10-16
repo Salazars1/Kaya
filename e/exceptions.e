@@ -1,7 +1,7 @@
 #include "../h/types.h"
 #include "../h/const.h"
-#ifndef exceptions
-#define exceptions
+#ifndef EXCEPTIONS
+#define EXCEPTIONS
 
 
 extern void Syscall1(state_t *caller);
