@@ -60,7 +60,7 @@ void IOTrapHandler()
     else if ((offendingLine & CLOCK1) != ZERO)
     {
         /*The process has spent its quantum. Its time to start a new process .*/
-        CallScheduler();
+        CallScheduler(timeInterruptOccurs);
         /*Clock 1 Has an Interrupt */
     }
     else if ((offendingLine & CLOCK2) != ZERO)
@@ -186,8 +186,8 @@ void IOTrapHandler()
             
         }
     }
+    CallScheduler(timeInterruptOccurs);
     /*Interrupt has been Handled!*/
-    CallScheduler();
 }
 
 /*HELPER FUNCTIONS*/
