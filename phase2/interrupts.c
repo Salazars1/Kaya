@@ -196,9 +196,10 @@ int finddevice(int linenumber)
 {
     /*Set some local variables*/
     int i;
-    OffendingDevice = (devregarea_t *)DEVPHYS;
+    devregarea_t * tOffendingDevice;
+    tOffendingDevice = (devregarea_t *)DEVPHYS;
     /*make a copy of the bit map */
-    unsigned int map = OffendingDevice->interrupt_dev[linenumber];
+    unsigned int map = tOffendingDevice->interrupt_dev[linenumber];
     int devn;
     /*8 Total devices to look through */
     for (i = 0; i < TOTALDEVICES; i++)
