@@ -136,32 +136,34 @@ void IOTrapHandler()
     /*We know which device it is */
     devsemnum = devsemnum + devicenumber;
 
+
+    device_t * testing;
     /*The base + 32 (4 words in the device + the size of each register * the register number*/
-    deviceRegisterNumber = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
-
-
+    /*deviceRegisterNumber = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
+*/
+    testing = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
     
 
     if (lineNumber == TERMINT)
     {
         /*Terminal*/
 
-        if ((deviceRegisterNumber->t_transm_status & 0x0F) != READY)
+        if ((testing->t_transm_status & 0x0F) != READY)
         {
                 
                 /*Acknowledge*/
             
-                deviceStatus = deviceRegisterNumber->t_recv_status;
+                deviceStatus = testing->t_recv_status;
                 /*Acknowledge*/
-                deviceRegisterNumber->t_transm_command = ACK;
+                testing->t_transm_command = ACK;
         }
         else
         {
             
             /*Save the status*/
-            deviceStatus = deviceRegisterNumber->t_recv_status;
+            deviceStatus = testing->t_recv_status;
             /*Acknowledge*/
-            deviceRegisterNumber->t_recv_command = ACK;
+            testing->t_recv_command = ACK;
             /*fix the semaphore number for terminal readers sub device */
             devsemnum = devsemnum + DEVPERINT;
         }
@@ -169,9 +171,9 @@ void IOTrapHandler()
     else
     {
         /*Non terminal Interrupt*/
-        deviceStatus = deviceRegisterNumber.d_status;
+        deviceStatus = testing.d_status;
         /*Acknowledge the interrupt*/
-        deviceRegisterNumber.d_command = ACK;
+        testing.d_command = ACK;
     }
 
     
