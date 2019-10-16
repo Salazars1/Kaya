@@ -42,7 +42,7 @@ void scheduler()
 
     /*  Process was running and either was blocked or its pointer got removed from readyQue */
 
-    if (!emptyProcQ(readyQue) == false) 
+    if (!emptyProcQ(readyQue)) 
     {/*  Starts next process in Queue*/
         currentProcess = removeProcQ(&(readyQue));      /* Remove process from Queue */
         STCK(TODStart);                                 /* Gets start time */
