@@ -145,11 +145,12 @@ void IOTrapHandler()
     {
         /*Terminal*/
 
-        if (deviceRegisterNumber->t_transm_status & 0x0F) != READY)
+        if ((deviceRegisterNumber->t_transm_status & 0x0F) != READY)
         {
                 
                 /*Acknowledge*/
-                deviceStatus = deviceRegisterNumber->t_transm_status;
+            
+                deviceStatus = deviceRegisterNumber->t_recv_status;
                 /*Acknowledge*/
                 deviceRegisterNumber->t_transm_command = ACK;
         }
