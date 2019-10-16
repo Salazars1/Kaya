@@ -48,7 +48,7 @@ void scheduler()
         STCK(TODStart);                                 /* Gets start time */
 
         SetTIMER (QUANTUM);                             /* Defines Quantum to 5 ms */
-        LDST(&(currentProcess -> p_s));
+        LDST((&(currentProcess -> p_s)));
     }
     else
     {/* There is nothing on the ReadyQueue */
