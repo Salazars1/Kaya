@@ -171,9 +171,9 @@ void IOTrapHandler()
     else
     {
         /*Non terminal Interrupt*/
-        deviceStatus = testing.d_status;
+        deviceStatus = testing->d_status;
         /*Acknowledge the interrupt*/
-        testing.d_command = ACK;
+        testing->d_command = ACK;
     }
 
     
