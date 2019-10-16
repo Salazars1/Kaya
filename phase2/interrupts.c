@@ -140,7 +140,7 @@ void IOTrapHandler()
     deviceRegisterNumber = (device_t *)temporary->rambase + 32 + (devsemnum * DEVREGSIZE);
 
 
-    FIXME:
+    
 
     if (lineNumber == TERMINT)
     {/*Terminal*/
@@ -172,7 +172,7 @@ void IOTrapHandler()
         deviceRegisterNumber->d_command = ACK;
     }
 
-    FIXME:
+    
     /*V op */
     (semD[devsemnum])++;
     if ((semD[devsemnum]) <= 0)
