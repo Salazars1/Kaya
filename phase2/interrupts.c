@@ -174,14 +174,14 @@ void IOTrapHandler()
 
     
     /*V op */
-    (semD[devsemnum])++;
+    semD[devsemnum]++;
     if ((semD[devsemnum]) <= 0)
     {
         t = removeBlocked(semaphoreaddress);
         if (t != NULL)
         {
             t->p_s.s_v0 = deviceStatus;
-            insertProcQ(&readyQue, t);
+            insertProcQ(&(readyQue), t);
             softBlockCount--;
             
         }
