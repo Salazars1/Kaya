@@ -71,7 +71,7 @@ void IOTrapHandler()
         semaphoreAddress = (int *) &(semD[SEMNUM-1]);
        
         pcb_t *t;
-        while (headBlocked(semaphoreAddress) != NULL)
+        while(headBlocked(semaphoreAddress) != NULL)
         {
             t = removeBlocked(semadd);
             STCK(timeInterruptEnds);
@@ -83,7 +83,7 @@ void IOTrapHandler()
             }
         }
 
-        (*semaphoreaddress) = 0;
+        (*semaphoreAddress) = 0;
         CallScheduler(timeInterruptOccurs);
     }
     else if ((offendingLine & DISKDEVICE) != ZERO)
