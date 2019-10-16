@@ -240,6 +240,5 @@ HIDDEN void CallScheduler()
         /*Load the state back */
         LDST(temp);
 
-        scheduler();
     }
 }
