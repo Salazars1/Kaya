@@ -125,43 +125,43 @@
 
 /*Define Sys Call Exceptions*/
 
-#define SYSCALL1 1; 
-#define SYSCALL2 2; 
-#define SYSCALL3 3; 
-#define SYSCALL4 4; 
-#define SYSCALL5 5; 
-#define SYSCALL6 6; 
-#define SYSCALL7 7; 
-#define SYSCALL8 8; 
+#define SYSCALL1 1
+#define SYSCALL2 2 
+#define SYSCALL3 3 
+#define SYSCALL4 4 
+#define SYSCALL5 5 
+#define SYSCALL6 6 
+#define SYSCALL7 7 
+#define SYSCALL8 8 
 
 
 /* Define Interrupts  */ 
-#define MULTICORE 0x00000001;
-#define CLOCK1 0x00000002;
-#define CLOCK2 0x00000004;
-#define DISKDEVICE 0x00000008;
-#define TAPEDEVICE 0x00000010;
-#define NETWORKDEVICE 0x00000020;
-#define PRINTERDEVICE 0x00000040;
-#define TERMINALDEVICE 0x00000080;
+#define MULTICORE 0x00000001
+#define CLOCK1 0x00000002
+#define CLOCK2 0x00000004
+#define DISKDEVICE 0x00000008
+#define TAPEDEVICE 0x00000010
+#define NETWORKDEVICE 0x00000020
+#define PRINTERDEVICE 0x00000040
+#define TERMINALDEVICE 0x00000080
 
 
-#define C1I 1; 
-#define C2I 2; 
-#define DI 3; 
-#define TI 4; 
-#define NETWORKI 5; 
-#define PRINTERI 6; 
-#define TERMINALI 7; 
+#define C1I 1
+#define C2I 2 
+#define DI 3 
+#define TI 4 
+#define NETWORKI 5 
+#define PRINTERI 6 
+#define TERMINALI 7 
 
-#define ZERO 0; 
-#define FIRSTBIT 0x00000001;
-#define DEVPHYS 0x10000000;
-#define PSUEDOCLOCKTIME 100000; 
-#define TOTALDEVICES 8; 
+#define ZERO 0
+#define FIRSTBIT 0x00000001
+#define DEVPHYS 0x10000000
+#define PSUEDOCLOCKTIME 100000 
+#define TOTALDEVICES 8
 
 /*Acknowledge a interrupt*/
-#define ACK 1; 
+#define ACK 1
 
 
 
