@@ -137,7 +137,7 @@ void IOTrapHandler()
     devsemnum = devsemnum + devicenumber;
 
     /*The base + 32 (4 words in the device + the size of each register * the register number*/
-    deviceRegisterNumber = (device_t *)temporary->rambase + 32 + (devsemnum * DEVREGSIZE);
+    deviceRegisterNumber = (device_t *)(temporary->rambase + 32 + (devsemnum * DEVREGSIZE));
 
 
     
