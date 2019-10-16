@@ -99,7 +99,7 @@ int main()
     LDIT(IOCLOCK);  /*Sets the semaphore pseudoclock*/
 
     /* Lets the scheduler file take over.*/
-   /* scheduler();*/
+   scheduler();
 
     return 0;
 }
