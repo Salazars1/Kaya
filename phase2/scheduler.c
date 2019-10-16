@@ -13,8 +13,12 @@
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
-#include "../e/initial.e"
+#include "../e/asl.e"
 #include "../e/pcb.e"
+#include "../e/initial.e"
+#include "../e/interrupts.e"
+#include "../e/exceptions.e"
+#include "../e/scheduler.e"
 
 /* Variables for maintaining CPU time*/
 extern cpu_t currentTOD;

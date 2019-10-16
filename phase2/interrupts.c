@@ -8,13 +8,14 @@
                             Module Comment Section
 
 **********************************************************************************************/
-#include "../e/interrupts.e"
 #include "../h/const.h"
 #include "../h/types.h"
-#include "../e/initial.e"
-#include "../e/scheduler.e"
-#include "../e/pcb.e"
 #include "../e/asl.e"
+#include "../e/pcb.e"
+#include "../e/initial.e"
+#include "../e/interrupts.e"
+#include "../e/exceptions.e"
+#include "../e/scheduler.e"
 
 //#include "/usr/local/include/umps2/umps/libumps.e"
 

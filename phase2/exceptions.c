@@ -13,14 +13,14 @@
     SYSOldArea. There are 8 Sys calls, which are going to be defined with more detail in 
     each function documentation.
 **********************************************************************************************/
-#include "../e/exceptions.e"
 #include "../h/const.h"
 #include "../h/types.h"
-#include "../e/pcb.e"
 #include "../e/asl.e"
-#include "../e/initial.e"
-#include "../e/scheduler.e"
 #include "../e/pcb.e"
+#include "../e/initial.e"
+#include "../e/interrupts.e"
+#include "../e/exceptions.e"
+#include "../e/scheduler.e"
 
 /* Global Variables*/
 extern int processCount;
