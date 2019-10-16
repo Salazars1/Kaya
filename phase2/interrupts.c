@@ -142,7 +142,8 @@ void IOTrapHandler()
     
 
     if (lineNumber == TERMINT)
-    {/*Terminal*/
+    {
+        /*Terminal*/
 
         if (deviceRegisterNumber->t_transm_status & 0x0F) != READY)
         {
