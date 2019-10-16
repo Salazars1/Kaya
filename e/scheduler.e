@@ -3,6 +3,8 @@
 #ifndef scheduler
 #define scheduler
 
+/*
 extern void scheduler();
+*/
 
 #endif
