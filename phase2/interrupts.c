@@ -176,7 +176,7 @@ void IOTrapHandler()
     semD[devsemnum]++;
     if ((semD[devsemnum]) <= 0)
     {
-        t = removeBlocked(semaphoreaddress);
+        t = removeBlocked(semaphoreAddress);
         if (t != NULL)
         {
             t->p_s.s_v0 = deviceStatus;
@@ -196,7 +196,7 @@ int finddevice(int linenumber)
     /*Set some local variables*/
     int i;
     devregarea_t * tOffendingDevice;
-    tOffendingDevice = (devregarea_t *)DEVPHYS;
+    tOffendingDevice = (devregarea_t *) DEVPHYS;
     /*make a copy of the bit map */
     unsigned int map = tOffendingDevice->interrupt_dev[linenumber];
     int devn;
