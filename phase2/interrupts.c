@@ -47,7 +47,7 @@ void IOTrapHandler()
     cpu_t timeInterruptOccurs;
     cpu_t timeInterruptEnds;
     devregarea_t *OffendingDevice;
-
+    pcb_t *t;
     state_PTR caller;
     caller = (state_t *)INTERRUPTOLDAREA;
 
@@ -70,7 +70,7 @@ void IOTrapHandler()
         /*Access the Last clock which is the psuedo clock*/
         semaphoreAddress = (int *) &(semD[SEMNUM-1]);
        
-        pcb_t *t;
+       
         while(headBlocked(semaphoreAddress) != NULL)
         {
             t = removeBlocked(semadd);
