@@ -28,6 +28,8 @@ pcb_t *currentProcess;
 pcb_t *readyQue;
 int semD[SEMNUM];
 
+extern void test; 
+
 /*LET THE OS KNOW WHERE TO START!*/
 int main()
 {
