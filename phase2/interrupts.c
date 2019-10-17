@@ -44,7 +44,7 @@ void IOTrapHandler()
     int deviceRegisterNumber;
     int* semaphoreAddress;
     unsigned int deviceStatus;
-    pcb_t * t;
+   
     devregarea_t *OffendingDevice;
 
     state_PTR caller;
