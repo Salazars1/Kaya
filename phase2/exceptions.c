@@ -64,25 +64,27 @@ void SYSCALLHandler()
 {
     state_t *prevState;
     state_t *program;
-    memaddr prevStatus;
+    unsigned int prevStatus;
+    unsigned int temp;
     int casel;
     int mode;
 
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;
     casel = prevState->s_a0;
+    
+    
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
 
     if (mode != ALLOFF) { /* It is User Mode*/
-
-        /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
-        prevState->s_cause = prevState->s_cause | (10 << 2);
-
         program = (state_t *)PRGMTRAPOLDAREA;
         CtrlPlusC(prevState, program);
 
+        /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
+        program->s_cause = ((program->s_cause)& ~(0xFF)) | (10 << 2);
+
         /*Program Trap Handler */
-        PrgTrapHandler(prevState);
+        PrgTrapHandler();
     }
 
     /* increment prevState's PC to next instruction */
