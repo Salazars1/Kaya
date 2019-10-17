@@ -65,12 +65,12 @@ pcb_PTR allocPcb(){
     temp->p_semAdd = NULL; 
 
     /*Syscall5 exceptions pointes are going to be defined*/
-    temp->oldSys = NULL;
-    temp->newSys = NULL;
-    temp->oldTLB = NULL;
-    temp->newTLB = NULL;
-    temp->oldProgramTrap = NULL;
-    temp->newProgramTrap = NULL;
+    temp->p_oldSys = NULL;
+    temp->p_newSys = NULL;
+    temp->p_oldTLB = NULL;
+    temp->p_newTLB = NULL;
+    temp->p_oldProgramTrap = NULL;
+    temp->p_newProgramTrap = NULL;
 
     /*Return this Node */
     return temp; 
