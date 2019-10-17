@@ -47,7 +47,7 @@ void scheduler()
 
         setTIMER (QUANTUM);                             /* Defines Quantum to 5 ms */
         /*LDST(&(currentProcess -> p_s));*/
-        setSTATUS(getStatus()|IEON|IMON)
+        setSTATUS(getStatus()|IEON|IMON);
     }
     else
     {/* There is nothing on the ReadyQueue */
