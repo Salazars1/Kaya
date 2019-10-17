@@ -48,7 +48,7 @@ void scheduler()
         currentProcess = removeProcQ(&(readyQue));      /* Remove process from Queue */
         STCK(TODStart);                                 /* Gets start time */
 
-        SETTIMER (QUANTUM);                             /* Defines Quantum to 5 ms */
+        setTIMER (QUANTUM);                             /* Defines Quantum to 5 ms */
         LDST((&(currentProcess -> p_s)));
     }
     else
