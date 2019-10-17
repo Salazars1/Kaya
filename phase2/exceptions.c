@@ -379,7 +379,7 @@ HIDDEN void Syscall8(state_t *caller)
     Parameters: state_t *caller
     Return: Void 
     */
-void PassUpOrDie(state_t *caller)
+void PassUpOrDie(pcb_t *caller)
 {
     state_t *oldState;
     state_t *newState;
@@ -410,7 +410,7 @@ void PassUpOrDie(state_t *caller)
         break;
     }
 
-    CtrlPlusC(caller, oldState);
+    CtrlPlusC( oldState,newState);
     LoadState(&newState);
 }
 
