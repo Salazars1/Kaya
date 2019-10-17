@@ -65,12 +65,12 @@ void SYSCALLHandler()
     state_t *prevState;
     state_t *program;
     (memaddr) prevStatus;
-    int case;
+    int casel;
     int mode;
 
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;
-    case = prevState->s_a0;
+    casel = prevState->s_a0;
     mode = (prevState & UMOFF); /*Uses the compliment to determine the mode I'm in*/
 
     if (mode != ALLOFF) { /* It is User Mode*/
@@ -87,7 +87,7 @@ void SYSCALLHandler()
 
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
-    switch (case) {
+    switch (casel) {
 
         case SYSCALL1:
             Syscall1(currentProcess);
