@@ -21,7 +21,7 @@
 #include "../e/interrupts.e"
 #include "../e/exceptions.e"
 #include "../e/scheduler.e"
-
+#include "./p2test.c"
 #include "/usr/local/include/umps2/umps/libumps.e"
 
 /* Global Variables*/
