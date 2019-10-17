@@ -316,7 +316,7 @@ HIDDEN void Syscall7(state_t *caller)
     if(sem < 0){
         /*Sem is less than 0 block the current process*/
         insertBlocked(sem,currentProcess);
-        CtrlPlusC(caller, currentProcess->p_s);
+        CtrlPlusC(caller, &(currentProcess->p_s));
         /*Increment that we have another process soft block so that it does not starve*/
         softBlockCount++;
     }
