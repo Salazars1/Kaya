@@ -60,18 +60,21 @@ int main()
     /* SYSCALL BREAK*/
     newLocation = (state_t *)SYSCALLNEWAREA;
     newLocation->s_pc = (memaddr) SYSCALLHandler;     
+    newLocation->s_t9 = (memaddr) SYSCALLHandler;
     newLocation->s_sp = RAMTOP;
     newLocation->s_status = ALLOFF;  /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
     /* PROGRAM TRAP */
     newLocation = (state_t*) PRGMTRAPNEWAREA;
     newLocation->s_pc = (memaddr) PrgTrapHandler;
+    newLocation->s_t9 = (memaddr) PrgTrapHandler;
     newLocation->s_sp = RAMTOP;
     newLocation->s_status = ALLOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
     /* TLB MANAGEMENT */
     newLocation = (state_t *)TBLMGMTNEWAREA;
     newLocation->s_pc = (memaddr) TLBTrapHandler;
+    newLocation->s_t9 = (memaddr) TLBTrapHandler;
     newLocation->s_sp = RAMTOP;
     newLocation->s_status = ALLOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
