@@ -248,35 +248,35 @@ HIDDEN void Syscall5(state_t *caller)
 
     if (caller->s_a1 == 0)
     { /*TLB TRAP*/
-        if (currentProcess->newTLB != NULL)
+        if (currentProcess->p_newTLB != NULL)
         { /* already called sys5 */
             syscall2();
         }
         /* assign exception values */
-        currentProcess->newTLB = (state_t *)caller->s_a3;
-        currentProcess->oldTLB = (state_t *)caller->s_a2;
+        currentProcess->p_newTLB = (state_t *)caller->s_a3;
+        currentProcess->p_oldTLB = (state_t *)caller->s_a2;
     }
 
     if (caller->s_a1 == 1)
     {
-        if (currentProcess->newProgramTrap != NULL)
+        if (currentProcess->p_newProgramTrap != NULL)
         { /* already called sys5 */
             syscall2();
         }
         /* assign exception values */
-        currentProcess->newProgramTrap = (state_t *)caller->s_a3;
-        currentProcess->oldProgramTrap = (state_t *)caller->s_a2;
+        currentProcess->p_newProgramTrap = (state_t *)caller->s_a3;
+        currentProcess->p_oldProgramTrap = (state_t *)caller->s_a2;
     }
 
     else
     {
-        if (currentProcess->newSys != NULL)
+        if (currentProcess->p_newSys != NULL)
         { /* already called sys5 */
             syscall2();
         }
         /* assign exception values */
-        currentProcess->newSys = (state_t *)caller->s_a3;
-        currentProcess->oldSys = (state_t *)caller->s_a2;
+        currentProcess->p_newSys = (state_t *)caller->s_a3;
+        currentProcess->p_oldSys = (state_t *)caller->s_a2;
     }
 
     LoadState(caller);
@@ -293,9 +293,9 @@ HIDDEN void Syscall6(state_t *caller)
     STCK(timeSpentProcessing);
 
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
-    (currentProcess->timeProc) = (currentProcess->timeProc) +  (timeSpentProcessing -TODStart); 
+    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) +  (timeSpentProcessing -TODStart); 
     /*Store the new updated time spent processing into the v0 register of the process state*/
-    (caller->s_v0) = (currentProcess->timeProc); 
+    (caller->s_v0) = (currentProcess->p_timeProc); 
 
     /*Updates start time*/
     StoreTime(TODStart);
@@ -391,18 +391,18 @@ void PassUpOrDie(state_t *caller)
     {
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
-        oldState = caller->oldTLB;
-        newState = caller->newTLB;
+        oldState = caller->p_oldTLB;
+        newState = caller->p_newTLB;
         break;
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
-        oldState = caller->oldProgramTrap;
-        newState = caller->newProgramTrap;
+        oldState = caller->p_oldProgramTrap;
+        newState = caller->p_newProgramTrap;
         break;
 
     case SYSTRAP: /*2 is SYS Exception!*/
-        oldState = caller->oldSys;
-        newState = caller->newSys;
+        oldState = caller->p_oldSys;
+        newState = caller->p_newSys;
         break;
 
     default:
