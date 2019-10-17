@@ -307,7 +307,7 @@ HIDDEN void Syscall6(state_t *caller)
     Knowing that this clock also has a syscall 3 performing on it every 100 milliseconds
     Parameters: State_t* Caller
     Return: Void*/
-HIDDEN void Syscall7(pcb_t *caller)
+HIDDEN void Syscall7(state_t *caller)
 {
     int * sem;
     sem = (int*) &(semD[MAGICNUM-1]);
@@ -379,7 +379,7 @@ HIDDEN void Syscall8(state_t *caller)
     Parameters: state_t *caller
     Return: Void 
     */
-void PassUpOrDie(pcb_t *caller)
+void PassUpOrDie(state_t *caller)
 {
     state_t *oldState;
     state_t *newState;
