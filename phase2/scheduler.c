@@ -46,7 +46,7 @@ void scheduler()
 		/* save how much time current process used on CPU */
 		/* subtract current time from global start time to get this ^ */
 		STCK(currentTOD);
-		currentProcess->p_timeProc = (currentProcess->p_timeProc) + (currentTOD - TODStarted);
+		currentProcess->p_timeProc = (currentProcess->p_timeProc) + (currentTOD - TODStart);
 	}
 
 
