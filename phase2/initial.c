@@ -30,7 +30,7 @@ pcb_t *currentProcess;
 pcb_t *readyQue;
 int semD[SEMNUM];
 
-extern test; 
+extern unsigned int test; 
 /*LET THE OS KNOW WHERE TO START!*/
 int main()
 {
