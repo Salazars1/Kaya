@@ -35,10 +35,27 @@ int main()
 {
     devregarea_t* deviceBus;
     deviceBus = (devregarea_t*) RAMBASEADDR;
-    memaddr RAMTOP;                                         /* Defines RAMTOP as an unsigned integer*/
+    unsigned int RAMTOP;                                         /* Defines RAMTOP as an unsigned integer*/
     RAMTOP = (deviceBus->rambase) + (deviceBus->ramsize);   /*Sets RAMTOP according to the hardware memory*/
 
     state_t *newLocation; /* Initialize the new Processor State Areas */
+
+        /*  Initialize the PCB and ASL lists  */
+    initPcbs();
+    initASL();
+
+    /*  Initialize phase2 global variables  */
+    processCount = 0;
+    softBlockCount = 0;
+    currentProcess = NULL;
+    readyQue = mkEmptyProcQ();
+
+    /* iniltialize semaphores to 0*/
+    int i;
+    for (i = 0; i < SEMNUM; i++)
+    {
+        semD[i] = 0;
+    }
 
     /* SYSCALL BREAK*/
     newLocation = (state_t *)SYSCALLNEWAREA;
@@ -63,23 +80,6 @@ int main()
     newLocation->s_pc = (memaddr) IOTrapHandler;
     newLocation->s_sp = RAMTOP;
     newLocation->s_status = ALLOFF | VMOFF | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
-
-    /*  Initialize the PCB and ASL lists  */
-    initPcbs();
-    initASL();
-
-    /*  Initialize phase2 global variables  */
-    processCount = 0;
-    softBlockCount = 0;
-    currentProcess = NULL;
-    readyQue = mkEmptyProcQ();
-
-    /* iniltialize semaphores to 0*/
-    int i;
-    for (i = 0; i < SEMNUM; i++)
-    {
-        semD[i] = 0;
-    }
 
     /* Create initial process (alloc PCB)*/
     currentProcess = allocPcb();
