@@ -71,7 +71,7 @@ void SYSCALLHandler()
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;
     casel = prevState->s_a0;
-    mode = (prevState & UMOFF); /*Uses the compliment to determine the mode I'm in*/
+    mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
 
     if (mode != ALLOFF) { /* It is User Mode*/
 
