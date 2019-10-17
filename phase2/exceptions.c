@@ -310,7 +310,7 @@ HIDDEN void Syscall6(state_t *caller)
 HIDDEN void Syscall7(state_t *caller)
 {
     int * sem;
-    sem = (int*) &(semD[MAGICNUM-1]);
+    sem = (int*) &(semD[SEMNUM-1]);
     (*sem)--;
 
     if(sem < 0){
@@ -363,7 +363,7 @@ HIDDEN void Syscall8(state_t *caller)
     {
         insertBlocked(semD[index], currentProcess);
         CtrlPlusC(caller, &(currentProcess->p_s));
-        softBlkCount++;
+        softBlockCount++;
 
         /*DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
         Keeps the overall flow of the program and since there is no starvation, eventually that process
