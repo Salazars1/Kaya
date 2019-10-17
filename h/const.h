@@ -126,6 +126,7 @@
 
 
 #define TEON			0x08000000
+#define IPAREA			0x0000FF00
 
 /*Define Sys Call Exceptions*/
 

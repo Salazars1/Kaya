@@ -29,7 +29,6 @@ extern pcb_t *readyQue;
 extern int semD[SEMNUM];
 
 /* Variables for maintaining CPU time*/
-extern cpu_t currentTOD;
 extern cpu_t TODStart;
 
 extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
@@ -47,11 +46,11 @@ void IOTrapHandler()
     unsigned int deviceStatus;
    
     devregarea_t *OffendingDevice;
-    pcb_t *t;
+
     state_PTR caller;
     caller = (state_t *)INTERRUPTOLDAREA;
 
-    offendingLine = (caller->s_cause) << 8 | 2;
+    offendingLine = ((caller->s_cause) & IPAREA) >> 8;
 
     if ((offendingLine & MULTICORE) != ZERO)
     { /*Mutli Core is on */

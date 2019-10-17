@@ -265,7 +265,7 @@ HIDDEN void Syscall5(state_t *caller)
     }
 
     if (caller->s_a1 == 1)
-    {
+    {/*Program Trap*/
         if (currentProcess->p_newProgramTrap != NULL)
         { /* already called sys5 */
             Syscall2();
