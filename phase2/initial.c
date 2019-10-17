@@ -93,7 +93,6 @@ int main()
 
     
     insertProcQ(&readyQue, currentProcess); /* Inserts the proces into the pcb data structure */
-    currentProcess = NULL;
     
     LDIT(IOCLOCK);  /*Sets the semaphore pseudoclock*/
 
