@@ -495,14 +495,14 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
 extern void CtrlPlusC(state_t *oldState, state_t *newState)
 {
     /*Move all of the contents from the old state into the new*/
-    NewState->s_asid = OldState->s_asid;
-    NewState->s_status = OldState->s_status;
-    NewState->s_pc = OldState->s_pc;
+    newState->s_asid = oldState->s_asid;
+    newState->s_status = oldState->s_status;
+    newState->s_pc = oldState->s_pc;
     /*Loop through all of the registers in the old state and write them into the new state*/
     int i;
     for (i = 0; i < STATEREGNUM; i++)
     {
-        NewState->s_reg[i] = OldState->s_reg[i];
+        newState->s_reg[i] = oldState->s_reg[i];
     }
 }
 
