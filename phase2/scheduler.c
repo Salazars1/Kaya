@@ -42,7 +42,7 @@ void scheduler()
 {
     if (!emptyProcQ(readyQue)) 
     {/*  Starts next process in Queue*/
-        currentProcess = removeProcQ(&readyQue);      /* Remove process from Queue */
+        currentProcess = removeProcQ(&(readyQue));      /* Remove process from Queue */
         STCK(TODStart);                                 /* Gets start time */
 
         setTIMER (QUANTUM);                             /* Defines Quantum to 5 ms */
