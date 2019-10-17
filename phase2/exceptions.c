@@ -64,7 +64,7 @@ void SYSCALLHandler()
 {
     state_t *prevState;
     state_t *program;
-    (memaddr) prevStatus;
+    memaddr prevStatus;
     int casel;
     int mode;
 
