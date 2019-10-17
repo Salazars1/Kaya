@@ -89,10 +89,10 @@ int main()
     processCount = processCount + 1;           /* Adds one more process to the process count */
 
     /* Initialize p_s with all the requirements */
-    (currentProcess->p_s).s_sp = (RAMTOP - PAGESIZE);
-    (currentProcess->p_s).s_pc = (memaddr) test;
-    (currentProcess->p_s).s_t9 = (memaddr) test;
-    (currentProcess->p_s).s_status = ALLOFF | IEON | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
+    currentProcess->p_s.s_sp = (RAMTOP - PAGESIZE);
+    currentProcess->p_s.s_pc = (memaddr) test;
+    currentProcess->p_s.s_t9 = (memaddr) test;
+    currentProcess->p_s.s_status = ALLOFF | IEON | IMON | UMOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
     
     insertProcQ(&readyQue, currentProcess); /* Inserts the process into the pcb data structure */
