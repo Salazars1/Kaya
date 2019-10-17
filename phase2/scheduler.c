@@ -66,7 +66,7 @@ void scheduler()
         else 
         { 
             /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */            
-            SETSTATUS(ALLOFF | IEON | IECON | IMON);
+            setSTATUS(ALLOFF | IEON | IECON | IMON);
             WAIT();
         }
     }
