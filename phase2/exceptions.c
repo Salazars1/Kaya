@@ -46,7 +46,7 @@ HIDDEN void Syscall6(state_t *caller);
 HIDDEN void Syscall7(state_t *caller);
 HIDDEN void Syscall8(state_t *caller);
 
-void PassUpOrDie(state_t *caller);
+void PassUpOrDie(pcb_t *caller);
 void PrgTrapHandler();
 void TLBTrapHandler();
 
@@ -84,6 +84,9 @@ void SYSCALLHandler()
         /*Program Trap Handler */
         PrgTrapHandler(prevState);
     }
+
+    /* increment prevState's PC to next instruction */
+	prevState -> s_pc = prevState -> s_pc + 4;
 
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
@@ -211,7 +214,7 @@ HIDDEN void Syscall3(state_t *caller)
         newProccess = removeBlocked(caller->s_a1);
         if (newProccess != NULL)
         { /* add it to the ready queue */
-            insertProcQ(&readyQue, newProccess);
+            insertProcQ(&readyQueue, newProccess);
         }
     }
 
@@ -250,7 +253,7 @@ HIDDEN void Syscall5(state_t *caller)
     { /*TLB TRAP*/
         if (currentProcess->p_newTLB != NULL)
         { /* already called sys5 */
-            Syscall2();
+            syscall2();
         }
         /* assign exception values */
         currentProcess->p_newTLB = (state_t *)caller->s_a3;
@@ -261,7 +264,7 @@ HIDDEN void Syscall5(state_t *caller)
     {
         if (currentProcess->p_newProgramTrap != NULL)
         { /* already called sys5 */
-            Syscall2();
+            syscall2();
         }
         /* assign exception values */
         currentProcess->p_newProgramTrap = (state_t *)caller->s_a3;
@@ -272,7 +275,7 @@ HIDDEN void Syscall5(state_t *caller)
     {
         if (currentProcess->p_newSys != NULL)
         { /* already called sys5 */
-            Syscall2();
+            syscall2();
         }
         /* assign exception values */
         currentProcess->p_newSys = (state_t *)caller->s_a3;
@@ -310,13 +313,13 @@ HIDDEN void Syscall6(state_t *caller)
 HIDDEN void Syscall7(state_t *caller)
 {
     int * sem;
-    sem = (int*) &(semD[SEMNUM-1]);
+    sem = (int*) &(semD[MAGICNUM-1]);
     (*sem)--;
 
     if(sem < 0){
         /*Sem is less than 0 block the current process*/
         insertBlocked(sem,currentProcess);
-        CtrlPlusC(caller, &(currentProcess->p_s));
+        CtrlPlusC(caller, currentProcess->p_s);
         /*Increment that we have another process soft block so that it does not starve*/
         softBlockCount++;
     }
@@ -363,7 +366,7 @@ HIDDEN void Syscall8(state_t *caller)
     {
         insertBlocked(semD[index], currentProcess);
         CtrlPlusC(caller, &(currentProcess->p_s));
-        softBlockCount++;
+        softBlkCount++;
 
         /*DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
         Keeps the overall flow of the program and since there is no starvation, eventually that process
@@ -379,7 +382,7 @@ HIDDEN void Syscall8(state_t *caller)
     Parameters: state_t *caller
     Return: Void 
     */
-void PassUpOrDie(state_t *caller)
+void PassUpOrDie(pcb_t *caller)
 {
     state_t *oldState;
     state_t *newState;
@@ -391,22 +394,22 @@ void PassUpOrDie(state_t *caller)
     {
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
-        oldState = currentProcess->p_oldTLB;
-        newState = currentProcess->p_newTLB;
+        oldState = caller->p_oldTLB;
+        newState = caller->p_newTLB;
         break;
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
-        oldState = currentProcess->p_oldProgramTrap;
-        newState = currentProcess->p_newProgramTrap;
+        oldState = caller->p_oldProgramTrap;
+        newState = caller->p_newProgramTrap;
         break;
 
     case SYSTRAP: /*2 is SYS Exception!*/
-        oldState = currentProcess->p_oldSys;
-        newState = currentProcess->p_newSys;
+        oldState = caller->p_oldSys;
+        newState = caller->p_newSys;
         break;
 
     default:
-        Syscall2(); /*No vector is defined. Nuke it till it pukes*/
+        syscall2(); /*No vector is defined. Nuke it till it pukes*/
         break;
     }
 
@@ -495,14 +498,14 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
 extern void CtrlPlusC(state_t *oldState, state_t *newState)
 {
     /*Move all of the contents from the old state into the new*/
-    newState->s_asid = oldState->s_asid;
-    newState->s_status = oldState->s_status;
-    newState->s_pc = oldState->s_pc;
+    NewState->s_asid = OldState->s_asid;
+    NewState->s_status = OldState->s_status;
+    NewState->s_pc = OldState->s_pc;
     /*Loop through all of the registers in the old state and write them into the new state*/
     int i;
     for (i = 0; i < STATEREGNUM; i++)
     {
-        newState->s_reg[i] = oldState->s_reg[i];
+        NewState->s_reg[i] = OldState->s_reg[i];
     }
 }
 
