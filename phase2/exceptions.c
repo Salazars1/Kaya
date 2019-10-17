@@ -250,7 +250,7 @@ HIDDEN void Syscall5(state_t *caller)
     { /*TLB TRAP*/
         if (currentProcess->p_newTLB != NULL)
         { /* already called sys5 */
-            syscall2();
+            Syscall2();
         }
         /* assign exception values */
         currentProcess->p_newTLB = (state_t *)caller->s_a3;
@@ -261,7 +261,7 @@ HIDDEN void Syscall5(state_t *caller)
     {
         if (currentProcess->p_newProgramTrap != NULL)
         { /* already called sys5 */
-            syscall2();
+            Syscall2();
         }
         /* assign exception values */
         currentProcess->p_newProgramTrap = (state_t *)caller->s_a3;
@@ -272,7 +272,7 @@ HIDDEN void Syscall5(state_t *caller)
     {
         if (currentProcess->p_newSys != NULL)
         { /* already called sys5 */
-            syscall2();
+            Syscall2();
         }
         /* assign exception values */
         currentProcess->p_newSys = (state_t *)caller->s_a3;
