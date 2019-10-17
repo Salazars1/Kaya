@@ -162,7 +162,7 @@ HIDDEN void Syscall1(state_t *caller)
         caller->s_v0 = 0;
 
         /*Copy the calling state into the new processes state*/
-        CtrlPlusc(caller, birthedProc->p_s);
+        CtrlPlusc(caller, &(birthedProc->p_s));
 
         LoadState(caller);
     }
