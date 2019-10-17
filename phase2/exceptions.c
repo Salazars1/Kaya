@@ -46,7 +46,7 @@ HIDDEN void Syscall6(state_t *caller);
 HIDDEN void Syscall7(state_t *caller);
 HIDDEN void Syscall8(state_t *caller);
 
-void PassUpOrDie(state_t *caller);
+void PassUpOrDie(pcb_t *caller);
 void PrgTrapHandler();
 void TLBTrapHandler();
 
@@ -307,7 +307,7 @@ HIDDEN void Syscall6(state_t *caller)
     Knowing that this clock also has a syscall 3 performing on it every 100 milliseconds
     Parameters: State_t* Caller
     Return: Void*/
-HIDDEN void Syscall7(state_t *caller)
+HIDDEN void Syscall7(pcb_t *caller)
 {
     int * sem;
     sem = (int*) &(semD[MAGICNUM-1]);
@@ -363,7 +363,7 @@ HIDDEN void Syscall8(state_t *caller)
     {
         insertBlocked(semD[index], currentProcess);
         CtrlPlusC(caller, &(currentProcess->p_s));
-        sftBlkCount++;
+        softBlkCount++;
 
         /*DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
         Keeps the overall flow of the program and since there is no starvation, eventually that process
