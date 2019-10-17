@@ -406,7 +406,7 @@ void PassUpOrDie(state_t *caller)
         break;
 
     default:
-        syscall2(); /*No vector is defined. Nuke it till it pukes*/
+        Syscall2(); /*No vector is defined. Nuke it till it pukes*/
         break;
     }
 
