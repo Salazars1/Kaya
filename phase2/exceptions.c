@@ -211,7 +211,7 @@ HIDDEN void Syscall3(state_t *caller)
         newProccess = removeBlocked(caller->s_a1);
         if (newProccess != NULL)
         { /* add it to the ready queue */
-            insertProcQ(&readyQueue, newProccess);
+            insertProcQ(&readyQue, newProccess);
         }
     }
 
