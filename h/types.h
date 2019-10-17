@@ -61,7 +61,7 @@ typedef struct pcb_t {
 
 	/* Active SemaphoreList  */
 	int *p_semAdd;				/* ASL ID*/
-	struct state_t	p_s;				/* processor state */
+	struct state_t	*p_s;				/* processor state */
 
 	state_t * p_oldSys; 
 	state_t * p_newSys; 
