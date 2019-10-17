@@ -48,7 +48,7 @@ void scheduler()
         currentProcess = removeProcQ(&(readyQue));      /* Remove process from Queue */
         STCK(TODStart);                                 /* Gets start time */
 
-        SetTIMER (QUANTUM);                             /* Defines Quantum to 5 ms */
+        SETTIMER (QUANTUM);                             /* Defines Quantum to 5 ms */
         LDST((&(currentProcess -> p_s)));
     }
     else
@@ -64,8 +64,9 @@ void scheduler()
             PANIC();
         }
         else 
-        { /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */            
-            SetSTATUS(ALLOFF | IEON | IECON | IMON);
+        { 
+            /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */            
+            SETSTATUS(ALLOFF | IEON | IECON | IMON);
             WAIT();
         }
     }
