@@ -301,9 +301,9 @@ HIDDEN void Syscall6(state_t *caller)
     (caller->s_v0) = (currentProcess->p_timeProc); 
 
     /*Updates start time*/
-    StoreTime(TODStart);
+    STCK(TODStart);
     /*Load the Current Processes State*/
-    LoadState(caller);
+    LDST(caller);
 }
 
 /*  Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
