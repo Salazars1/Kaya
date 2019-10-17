@@ -152,6 +152,7 @@ HIDDEN void Syscall1(state_t *caller)
     { /*Check space in the ready queue to make sure we have room to allocate*/
         /*We did not have any more processses able to be made so we send back a -1*/
         caller->s_v0 = -1;
+        LDST(caller);
     }
     else
     {
@@ -161,13 +162,14 @@ HIDDEN void Syscall1(state_t *caller)
         insertChild(currentProcess, birthedProc);
 
         /* Inserts the new process into the Ready Queue*/
-        insertProcQ(currentProcess, birthedProc);
+        insertProcQ(&readyQue, birthedProc);
+
+        /*Copy the calling state into the new processes state*/
+        CtrlPlusC(caller, &(birthedProc->p_s));
 
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
 
-        /*Copy the calling state into the new processes state*/
-        CtrlPlusC(caller, &(birthedProc->p_s));
 
         LoadState(caller);
     }
@@ -458,20 +460,17 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
 {
     while (emptyChild(headPtr))
     {
-        
         /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
         NukeThemTillTheyPuke(removeChild(headPtr));
     }
 
     if (headPtr == currentProcess)
     {
-        
         /*  Children services comes for you and take your child*/
         outChild(currentProcess);
     }
     if (headPtr->p_semAdd == NULL)
     {
-        
         /*  remove process from readyQueue*/
         outProcQ(&readyQue, headPtr);
     }
@@ -479,7 +478,7 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
     {
         /*  remove process from ASL*/
         outBlocked(headPtr);
-        if ((headPtr->p_semAdd > &(semD[0])) && (headPtr->p_semAdd < &(semD[SEMNUM - 1])))
+        if ((headPtr->p_semAdd >= &(semD[0])) && (headPtr->p_semAdd <= &(semD[SEMNUM - 1])))
         {   /*SemAdd count is somewhere in between the SemD array*/
             softBlockCount--;
         }
