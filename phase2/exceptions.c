@@ -214,7 +214,7 @@ HIDDEN void Syscall3(state_t *caller)
         newProccess = removeBlocked(caller->s_a1);
         if (newProccess != NULL)
         { /* add it to the ready queue */
-            insertProcQ(&readyQueue, newProccess);
+            insertProcQ(&readyQue, newProccess);
         }
     }
 
@@ -313,7 +313,7 @@ HIDDEN void Syscall6(state_t *caller)
 HIDDEN void Syscall7(state_t *caller)
 {
     int * sem;
-    sem = (int*) &(semD[MAGICNUM-1]);
+    sem = (int*) &(semD[SEMNUM-1]);
     (*sem)--;
 
     if(sem < 0){
@@ -382,7 +382,7 @@ HIDDEN void Syscall8(state_t *caller)
     Parameters: state_t *caller
     Return: Void 
     */
-void PassUpOrDie(pcb_t *caller)
+void PassUpOrDie(state_t *caller)
 {
     state_t *oldState;
     state_t *newState;
@@ -394,18 +394,18 @@ void PassUpOrDie(pcb_t *caller)
     {
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
-        oldState = caller->p_oldTLB;
-        newState = caller->p_newTLB;
+        oldState = currentProcess->p_oldTLB;
+        newState = currentProcess->p_newTLB;
         break;
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
-        oldState = caller->p_oldProgramTrap;
-        newState = caller->p_newProgramTrap;
+        oldState = currentProcess->p_oldProgramTrap;
+        newState = currentProcess->p_newProgramTrap;
         break;
 
     case SYSTRAP: /*2 is SYS Exception!*/
-        oldState = caller->p_oldSys;
-        newState = caller->p_newSys;
+        oldState = currentProcess->p_oldSys;
+        newState = currentProcess->p_newSys;
         break;
 
     default:
@@ -498,14 +498,14 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
 extern void CtrlPlusC(state_t *oldState, state_t *newState)
 {
     /*Move all of the contents from the old state into the new*/
-    NewState->s_asid = OldState->s_asid;
-    NewState->s_status = OldState->s_status;
-    NewState->s_pc = OldState->s_pc;
+    newState->s_asid = oldState->s_asid;
+    newState->s_status = oldState->s_status;
+    newState->s_pc = oldState->s_pc;
     /*Loop through all of the registers in the old state and write them into the new state*/
     int i;
     for (i = 0; i < STATEREGNUM; i++)
     {
-        NewState->s_reg[i] = OldState->s_reg[i];
+        newState->s_reg[i] = oldState->s_reg[i];
     }
 }
 
