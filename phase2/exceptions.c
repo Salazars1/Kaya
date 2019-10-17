@@ -379,7 +379,7 @@ HIDDEN void Syscall8(state_t *caller)
     Parameters: state_t *caller
     Return: Void 
     */
-void PassUpOrDie(pcb_t *caller)
+void PassUpOrDie(state_t *caller)
 {
     state_t *oldState;
     state_t *newState;
@@ -391,18 +391,18 @@ void PassUpOrDie(pcb_t *caller)
     {
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
-        oldState = caller->p_oldTLB;
-        newState = caller->p_newTLB;
+        oldState = currentProcess->p_oldTLB;
+        newState = currentProcess->p_newTLB;
         break;
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
-        oldState = caller->p_oldProgramTrap;
-        newState = caller->p_newProgramTrap;
+        oldState = currentProcess->p_oldProgramTrap;
+        newState = currentProcess->p_newProgramTrap;
         break;
 
     case SYSTRAP: /*2 is SYS Exception!*/
-        oldState = caller->p_oldSys;
-        newState = caller->p_newSys;
+        oldState = currentProcess->p_oldSys;
+        newState = currentProcess->p_newSys;
         break;
 
     default:
