@@ -23,8 +23,8 @@
 #include "/usr/local/include/umps2/umps/libumps.e"
 
 /* Variables for maintaining CPU time*/
-extern cpu_t currentTOD;
-extern cpu_t TODStart;
+ cpu_t currentTOD;
+ cpu_t TODStart;
 
 /* Variables that the scheduler uses from initial.c*/
 extern int processCount;
