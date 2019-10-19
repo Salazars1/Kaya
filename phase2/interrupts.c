@@ -34,6 +34,11 @@ extern cpu_t TODStart;
 extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
 HIDDEN int findDevice(int lineNumber);
 
+HIDDEN int testingbaby(int aaaaaa){
+    return aaaaaa; 
+
+}
+
 void IOTrapHandler()
 {
     testingbaby(1);
@@ -267,7 +272,3 @@ HIDDEN void CallScheduler()
 
 
 
-int testingbaby(int aaaaaa){
-    return aaaaaa; 
-
-}
