@@ -234,7 +234,7 @@ int finddevice(int linenumber)
     devregarea_t * tOffendingDevice;
     tOffendingDevice = (devregarea_t *) DEVPHYS;
     /*make a copy of the bit map */
-    unsigned int map = tOffendingDevice->interrupt_dev[linenumber];
+    unsigned int map = tOffendingDevice->interrupt_dev[linenumber-3];
     int devn;
     testingbaby(19);
     /*8 Total devices to look through */
