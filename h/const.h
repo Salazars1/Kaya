@@ -92,7 +92,6 @@
         There are 8 Networks
         There are 8 disks
         1 timer
-
         ARR LAYOUT: DISKS, TAPES, NETWORKS, PRINTERS, TERMINALS READ, TERMINALS WRITE, PSEUDOCLOCK 
         */
 #define SEMNUM 49
