@@ -191,10 +191,14 @@ void IOTrapHandler()
         deviceStatus = (test69->t_transm_status & 0x0F);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (deviceStatus == 3||deviceStatus == 4 |deviceStatus == 5)
 =======
         if ((testing->t_transm_status & 0xF) != READY)
 >>>>>>> cca933bce4e98f30975dd4ae2f82a34c87118c02
+=======
+        if ((testing->t_transm_status & 0x0F) != READY)
+>>>>>>> parent of 2bbd89f... Testing Init
         {
                 
                 /*Acknowledge*/
