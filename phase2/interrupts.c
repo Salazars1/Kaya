@@ -46,7 +46,7 @@ void IOTrapHandler()
     int lineNumber;
     int devsemnum;
     int devicenumber;
-    device_t *  deviceRegisterNumber;
+    int deviceRegisterNumber;
     int* semaphoreAddress;
     int deviceStatus;
     pcb_t * t;
