@@ -396,6 +396,35 @@ void PassUpOrDie(state_t *caller)
     int triggerReason;
     triggerReason = caller->s_a1;
 
+    if(triggerReason == 0){
+        oldstater = currentProcess -> p_oldTLB; 
+        if(oldstater == NULL){
+            Syscall2();
+        }
+        else{
+            oldstater = currentProcess-> p_oldTLB; 
+
+        }
+    }
+    else if(triggerReason == 1){
+        oldstater = currentProcess -> p_oldProgramTrap; 
+        if(oldstater == NULL){
+            Syscall2();
+        }
+        else{
+            stater = currentProcess ->p_oldProgramTrap; 
+        }
+    }
+    else{
+        oldstater = currentProcess -> p_oldSys;
+        if(oldstater == NULL){
+            Syscall2();
+        }
+        else{ 
+            stater = currentProcess -> p_oldSys;
+        }
+    }
+
     switch (triggerReason)
     {
 
