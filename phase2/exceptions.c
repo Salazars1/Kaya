@@ -395,7 +395,9 @@ void PassUpOrDie(state_t *caller)
 
     int triggerReason;
     triggerReason = caller->s_a1;
-
+    if(currentProcess -> p_s == NULL){
+        Syscall2();
+    }
     switch (triggerReason)
     {
 
