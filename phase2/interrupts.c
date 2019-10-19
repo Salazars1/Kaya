@@ -155,13 +155,14 @@ testingbaby(13);
 
 
     device_t * testing;
+    int mathishard; 
     /*The base + 32 (4 words in the device + the size of each register * the register number*/
     /*deviceRegisterNumber = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
 */
-    testing = 8 * 16; 
-    testing = testing * (lineNumber -3);
-    testing = testing + (devsemnum * DEVREGSIZE);
-    testing = (device_t *) 0x10000050 + testing; 
+    mathishard = 8 * 16; 
+    mathishard = mathishard * (lineNumber -3);
+    mathishard = mathishard + (devsemnum * DEVREGSIZE);
+    testing = (device_t *) (0x10000050 + mathishard); 
    /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
     
 testingbaby(14);
