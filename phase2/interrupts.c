@@ -54,10 +54,12 @@ void IOTrapHandler()
     state_PTR caller;
     caller = (state_t *)INTERRUPTOLDAREA;
 
- 
+
+/*UNSURE*/ 
     offendingLine = caller -> s_cause >> 8; 
     testingbaby(2);
 
+/*finish UNSURE*/
 
     if ((offendingLine & MULTICORE) != ZERO)
     { /*Mutli Core is on */
@@ -140,7 +142,7 @@ void IOTrapHandler()
     {
         PANIC();
     }
-testingbaby(13);
+    testingbaby(13);
     /*Need to Determine Device Address and the Device semaphore number*/
     int templinenum;
     /*Offest the Line number*/
@@ -167,7 +169,7 @@ testingbaby(13);
     mathishard = mathishard + mathishard2; 
     testing = (device_t *) (0x10000050 + mathishard); 
     device_t * devaddrbase; 
-    devaddrbase = (0x10000050 + ((lineNumber - 3) * 8*16) + (devicenumber * 16));
+    devaddrbase = (device_t *) (0x10000050 + ((lineNumber - 3) * 8*16) + (devicenumber * 16));
     
    /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
     
