@@ -143,7 +143,7 @@ testingbaby(13);
     /*Offest the Line number*/
     templinenum = lineNumber - 3;
     /* 8 devices per line number*/
-    devsemnum = templinenum * 8;
+    devsemnum = lineNumber * 8;
     /*We know which device it is */
     devsemnum = devsemnum + devicenumber;
     device_t * testing;
