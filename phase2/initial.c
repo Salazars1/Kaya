@@ -102,7 +102,7 @@ int main()
 
     /* Lets the scheduler file take over.*/
     
-   addokbuff("Inital is ok!");
+  
    scheduler();
 
     return 0;

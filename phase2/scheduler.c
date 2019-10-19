@@ -33,6 +33,10 @@ extern pcb_t *currentProcess;
 extern pcb_t *readyQueue;
 
 
+
+
+
+
 /*  Round Robin algorithm that schedules each process that it is going to be executed by the system.
     Under certain conditions, it PANICS or performs the appropiate function call. 
     Parameters: None
@@ -40,8 +44,11 @@ extern pcb_t *readyQueue;
     */
 void scheduler()
 {
-    if (!emptyProcQ(readyQue)) 
+    
+    if (emptyProcQ(readyQue) != TRUE) 
     {/*  Starts next process in Queue*/
+        
+
         currentProcess = removeProcQ(&(readyQue));      /* Remove process from Queue */
         STCK(TODStart);                                 /* Gets start time */
 
@@ -57,7 +64,9 @@ void scheduler()
         { /* Everything finished running correctly */
             HALT();
         }
-        else if (softBlockCount == 0)
+        if(processCount > 0){
+        
+        if (softBlockCount == 0)
         { /* DEADLOCK CASE */
             PANIC();
         }
@@ -67,6 +76,15 @@ void scheduler()
             setSTATUS(ALLOFF | IEON | IECON | IMON);
             WAIT();
         }
+
+
+        }
+
     }
+}
+
+int debugthisfuckingshit(int b){
+
+    return b; 
 }
 
