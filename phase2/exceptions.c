@@ -446,7 +446,7 @@ void PassUpOrDie(state_t *caller)
         break;
     }
 
-    CtrlPlusC( oldStater,newState);
+    CtrlPlusC( oldstater,newState);
     LoadState(&newState);
 }
 
