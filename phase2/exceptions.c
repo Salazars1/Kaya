@@ -126,6 +126,9 @@ void SYSCALLHandler()
             Syscall8(prevState);
             break;
 
+        default:
+            PassUpOrDie(prevState);
+            break;
     }
 
     /*We should NEVER GET HERE. IF WE DO, WE DIE*/
@@ -390,55 +393,25 @@ void PassUpOrDie(state_t *caller)
     state_t *oldState;
     state_t *newState;
 
-    state_t * oldstater; 
     int triggerReason;
     triggerReason = caller->s_a1;
-
-    if(triggerReason == 0){
-        oldstater = currentProcess -> p_oldTLB; 
-        if(oldstater == NULL){
-            Syscall2();
-        }
-        else{
-            oldstater = currentProcess-> p_oldTLB; 
-
-        }
-    }
-    else if(triggerReason == 1){
-        oldstater = currentProcess -> p_oldProgramTrap; 
-        if(oldstater == NULL){
-            Syscall2();
-        }
-        else{
-            oldstater = currentProcess ->p_oldProgramTrap; 
-        }
-    }
-    else{
-        oldstater = currentProcess -> p_oldSys;
-        if(oldstater == NULL){
-            Syscall2();
-        }
-        else{ 
-            oldstater = currentProcess -> p_oldSys;
-        }
-    }
 
     switch (triggerReason)
     {
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
- 
-        newState = (state_t *)TBLMGMTOLDAREA;
+        oldState = currentProcess->p_oldTLB;
+        newState = currentProcess->p_newTLB;
         break;
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
-        
-        newState = (state_t *)PRGMTRAPOLDAREA;
+        oldState = currentProcess->p_oldProgramTrap;
+        newState = currentProcess->p_newProgramTrap;
         break;
 
     case SYSTRAP: /*2 is SYS Exception!*/
-        
-        newState = (state_t * )SYSCALLOLDAREA;
+        oldState = currentProcess->p_oldSys;
+        newState = currentProcess->p_newSys;
         break;
 
     default:
@@ -446,7 +419,7 @@ void PassUpOrDie(state_t *caller)
         break;
     }
 
-    CtrlPlusC( oldstater,newState);
+    CtrlPlusC( oldState,newState);
     LoadState(&newState);
 }
 
