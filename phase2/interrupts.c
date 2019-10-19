@@ -130,6 +130,7 @@ void IOTrapHandler()
     }
     else
     {
+        testingbaby(32);
         PANIC();
     }
 
