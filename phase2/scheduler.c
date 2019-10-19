@@ -43,12 +43,15 @@ extern pcb_t *readyQueue;
     Return: Void
     */
 void scheduler()
-{
+{   
+    /*#1 we have succeeded in Initial and we are in scheduler*/
+    debugthisfuckingshit(1);
     
     if (emptyProcQ(readyQue) != TRUE) 
     {/*  Starts next process in Queue*/
         
-
+        /*If the value is 2 then we know that we are in the first if*/
+        debugthisfuckingshit(2);
         currentProcess = removeProcQ(&(readyQue));      /* Remove process from Queue */
         STCK(TODStart);                                 /* Gets start time */
 
@@ -58,21 +61,27 @@ void scheduler()
     }
     else
     {/* There is nothing on the ReadyQueue */
+
+        debugthisfuckingshit(3);
         currentProcess = NULL; /* no process is running*/
 
         if (processCount == 0)
         { /* Everything finished running correctly */
+            
+            debugthisfuckingshit(4);
             HALT();
         }
         if(processCount > 0){
         
         if (softBlockCount == 0)
         { /* DEADLOCK CASE */
+            debugthisfuckingshit(5);
             PANIC();
         }
         else 
         { 
             /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */            
+            debugthisfuckingshit(6);
             setSTATUS(ALLOFF | IEON | IECON | IMON);
             WAIT();
         }
