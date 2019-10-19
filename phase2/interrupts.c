@@ -148,7 +148,7 @@ testingbaby(13);
     templinenum = lineNumber - 3;
 
     /* 8 devices per line number*/
-    devsemnum = lineNumber * 8;
+    devsemnum = templinenum * 8;
     /*We know which device it is */
     devsemnum = devsemnum + devicenumber;
 
