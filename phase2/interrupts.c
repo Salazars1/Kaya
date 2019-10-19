@@ -245,6 +245,7 @@ int finddevice(int linenumber)
         {
 
             devn = i;
+            break; 
         }
         
             else
