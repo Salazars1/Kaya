@@ -36,7 +36,7 @@ HIDDEN int findDevice(int lineNumber);
 
 void IOTrapHandler()
 {
-
+    testingbaby(1);
     unsigned int offendingLine;
     int lineNumber;
     int devsemnum;
@@ -51,27 +51,34 @@ void IOTrapHandler()
     caller = (state_t *)INTERRUPTOLDAREA;
 
     offendingLine = ((caller->s_cause) & IPAREA) >> 8;
+    testingbaby(2);
+
 
     if ((offendingLine & MULTICORE) != ZERO)
     { /*Mutli Core is on */
+        testingbaby(3);
         PANIC();
+       
     }
     else if ((offendingLine & CLOCK1) != ZERO)
     {
         /*The process has spent its quantum. Its time to start a new process .*/
+        testingbaby(4);
         CallScheduler();
         /*Clock 1 Has an Interrupt */
     }
+   
     else if ((offendingLine & CLOCK2) != ZERO)
     {
         /*Load the clock with 100 Milliseconds*/
         LDIT(PSUEDOCLOCKTIME);
         /*Access the Last clock which is the psuedo clock*/
         semaphoreAddress = (int *) &(semD[SEMNUM-1]);
-       
+        testingbaby(5);
        
         while(headBlocked(semaphoreAddress) != NULL)
         {
+             testingbaby(6);
             t = removeBlocked(semaphoreAddress);
             
 
@@ -81,34 +88,38 @@ void IOTrapHandler()
                 softBlockCount--;
             }
         }
-
+         testingbaby(7);
         (*semaphoreAddress) = 0;
         CallScheduler();
     }
     else if ((offendingLine & DISKDEVICE) != ZERO)
     {
         /*Disk Device is on  */
+         testingbaby(8);
         lineNumber = DI;
     }
     else if ((offendingLine & TAPEDEVICE) != ZERO)
     {
         /*Tape Device is on */
+         testingbaby(9);
         lineNumber = TI;
     }
     else if ((offendingLine & NETWORKDEVICE) != ZERO)
     {
         /*Network Device is on */
+         testingbaby(10);
         lineNumber = NETWORKI;
     }
     else if ((offendingLine & PRINTERDEVICE) != ZERO)
     {
         /*Printer Device is on */
-
+         testingbaby(11);
         lineNumber = PRINTERI;
     }
     else if ((offendingLine & TERMINALDEVICE) != ZERO)
     {
         /*Terminal Device is on */
+         testingbaby(12);
         lineNumber = TERMINALI;
     }
     else
@@ -124,7 +135,7 @@ void IOTrapHandler()
     {
         PANIC();
     }
-
+testingbaby(13);
     /*Need to Determine Device Address and the Device semaphore number*/
     int templinenum;
     /*Offest the Line number*/
@@ -142,7 +153,7 @@ void IOTrapHandler()
 */
     testing = (device_t *)(0x10000050 + (lineNumber -3 ) * (8 * 16) + (devsemnum * DEVREGSIZE));
     
-
+testingbaby(14);
     if (lineNumber == TERMINT)
     {
         /*Terminal*/
@@ -151,7 +162,7 @@ void IOTrapHandler()
         {
                 
                 /*Acknowledge*/
-            
+            testingbaby(15);
                 deviceStatus = testing->t_recv_status;
                 /*Acknowledge*/
                 testing->t_transm_command = ACK;
@@ -189,6 +200,7 @@ void IOTrapHandler()
             
         }
     }
+    testingbaby(17);
     CallScheduler();
     /*Interrupt has been Handled!*/
 }
@@ -204,6 +216,7 @@ int finddevice(int linenumber)
     /*make a copy of the bit map */
     unsigned int map = tOffendingDevice->interrupt_dev[linenumber];
     int devn;
+    testingbaby(19);
     /*8 Total devices to look through */
     for (i = 0; i < TOTALDEVICES; i++)
     {
@@ -223,6 +236,7 @@ int finddevice(int linenumber)
             map << 1;
         }
     }
+    testingbaby(20);
     /*Return the device number*/
     return devn;
 }
@@ -248,4 +262,12 @@ HIDDEN void CallScheduler()
         LDST(temp);
 
     }
+}
+
+
+
+
+int testingbaby(int a){
+return a; 
+
 }
