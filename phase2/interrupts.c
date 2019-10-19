@@ -176,10 +176,13 @@ void IOTrapHandler()
     mathishard2 = devicenumber * 16; 
     mathishard = mathishard + mathishard2; 
     testing = (device_t *) (0x10000050 + mathishard); 
+<<<<<<< HEAD
     device_t * devaddrbase; 
     devaddrbase = 0x10000050 + ((lineNumber - 3) * 0x80) + (devicenumber * 0x10);
     
 >>>>>>> cca933bce4e98f30975dd4ae2f82a34c87118c02
+=======
+>>>>>>> parent of cca933b... Testing Init
    /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
     
         testingbaby(14);
@@ -196,10 +199,10 @@ void IOTrapHandler()
                 
                 /*Acknowledge*/
             testingbaby(15);
-                deviceStatus = devaddrbase->t_transm_status;
+                deviceStatus = testing->t_transm_status;
                 testingbaby(1000);
                 /*Acknowledge*/
-                devaddrbase->t_transm_command = ACK;
+                testing->t_transm_command = ACK;
                 testingbaby(13000);
         }
         else
