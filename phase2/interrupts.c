@@ -167,6 +167,9 @@ testingbaby(13);
     mathishard2 = devicenumber * 16; 
     mathishard = mathishard + mathishard2; 
     testing = (device_t *) (0x10000050 + mathishard); 
+    device_t * devaddrbase; 
+    devaddrbase = 0x10000050 + ((lineNumber - 3) * 0x80) + (devicenumber * 0x10);
+    
    /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
     
 testingbaby(14);
@@ -179,10 +182,10 @@ testingbaby(14);
                 
                 /*Acknowledge*/
             testingbaby(15);
-                deviceStatus = testing->t_transm_status;
+                deviceStatus = devaddrbase->t_transm_status;
                 testingbaby(1000);
                 /*Acknowledge*/
-                testing->t_transm_command = ACK;
+                devaddrbase->t_transm_command = ACK;
                 testingbaby(13000);
         }
         else
