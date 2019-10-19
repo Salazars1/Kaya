@@ -55,7 +55,8 @@ void IOTrapHandler()
     state_PTR caller;
     caller = (state_t *)INTERRUPTOLDAREA;
 
-    offendingLine = ((caller->s_cause) & IPAREA) >> 8;
+    /*offendingLine = ((caller->s_cause) & IPAREA) >> 8;*/
+    offendingLine = caller -> s_cause; 
     testingbaby(2);
 
 
