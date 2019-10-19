@@ -39,7 +39,10 @@ void IOTrapHandler()
     int devicenumber;
     int deviceRegisterNumber;
 <<<<<<< HEAD
+<<<<<<< HEAD
     device_t *  deviceRegisterNumber;
+=======
+>>>>>>> parent of b76a1db... fuck it
 =======
 >>>>>>> parent of b76a1db... fuck it
     int* semaphoreAddress;
@@ -135,10 +138,16 @@ void IOTrapHandler()
         PANIC();
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
     testingbaby(13);
 testingbaby(13);
+=======
+    
+    
+    testingbaby(13);
+>>>>>>> parent of b76a1db... fuck it
 =======
     
     
@@ -177,11 +186,15 @@ testingbaby(13);
 
 =======
     
+<<<<<<< HEAD
+>>>>>>> parent of b76a1db... fuck it
+=======
 >>>>>>> parent of b76a1db... fuck it
 >>>>>>> cca933bce4e98f30975dd4ae2f82a34c87118c02
 =======
 >>>>>>> parent of cca933b... Testing Init
    /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
+<<<<<<< HEAD
 <<<<<<< HEAD
 
         testingbaby(14);
@@ -190,6 +203,13 @@ testingbaby(14);
     {
         deviceStatus = (test69->t_transm_status & 0x0F);
         /*Terminal*/
+=======
+    
+        testingbaby(14);
+    if (lineNumber == TERMINT)
+    {
+        deviceStatus = (test69->t_transm_status & 0x0F);
+>>>>>>> parent of b76a1db... fuck it
 =======
     
         testingbaby(14);
@@ -213,11 +233,17 @@ testingbaby(14);
             testingbaby(15);
                 deviceStatus = testing->t_transm_status;
 <<<<<<< HEAD
+<<<<<<< HEAD
                 deviceStatus = devaddrbase->t_transm_status;
                 testingbaby(1000);
                 /*Acknowledge*/
                 testing->t_transm_command = ACK;
                 devaddrbase->t_transm_command = ACK;
+=======
+                testingbaby(1000);
+                /*Acknowledge*/
+                testing->t_transm_command = ACK;
+>>>>>>> parent of b76a1db... fuck it
 =======
                 testingbaby(1000);
                 /*Acknowledge*/
@@ -229,7 +255,10 @@ testingbaby(14);
         {
             testingbaby(16);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of b76a1db... fuck it
 =======
 >>>>>>> parent of b76a1db... fuck it
             /*Save the status*/
@@ -322,10 +351,16 @@ HIDDEN void CallScheduler()
     }
 <<<<<<< HEAD
 }
+<<<<<<< HEAD
 =======
 }
+=======
+>>>>>>> parent of b76a1db... fuck it
 
 
 
 
+<<<<<<< HEAD
+>>>>>>> parent of b76a1db... fuck it
+=======
 >>>>>>> parent of b76a1db... fuck it
