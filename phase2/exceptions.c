@@ -410,7 +410,7 @@ void PassUpOrDie(state_t *caller)
             Syscall2();
         }
         else{
-            stater = currentProcess ->p_oldProgramTrap; 
+            oldstater = currentProcess ->p_oldProgramTrap; 
         }
     }
     else{
@@ -419,7 +419,7 @@ void PassUpOrDie(state_t *caller)
             Syscall2();
         }
         else{ 
-            stater = currentProcess -> p_oldSys;
+            oldstater = currentProcess -> p_oldSys;
         }
     }
 
