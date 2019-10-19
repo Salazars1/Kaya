@@ -6,7 +6,6 @@
 
 /*********************************************************************************************
                             Module Comment Section
-
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
@@ -46,14 +45,11 @@ void IOTrapHandler()
     int lineNumber;
     int devsemnum;
     int devicenumber;
-    int deviceRegisterNumber;
+    device_t *  deviceRegisterNumber;
     int* semaphoreAddress;
     int deviceStatus;
     pcb_t * t;
     devregarea_t *OffendingDevice;
-
-    device_t *test69;
-
 
     state_PTR caller;
     caller = (state_t *)INTERRUPTOLDAREA;
@@ -144,14 +140,8 @@ void IOTrapHandler()
     {
         PANIC();
     }
-    
-    
-    testingbaby(13);
+testingbaby(13);
     /*Need to Determine Device Address and the Device semaphore number*/
-<<<<<<< HEAD
-
-    test69 = (device_t *) (0x10000050 + ((lineNumber-DEVWOSEM)* DEVREGSIZE * DEVPERINT) + (devicenumber * DEVREGSIZE));
-=======
     int templinenum;
     /*Offest the Line number*/
     templinenum = lineNumber - 3;
@@ -176,49 +166,36 @@ void IOTrapHandler()
     mathishard2 = devicenumber * 16; 
     mathishard = mathishard + mathishard2; 
     testing = (device_t *) (0x10000050 + mathishard); 
-<<<<<<< HEAD
     device_t * devaddrbase; 
     devaddrbase = 0x10000050 + ((lineNumber - 3) * 0x80) + (devicenumber * 0x10);
     
->>>>>>> cca933bce4e98f30975dd4ae2f82a34c87118c02
-=======
->>>>>>> parent of cca933b... Testing Init
    /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
     
-        testingbaby(14);
+testingbaby(14);
     if (lineNumber == TERMINT)
     {
-        deviceStatus = (test69->t_transm_status & 0x0F);
+        /*Terminal*/
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        if (deviceStatus == 3||deviceStatus == 4 |deviceStatus == 5)
-=======
         if ((testing->t_transm_status & 0xF) != READY)
->>>>>>> cca933bce4e98f30975dd4ae2f82a34c87118c02
-=======
-        if ((testing->t_transm_status & 0x0F) != READY)
->>>>>>> parent of 2bbd89f... Testing Init
         {
                 
                 /*Acknowledge*/
             testingbaby(15);
-                deviceStatus = testing->t_transm_status;
+                deviceStatus = devaddrbase->t_transm_status;
                 testingbaby(1000);
                 /*Acknowledge*/
-                testing->t_transm_command = ACK;
+                devaddrbase->t_transm_command = ACK;
                 testingbaby(13000);
         }
         else
         {
-            testingbaby(16);
+            
             /*Save the status*/
             deviceStatus = testing->t_recv_status;
             /*Acknowledge*/
             testing->t_recv_command = ACK;
             /*fix the semaphore number for terminal readers sub device */
             devsemnum = devsemnum + DEVPERINT;
-            testingbaby(32);
         }
     }
     else
@@ -307,7 +284,3 @@ HIDDEN void CallScheduler()
 
     }
 }
-
-
-
-
