@@ -174,7 +174,7 @@ testingbaby(14);
     {
         /*Terminal*/
 
-        if ((testing->t_transm_status & 0x0F) != READY)
+        if ((testing->t_transm_status & 0xF) != READY)
         {
                 
                 /*Acknowledge*/
