@@ -126,9 +126,6 @@ void SYSCALLHandler()
             Syscall8(prevState);
             break;
 
-        default:
-            PassUpOrDie(prevState);
-            break;
     }
 
     /*We should NEVER GET HERE. IF WE DO, WE DIE*/
@@ -393,27 +390,55 @@ void PassUpOrDie(state_t *caller)
     state_t *oldState;
     state_t *newState;
 
+    state_t * oldstater; 
     int triggerReason;
     triggerReason = caller->s_a1;
-    if(currentProcess -> p_oldTLB == NULL || currentProcess -> p_oldProgramTrap == NULL || currentProcess -> p_oldSys == NULL){
-        Syscall2();
+
+    if(triggerReason == 0){
+        oldstater = caller -> p_oldTLB; 
+        if(oldstater == NULL){
+            Syscall2();
+        }
+        else{
+            oldstater = caller -> p_oldTLB; 
+
+        }
     }
+    else if(triggerReason == 1){
+        oldstater = caller -> p_oldProgramTrap; 
+        if(oldstater == NULL){
+            Syscall2();
+        }
+        else{
+            stater = caller ->p_oldProgramTrap; 
+        }
+    }
+    else{
+        oldstater = caller -> p_oldSys;
+        if(oldstater == NULL){
+            Syscall2();
+        }
+        else{ 
+            stater = caller -> p_oldSys;
+        }
+    }
+
     switch (triggerReason)
     {
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
-        oldState = currentProcess->p_oldTLB;
-        newState = currentProcess->p_newTLB;
+ 
+        newState = (state_t *)TBLMGMTOLDAREA;
         break;
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
-        oldState = currentProcess->p_oldProgramTrap;
-        newState = currentProcess->p_newProgramTrap;
+        
+        newState = (state_t *)PRGMTRAPOLDAREA;
         break;
 
     case SYSTRAP: /*2 is SYS Exception!*/
-        oldState = currentProcess->p_oldSys;
-        newState = currentProcess->p_newSys;
+        
+        newState = (state_t * )SYSCALLOLDAREA;
         break;
 
     default:
@@ -421,7 +446,7 @@ void PassUpOrDie(state_t *caller)
         break;
     }
 
-    CtrlPlusC( oldState,newState);
+    CtrlPlusC( oldStater,newState);
     LoadState(&newState);
 }
 
