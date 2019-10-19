@@ -368,8 +368,9 @@ HIDDEN void Syscall8(state_t *caller)
 
     if (semD[index] < 0)
     {
-        insertBlocked(semD[index], currentProcess);
         CtrlPlusC(caller, &(currentProcess->p_s));
+        insertBlocked(semD[index], currentProcess);
+        
         softBlockCount++;
 
         /*DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
