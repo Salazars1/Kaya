@@ -46,7 +46,7 @@ void IOTrapHandler()
     int lineNumber;
     int devsemnum;
     int devicenumber;
-    int deviceRegisterNumber;
+    device_t *  deviceRegisterNumber;
     int* semaphoreAddress;
     int deviceStatus;
     pcb_t * t;
@@ -148,8 +148,38 @@ void IOTrapHandler()
     
     testingbaby(13);
     /*Need to Determine Device Address and the Device semaphore number*/
+<<<<<<< HEAD
 
     test69 = (device_t *) (0x10000050 + ((lineNumber-DEVWOSEM)* DEVREGSIZE * DEVPERINT) + (devicenumber * DEVREGSIZE));
+=======
+    int templinenum;
+    /*Offest the Line number*/
+    templinenum = lineNumber - 3;
+
+    /* 8 devices per line number*/
+    devsemnum = templinenum * 8;
+    /*We know which device it is */
+    devsemnum = devsemnum + devicenumber;
+
+
+    device_t * testing;
+    int mathishard; 
+    int mathishard2; 
+    mathishard = 0; 
+    mathishard2 = 0; 
+    /*The base + 32 (4 words in the device + the size of each register * the register number*/
+    /*deviceRegisterNumber = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
+*/
+    mathishard2 = lineNumber - 3; 
+    mathishard = mathishard2 * 16; 
+    mathishard = mathishard * 8; 
+    mathishard2 = devicenumber * 16; 
+    mathishard = mathishard + mathishard2; 
+    testing = (device_t *) (0x10000050 + mathishard); 
+    device_t * devaddrbase; 
+    devaddrbase = 0x10000050 + ((lineNumber - 3) * 0x80) + (devicenumber * 0x10);
+    
+>>>>>>> cca933bce4e98f30975dd4ae2f82a34c87118c02
    /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
     
         testingbaby(14);
@@ -157,15 +187,19 @@ void IOTrapHandler()
     {
         deviceStatus = (test69->t_transm_status & 0x0F);
 
+<<<<<<< HEAD
         if (deviceStatus == 3||deviceStatus == 4 |deviceStatus == 5)
+=======
+        if ((testing->t_transm_status & 0xF) != READY)
+>>>>>>> cca933bce4e98f30975dd4ae2f82a34c87118c02
         {
                 
                 /*Acknowledge*/
             testingbaby(15);
-                deviceStatus = testing->t_transm_status;
+                deviceStatus = devaddrbase->t_transm_status;
                 testingbaby(1000);
                 /*Acknowledge*/
-                testing->t_transm_command = ACK;
+                devaddrbase->t_transm_command = ACK;
                 testingbaby(13000);
         }
         else
