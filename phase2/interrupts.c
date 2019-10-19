@@ -158,7 +158,11 @@ testingbaby(13);
     /*The base + 32 (4 words in the device + the size of each register * the register number*/
     /*deviceRegisterNumber = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
 */
-    testing = (device_t *)(0x10000050 + (lineNumber -3 ) * (8 * 16) + (devsemnum * DEVREGSIZE));
+    testing = 8 * 16; 
+    testing = testing * (lineNumber -3);
+    testing = testing + (devsemnum * DEVREGSIZE);
+    testing = (device_t *) 0x10000050 + testing; 
+   /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
     
 testingbaby(14);
     if (lineNumber == TERMINT)
