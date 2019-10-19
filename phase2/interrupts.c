@@ -6,7 +6,6 @@
 
 /*********************************************************************************************
                             Module Comment Section
-
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
@@ -16,29 +15,20 @@
 #include "../e/interrupts.e"
 #include "../e/exceptions.e"
 #include "../e/scheduler.e"
-
-
 #include "/usr/local/include/umps2/umps/libumps.e"
-
-
 /* Global Variables*/
 extern int processCount;
 extern int softBlockCount;
 extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
 extern int semD[SEMNUM];
-
 /* Variables for maintaining CPU time*/
 extern cpu_t TODStart;
-
 extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
 HIDDEN int findDevice(int lineNumber);
-
 HIDDEN int testingbaby(int aaaaaa){
     return aaaaaa; 
-
 }
-
 void IOTrapHandler()
 {
     testingbaby(1);
@@ -46,6 +36,7 @@ void IOTrapHandler()
     int lineNumber;
     int devsemnum;
     int devicenumber;
+    int deviceRegisterNumber;
     device_t *  deviceRegisterNumber;
     int* semaphoreAddress;
     int deviceStatus;
@@ -61,8 +52,6 @@ void IOTrapHandler()
  
     offendingLine = caller -> s_cause >> 8; 
     testingbaby(2);
-
-
     if ((offendingLine & MULTICORE) != ZERO)
     { /*Mutli Core is on */
         testingbaby(3);
@@ -90,7 +79,6 @@ void IOTrapHandler()
              testingbaby(6);
             t = removeBlocked(semaphoreAddress);
             
-
             if(t != NULL){
                 insertProcQ(&readyQue, t);
                 softBlockCount--;
@@ -135,18 +123,17 @@ void IOTrapHandler()
         testingbaby(32);
         PANIC();
     }
-
     devicenumber = finddevice(lineNumber);
     /*with Dev Reg and Line number Do literal magic*/
     devregarea_t *temporary = (devregarea_t *)DEVPHYS;
-
     if (devicenumber == -1)
     {
         PANIC();
     }
-    
-    
+
+
     testingbaby(13);
+testingbaby(13);
     /*Need to Determine Device Address and the Device semaphore number*/
 <<<<<<< HEAD
 
@@ -155,13 +142,10 @@ void IOTrapHandler()
     int templinenum;
     /*Offest the Line number*/
     templinenum = lineNumber - 3;
-
     /* 8 devices per line number*/
     devsemnum = templinenum * 8;
     /*We know which device it is */
     devsemnum = devsemnum + devicenumber;
-
-
     device_t * testing;
     int mathishard; 
     int mathishard2; 
@@ -178,17 +162,19 @@ void IOTrapHandler()
     testing = (device_t *) (0x10000050 + mathishard); 
 <<<<<<< HEAD
     device_t * devaddrbase; 
-    devaddrbase = (0x10000050 + ((lineNumber - 3) * 8*16) + (devicenumber * 16));
-    
+    devaddrbase = 0x10000050 + ((lineNumber - 3) * 0x80) + (devicenumber * 0x10);
+
 >>>>>>> cca933bce4e98f30975dd4ae2f82a34c87118c02
 =======
 >>>>>>> parent of cca933b... Testing Init
    /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
-    
+
         testingbaby(14);
+testingbaby(14);
     if (lineNumber == TERMINT)
     {
         deviceStatus = (test69->t_transm_status & 0x0F);
+        /*Terminal*/
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -200,18 +186,21 @@ void IOTrapHandler()
         if ((testing->t_transm_status & 0x0F) != READY)
 >>>>>>> parent of 2bbd89f... Testing Init
         {
-                
+
                 /*Acknowledge*/
             testingbaby(15);
                 deviceStatus = testing->t_transm_status;
+                deviceStatus = devaddrbase->t_transm_status;
                 testingbaby(1000);
                 /*Acknowledge*/
                 testing->t_transm_command = ACK;
+                devaddrbase->t_transm_command = ACK;
                 testingbaby(13000);
         }
         else
         {
             testingbaby(16);
+
             /*Save the status*/
             deviceStatus = testing->t_recv_status;
             /*Acknowledge*/
@@ -228,7 +217,6 @@ void IOTrapHandler()
         /*Acknowledge the interrupt*/
         testing->d_command = ACK;
     }
-
     
     /*V op */
     semD[devsemnum]++;
@@ -247,17 +235,15 @@ void IOTrapHandler()
     CallScheduler();
     /*Interrupt has been Handled!*/
 }
-
 /*HELPER FUNCTIONS*/
-
 int finddevice(int linenumber)
 {
     /*Set some local variables*/
     int i;
     devregarea_t * tOffendingDevice;
-    tOffendingDevice = (devregarea_t *) RAMBASEADDR;
+    tOffendingDevice = (devregarea_t *) DEVPHYS;
     /*make a copy of the bit map */
-    unsigned int map = tOffendingDevice->interrupt_dev[linenumber-3];
+    unsigned int map = tOffendingDevice->interrupt_dev[linenumber];
     int devn;
     testingbaby(19);
     /*8 Total devices to look through */
@@ -266,25 +252,21 @@ int finddevice(int linenumber)
         /*Bit wise and if the value is not 0 Device is interrupting */
         if ((map & FIRSTBIT) != ZERO)
         {
-
             devn = i;
-            break; 
         }
         
             else
             {
-
             
                 /*Increment both the index and shift the bits 1 */
-               
-            map >> 1;
+                i = i + 1;
+            map << 1;
         }
     }
     testingbaby(20);
     /*Return the device number*/
     return devn;
 }
-
 HIDDEN void CallScheduler()
 {
     
@@ -308,7 +290,3 @@ HIDDEN void CallScheduler()
 
     }
 }
-
-
-
-
