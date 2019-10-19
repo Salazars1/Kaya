@@ -140,7 +140,7 @@ void IOTrapHandler()
     /*The base + 32 (4 words in the device + the size of each register * the register number*/
     /*deviceRegisterNumber = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
 */
-    testing = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
+    testing = (device_t *)(0x10000050 + (lineNumber -3 ) * (8 * 16) + (devsemnum * DEVREGSIZE));
     
 
     if (lineNumber == TERMINT)
