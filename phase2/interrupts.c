@@ -254,7 +254,7 @@ int finddevice(int linenumber)
             
                 /*Increment both the index and shift the bits 1 */
                 i = i + 1;
-            map << 1;
+            map >> 1;
         }
     }
     testingbaby(20);
