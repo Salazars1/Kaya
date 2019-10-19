@@ -232,7 +232,7 @@ int finddevice(int linenumber)
     /*Set some local variables*/
     int i;
     devregarea_t * tOffendingDevice;
-    tOffendingDevice = (devregarea_t *) DEVPHYS;
+    tOffendingDevice = (devregarea_t *) RAMBASEADDR;
     /*make a copy of the bit map */
     unsigned int map = tOffendingDevice->interrupt_dev[linenumber-3];
     int devn;
@@ -253,7 +253,7 @@ int finddevice(int linenumber)
 
             
                 /*Increment both the index and shift the bits 1 */
-                i = i + 1;
+               
             map >> 1;
         }
     }
