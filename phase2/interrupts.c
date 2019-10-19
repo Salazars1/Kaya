@@ -156,6 +156,7 @@ testingbaby(13);
 
     device_t * testing;
     int mathishard; 
+    mathishard = 0; 
     /*The base + 32 (4 words in the device + the size of each register * the register number*/
     /*deviceRegisterNumber = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
 */
@@ -273,7 +274,8 @@ HIDDEN void CallScheduler()
         CtrlPlusC(temp, &(currentProcess->p_s));
         insertProcQ(&readyQue, currentProcess);
         /*Load the state back */
-        LDST(temp);
+        /**LDST(temp);*/
+        scheduler();
 
     }
 }
