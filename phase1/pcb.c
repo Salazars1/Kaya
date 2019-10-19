@@ -63,6 +63,8 @@ pcb_PTR allocPcb(){
 
 
     temp->p_semAdd = NULL; 
+    temp ->p_timeProc = 0; /* no CPU time */
+
 
     /*Syscall5 exceptions pointes are going to be defined*/
     temp->p_oldSys = NULL;

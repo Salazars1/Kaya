@@ -64,25 +64,27 @@ void SYSCALLHandler()
 {
     state_t *prevState;
     state_t *program;
-    memaddr prevStatus;
+    unsigned int prevStatus;
+    unsigned int temp;
     int casel;
     int mode;
 
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;
     casel = prevState->s_a0;
+    
+    
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
 
     if (mode != ALLOFF) { /* It is User Mode*/
-
-        /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
-        prevState->s_cause = prevState->s_cause | (10 << 2);
-
         program = (state_t *)PRGMTRAPOLDAREA;
         CtrlPlusC(prevState, program);
 
+        /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
+        program->s_cause = ((program->s_cause)& ~(0xFF)) | (10 << 2);
+
         /*Program Trap Handler */
-        PrgTrapHandler(prevState);
+        PrgTrapHandler();
     }
 
     /* increment prevState's PC to next instruction */
@@ -150,6 +152,7 @@ HIDDEN void Syscall1(state_t *caller)
     { /*Check space in the ready queue to make sure we have room to allocate*/
         /*We did not have any more processses able to be made so we send back a -1*/
         caller->s_v0 = -1;
+        LDST(caller);
     }
     else
     {
@@ -159,13 +162,14 @@ HIDDEN void Syscall1(state_t *caller)
         insertChild(currentProcess, birthedProc);
 
         /* Inserts the new process into the Ready Queue*/
-        insertProcQ(currentProcess, birthedProc);
+        insertProcQ(&readyQue, birthedProc);
+
+        /*Copy the calling state into the new processes state*/
+        CtrlPlusC(caller, &(birthedProc->p_s));
 
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
 
-        /*Copy the calling state into the new processes state*/
-        CtrlPlusC(caller, &(birthedProc->p_s));
 
         LoadState(caller);
     }
@@ -261,7 +265,7 @@ HIDDEN void Syscall5(state_t *caller)
     }
 
     if (caller->s_a1 == 1)
-    {
+    {/*Program Trap*/
         if (currentProcess->p_newProgramTrap != NULL)
         { /* already called sys5 */
             Syscall2();
@@ -456,20 +460,17 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
 {
     while (emptyChild(headPtr))
     {
-        
         /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
         NukeThemTillTheyPuke(removeChild(headPtr));
     }
 
     if (headPtr == currentProcess)
     {
-        
         /*  Children services comes for you and take your child*/
         outChild(currentProcess);
     }
     if (headPtr->p_semAdd == NULL)
     {
-        
         /*  remove process from readyQueue*/
         outProcQ(&readyQue, headPtr);
     }
@@ -477,7 +478,7 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
     {
         /*  remove process from ASL*/
         outBlocked(headPtr);
-        if ((headPtr->p_semAdd > &(semD[0])) && (headPtr->p_semAdd < &(semD[SEMNUM - 1])))
+        if ((headPtr->p_semAdd >= &(semD[0])) && (headPtr->p_semAdd <= &(semD[SEMNUM - 1])))
         {   /*SemAdd count is somewhere in between the SemD array*/
             softBlockCount--;
         }

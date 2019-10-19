@@ -40,16 +40,14 @@ extern pcb_t *readyQueue;
     */
 void scheduler()
 {
-
-    /*  Process was running and either was blocked or its pointer got removed from readyQue */
-
     if (!emptyProcQ(readyQue)) 
     {/*  Starts next process in Queue*/
         currentProcess = removeProcQ(&(readyQue));      /* Remove process from Queue */
         STCK(TODStart);                                 /* Gets start time */
 
         setTIMER (QUANTUM);                             /* Defines Quantum to 5 ms */
-        LDST((&(currentProcess -> p_s)));
+        LDST(&(currentProcess ->p_s));
+        
     }
     else
     {/* There is nothing on the ReadyQueue */
