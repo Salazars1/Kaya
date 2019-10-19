@@ -164,6 +164,8 @@
 #define DEVPHYS 0x10000000
 #define PSUEDOCLOCKTIME 100000 
 #define TOTALDEVICES 8 
+#define TEBITON 0x08000000
+
 
 /*Acknowledge a interrupt*/
 #define ACK 1 
