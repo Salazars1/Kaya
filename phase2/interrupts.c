@@ -176,8 +176,10 @@ testingbaby(14);
                 /*Acknowledge*/
             testingbaby(15);
                 deviceStatus = testing->t_recv_status;
+                testingbaby(1000);
                 /*Acknowledge*/
                 testing->t_transm_command = ACK;
+                testingbaby(13000);
         }
         else
         {
