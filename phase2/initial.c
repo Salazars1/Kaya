@@ -102,7 +102,7 @@ int main()
 
     /* Lets the scheduler file take over.*/
     
-   print("Initial Works fine");
+   addokbuff("Inital is ok!");
    scheduler();
 
     return 0;
