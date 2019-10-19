@@ -286,7 +286,7 @@ HIDDEN void Syscall5(state_t *caller)
         currentProcess->p_oldSys = (state_t *)caller->s_a2;
     }
 
-    LoadState(caller);
+    LoadState(&(caller));
 }
 
 /*Syscall6:  "Get_CPU_Time"
@@ -307,7 +307,7 @@ HIDDEN void Syscall6(state_t *caller)
     /*Updates start time*/
     STCK(TODStart);
     /*Load the Current Processes State*/
-    LDST(caller);
+    LDST(&(caller));
 }
 
 /*  Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
