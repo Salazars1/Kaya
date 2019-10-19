@@ -6,7 +6,12 @@
 
 /*********************************************************************************************
                             Module Comment Section
-
+    A SYSCALL exception occurs when a SYSCALL assembler instruction is executed. After
+    the processor and ROM-Exception handler actions when a SYSCALL point exception is 
+    raised, continued executing the nucleus Exception handler. This nreakpoints, are 
+    distinguidhed from a Breakpoint, exceptions by the contents of Cause.ExcCode in the
+    SYSOldArea. There are 8 Sys calls, which are going to be defined with more detail in 
+    each function documentation.
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
@@ -16,386 +21,510 @@
 #include "../e/interrupts.e"
 #include "../e/exceptions.e"
 #include "../e/scheduler.e"
+
 #include "/usr/local/include/umps2/umps/libumps.e"
+
 /* Global Variables*/
 extern int processCount;
 extern int softBlockCount;
 extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
 extern int semD[SEMNUM];
+
 /* Variables for maintaining CPU time*/
+extern cpu_t currentTOD;
 extern cpu_t TODStart;
-extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
-HIDDEN int findDevice(int lineNumber);
-HIDDEN int testingbaby(int aaaaaa){
-    return aaaaaa; 
-}
-void IOTrapHandler()
+
+/*  Declaration of exceptions and helper fucntions. Further documentation will be provided
+    in the actual function.*/
+HIDDEN void Syscall1(state_t *caller);
+HIDDEN void Syscall2();
+HIDDEN void Syscall3(state_t *caller);
+HIDDEN void Syscall4(state_t *caller);
+HIDDEN void Syscall5(state_t *caller);
+HIDDEN void Syscall6(state_t *caller);
+HIDDEN void Syscall7(state_t *caller);
+HIDDEN void Syscall8(state_t *caller);
+
+void PassUpOrDie(state_t *caller);
+void PrgTrapHandler();
+void TLBTrapHandler();
+
+extern void CtrlPlusC(state_t *oldState, state_t *newState);
+HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr);
+HIDDEN void LoadState(state_t *s);
+
+/*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
+    for these first 8 System calls the Kernel Mode must be active in order for these commands
+    to execute. If this is not the case, then the appropiate program trap would be execute. 
+    Parameters: None
+    Return: Void
+     */
+void SYSCALLHandler()
 {
-    testingbaby(1);
-    unsigned int offendingLine;
-    int lineNumber;
-    int devsemnum;
-    int devicenumber;
-    int deviceRegisterNumber;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    device_t *  deviceRegisterNumber;
-=======
->>>>>>> parent of b76a1db... fuck it
-=======
->>>>>>> parent of b76a1db... fuck it
-=======
->>>>>>> parent of b76a1db... fuck it
-    int* semaphoreAddress;
-    int deviceStatus;
-    pcb_t * t;
-    devregarea_t *OffendingDevice;
+    state_t *prevState;
+    state_t *program;
+    unsigned int prevStatus;
+    unsigned int temp;
+    int casel;
+    int mode;
 
-    device_t *test69;
+    prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
+    prevStatus = prevState->s_status;
+    casel = prevState->s_a0;
+    
+    
+    mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
 
+    if (mode != ALLOFF) { /* It is User Mode*/
+        program = (state_t *)PRGMTRAPOLDAREA;
+        CtrlPlusC(prevState, program);
 
-    state_PTR caller;
-    caller = (state_t *)INTERRUPTOLDAREA;
+        /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
+        program->s_cause = ((program->s_cause)& ~(0xFF)) | (10 << 2);
 
- 
-    offendingLine = caller -> s_cause >> 8; 
-    testingbaby(2);
-    if ((offendingLine & MULTICORE) != ZERO)
-    { /*Mutli Core is on */
-        testingbaby(3);
-        PANIC();
-       
+        /*Program Trap Handler */
+        PrgTrapHandler();
     }
-    else if ((offendingLine & CLOCK1) != ZERO)
-    {
-        /*The process has spent its quantum. Its time to start a new process .*/
-        testingbaby(4);
-        CallScheduler();
-        /*Clock 1 Has an Interrupt */
+
+    /* increment prevState's PC to next instruction */
+	prevState -> s_pc = prevState -> s_pc + 4;
+
+    /*Switch statement to determine which Syscall we are about to do. If there is no case, we
+    execute the default case */
+    switch (casel) {
+
+        case SYSCALL1:
+            Syscall1(currentProcess);
+            break;
+
+        case SYSCALL2:
+            Syscall2();
+            break;
+
+        case SYSCALL3:
+            Syscall3(prevState);
+            break;
+
+        case SYSCALL4:
+            Syscall4(prevState);
+            break;
+
+        case SYSCALL5:
+            Syscall5(prevState);
+            break;
+
+        case SYSCALL6:
+            Syscall6(prevState);
+            break;
+
+        case SYSCALL7:
+            Syscall7(prevState);
+            break;
+
+        case SYSCALL8:
+            Syscall8(prevState);
+            break;
+
+        default:
+            PassUpOrDie(prevState);
+            break;
     }
-   
-    else if ((offendingLine & CLOCK2) != ZERO)
-    {
-        /*Load the clock with 100 Milliseconds*/
-        LDIT(PSUEDOCLOCKTIME);
-        /*Access the Last clock which is the psuedo clock*/
-        semaphoreAddress = (int *) &(semD[SEMNUM-1]);
-        testingbaby(5);
-       
-        while(headBlocked(semaphoreAddress) != NULL)
-        {
-             testingbaby(6);
-            t = removeBlocked(semaphoreAddress);
-            
-            if(t != NULL){
-                insertProcQ(&readyQue, t);
-                softBlockCount--;
-            }
-        }
-         testingbaby(7);
-        (*semaphoreAddress) = 0;
-        CallScheduler();
-    }
-    else if ((offendingLine & DISKDEVICE) != ZERO)
-    {
-        /*Disk Device is on  */
-         testingbaby(8);
-        lineNumber = DI;
-    }
-    else if ((offendingLine & TAPEDEVICE) != ZERO)
-    {
-        /*Tape Device is on */
-         testingbaby(9);
-        lineNumber = TI;
-    }
-    else if ((offendingLine & NETWORKDEVICE) != ZERO)
-    {
-        /*Network Device is on */
-         testingbaby(10);
-        lineNumber = NETWORKI;
-    }
-    else if ((offendingLine & PRINTERDEVICE) != ZERO)
-    {
-        /*Printer Device is on */
-         testingbaby(11);
-        lineNumber = PRINTERI;
-    }
-    else if ((offendingLine & TERMINALDEVICE) != ZERO)
-    {
-        /*Terminal Device is on */
-         testingbaby(12);
-        lineNumber = TERMINALI;
+
+    /*We should NEVER GET HERE. IF WE DO, WE DIE*/
+}
+
+/**************************  SYSCALL 1 THROUGH 8 FUNCTIONS    ******************************/
+
+/*  This service creates a new process (progeny) of the caller process. a1 contains the physical
+    address of a processor state area at the rime instruction is executed. The processsor state
+    is uded as the initial state of the newly birth child.
+    Parameter:  state* caller
+    Return:     -0 in V0 if the process was done effectively
+                -1 in V0 if the process was NOT done because of lack of resources.*/
+
+HIDDEN void Syscall1(state_t *caller)
+{
+
+    pcb_t *birthedProc = allocPcb();
+
+    if (emptyProcQ(birthedProc) == TRUE)
+    { /*Check space in the ready queue to make sure we have room to allocate*/
+        /*We did not have any more processses able to be made so we send back a -1*/
+        caller->s_v0 = -1;
+        LDST(caller);
     }
     else
     {
-        testingbaby(32);
-        PANIC();
+        processCount++;
+
+        /*Makes the new process a child of the currently running process calling the sys call */
+        insertChild(currentProcess, birthedProc);
+
+        /* Inserts the new process into the Ready Queue*/
+        insertProcQ(&readyQue, birthedProc);
+
+        /*Copy the calling state into the new processes state*/
+        CtrlPlusC(caller, &(birthedProc->p_s));
+
+        /*WE were able to allocate thus we put 0 in the v0 register*/
+        caller->s_v0 = 0;
+
+
+        LoadState(caller);
     }
-    devicenumber = finddevice(lineNumber);
-    /*with Dev Reg and Line number Do literal magic*/
-    devregarea_t *temporary = (devregarea_t *)DEVPHYS;
-    if (devicenumber == -1)
-    {
-        PANIC();
+}
+
+/*  This services causes the executing process to be anihilated along with all its children, grand
+    children and so on. Execution of this instruction does not complete until everyone has been
+    exterminated
+    Parameters: None
+    Return: Void*/
+HIDDEN void Syscall2()
+{
+    pcb_t *temp = currentProcess;
+
+    if (emptyChild(temp))
+    { /*current process has no children*/
+        outChild(temp);
+        freePcb(temp);
+        processCount--;
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-
-    testingbaby(13);
-testingbaby(13);
-=======
-    
-    
-    testingbaby(13);
->>>>>>> parent of b76a1db... fuck it
-=======
-    
-    
-    testingbaby(13);
->>>>>>> parent of b76a1db... fuck it
-=======
-    
-    
-    testingbaby(13);
->>>>>>> parent of b76a1db... fuck it
-    /*Need to Determine Device Address and the Device semaphore number*/
-<<<<<<< HEAD
-
-    test69 = (device_t *) (0x10000050 + ((lineNumber-DEVWOSEM)* DEVREGSIZE * DEVPERINT) + (devicenumber * DEVREGSIZE));
-=======
-    int templinenum;
-    /*Offest the Line number*/
-    templinenum = lineNumber - 3;
-    /* 8 devices per line number*/
-    devsemnum = lineNumber * 8;
-    /*We know which device it is */
-    devsemnum = devsemnum + devicenumber;
-    device_t * testing;
-    int mathishard; 
-    int mathishard2; 
-    mathishard = 0; 
-    mathishard2 = 0; 
-    /*The base + 32 (4 words in the device + the size of each register * the register number*/
-    /*deviceRegisterNumber = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
-*/
-    mathishard2 = lineNumber - 3; 
-    mathishard = mathishard2 * 16; 
-    mathishard = mathishard * 8; 
-    mathishard2 = devicenumber * 16; 
-    mathishard = mathishard + mathishard2; 
-    testing = (device_t *) (0x10000050 + mathishard); 
-<<<<<<< HEAD
-    device_t * devaddrbase; 
-    devaddrbase = 0x10000050 + ((lineNumber - 3) * 0x80) + (devicenumber * 0x10);
-<<<<<<< HEAD
-
-=======
-    
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of b76a1db... fuck it
-=======
->>>>>>> parent of b76a1db... fuck it
-=======
->>>>>>> parent of b76a1db... fuck it
->>>>>>> cca933bce4e98f30975dd4ae2f82a34c87118c02
-=======
->>>>>>> parent of cca933b... Testing Init
-   /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-        testingbaby(14);
-testingbaby(14);
-    if (lineNumber == TERMINT)
+    else
     {
-        deviceStatus = (test69->t_transm_status & 0x0F);
-        /*Terminal*/
-=======
-    
-        testingbaby(14);
-    if (lineNumber == TERMINT)
-    {
-        deviceStatus = (test69->t_transm_status & 0x0F);
->>>>>>> parent of b76a1db... fuck it
-=======
-    
-        testingbaby(14);
-    if (lineNumber == TERMINT)
-    {
-        deviceStatus = (test69->t_transm_status & 0x0F);
->>>>>>> parent of b76a1db... fuck it
-=======
-    
-        testingbaby(14);
-    if (lineNumber == TERMINT)
-    {
-        deviceStatus = (test69->t_transm_status & 0x0F);
->>>>>>> parent of b76a1db... fuck it
+        /*Helper Function*/
+        NukeThemTillTheyPuke(temp);
+    }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        if (deviceStatus == 3||deviceStatus == 4 |deviceStatus == 5)
-=======
-        if ((testing->t_transm_status & 0xF) != READY)
->>>>>>> cca933bce4e98f30975dd4ae2f82a34c87118c02
-=======
-        if ((testing->t_transm_status & 0x0F) != READY)
->>>>>>> parent of 2bbd89f... Testing Init
-        {
+    /*  Clean up after myself*/
+    currentProcess = NULL;
 
-                /*Acknowledge*/
-            testingbaby(15);
-                deviceStatus = testing->t_transm_status;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-                deviceStatus = devaddrbase->t_transm_status;
-                testingbaby(1000);
-                /*Acknowledge*/
-                testing->t_transm_command = ACK;
-                devaddrbase->t_transm_command = ACK;
-=======
-                testingbaby(1000);
-                /*Acknowledge*/
-                testing->t_transm_command = ACK;
->>>>>>> parent of b76a1db... fuck it
-=======
-                testingbaby(1000);
-                /*Acknowledge*/
-                testing->t_transm_command = ACK;
->>>>>>> parent of b76a1db... fuck it
-=======
-                testingbaby(1000);
-                /*Acknowledge*/
-                testing->t_transm_command = ACK;
->>>>>>> parent of b76a1db... fuck it
-                testingbaby(13000);
+    /*call scheduler*/
+    scheduler();
+}
+
+/*  When this service is requested, it is interpreted by the nucleus to request to perform a Verhogen
+    (V) operation on a sempahore. This is requested by placing 3 in a0, abd Verhogened in a1.
+    Parameter:  state* caller
+    Return: Void
+    */
+HIDDEN void Syscall3(state_t *caller)
+{
+    pcb_t *newProccess = NULL;
+    (caller->s_a1)++; /* increment semaphore  */
+
+    if ((caller->s_a1) <= 0)
+    { /* waiting in the semaphore */
+        newProccess = removeBlocked(caller->s_a1);
+        if (newProccess != NULL)
+        { /* add it to the ready queue */
+            insertProcQ(&readyQue, newProccess);
+        }
+    }
+
+    LoadState(caller); /* returns control to caller */
+}
+
+/*  When this service is requested, it is interpreted by the nucleus to request to perform a Passeren
+    (P) operation on a sempahore. This is requested by placing 4 in a0, and Passerened in a1.
+    Parameter:  state* caller
+    Return: Void
+    */
+HIDDEN void Syscall4(state_t *caller)
+{
+    (caller->s_a1)--; /* decrement semaphore */
+    if ((caller->s_a1) < 0)
+    { /* there is something controlling the semaphore */
+        CtrlPlusC(caller, &(currentProcess->p_s));
+        insertBlocked((caller->s_a1), currentProcess);
+        scheduler();
+    }
+    /* nothing had control of the sem, return control to caller */
+    LoadState(caller);
+}
+
+/*  When this service is requested, it will save the contentes of a2 and a3 and pass them to handle the
+    respective exceptions (TLB, PGMTRAP, SYS) while this process is executing. Each process may request
+    a SYS5 only ONCE for each of the exceptions types, more than one call will trigger SYS2 and Nuke the
+    process (error occured).
+    Parameter:  state* caller
+    Return: Void
+    */
+HIDDEN void Syscall5(state_t *caller)
+{
+
+    if (caller->s_a1 == 0)
+    { /*TLB TRAP*/
+        if (currentProcess->p_newTLB != NULL)
+        { /* already called sys5 */
+            Syscall2();
+        }
+        /* assign exception values */
+        currentProcess->p_newTLB = (state_t *)caller->s_a3;
+        currentProcess->p_oldTLB = (state_t *)caller->s_a2;
+    }
+
+    if (caller->s_a1 == 1)
+    {/*Program Trap*/
+        if (currentProcess->p_newProgramTrap != NULL)
+        { /* already called sys5 */
+            Syscall2();
+        }
+        /* assign exception values */
+        currentProcess->p_newProgramTrap = (state_t *)caller->s_a3;
+        currentProcess->p_oldProgramTrap = (state_t *)caller->s_a2;
+    }
+
+    else
+    {
+        if (currentProcess->p_newSys != NULL)
+        { /* already called sys5 */
+            Syscall2();
+        }
+        /* assign exception values */
+        currentProcess->p_newSys = (state_t *)caller->s_a3;
+        currentProcess->p_oldSys = (state_t *)caller->s_a2;
+    }
+
+    LoadState(&(caller));
+}
+
+/*Syscall6:  "Get_CPU_Time"
+    This service is in charge of making sure that the amount of time spent being processed is tracked by 
+    each Process Block that is running. 
+        Parameters: State_t * caller
+        Return: Void*/
+HIDDEN void Syscall6(state_t *caller)
+{
+    cpu_t timeSpentProcessing;
+    STCK(timeSpentProcessing);
+
+    /*Track the amout of time spent processing and add this to the previous amount of process time*/
+    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) +  (timeSpentProcessing -TODStart); 
+    /*Store the new updated time spent processing into the v0 register of the process state*/
+    (caller->s_v0) = (currentProcess->p_timeProc); 
+
+    /*Updates start time*/
+    STCK(TODStart);
+    /*Load the Current Processes State*/
+    LDST(&(caller));
+}
+
+/*  Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
+    Knowing that this clock also has a syscall 3 performing on it every 100 milliseconds
+    Parameters: State_t* Caller
+    Return: Void*/
+HIDDEN void Syscall7(state_t *caller)
+{
+    int * sem;
+    sem = (int*) &(semD[SEMNUM-1]);
+    (*sem)--;
+
+    if(sem < 0){
+        /*Sem is less than 0 block the current process*/
+        insertBlocked(sem,currentProcess);
+        CtrlPlusC(caller, &(currentProcess->p_s));
+        /*Increment that we have another process soft block so that it does not starve*/
+        softBlockCount++;
+    }
+
+    /*Process is soft blocked call to run another process*/
+    scheduler();
+
+    
+}
+
+/*  This service perofroms a Syscall 5 operation on the semaphore that the nucles maintains for the IO 
+    device by the values in a1, a2, and a3 (optionally). The nucleus performs a V operation on the
+    semaphore whenever that device generates an interrupt. 
+    Return:     Device Status in v0 (Once the process resumes after the occurrence of the anticipated
+                interrupt)*/
+HIDDEN void Syscall8(state_t *caller)
+{
+    int lineNo; /*  line number*/
+    int dnum;   /*  device number*/
+    int termRead;
+
+    int index;
+    int *sem;
+
+    lineNo = caller->s_a1;
+    dnum = caller->s_a2;
+    termRead = caller->s_a3; /* terminal read  or write */
+
+    /* what device is going to be computed*/
+    if (lineNo == TERMINT && termRead == TRUE)
+    {
+        /* terminal read */
+        index = DEVPERINT * (lineNo - DEVWOSEM + termRead) + dnum;
+    }
+    else
+    {
+        /* anything else */
+        index = DEVPERINT * (lineNo - DEVWOSEM) + dnum;
+    }
+
+    semD[index]--;
+
+    if (semD[index] < 0)
+    {
+        CtrlPlusC(caller, &(currentProcess->p_s));
+        insertBlocked(semD[index], currentProcess);
+        
+        softBlockCount++;
+
+        /*DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
+        Keeps the overall flow of the program and since there is no starvation, eventually that process
+        will get its turn to play with the processor*/
+        /*LDST(caller);*/
+        scheduler();
+    }
+}
+
+/**************************  HANDLERS FUNCTIONS    ******************************/
+
+/*If an exception has been encountered, it passes the error to the appropiate handler, if no exception
+    is found, it Nukes the procees till it pukes.
+    Parameters: state_t *caller
+    Return: Void 
+    */
+void PassUpOrDie(state_t *caller)
+{
+    state_t *oldState;
+    state_t *newState;
+
+    int triggerReason;
+    triggerReason = caller->s_a1;
+
+    switch (triggerReason)
+    {
+
+    case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
+        oldState = currentProcess->p_oldTLB;
+        newState = currentProcess->p_newTLB;
+        break;
+
+    case PROGTRAP: /*1 is Program Trap Exceptions*/
+        oldState = currentProcess->p_oldProgramTrap;
+        newState = currentProcess->p_newProgramTrap;
+        break;
+
+    case SYSTRAP: /*2 is SYS Exception!*/
+        oldState = currentProcess->p_oldSys;
+        newState = currentProcess->p_newSys;
+        break;
+
+    default:
+        Syscall2(); /*No vector is defined. Nuke it till it pukes*/
+        break;
+    }
+
+    CtrlPlusC( oldState,newState);
+    LoadState(&newState);
+}
+
+/*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is 
+    triggered when a PgmTrap exception is raised, execution continues with the nucleus’s PgmTrap exception
+    handler. The cause of the PgmTrap exception will be set in Cause.ExcCode in the PgmTrap Old Area.
+    Parameters: None
+    Return: Void
+     */
+void PrgTrapHandler()
+{
+    state_t *caller = (state_t *)PRGMTRAPOLDAREA;
+    /*Call Pass Up Or Die*/
+    PassUpOrDie(caller);
+}
+
+/*Gets triggered when μMPS2 fails in an attempt to translate a virtual address into its corresponding 
+    physical address. Therefore, since  this is triggered when a TLB exception is raised, execution
+    continues with the nucleus’s TLB exception handler. The cause of the TLB exception will be set in
+     Cause.ExcCode in the TLB Old Area. 
+     Parameters: None
+    Return: Void
+     */
+void TLBTrapHandler()
+{
+    state_t *caller = (state_t *)TBLMGMTOLDAREA;
+    /*Call Pass Up Or Die*/
+    PassUpOrDie(caller);
+}
+
+/**************************  HELPER FUNCTIONS    ******************************/
+
+/*Recursively removes all the children of the head, and starts hunting them down one by one. 
+    It kills them if they are in the ASL, ReadyQueue or currentProcess. Adjust the process count
+    as the process are being terminated.
+    Parameters: pcb_t * HeadPtr
+    Return: Void
+    */
+HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
+{
+    while (emptyChild(headPtr))
+    {
+        /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
+        NukeThemTillTheyPuke(removeChild(headPtr));
+    }
+
+    if (headPtr == currentProcess)
+    {
+        /*  Children services comes for you and take your child*/
+        outChild(currentProcess);
+    }
+    if (headPtr->p_semAdd == NULL)
+    {
+        /*  remove process from readyQueue*/
+        outProcQ(&readyQue, headPtr);
+    }
+    else
+    {
+        /*  remove process from ASL*/
+        outBlocked(headPtr);
+        if ((headPtr->p_semAdd >= &(semD[0])) && (headPtr->p_semAdd <= &(semD[SEMNUM - 1])))
+        {   /*SemAdd count is somewhere in between the SemD array*/
+            softBlockCount--;
         }
         else
         {
-            testingbaby(16);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> parent of b76a1db... fuck it
-=======
->>>>>>> parent of b76a1db... fuck it
-=======
->>>>>>> parent of b76a1db... fuck it
-            /*Save the status*/
-            deviceStatus = testing->t_recv_status;
-            /*Acknowledge*/
-            testing->t_recv_command = ACK;
-            /*fix the semaphore number for terminal readers sub device */
-            devsemnum = devsemnum + DEVPERINT;
-            testingbaby(32);
+            /*  Increment Semaphore*/
+            (headPtr->p_semAdd)++;
         }
     }
-    else
-    {
-        /*Non terminal Interrupt*/
-        deviceStatus = testing->d_status;
-        /*Acknowledge the interrupt*/
-        testing->d_command = ACK;
-    }
-    
-    /*V op */
-    semD[devsemnum]++;
-    if ((semD[devsemnum]) <= 0)
-    {
-        t = removeBlocked(semaphoreAddress);
-        if (t != NULL)
-        {
-            t->p_s.s_v0 = deviceStatus;
-            insertProcQ(readyQue, t);
-            softBlockCount--;
-            
-        }
-    }
-    testingbaby(17);
-    CallScheduler();
-    /*Interrupt has been Handled!*/
+    /*  We have no more children! Good to go*/
+    processCount--;
+    freePcb(headPtr);
 }
-/*HELPER FUNCTIONS*/
-int finddevice(int linenumber)
+
+/*  This state will copy all of the contents of the old state into the new state
+    Parameters: State_t * oldstate, State_t* NewState
+    Return: Void*/
+extern void CtrlPlusC(state_t *oldState, state_t *newState)
 {
-    /*Set some local variables*/
+    /*Move all of the contents from the old state into the new*/
+    newState->s_asid = oldState->s_asid;
+    newState->s_status = oldState->s_status;
+    newState->s_pc = oldState->s_pc;
+    /*Loop through all of the registers in the old state and write them into the new state*/
     int i;
-    devregarea_t * tOffendingDevice;
-    tOffendingDevice = (devregarea_t *) DEVPHYS;
-    /*make a copy of the bit map */
-    unsigned int map = tOffendingDevice->interrupt_dev[linenumber];
-    int devn;
-    testingbaby(19);
-    /*8 Total devices to look through */
-    for (i = 0; i < TOTALDEVICES; i++)
+    for (i = 0; i < STATEREGNUM; i++)
     {
-        /*Bit wise and if the value is not 0 Device is interrupting */
-        if ((map & FIRSTBIT) != ZERO)
-        {
-            devn = i;
-        }
-        
-            else
-            {
-            
-                /*Increment both the index and shift the bits 1 */
-                i = i + 1;
-            map << 1;
-        }
+        newState->s_reg[i] = oldState->s_reg[i];
     }
-    testingbaby(20);
-    /*Return the device number*/
-    return devn;
 }
-HIDDEN void CallScheduler()
+
+/*Function that is designed for ME to be able to read that LDST is Load State 
+Parameters: state_t * s
+    Return: Void
+*/
+HIDDEN void LoadState(state_t *s)
 {
-    
-    state_t *temp = (state_t *)INTERRUPTOLDAREA;
-    
-    if (currentProcess == NULL)
-    {
-        /*Get the next Job */
-        scheduler();
-    }
-    else
-    {
-        
-        
-        /*if the process is still around need to copy its contents over*/
-        CtrlPlusC(temp, &(currentProcess->p_s));
-        insertProcQ(&readyQue, currentProcess);
-        /*Load the state back */
-        /**LDST(temp);*/
-        scheduler();
-
-    }
-<<<<<<< HEAD
+    LDST(s);
 }
-<<<<<<< HEAD
-=======
+
+/*Track the Time
+    Parameters: Cpu_t t
+    Return: Void*/
+
+HIDDEN void StoreTime(cpu_t t){
+    STCK(t);
 }
-<<<<<<< HEAD
-=======
->>>>>>> parent of b76a1db... fuck it
-=======
->>>>>>> parent of b76a1db... fuck it
-
-
-
-
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of b76a1db... fuck it
-=======
->>>>>>> parent of b76a1db... fuck it
-=======
->>>>>>> parent of b76a1db... fuck it
