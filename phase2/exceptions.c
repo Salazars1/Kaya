@@ -376,7 +376,8 @@ HIDDEN void Syscall8(state_t *caller)
         /*DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
         Keeps the overall flow of the program and since there is no starvation, eventually that process
         will get its turn to play with the processor*/
-        scheduler();
+        LDSt(caller);
+        /*scheduler();*/
     }
 }
 
