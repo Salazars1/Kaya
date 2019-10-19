@@ -167,7 +167,7 @@ testingbaby(13);
     mathishard = mathishard + mathishard2; 
     testing = (device_t *) (0x10000050 + mathishard); 
     device_t * devaddrbase; 
-    devaddrbase = 0x10000050 + ((lineNumber - 3) * 0x80) + (devicenumber * 0x10);
+    devaddrbase = (0x10000050 + ((lineNumber - 3) * 8) + (devicenumber * 16));
     
    /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
     
