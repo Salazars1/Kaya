@@ -19,6 +19,9 @@
 
 typedef unsigned int devregtr;
 
+
+extern void addokbuf(char *strp);
+
 /* hardware constants */
 #define PRINTCHR	2
 #define BYTELEN	8
@@ -124,6 +127,7 @@ void print(char *msg) {
 		*(base + 3) = PRINTCHR | (((devregtr) *s) << BYTELEN);
 		status = SYSCALL(WAITIO, TERMINT, 0, 0);	
 		if ((status & TERMSTATMASK) != RECVD)
+			boobies(10);
 			PANIC();
 		s++;	
 	}
@@ -624,3 +628,8 @@ void p8leaf() {
 }
 
 
+int boobies(int stone){
+return stone; 
+
+
+}

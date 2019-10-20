@@ -17,6 +17,7 @@
 #include "../e/scheduler.e"
 
 
+
 #include "/usr/local/include/umps2/umps/libumps.e"
 
 
@@ -37,6 +38,8 @@ HIDDEN int testingbaby(int aaaaaa){
     return aaaaaa; 
 
 }
+
+extern void addokbuf(char *strp);
 
 void IOTrapHandler()
 {
