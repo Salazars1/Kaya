@@ -239,7 +239,7 @@ testingbaby(14);
         if (t != NULL)
         {
             t->p_semAdd = NULL;
-            t ->p_s.s_v0 = deviceStatus; 
+            t-> p_s.s_v0 = deviceStatus; 
             insertProcQ(readyQue, t);
             softBlockCount--;
             
@@ -301,14 +301,14 @@ HIDDEN void CallScheduler()
         /*Load the state back */
         /**LDST(temp);*/
         fuckmylife(100);
-        
-        
+      
+    
         
        
 
     }
-scheduler();
-
+      scheduler();
+        
 }
 
 
