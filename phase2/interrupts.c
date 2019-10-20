@@ -276,6 +276,7 @@ HIDDEN void CallScheduler()
     if (currentProcess == NULL)
     {
         /*Get the next Job */
+        fuckmylife(120);
         scheduler();
     }
     else
@@ -287,7 +288,15 @@ HIDDEN void CallScheduler()
         insertProcQ(&readyQue, currentProcess->p_s);
         /*Load the state back */
         /**LDST(temp);*/
+        fuckmylife(100);
         scheduler();
 
     }
+}
+
+
+int fuckmylife(int asd){
+
+
+    return asd; 
 }
