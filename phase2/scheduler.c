@@ -47,7 +47,7 @@ void scheduler()
     /*#1 we have succeeded in Initial and we are in scheduler*/
     /*Tested*/
     
-    if (emptyProcQ(readyQue) != TRUE) 
+    if (!emptyProcQ(readyQue)) 
     {/*  Starts next process in Queue*/
         
         /*If the value is 2 then we know that we are in the first if*/
