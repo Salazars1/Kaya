@@ -243,7 +243,7 @@ testingbaby(14);
         {
             t->p_semAdd = NULL;
             t-> p_s.s_v0 = deviceStatus; 
-            insertProcQ(readyQue, t);
+            insertProcQ(&readyQue, t);
             softBlockCount--;
             
         }
