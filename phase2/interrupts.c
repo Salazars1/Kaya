@@ -195,7 +195,7 @@ testingbaby(14);
         }
         else
         {
-            devsemnum = devsemnum + 8; 
+            
             /*Save the status*/
             deviceStatus = testing->t_recv_status;
             /*Acknowledge*/
