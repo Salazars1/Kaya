@@ -168,7 +168,7 @@
 
 /*Acknowledge a interrupt*/
 #define ACK 1 
-
+#define IPAREA			0x0000FF00
 
 
 #endif

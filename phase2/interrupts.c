@@ -55,11 +55,15 @@ void IOTrapHandler()
     caller = (state_t *)INTERRUPTOLDAREA;
 
 
-/*UNSURE*/ 
+/*UNSURE 
     offendingLine = caller -> s_cause >> 8; 
     testingbaby(2);
 
-/*finish UNSURE*/
+finish UNSURE*/
+
+
+    offendingLine = ((caller ->s_cause) & IPAREA) >>8;
+
 
     if ((offendingLine & MULTICORE) != ZERO)
     { /*Mutli Core is on */
