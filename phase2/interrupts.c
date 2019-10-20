@@ -65,7 +65,9 @@ void IOTrapHandler()
 finish UNSURE*/
 
 
-    offendingLine = ((caller ->s_cause) & IPAREA) >> 8;
+    /*offendingLine = ((caller ->s_cause) & IPAREA) >> 8;*/
+
+    offendingLine = caller ->s_cause; 
 
 
     if ((offendingLine & MULTICORE) != ZERO)
