@@ -43,7 +43,8 @@ extern void addokbuf(char *strp);
 
 void IOTrapHandler()
 {
-    testingbaby(1);
+    int b = 1; 
+    testingbaby(b);
     unsigned int offendingLine;
     int lineNumber;
     int devsemnum;
@@ -197,10 +198,11 @@ testingbaby(14);
                 /*Acknowledge*/
             testingbaby(15);
                 deviceStatus = devaddrbase->t_transm_status;
-                testingbaby(1000);
+                testingbaby(b);
                 /*Acknowledge*/
                 devaddrbase->t_transm_command = ACK;
-                testingbaby(13000);
+                b = 4; 
+                testingbaby(b);
         }
         else
         {
