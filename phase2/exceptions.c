@@ -358,21 +358,26 @@ HIDDEN void Syscall8(state_t *caller)
     dnum = caller->s_a2;
     termRead = caller->s_a3; /* terminal read  or write */
 
-    /* what device is going to be computed*/
+    /* what device is going to be computed*//
+    index = lineNo - 3 + termRead; 
+    index = index * 8; 
+    index = index + dnum; 
+    /*
     if (lineNo == TERMINT && termRead == TRUE)
     {
-        fuckme(4);
+        fuckme(4);*/
         /* terminal read */
-        index = DEVPERINT * (lineNo - DEVWOSEM + termRead) + dnum;
+        /*index = DEVPERINT * (lineNo - DEVWOSEM + termRead) + dnum;
     }
+
     else
     {
-        fuckme(34);
-        /* anything else */
+        fuckme(34);*/
+        /* anything else *//*
         index = DEVPERINT * (lineNo - DEVWOSEM) + dnum;
 
     }
-
+*/
     semD[index]--;
 
     if (semD[index] < 0)
