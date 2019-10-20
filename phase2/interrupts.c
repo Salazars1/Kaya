@@ -201,6 +201,8 @@ testingbaby(14);
                 testingbaby(23);
                 /*Acknowledge*/
                 devaddrbase->t_transm_command = ACK;
+
+                devsemnum =  (DEVPERINT * (lineNumber - DEVWOSEM)) + devicenumber;
                 
                 testingbaby(34);
         }
@@ -208,6 +210,7 @@ testingbaby(14);
         {
             
             /*Save the status*/
+            devsemnum =  (DEVPERINT * (lineNumber - 2)) + devicenumber;
             deviceStatus = testing->t_recv_status;
             /*Acknowledge*/
             testing->t_recv_command = ACK;
