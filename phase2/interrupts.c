@@ -225,9 +225,15 @@ testingbaby(14);
 
     testingbaby(43);
     /*V op */
-    semD[devsemnum]++;
+    int * semad; 
+
+    semad =(int*) &(semD[devsemnum]);
+
+    
+    (*semad)--; 
+    
     testingbaby(3);
-    if ((semD[devsemnum]) <= 0)
+    if (semad <= 0)
     {
         t = removeBlocked(semaphoreAddress);
         if (t != NULL)
