@@ -147,6 +147,7 @@ finish UNSURE*/
 
     if (devicenumber == -1)
     {
+        testingbaby(10200202);
         PANIC();
     }
     testingbaby(13);

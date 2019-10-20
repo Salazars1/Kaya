@@ -127,7 +127,6 @@ void print(char *msg) {
 		*(base + 3) = PRINTCHR | (((devregtr) *s) << BYTELEN);
 		status = SYSCALL(WAITIO, TERMINT, 0, 0);	
 		if ((status & TERMSTATMASK) != RECVD)
-			boobies(10);
 			PANIC();
 		s++;	
 	}
@@ -625,11 +624,4 @@ void p8leaf() {
 	SYSCALL(VERHOGEN, (int)&endcreate, 0, 0);
 
 	SYSCALL(PASSERN, (int)&blkp8, 0, 0);
-}
-
-
-int boobies(int stone){
-return stone; 
-
-
 }
