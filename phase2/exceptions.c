@@ -358,7 +358,7 @@ HIDDEN void Syscall8(state_t *caller)
     dnum = caller->s_a2;
     termRead = caller->s_a3; /* terminal read  or write */
 
-    /* what device is going to be computed*//
+    /* what device is going to be computed*/
     index = lineNo - 3 + termRead; 
     index = index * 8; 
     index = index + dnum; 
