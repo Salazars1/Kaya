@@ -341,6 +341,8 @@ HIDDEN void Syscall7(state_t *caller)
                 interrupt)*/
 HIDDEN void Syscall8(state_t *caller)
 {
+
+    fuckme(2);
     int lineNo; /*  line number*/
     int dnum;   /*  device number*/
     int termRead;
@@ -355,11 +357,13 @@ HIDDEN void Syscall8(state_t *caller)
     /* what device is going to be computed*/
     if (lineNo == TERMINT && termRead == TRUE)
     {
+        fuckme(4);
         /* terminal read */
         index = DEVPERINT * (lineNo - DEVWOSEM + termRead) + dnum;
     }
     else
     {
+        fuckme(34);
         /* anything else */
         index = DEVPERINT * (lineNo - DEVWOSEM) + dnum;
 
@@ -528,4 +532,7 @@ HIDDEN void LoadState(state_t *s)
 
 HIDDEN void StoreTime(cpu_t t){
     STCK(t);
+}
+int fuckme(int b){
+    return b; 
 }

@@ -82,6 +82,7 @@ void scheduler()
         { 
             /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */            
           /*Tested*/
+          debugthisfuckingshit(2);
           setTIMER(10000000000);
             setSTATUS(ALLOFF | IEON | IECON | IMON);
             
