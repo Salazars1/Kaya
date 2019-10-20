@@ -52,6 +52,7 @@ void scheduler()
         
         /*If the value is 2 then we know that we are in the first if*/
         /*Tested*/
+        
         currentProcess = removeProcQ(&(readyQue));      /* Remove process from Queue */
         STCK(TODStart);                                 /* Gets start time */
 

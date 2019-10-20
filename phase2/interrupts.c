@@ -271,25 +271,27 @@ int finddevice(int linenumber)
 HIDDEN void CallScheduler()
 {
     
-    state_t *temp = (state_t *)INTERRUPTOLDAREA;
+    state_t *temp;
+    temp =  (state_t *)INTERRUPTOLDAREA;
     
-    if (currentProcess == NULL)
+    if (currentProcess != NULL)
     {
-        /*Get the next Job */
-        fuckmylife(120);
-        scheduler();
-    }
-    else
-    {
-        
-        
-        /*if the process is still around need to copy its contents over*/
+         /*if the process is still around need to copy its contents over*/
         CtrlPlusC(temp, &(currentProcess->p_s));
         insertProcQ(&readyQue, currentProcess);
         /*Load the state back */
         /**LDST(temp);*/
         fuckmylife(100);
         scheduler();
+        
+    if(currentProcess == NULL)
+    {
+        /*Get the next Job */
+        fuckmylife(120);
+        scheduler();
+    }
+        
+       
 
     }
 }
