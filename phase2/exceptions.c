@@ -54,6 +54,10 @@ extern void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr);
 HIDDEN void LoadState(state_t *s);
 
+
+int fuckme(int b){
+    return b; 
+}
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
     for these first 8 System calls the Kernel Mode must be active in order for these commands
     to execute. If this is not the case, then the appropiate program trap would be execute. 
@@ -532,7 +536,4 @@ HIDDEN void LoadState(state_t *s)
 
 HIDDEN void StoreTime(cpu_t t){
     STCK(t);
-}
-int fuckme(int b){
-    return b; 
 }
