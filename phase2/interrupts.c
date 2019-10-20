@@ -233,7 +233,7 @@ testingbaby(14);
     (*semad)--; 
     
     testingbaby(3);
-    if (semad <= 0)
+    if (semad < 0)
     {
         t = removeBlocked(semaphoreAddress);
         if (t != NULL)
