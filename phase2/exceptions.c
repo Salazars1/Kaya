@@ -362,9 +362,9 @@ HIDDEN void Syscall8(state_t *caller)
     {
         /* anything else */
         index = DEVPERINT * (lineNo - DEVWOSEM) + dnum;
+
     }
 
-    index = DEVPERINT * (lineNo -DEVWOSEM + termRead) + dnum;
     semD[index]--;
 
     if (semD[index] < 0)
