@@ -307,7 +307,7 @@ HIDDEN void CallScheduler()
        
 
     }
-    LDST(currentProcess);
+   /* LDST(currentProcess);*/
       scheduler();
         
 }
