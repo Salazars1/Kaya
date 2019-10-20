@@ -284,7 +284,7 @@ HIDDEN void CallScheduler()
         
         /*if the process is still around need to copy its contents over*/
         CtrlPlusC(temp, &(currentProcess->p_s));
-        insertProcQ(&readyQue, &(currentProcess->p_s));
+        insertProcQ(&readyQue, currentProcess->p_s);
         /*Load the state back */
         /**LDST(temp);*/
         scheduler();
