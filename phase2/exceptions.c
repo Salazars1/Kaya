@@ -332,7 +332,7 @@ HIDDEN void Syscall7(state_t *caller)
         /*Increment that we have another process soft block so that it does not starve*/
        softBlockCount++;
     }
- 
+    fuckme(1616161616161616);
     /*Process is soft blocked call to run another process*/
     scheduler();
 
@@ -384,6 +384,7 @@ tough = &(semD[index]);
     if (*tough < 0)
     {
         CtrlPlusC(caller, &(currentProcess->p_s));
+
         insertBlocked(tough, currentProcess);
         
         softBlockCount++;
@@ -392,6 +393,7 @@ tough = &(semD[index]);
         Keeps the overall flow of the program and since there is no starvation, eventually that process
         will get its turn to play with the processor*/
         /*LDST(caller);*/
+        fuckme(30);
         scheduler();
     }
 }
