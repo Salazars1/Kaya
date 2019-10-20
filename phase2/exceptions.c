@@ -371,7 +371,7 @@ HIDDEN void Syscall8(state_t *caller)
 
     else
     {
-        fuckme(34);*/
+        fuckme(34);
         /* anything else */
         index = DEVPERINT * (lineNo - DEVWOSEM) + dnum;
 
