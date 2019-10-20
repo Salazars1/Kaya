@@ -67,7 +67,7 @@ finish UNSURE*/
 
     /*offendingLine = ((caller ->s_cause) & IPAREA) >> 8;*/
 
-    offendingLine = caller ->s_cause >> 24; 
+    offendingLine = caller ->s_cause >> 8; 
 
 
     if ((offendingLine & MULTICORE) != ZERO)
