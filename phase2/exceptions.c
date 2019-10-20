@@ -325,9 +325,9 @@ HIDDEN void Syscall7(state_t *caller)
         insertBlocked(sem,currentProcess);
         CtrlPlusC(caller, &(currentProcess->p_s));
         /*Increment that we have another process soft block so that it does not starve*/
-        softBlockCount++;
+       
     }
-
+ softBlockCount++;
     /*Process is soft blocked call to run another process*/
     scheduler();
 
