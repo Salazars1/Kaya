@@ -198,11 +198,11 @@ testingbaby(14);
                 /*Acknowledge*/
             testingbaby(15);
                 deviceStatus = devaddrbase->t_transm_status;
-                testingbaby(b);
+                testingbaby(23);
                 /*Acknowledge*/
                 devaddrbase->t_transm_command = ACK;
-                b = 4; 
-                testingbaby(b);
+                
+                testingbaby(34);
         }
         else
         {
@@ -223,7 +223,7 @@ testingbaby(14);
         testing->d_command = ACK;
     }
 
-    
+    testingbaby(43);
     /*V op */
     semD[devsemnum]++;
     if ((semD[devsemnum]) <= 0)
