@@ -247,6 +247,10 @@ testingbaby(14);
             softBlockCount--;
             
         }
+        else{
+
+            HALT();
+        }
     }
     testingbaby(17);
     CallScheduler();
