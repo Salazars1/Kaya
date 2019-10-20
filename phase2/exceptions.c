@@ -360,7 +360,7 @@ HIDDEN void Syscall8(state_t *caller)
     termRead = caller->s_a3; /* terminal read  or write */
 
     /* what device is going to be computed*/
-    ]
+    
     
     if (lineNo == TERMINT && termRead == TRUE)
     {
