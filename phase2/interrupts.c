@@ -301,18 +301,14 @@ HIDDEN void CallScheduler()
         /*Load the state back */
         /**LDST(temp);*/
         fuckmylife(100);
-        scheduler();
         
-    if(currentProcess == NULL)
-    {
-        /*Get the next Job */
-        fuckmylife(120);
-        scheduler();
-    }
+        
         
        
 
     }
+scheduler();
+
 }
 
 
