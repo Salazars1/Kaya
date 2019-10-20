@@ -100,7 +100,7 @@ void SYSCALLHandler()
     switch (casel) {
 
         case SYSCALL1:
-            Syscall1(currentProcess);
+            Syscall1(prevState);
             break;
 
         case SYSCALL2:
