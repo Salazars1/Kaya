@@ -90,6 +90,7 @@ void SYSCALLHandler()
         /*Program Trap Handler */
         PrgTrapHandler();
     }
+    
 
     /* increment prevState's PC to next instruction */
 	prevState -> s_pc = prevState -> s_pc + 4;
@@ -378,12 +379,14 @@ HIDDEN void Syscall8(state_t *caller)
 
     }
 */
-    semD[index]--;
-
-    if (semD[index] < 0)
+int * tough; 
+tough = &(semD[index]);
+(*tough)--;
+    
+    if (*tough < 0)
     {
         CtrlPlusC(caller, &(currentProcess->p_s));
-        insertBlocked(semD[index], currentProcess);
+        insertBlocked(tough, currentProcess);
         
         softBlockCount++;
 
@@ -518,6 +521,7 @@ extern void CtrlPlusC(state_t *oldState, state_t *newState)
     newState->s_asid = oldState->s_asid;
     newState->s_status = oldState->s_status;
     newState->s_pc = oldState->s_pc;
+    newState ->s_cause = oldState ->s_cause; 
     /*Loop through all of the registers in the old state and write them into the new state*/
     int i;
     for (i = 0; i < STATEREGNUM; i++)
