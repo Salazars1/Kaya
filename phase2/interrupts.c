@@ -238,7 +238,8 @@ testingbaby(14);
         t = removeBlocked(semaphoreAddress);
         if (t != NULL)
         {
-            t->p_s.s_v0 = deviceStatus;
+            t->semAdd = NULL;
+        
             insertProcQ(readyQue, t);
             softBlockCount--;
             
