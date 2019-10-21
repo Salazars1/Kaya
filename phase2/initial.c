@@ -22,6 +22,14 @@
 #include "/usr/local/include/umps2/umps/libumps.e"
 
 
+#define TRANSMITTED	5
+#define ACK	1
+#define PRINTCHR	2
+#define CHAROFFSET	8
+#define STATUSMASK	0xFF
+#define	TERM0ADDR	0x10000250
+
+
 /* Global Variables*/
 int processCount;
 int softBlockCount;
@@ -30,7 +38,7 @@ pcb_t *readyQue;
 int semD[SEMNUM];
 char okbuf[2048];			/* sequence of progress messages */
 char *mp = okbuf;
-
+typedef unsigned int devreg;
 
 extern void test(); 
 extern void addkbuf(char * strp);
@@ -47,9 +55,13 @@ int main()
         /*  Initialize the PCB and ASL lists  */
     initPcbs();
     initASL();
+    addokbuf("Initialization of Pcbs and ASL is done\n");
+
 
     /*  Initialize phase2 global variables  */
     processCount = 0;
+    addokbuf("Well fuck my ass and call me daddy\n");
+
     softBlockCount = 0;
     currentProcess = NULL;
     readyQue = mkEmptyProcQ();
@@ -105,6 +117,10 @@ int main()
     
     LDIT(IOCLOCK);  /*Sets the semaphore pseudoclock*/
 
+
+    addokbuf("Psuedo Clock has been loaded \n");
+    addokbuf("Initial is done\n");
+
     /* Lets the scheduler file take over.*/
     
   
@@ -116,6 +132,9 @@ int main()
 
 
 
+devreg termstat(memaddr * stataddr) {
+	return((*stataddr) & STATUSMASK);
+}
 
 /* This function prints a string on specified terminal and returns TRUE if 
  * print was successful, FALSE if not   */
@@ -177,4 +196,3 @@ void addokbuf(char *strp) {
 	termprint(tstrp, 0);
 }
 
- 
