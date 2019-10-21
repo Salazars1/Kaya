@@ -38,7 +38,7 @@ pcb_t *readyQue;
 int semD[SEMNUM];
 char okbuf[2048];			/* sequence of progress messages */
 char *mp = okbuf;
-
+typedef unsigned int devreg;
 
 extern void test(); 
 extern void addkbuf(char * strp);
@@ -126,6 +126,9 @@ int main()
 
 
 
+devreg termstat(memaddr * stataddr) {
+	return((*stataddr) & STATUSMASK);
+}
 
 /* This function prints a string on specified terminal and returns TRUE if 
  * print was successful, FALSE if not   */
