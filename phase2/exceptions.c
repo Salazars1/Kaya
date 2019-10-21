@@ -170,7 +170,7 @@ void SYSCALLHandler()
 
 void Syscall1(state_t *caller)
 {
-addokbuf("calling Alloc PCB\n");
+    addokbuf("calling Alloc PCB\n");
     pcb_t *birthedProc = allocPcb();
 
     if (birthedProc == NULL)
