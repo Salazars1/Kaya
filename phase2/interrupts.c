@@ -224,6 +224,7 @@ testingbaby(14);
         deviceStatus = testing->d_status;
         /*Acknowledge the interrupt*/
         testing->d_command = ACK;
+        devsemnum =  (DEVPERINT * (lineNumber - DEVWOSEM)) + devicenumber;
     }
 
     testingbaby(43);
