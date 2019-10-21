@@ -66,77 +66,91 @@ int fuckme(int b)
      */
 void SYSCALLHandler()
 {
+    addokbuf("An Exception has happened we are in the SYscall handler\n");
     state_t *prevState;
     state_t *program;
     unsigned int prevStatus;
 
     int casel;
     int mode;
+    
 
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;
     casel = prevState->s_a0;
-
+    addokbuf("Exceptions have been loaded check fuck me test for casel sys call val\n");
+    fuckme(casel);
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
 
     if (((prevStatus > 0) && (prevStatus < 9) && mode) != ALLOFF)
     { /* It is User Mode*/
+        addokbuf("We are in the part where the program will die\n");    
         program = (state_t *)PRGMTRAPOLDAREA;
         CtrlPlusC(prevState, program);
 
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         (program->s_cause) = (((program->s_cause) & ~(0xFF)) | (10 << 2));
-
+        addokbuf("Program will be killed\n");
         /*Program Trap Handler */
         PrgTrapHandler();
     }
 
     /* increment prevState's PC to next instruction */
     (prevState->s_pc) = (prevState->s_pc) + 4;
-
+    addokbuf("Get the next instruction\n");
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
     switch (casel)
     {
 
     case SYSCALL1:
+    addokbuf("SysCall1 \n");
         Syscall1(prevState);
         break;
 
     case SYSCALL2:
+    addokbuf("SysCall2 \n");
         Syscall2();
         break;
 
     case SYSCALL3:
         Syscall3(prevState);
+    addokbuf("Syscall 3\n");
         break;
 
     case SYSCALL4:
+    addokbuf("Syscall 4\n");
         Syscall4(prevState);
         break;
 
     case SYSCALL5:
+    addokbuf("Sys call 5 \n");
         Syscall5(prevState);
         break;
 
     case SYSCALL6:
+    addokbuf("Sys call 6 \n");
         Syscall6(prevState);
         break;
 
     case SYSCALL7:
+    addokbuf("Sys call 7 \n");
         Syscall7(prevState);
         break;
 
     case SYSCALL8:
+    addokbuf("Syscall 8 \n");
         Syscall8(prevState);
         break;
 
     default:
+    addokbuf("Pass up or die (Default case\n");
         PassUpOrDie(prevState, SYSTRAP);
         break;
     }
 
     /*We should NEVER GET HERE. IF WE DO, WE DIE*/
+    addokbuf("Panic\n");
     PANIC();
 }
 
@@ -151,7 +165,7 @@ void SYSCALLHandler()
 
 void Syscall1(state_t *caller)
 {
-
+addokbuf("calling Alloc PCB\n");
     pcb_t *birthedProc = allocPcb();
 
     if (birthedProc == NULL)

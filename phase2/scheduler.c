@@ -42,39 +42,41 @@ int debugthisfuckingshit(int b);
     */
 void scheduler()
 {
-    addokbuf("Well fuck my ass and call me daddy\n");
+    addokbuf("We are at the beginning of the scheduler\n");
     /*#1 we have succeeded in Initial and we are in scheduler*/
     /*Tested*/
 
     if (!emptyProcQ(readyQue))
     { /*  Starts next process in Queue*/
-
+        addokbuf("The ready Queue has a process\n");
         /*If the value is 2 then we know that we are in the first if*/
         /*Tested*/
         currentProcess = removeProcQ(&(readyQue)); /* Remove process from Queue */
         STCK(TODStart);                            /* Gets start time */
 
         setTIMER(QUANTUM); /* Defines Quantum to 5 ms */
+        addokbuf("We have set the timer to be a new quantum\n");
         LDST(&(currentProcess->p_s));
     }
     else
     { /* There is nothing on the ReadyQueue */
-
+addokbuf("There is nothing on the ready queue\n");
         /*Tested*/
         currentProcess = NULL; /* no process is running*/
-
+addokbuf("Current Process is Now NULL\n");
         if (processCount == 0)
         { /* Everything finished running correctly */
-
+            addokbuf("Process Count is 0 we are halting the machine\n");
             debugthisfuckingshit(4);
             HALT();
         }
         
         if (processCount > 0)
         {
-
+            addokbuf("Process count is greater than 0 meaning that we have processes to run\n");
             if (softBlockCount == 0)
             { /* DEADLOCK CASE */
+            addokbuf("No processes are soft blocked we hit dead lock PANIC\n");
                 debugthisfuckingshit(5);
                 PANIC();
             }
@@ -82,10 +84,11 @@ void scheduler()
             {
                 /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
                 /*Tested*/
+                addokbuf("Soft block count is not 0 thus we are waiting for them to be put back on the queue\n");
                 debugthisfuckingshit(2);
                 setTIMER(MAXINT);
                 setSTATUS(ALLOFF | IEON | IECON | IMON);
-
+                addokbuf("Begin Waiting\n");
                 WAIT();
             }
         }
