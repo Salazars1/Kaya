@@ -86,7 +86,7 @@ addokbuf("Current Process is Now NULL\n");
                 /*Tested*/
                 addokbuf("Soft block count is not 0 thus we are waiting for them to be put back on the queue\n");
                 debugthisfuckingshit(2);
-                setTIMER(MAXINT);
+                /*setTIMER(MAXINT);*/
                 setSTATUS(ALLOFF | IEON | IECON | IMON);
                 addokbuf("Begin Waiting\n");
                 WAIT();
