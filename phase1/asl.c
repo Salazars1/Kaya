@@ -38,7 +38,7 @@ int insertBlocked(int *semAdd, pcb_t *p){
         insertProcQ(&(temp->s_next->s_procQ),p);        /*Calls pcb to insert pcb*/  
         return FALSE;
     }else{                                              /*ID is not in the ASL*/
-        semd_t *newSemd = allocASL();                   /*Creates new node*/
+        semd_t* newSemd = (semd_t*) allocASL();                   /*Creates new node*/
         if(newSemd == NULL){
             return TRUE;                                /*More than 20 (MAXPROC) Processes*/
         }else{
@@ -62,10 +62,10 @@ int insertBlocked(int *semAdd, pcb_t *p){
                 - pcb_t (if the node was found in the list)*/
 
 pcb_t *removeBlocked(int *semAdd){
-    semd_t *parentNode;
-    parentNode = searchForParent(semAdd);                 /*Gets the parent of the node whose semAdd equals the parameters*/
+    semd_t* parentNode;
+    parentNode = (semd_t*) searchForParent(semAdd);                 /*Gets the parent of the node whose semAdd equals the parameters*/
 
-    pcb_t * returnValue;
+    pcb_t* returnValue;
     if(parentNode -> s_next -> s_semAdd == semAdd){       /*ID is in the ASL*/
         returnValue  = removeProcQ(&parentNode ->s_next ->s_procQ);
         if(returnValue == NULL){                          /*SemAdd was not found in the list*/
