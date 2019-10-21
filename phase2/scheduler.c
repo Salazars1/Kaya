@@ -42,7 +42,7 @@ int debugthisfuckingshit(int b);
     */
 void scheduler()
 {
-    addokbuf("\n WE ARE AT THE BEGGINING OF SCHEDULER");
+    /*addokbuf("\n WE ARE AT THE BEGGINING OF SCHEDULER");*/
 
     if (!emptyProcQ(readyQue))
     { /*  Starts next process in Queue*/
@@ -51,7 +51,7 @@ void scheduler()
         STCK(TODStart);                            /* Gets start time */
 
         setTIMER(QUANTUM); /* Defines Quantum to 5 ms */
-        addokbuf("\n\n___________LOADING CURRENT PROCESS_________________\n\n");
+        /*addokbuf("\n\n___________LOADING CURRENT PROCESS_________________\n\n");*/
         LDST(&(currentProcess->p_s));
         
     }
