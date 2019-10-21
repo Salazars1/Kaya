@@ -149,6 +149,7 @@ void initASL(){
     semd_h = NULL; 
     semdFree_h = NULL;
     int i;
+    i=2;
     for(i = 2; i < MAXPROC+2; i++){
         deAllocASL(&(ASLInitialization[i]));
     }
