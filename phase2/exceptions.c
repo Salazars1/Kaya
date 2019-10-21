@@ -37,14 +37,14 @@ extern cpu_t TODStart;
 
 /*  Declaration of exceptions and helper fucntions. Further documentation will be provided
     in the actual function.*/
-HIDDEN void Syscall1(state_t *caller);
-HIDDEN void Syscall2();
-HIDDEN void Syscall3(state_t *caller);
-HIDDEN void Syscall4(state_t *caller);
-HIDDEN void Syscall5(state_t *caller);
-HIDDEN void Syscall6(state_t *caller);
-HIDDEN void Syscall7(state_t *caller);
-HIDDEN void Syscall8(state_t *caller);
+void Syscall1(state_t *caller);
+void Syscall2();
+void Syscall3(state_t *caller);
+void Syscall4(state_t *caller);
+void Syscall5(state_t *caller);
+void Syscall6(state_t *caller);
+void Syscall7(state_t *caller);
+void Syscall8(state_t *caller);
 
 void PassUpOrDie(state_t *caller, int triggerReason);
 void PrgTrapHandler();
@@ -149,7 +149,7 @@ void SYSCALLHandler()
     Return:     -0 in V0 if the process was done effectively
                 -1 in V0 if the process was NOT done because of lack of resources.*/
 
-HIDDEN void Syscall1(state_t *caller)
+void Syscall1(state_t *caller)
 {
 
     pcb_t *birthedProc = allocPcb();
@@ -185,7 +185,7 @@ HIDDEN void Syscall1(state_t *caller)
     exterminated
     Parameters: None
     Return: Void*/
-HIDDEN void Syscall2()
+void Syscall2()
 {
     if (emptyChild(currentProcess))
     { /*current process has no children*/
@@ -208,7 +208,7 @@ HIDDEN void Syscall2()
     Parameter:  state* caller
     Return: Void
     */
-HIDDEN void Syscall3(state_t *caller)
+void Syscall3(state_t *caller)
 {
     pcb_t* newProccess = NULL;
     (caller->s_a1)++; /* increment semaphore  */
@@ -230,7 +230,7 @@ HIDDEN void Syscall3(state_t *caller)
     Parameter:  state* caller
     Return: Void
     */
-HIDDEN void Syscall4(state_t *caller)
+void Syscall4(state_t *caller)
 {
     (caller->s_a1)--; /* decrement semaphore */
     if ((caller->s_a1) < 0)
@@ -250,7 +250,7 @@ HIDDEN void Syscall4(state_t *caller)
     Parameter:  state* caller
     Return: Void
     */
-HIDDEN void Syscall5(state_t *caller)
+void Syscall5(state_t *caller)
 {
 
     if (caller->s_a1 == 0)
@@ -292,7 +292,7 @@ HIDDEN void Syscall5(state_t *caller)
     each Process Block that is running. 
         Parameters: State_t * caller
         Return: Void*/
-HIDDEN void Syscall6(state_t *caller)
+void Syscall6(state_t *caller)
 {
     cpu_t timeSpentProcessing;
     STCK(timeSpentProcessing);
@@ -312,7 +312,7 @@ HIDDEN void Syscall6(state_t *caller)
     Knowing that this clock also has a syscall 3 performing on it every 100 milliseconds
     Parameters: State_t* Caller
     Return: Void*/
-HIDDEN void Syscall7(state_t *caller)
+void Syscall7(state_t *caller)
 {
     int *sem;
     sem = (int *)&(semD[SEMNUM - 1]);
@@ -336,7 +336,7 @@ HIDDEN void Syscall7(state_t *caller)
     semaphore whenever that device generates an interrupt. 
     Return:     Device Status in v0 (Once the process resumes after the occurrence of the anticipated
                 interrupt)*/
-HIDDEN void Syscall8(state_t *caller)
+void Syscall8(state_t *caller)
 {
 
     fuckme(2);
