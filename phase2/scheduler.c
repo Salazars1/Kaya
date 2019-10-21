@@ -42,7 +42,7 @@ int debugthisfuckingshit(int b);
     */
 void scheduler()
 {
-    ?/*addokbuf("We are at the beginning of the scheduler\n");*/
+    /*addokbuf("We are at the beginning of the scheduler\n");*/
     /*#1 we have succeeded in Initial and we are in scheduler*/
     /*Tested*/
 
