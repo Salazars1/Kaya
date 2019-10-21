@@ -24,6 +24,7 @@ HIDDEN semd_t *semdFree_h;              /* Globally define free semaphore list *
 
 HIDDEN semd_t *searchForParent(int *semAdd);
 HIDDEN semd_t *allocASL();
+HIDDEN void deAllocASL(semd_t *s);
 
 /*  Insert the ProcBlk pointed to by p at the tail of the process queue associated 
     with the semaphore (semAdd) and sets the semaphore address of p to semAdd. 
