@@ -52,7 +52,7 @@ void TLBTrapHandler();
 
 extern void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr);
-HIDDEN void LoadState(state_t *s);
+
 
 int fuckme(int b)
 {
@@ -176,7 +176,7 @@ HIDDEN void Syscall1(state_t *caller)
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
 
-        LoadState(caller);
+        LDST(caller);
     }
 }
 
@@ -225,7 +225,7 @@ HIDDEN void Syscall3(state_t *caller)
         }
     }
 
-    LoadState(caller); /* returns control to caller */
+    LDST(caller); /* returns control to caller */
 }
 
 /*  When this service is requested, it is interpreted by the nucleus to request to perform a Passeren
