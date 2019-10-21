@@ -243,7 +243,7 @@ HIDDEN void Syscall4(state_t *caller)
         scheduler();
     }
     /* nothing had control of the sem, return control to caller */
-    LoadState(caller);
+    LDST(caller);
 }
 
 /*  When this service is requested, it will save the contentes of a2 and a3 and pass them to handle the
