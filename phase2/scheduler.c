@@ -32,6 +32,9 @@ extern int softBlockCount;
 extern pcb_t *currentProcess;
 extern pcb_t *readyQueue;
 
+
+int debugthisfuckingshit(int b);
+
 /*  Round Robin algorithm that schedules each process that it is going to be executed by the system.
     Under certain conditions, it PANICS or performs the appropiate function call. 
     Parameters: None
@@ -79,7 +82,7 @@ void scheduler()
                 /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
                 /*Tested*/
                 debugthisfuckingshit(2);
-                setTIMER(10000000000);
+                setTIMER(MAXINT);
                 setSTATUS(ALLOFF | IEON | IECON | IMON);
 
                 WAIT();

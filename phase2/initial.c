@@ -38,7 +38,7 @@ int main()
     unsigned int RAMTOP;                                         /* Defines RAMTOP as an unsigned integer*/
     RAMTOP = (deviceBus->rambase) + (deviceBus->ramsize);   /*Sets RAMTOP according to the hardware memory*/
 
-    state_t *newLocation; /* Initialize the new Processor State Areas */
+    state_t* newLocation; /* Initialize the new Processor State Areas */
 
         /*  Initialize the PCB and ASL lists  */
     initPcbs();

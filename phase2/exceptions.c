@@ -69,7 +69,6 @@ void SYSCALLHandler()
     state_t *prevState;
     state_t *program;
     unsigned int prevStatus;
-    unsigned int temp;
 
     int casel;
     int mode;
@@ -214,12 +213,12 @@ HIDDEN void Syscall2()
     */
 HIDDEN void Syscall3(state_t *caller)
 {
-    pcb_t *newProccess = NULL;
+    pcb_t* newProccess = NULL;
     (caller->s_a1)++; /* increment semaphore  */
 
     if ((caller->s_a1) <= 0)
     { /* waiting in the semaphore */
-        newProccess = removeBlocked(caller->s_a1);
+        newProccess = removeBlocked((caller->s_a1));
         if (newProccess != NULL)
         { /* add it to the ready queue */
             insertProcQ(&readyQue, newProccess);
@@ -330,7 +329,7 @@ HIDDEN void Syscall7(state_t *caller)
         /*Increment that we have another process soft block so that it does not starve*/
         softBlockCount++;
     }
-    fuckme(1616161616161616);
+    fuckme(1616);
     /*Process is soft blocked call to run another process*/
     scheduler();
 }
