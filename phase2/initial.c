@@ -120,7 +120,7 @@ int main()
 
     addokbuf("\nPsuedo Clock has been loaded");
     addokbuf("\nInitial is done");
-    addokbuf("\n\n\n\n\n");
+    addokbuf("\n\n________________________________________________________\n\n");
 
     /* Lets the scheduler file take over.*/
     
