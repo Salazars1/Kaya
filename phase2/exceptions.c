@@ -287,7 +287,7 @@ HIDDEN void Syscall5(state_t *caller)
         currentProcess->p_newSys = (state_t *)caller->s_a3;
     }
 
-    LDST(&(caller));
+    LDST(caller);
 }
 
 /*Syscall6:  "Get_CPU_Time"
