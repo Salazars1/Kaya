@@ -447,7 +447,7 @@ addokbuf("We are messing with semaphores again\n");
         insertBlocked((semD[index]), currentProcess);
         CtrlPlusC(caller, &(currentProcess->p_s));
 
-        softBlockCount++;
+        softBlockCount = softBlockCount + 1;
 
         /*DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
         Keeps the overall flow of the program and since there is no starvation, eventually that process
@@ -459,8 +459,6 @@ addokbuf("We are messing with semaphores again\n");
     }
 
     LDST(caller);
-
-    /*What happens in this else???*/
 }
 
 /**************************  HANDLERS FUNCTIONS    ******************************/
