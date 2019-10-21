@@ -374,10 +374,11 @@ HIDDEN void Syscall8(state_t *caller)
     sem = &(semD[index]);
     (*sem)--;
 
-    if ((*sem) < 0)
+    if (*sem < 0)
     {
+         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
-        CtrlPlusC(caller, &(currentProcess->p_s));
+       
 
         softBlockCount++;
 
