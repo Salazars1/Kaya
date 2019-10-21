@@ -23,8 +23,8 @@
 #include "/usr/local/include/umps2/umps/libumps.e"
 
 /* Variables for maintaining CPU time*/
- cpu_t currentTOD;
- cpu_t TODStart;
+cpu_t currentTOD;
+cpu_t TODStart;
 
 /* Variables that the scheduler uses from initial.c*/
 extern int processCount;
@@ -32,70 +32,64 @@ extern int softBlockCount;
 extern pcb_t *currentProcess;
 extern pcb_t *readyQueue;
 
-
-
-
-
-
 /*  Round Robin algorithm that schedules each process that it is going to be executed by the system.
     Under certain conditions, it PANICS or performs the appropiate function call. 
     Parameters: None
     Return: Void
     */
 void scheduler()
-{   
+{
     /*#1 we have succeeded in Initial and we are in scheduler*/
     /*Tested*/
-    
-    if (!emptyProcQ(readyQue)) 
-    {/*  Starts next process in Queue*/
-        
+
+    if (!emptyProcQ(readyQue))
+    { /*  Starts next process in Queue*/
+
         /*If the value is 2 then we know that we are in the first if*/
         /*Tested*/
-        currentProcess = removeProcQ(&(readyQue));      /* Remove process from Queue */
-        STCK(TODStart);                                 /* Gets start time */
+        currentProcess = removeProcQ(&(readyQue)); /* Remove process from Queue */
+        STCK(TODStart);                            /* Gets start time */
 
-        setTIMER (QUANTUM);                             /* Defines Quantum to 5 ms */
-        LDST(&(currentProcess ->p_s));
-        
+        setTIMER(QUANTUM); /* Defines Quantum to 5 ms */
+        LDST(&(currentProcess->p_s));
     }
     else
-    {/* There is nothing on the ReadyQueue */
+    { /* There is nothing on the ReadyQueue */
 
         /*Tested*/
         currentProcess = NULL; /* no process is running*/
 
         if (processCount == 0)
         { /* Everything finished running correctly */
-            
+
             debugthisfuckingshit(4);
             HALT();
         }
-        if(processCount > 0){
         
-        if (softBlockCount == 0)
-        { /* DEADLOCK CASE */
-            debugthisfuckingshit(5);
-            PANIC();
-        }
-        else 
-        { 
-            /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */            
-          /*Tested*/
-          debugthisfuckingshit(2);
-          setTIMER(10000000000);
-            setSTATUS(ALLOFF | IEON | IECON | IMON);
-            
-            WAIT();
-        }
+        if (processCount > 0)
+        {
 
+            if (softBlockCount == 0)
+            { /* DEADLOCK CASE */
+                debugthisfuckingshit(5);
+                PANIC();
+            }
+            else
+            {
+                /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
+                /*Tested*/
+                debugthisfuckingshit(2);
+                setTIMER(10000000000);
+                setSTATUS(ALLOFF | IEON | IECON | IMON);
 
+                WAIT();
+            }
         }
-
     }
 }
 
-int debugthisfuckingshit(int b){
+int debugthisfuckingshit(int b)
+{
 
-    return b; 
+    return b;
 }

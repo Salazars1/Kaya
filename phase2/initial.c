@@ -72,7 +72,7 @@ int main()
     newLocation->s_status = ALLOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
     /* TLB MANAGEMENT */
-    newLocation = (state_t*) TBLMGMTNEWAREA;
+    newLocation = (state_t*) TLBMGMTNEWAREA;
     newLocation->s_pc = (memaddr) TLBTrapHandler;
     newLocation->s_t9 = (memaddr) TLBTrapHandler;
     newLocation->s_sp = RAMTOP;
