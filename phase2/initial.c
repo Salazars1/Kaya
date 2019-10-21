@@ -30,6 +30,7 @@ pcb_t *readyQue;
 int semD[SEMNUM];
 
 extern void test(); 
+extern void addkbuf(char * strp);
 /*LET THE OS KNOW WHERE TO START!*/
 int main()
 {
@@ -46,6 +47,8 @@ int main()
 
     /*  Initialize phase2 global variables  */
     processCount = 0;
+    addokbuf("Well fuck my ass and call me daddy");
+
     softBlockCount = 0;
     currentProcess = NULL;
     readyQue = mkEmptyProcQ();
