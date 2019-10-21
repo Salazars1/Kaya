@@ -123,9 +123,7 @@ int main()
     addokbuf("\n\n________________________________________________________\n\n");
 
     /* Lets the scheduler file take over.*/
-    
-  
-   scheduler();
+    scheduler();
 
     return 0;
 }
