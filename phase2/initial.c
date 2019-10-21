@@ -29,6 +29,7 @@ pcb_t *currentProcess;
 pcb_t *readyQue;
 int semD[SEMNUM];
 char okbuf[2048];			/* sequence of progress messages */
+char *mp = okbuf;
 
 
 extern void test(); 
