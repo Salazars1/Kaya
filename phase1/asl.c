@@ -33,7 +33,7 @@ HIDDEN semd_t *allocASL();
 
 int insertBlocked(int *semAdd, pcb_t *p){
     semd_t * temp;
-    temp = (semd_t) searchForParent(semAdd);
+    temp = (semd_t*) searchForParent(semAdd);
     if(temp -> s_next -> s_semAdd == semAdd){           /*ID is in the ASL*/
         p->p_semAdd = semAdd;
         insertProcQ(&(temp->s_next->s_procQ),p);        /*Calls pcb to insert pcb*/  
