@@ -22,6 +22,14 @@
 #include "/usr/local/include/umps2/umps/libumps.e"
 
 
+#define TRANSMITTED	5
+#define ACK	1
+#define PRINTCHR	2
+#define CHAROFFSET	8
+#define STATUSMASK	0xFF
+#define	TERM0ADDR	0x10000250
+
+
 /* Global Variables*/
 int processCount;
 int softBlockCount;
