@@ -437,17 +437,15 @@ testb(termRead);*/
         index = DEVPERINT * (lineNo - DEVWOSEM) + dnum;
     }
 
-    sem = &(semD[index]);
-    (*sem)--;
+    (semD[index])--;
 addokbuf("We are messing with semaphores again\n");
    /* test(*sem);*/
-    if (*sem < 0)
+    if ((semD[index]) < 0)
     {
 
         addokbuf("Copying state and inserting it onto the blocked list\n");
-         CtrlPlusC(caller, &(currentProcess->p_s));
-        insertBlocked(sem, currentProcess);
-       
+        insertBlocked((semD[index]), currentProcess);
+        CtrlPlusC(caller, &(currentProcess->p_s));
 
         softBlockCount++;
 
@@ -459,6 +457,8 @@ addokbuf("We are messing with semaphores again\n");
         addokbuf("Calling scheduler\n");
         scheduler();
     }
+
+    LDST(caller);
 
     /*What happens in this else???*/
 }

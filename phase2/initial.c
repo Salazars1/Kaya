@@ -60,8 +60,6 @@ int main()
 
     /*  Initialize phase2 global variables  */
     processCount = 0;
-    
-
     softBlockCount = 0;
     currentProcess = NULL;
     readyQue = mkEmptyProcQ();
