@@ -58,7 +58,7 @@ void IOTrapHandler()
 
     state_PTR caller;
     caller = (state_t *)INTERRUPTOLDAREA;
-
+    addokbuf("Called and the rest of the variables are set /n");
 
 /*UNSURE 
     offendingLine = caller -> s_cause >> 8; 
@@ -68,7 +68,7 @@ finish UNSURE*/
 
 
     offendingLine = ((caller ->s_cause) & IPAREA) >> 8;
-
+   addokbuf("check the test suite to see the offending line /n");
     /*offendingLine = caller ->s_cause >> 8;*/ 
 
     
@@ -77,12 +77,14 @@ finish UNSURE*/
 
     if ((offendingLine & MULTICORE) != ZERO)
     { /*Mutli Core is on */
+       addokbuf("Multi Core go ahead and panic/n");
         testingbaby(3);
         PANIC();
        
     }
     else if ((offendingLine & CLOCK1) != ZERO)
     {
+           addokbuf("QUantum is up CLock 1 call scheduler/n");
         /*The process has spent its quantum. Its time to start a new process .*/
         testingbaby(4);
         CallScheduler();
@@ -92,6 +94,7 @@ finish UNSURE*/
     else if ((offendingLine & CLOCK2) != ZERO)
     {
         /*Load the clock with 100 Milliseconds*/
+           addokbuf("Line number is 2 (4)/n");
         LDIT(PSUEDOCLOCKTIME);
         /*Access the Last clock which is the psuedo clock*/
         semaphoreAddress = (int *) &(semD[SEMNUM-1]);
@@ -99,21 +102,25 @@ finish UNSURE*/
        
         while(headBlocked(semaphoreAddress) != NULL)
         {
+               addokbuf("Headblocked is running /n");
              testingbaby(6);
             t = removeBlocked(semaphoreAddress);
-            
+               addokbuf("Remove the process from the blocked /n");
 
             if(t != NULL){
+                   addokbuf("new process is not null /n");
                 insertProcQ(&readyQue, t);
                 softBlockCount--;
             }
         }
          testingbaby(7);
         (*semaphoreAddress) = 0;
+        addokbuf("Reset the semaphore address and call scheduler /n");
         CallScheduler();
     }
     else if ((offendingLine & DISKDEVICE) != ZERO)
     {
+           addokbuf("The offending line is 3 or a disk device /n");
         /*Disk Device is on  */
          testingbaby(8);
         lineNumber = DI;
@@ -121,39 +128,47 @@ finish UNSURE*/
     else if ((offendingLine & TAPEDEVICE) != ZERO)
     {
         /*Tape Device is on */
+           addokbuf("The offending line is a tape device/n");
          testingbaby(9);
         lineNumber = TI;
     }
     else if ((offendingLine & NETWORKDEVICE) != ZERO)
     {
         /*Network Device is on */
+           addokbuf("THe offending line is a network device 5 /n");
          testingbaby(10);
         lineNumber = NETWORKI;
     }
     else if ((offendingLine & PRINTERDEVICE) != ZERO)
     {
+           addokbuf("The offending linne is printer device 6  /n");
         /*Printer Device is on */
          testingbaby(11);
         lineNumber = PRINTERI;
     }
     else if ((offendingLine & TERMINALDEVICE) != ZERO)
     {
+           addokbuf("the offending line is a terminal device -> FUck  /n");
         /*Terminal Device is on */
          testingbaby(12);
         lineNumber = TERMINALI;
     }
     else
     {
+           addokbuf("Not a known line number PANIC /n");
         testingbaby(32);
         PANIC();
     }
 
+       addokbuf("Geting the device number/n");
     devicenumber = finddevice(lineNumber);
+       addokbuf("Check the device number in a debug fun /n");
     /*with Dev Reg and Line number Do literal magic*/
     devregarea_t *temporary = (devregarea_t *)DEVPHYS;
 
     if (devicenumber == -1)
     {
+           addokbuf("Device number is -1 panic  /n");
         testingbaby(10200202);
         PANIC();
     }
@@ -177,6 +192,7 @@ finish UNSURE*/
     /*The base + 32 (4 words in the device + the size of each register * the register number*/
     /*deviceRegisterNumber = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
 */
+   addokbuf("The math is being computated for the device number and device base  /n");
     mathishard2 = lineNumber - 3; 
     mathishard = mathishard2 * 16; 
     mathishard = mathishard * 8; 
@@ -191,11 +207,13 @@ finish UNSURE*/
 testingbaby(14);
     if (lineNumber == TERMINT)
     {
+
+           addokbuf("We got a terminal /n");
         /*Terminal*/
 
         if ((testing->t_transm_status & 0x0F) != READY)
         {
-                
+                   addokbuf("We are transmitting /n");
                 /*Acknowledge*/
             testingbaby(15);
                 deviceStatus = devaddrbase->t_transm_status;
@@ -209,7 +227,7 @@ testingbaby(14);
         }
         else
         {
-            
+               addokbuf("We are recieving  /n");
             /*Save the status*/
             devsemnum =  (DEVPERINT * (lineNumber - 3)) + devicenumber;
             deviceStatus = testing->t_recv_status;
@@ -221,6 +239,7 @@ testingbaby(14);
     }
     else
     {
+           addokbuf("Not a terminal /n");
         /*Non terminal Interrupt*/
         deviceStatus = testing->d_status;
         /*Acknowledge the interrupt*/
@@ -230,6 +249,7 @@ testingbaby(14);
 
     testingbaby(43);
     /*V op */
+       addokbuf("Playing with semaphores go ahead and check these in the debug functions /n");
     int * semad; 
 
     semad =(int*) &(semD[devsemnum]);
@@ -240,9 +260,11 @@ testingbaby(14);
     testingbaby(3);
     if (semad <= 0)
     {
+           addokbuf("Value is less than 0 /n");
         t = removeBlocked(semad);
         if (t != NULL)
         {
+               addokbuf("t is a process that was on the blocked queue /n");
             t->p_semAdd = NULL;
             t-> p_s.s_v0 = deviceStatus; 
             insertProcQ(&readyQue, t);
@@ -250,11 +272,12 @@ testingbaby(14);
             
         }
         else{
-
+               addokbuf("Process is null halt /n");
             HALT();
         }
     }
     testingbaby(17);
+       addokbuf("Call scheduler /n");
     CallScheduler();
     /*Interrupt has been Handled!*/
 }
@@ -263,6 +286,7 @@ testingbaby(14);
 
 int finddevice(int linenumber)
 {
+       addokbuf("Finding this fucking device number  /n");
     /*Set some local variables*/
     int i;
     devregarea_t * tOffendingDevice;
@@ -299,18 +323,20 @@ int finddevice(int linenumber)
 
 HIDDEN void CallScheduler()
 {
-    
+       addokbuf("Calling the shceduler has started/n");
     state_t *temp;
     temp =  (state_t *)INTERRUPTOLDAREA;
     
     if (currentProcess != NULL)
     {
+           addokbuf("Current process is not null /n");
          /*if the process is still around need to copy its contents over*/
         CtrlPlusC(temp, &(currentProcess->p_s));
         insertProcQ(&readyQue, currentProcess);
         /*Load the state back */
         /**LDST(temp);*/
         fuckmylife(100);
+           addokbuf("Calling scheduler /n");
        scheduler();
     
         
@@ -318,6 +344,7 @@ HIDDEN void CallScheduler()
 
     }
     else{
+           addokbuf("Calling scheduler /n");
    /* LDST(currentProcess);*/
       scheduler();
     }
