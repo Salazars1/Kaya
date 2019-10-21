@@ -46,16 +46,18 @@ void scheduler()
 
     if (!emptyProcQ(readyQue))
     { /*  Starts next process in Queue*/
-       addokbuf("\nThe ready Queue has a process");
+        /*addokbuf("\nThe ready Queue has a process");*/
         currentProcess = removeProcQ(&(readyQue)); /* Remove process from Queue */
         STCK(TODStart);                            /* Gets start time */
 
         setTIMER(QUANTUM); /* Defines Quantum to 5 ms */
+        addokbuf("\n\n___________LOADING CURRENT PROCESS_________________\n\n");
         LDST(&(currentProcess->p_s));
+        
     }
     else
     { /* There is nothing on the ReadyQueue */
-        addokbuf("\nThere is nothing on the ready queue");
+        /*addokbuf("\nThere is nothing on the ready queue");*/
         /*Tested*/
         currentProcess = NULL; /* no process is running*/
         if (processCount == 0)
@@ -67,7 +69,7 @@ void scheduler()
         
         if (processCount > 0)
         {
-            addokbuf("Process count is greater than 0 meaning that we have processes to run\n");
+            /*addokbuf("Process count is greater than 0 meaning that we have processes to run\n");*/
             if (softBlockCount == 0)
             { /* DEADLOCK CASE */
                 addokbuf("No processes are soft blocked we hit dead lock PANIC\n");
@@ -80,9 +82,13 @@ void scheduler()
                 /*Tested*/
                 addokbuf("Soft block count is not 0 thus we are waiting for them to be put back on the queue\n");
                 debugthisfuckingshit(2);
-                /*setTIMER(MAXINT);*/
+                
+                setTIMER(MAXINT);
+                /*FIXME:?*/
                 setSTATUS(ALLOFF | IEON | IECON | IMON);
+                
                 addokbuf("Begin Waiting\n");
+                
                 WAIT();
             }
         }

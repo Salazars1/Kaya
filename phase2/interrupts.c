@@ -46,7 +46,7 @@ extern void addokbuf(char *strp);
 
 void IOTrapHandler()
 {
-    addokbuf("Interupts is starting\n");
+    addokbuf("\n INTERRUPTS HAVE STARTED \n");
     int b = 1; 
     testingbaby(b);
     unsigned int offendingLine;
