@@ -440,7 +440,7 @@ testb(termRead);
     sem = &(semD[index]);
     (*sem)--;
 addokbuf("We are messing with semaphores again\n");
-    testn(*sem);
+    test(*sem);
     if (*sem < 0)
     {
 
