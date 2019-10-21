@@ -46,9 +46,7 @@ void scheduler()
 
     if (!emptyProcQ(readyQue))
     { /*  Starts next process in Queue*/
-       addokbuf("The ready Queue has a process\n");
-        /*If the value is 2 then we know that we are in the first if*/
-        /*Tested*/
+       addokbuf("\nThe ready Queue has a process");
         currentProcess = removeProcQ(&(readyQue)); /* Remove process from Queue */
         STCK(TODStart);                            /* Gets start time */
 
@@ -57,13 +55,12 @@ void scheduler()
     }
     else
     { /* There is nothing on the ReadyQueue */
-addokbuf("There is nothing on the ready queue\n");
+        addokbuf("\nThere is nothing on the ready queue");
         /*Tested*/
         currentProcess = NULL; /* no process is running*/
-addokbuf("Current Process is Now NULL\n");
         if (processCount == 0)
         { /* Everything finished running correctly */
-            addokbuf("Process Count is 0 we are halting the machine\n");
+            addokbuf("\nProcess Count is 0 we are halting the machine");
             debugthisfuckingshit(4);
             HALT();
         }
@@ -73,7 +70,7 @@ addokbuf("Current Process is Now NULL\n");
             addokbuf("Process count is greater than 0 meaning that we have processes to run\n");
             if (softBlockCount == 0)
             { /* DEADLOCK CASE */
-            addokbuf("No processes are soft blocked we hit dead lock PANIC\n");
+                addokbuf("No processes are soft blocked we hit dead lock PANIC\n");
                 debugthisfuckingshit(5);
                 PANIC();
             }
@@ -90,6 +87,9 @@ addokbuf("Current Process is Now NULL\n");
             }
         }
     }
+
+    addokbuf("\n\n________________________________________________________\n\n");
+
 }
 
 int debugthisfuckingshit(int b)
