@@ -159,7 +159,7 @@ void initASL(){
     lastSent = &ASLInitialization[1];                   /*Sets the first dummy node to be the second node ([1]) in the arary*/
 
     firstSent ->s_semAdd = NULL;                                /*First Dummy node semAdd is 0*/
-    lastSent -> s_semAdd = MAXINT;                              /*Last dummy node semAdd is 0xFFFFFFFF*/
+    lastSent -> s_semAdd = (int*) MAXINT;                              /*Last dummy node semAdd is 0xFFFFFFFF*/
     firstSent ->s_next = lastSent;                              
     lastSent -> s_next = NULL;                                  
     firstSent -> s_procQ = NULL;                                
@@ -212,7 +212,7 @@ HIDDEN semd_t *searchForParent(int *semAdd){
 	semd_t *temp = (semd_t*) semd_h;
     
 	if(semAdd == NULL){
-        semAdd = MAXINT; 
+        semAdd = (int*) MAXINT; 
     }
 
 	while(semAdd > (temp -> s_next -> s_semAdd)){               /*Checks the semaphore with an greater than sign to keep the list organized*/
