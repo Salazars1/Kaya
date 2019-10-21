@@ -83,7 +83,7 @@ void SYSCALLHandler()
     prevStatus = prevState->s_status;
     casel = prevState->s_a0;
     addokbuf("Exceptions have been loaded check fuck me test for casel sys call val\n");
-    testb(casel);
+ /*   testb(casel);*/
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
 
     if (((prevStatus > 0) && (prevStatus < 9) && mode) != ALLOFF)
@@ -240,7 +240,7 @@ void Syscall3(state_t *caller)
     pcb_t* newProccess = NULL;
     addokbuf("Get the semaphore Callers A1\n");
     (caller->s_a1)++; /* increment semaphore  */
-    testb(caller -> s_a1);
+   /* testb(caller -> s_a1);*/
     if ((caller->s_a1) <= 0)
     { /* waiting in the semaphore */
 
@@ -267,7 +267,7 @@ void Syscall4(state_t *caller)
 
     addokbuf("Syscall 4 start\n ");
     (caller->s_a1)--; /* decrement semaphore */
-    testb(caller -> s_a1);
+  /*  testb(caller -> s_a1);*/
     if ((caller->s_a1) < 0)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
@@ -370,7 +370,7 @@ void Syscall7(state_t *caller)
     int *sem;
     sem = (int *)&(semD[SEMNUM - 1]);
     (*sem)--;
-    testb(*sem);
+  /*  testb(*sem);*/
     if ((*sem) < 0)
     {
         addokbuf("Semaphore is less than 0\n");
@@ -408,10 +408,10 @@ void Syscall8(state_t *caller)
     lineNo = caller->s_a1;
     dnum = caller->s_a2;
     termRead = caller->s_a3; /* terminal read  or write */
-testb(lineNo);
+/*testb(lineNo);
 
 testb(dnum);
-testb(termRead);
+testb(termRead);*/
     /* what device is going to be computed*/
     addokbuf("Store values from registers a1 a2 a3 \n");
     if (lineNo < DISKINT || lineNo > TERMINT)
@@ -440,7 +440,7 @@ testb(termRead);
     sem = &(semD[index]);
     (*sem)--;
 addokbuf("We are messing with semaphores again\n");
-    test(*sem);
+   /* test(*sem);*/
     if (*sem < 0)
     {
 
