@@ -218,7 +218,7 @@ HIDDEN void Syscall3(state_t *caller)
 
     if ((caller->s_a1) <= 0)
     { /* waiting in the semaphore */
-        newProccess = (pcb_t*) removeBlocked((caller->s_a1));
+        newProccess = (pcb_t*) removeBlocked((int*) (caller->s_a1));
         if (newProccess != NULL)
         { /* add it to the ready queue */
             insertProcQ(&readyQue, newProccess);
