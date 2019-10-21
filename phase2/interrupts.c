@@ -74,7 +74,7 @@ finish UNSURE*/
    addokbuf("check the test suite to see the offending line \n");
     /*offendingLine = caller ->s_cause >> 8;*/ 
 
-    test(offendingLine);
+   /* test(offendingLine);*/
 
 
 
@@ -165,7 +165,7 @@ finish UNSURE*/
 
        addokbuf("Geting the device number \n");
     devicenumber = finddevice(lineNumber);
-    tes(devicenumber);
+  /*  tes(devicenumber);*/
        addokbuf("Check the device number in a debug fun \n");
     /*with Dev Reg and Line number Do literal magic*/
     devregarea_t *temporary = (devregarea_t *)DEVPHYS;
@@ -260,7 +260,7 @@ testingbaby(14);
 
     
     (*semad)--; 
-    tes(*semad);
+   /* tes(*semad);*/
     
     testingbaby(3);
     if (semad <= 0)
