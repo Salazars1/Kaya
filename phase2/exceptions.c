@@ -321,7 +321,7 @@ HIDDEN void Syscall7(state_t *caller)
     sem = (int *)&(semD[SEMNUM - 1]);
     (*sem)--;
 
-    if (sem < 0)
+    if ((*sem) < 0)
     {
         /*Sem is less than 0 block the current process*/
         insertBlocked(sem, currentProcess);
@@ -450,7 +450,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     }
 
     CtrlPlusC(oldState, newState);
-    LoadState(&newState);
+    LDST(&newState);
 }
 
 /*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is 
@@ -544,18 +544,4 @@ extern void CtrlPlusC(state_t *oldState, state_t *newState)
     }
 }
 
-/*Function that is designed for ME to be able to read that LDST is Load State 
-Parameters: state_t * s
-    Return: Void*/
-HIDDEN void LoadState(state_t *s)
-{
-    LDST(s);
-}
 
-/*Track the Time
-    Parameters: Cpu_t t
-    Return: Void*/
-HIDDEN void StoreTime(cpu_t t)
-{
-    STCK(t);
-}
