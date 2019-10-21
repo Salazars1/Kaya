@@ -42,6 +42,7 @@ int debugthisfuckingshit(int b);
     */
 void scheduler()
 {
+    addokbuf("Well fuck my ass and call me daddy\n");
     /*#1 we have succeeded in Initial and we are in scheduler*/
     /*Tested*/
 

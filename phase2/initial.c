@@ -55,10 +55,12 @@ int main()
         /*  Initialize the PCB and ASL lists  */
     initPcbs();
     initASL();
+    addokbuf("Initialization of Pcbs and ASL is done\n");
+
 
     /*  Initialize phase2 global variables  */
     processCount = 0;
-    addokbuf("Well fuck my ass and call me daddy");
+    addokbuf("Well fuck my ass and call me daddy\n");
 
     softBlockCount = 0;
     currentProcess = NULL;
@@ -114,6 +116,10 @@ int main()
     currentProcess = NULL;
     
     LDIT(IOCLOCK);  /*Sets the semaphore pseudoclock*/
+
+
+    addokbuf("Psuedo Clock has been loaded \n");
+    addokbuf("Initial is done\n");
 
     /* Lets the scheduler file take over.*/
     
