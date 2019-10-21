@@ -25,6 +25,7 @@ HIDDEN semd_t *semdFree_h;              /* Globally define free semaphore list *
 HIDDEN semd_t *searchForParent(int *semAdd);
 HIDDEN semd_t *allocASL();
 HIDDEN void deAllocASL(semd_t *s);
+void initASL();
 
 /*  Insert the ProcBlk pointed to by p at the tail of the process queue associated 
     with the semaphore (semAdd) and sets the semaphore address of p to semAdd. 
@@ -97,7 +98,7 @@ pcb_t *outBlocked(pcb_t *p){
 
     semd_t *parentNode;
     parentNode = searchForParent(p->p_semAdd);                 /*Gets the parent of the node whose semAdd equals the parameters*/   
-    pcb_t * returnValue;
+    pcb_t* returnValue;
 
     if(parentNode -> s_next -> s_semAdd == p->p_semAdd){       /*ID is in the ASL*/
         returnValue  = outProcQ(&(parentNode ->s_next ->s_procQ) ,p);
@@ -142,7 +143,7 @@ pcb_t *headBlocked(int *semAdd){
 }
 
 /*Initialize the semdFree list to contain all the elements of the list*/
-initASL(){
+void initASL(){
     static semd_t ASLInitialization[MAXPROC+2];                 /*Sets up the size to include the two dummie nodes*/
     
     semd_h = NULL; 
@@ -152,8 +153,10 @@ initASL(){
         deAllocASL(&(ASLInitialization[i]));
     }
 
-    semd_t *firstSent = &ASLInitialization[0];                  /*Sets the first dummy node to be the first node ([0]) in the arary*/
-    semd_t *lastSent = &ASLInitialization[1];                   /*Sets the first dummy node to be the second node ([1]) in the arary*/
+    semd_t *firstSent;
+    firstSent = &ASLInitialization[0];                  /*Sets the first dummy node to be the first node ([0]) in the arary*/
+    semd_t *lastSent;
+    lastSent = &ASLInitialization[1];                   /*Sets the first dummy node to be the second node ([1]) in the arary*/
 
     firstSent ->s_semAdd = NULL;                                /*First Dummy node semAdd is 0*/
     lastSent -> s_semAdd = MAXINT;                              /*Last dummy node semAdd is 0xFFFFFFFF*/
@@ -206,7 +209,7 @@ HIDDEN semd_t *allocASL(){
                     -dummy node parent: if semAdd is not found.*/
     
 HIDDEN semd_t *searchForParent(int *semAdd){
-	semd_t *temp = semd_h;
+	semd_t *temp = (semd_t*) semd_h;
     
 	if(semAdd == NULL){
         semAdd = MAXINT; 
