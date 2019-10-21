@@ -267,13 +267,14 @@ int finddevice(int linenumber)
     tOffendingDevice = (devregarea_t *) RAMBASEADDR;
     /*make a copy of the bit map */
     unsigned int map = tOffendingDevice->interrupt_dev[linenumber-3];
+    unsigned int  t = FIRSTBIT; 
     int devn;
     testingbaby(19);
     /*8 Total devices to look through */
     for (i = 0; i < TOTALDEVICES; i++)
     {
         /*Bit wise and if the value is not 0 Device is interrupting */
-        if ((map & FIRSTBIT) != ZERO)
+        if ((map & t) != ZERO)
         {
 
             devn = i;
@@ -286,7 +287,7 @@ int finddevice(int linenumber)
             
                 /*Increment both the index and shift the bits 1 */
                
-            map >> 1;
+            t << 1;
         }
     }
     testingbaby(20);
