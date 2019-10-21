@@ -215,10 +215,12 @@ void Syscall2()
     else
     {
         /*Helper Function*/
+        addokbuf("Current procss is being killed\n");
         NukeThemTillTheyPuke(currentProcess);
     }
 
     /*call scheduler*/
+    addokbuf("Schedule is called\n");
     scheduler();
 }
 
@@ -229,18 +231,24 @@ void Syscall2()
     */
 void Syscall3(state_t *caller)
 {
+    addokbuf("Creating a new process\n");
     pcb_t* newProccess = NULL;
+    addokbuf("Get the semaphore Callers A1\n");
     (caller->s_a1)++; /* increment semaphore  */
 
     if ((caller->s_a1) <= 0)
     { /* waiting in the semaphore */
+
+        addokbuf("Caller A1 is less than or equal to 0\n");
         newProccess = (pcb_t*) removeBlocked((int*) (caller->s_a1));
         if (newProccess != NULL)
         { /* add it to the ready queue */
+            addokbuf("Newprocess is not null put that on the ready queue\n");
             insertProcQ(&readyQue, newProccess);
         }
     }
 
+    addokbuf("Load State\n");
     LDST(caller); /* returns control to caller */
 }
 
@@ -251,14 +259,19 @@ void Syscall3(state_t *caller)
     */
 void Syscall4(state_t *caller)
 {
+
+    addokbuf("Syscall 4 start\n ");
     (caller->s_a1)--; /* decrement semaphore */
     if ((caller->s_a1) < 0)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked((int*) (caller->s_a1), currentProcess);
+        addokbuf("the sa1 is less than 0 COpy state and block the process\n");
         scheduler();
+
     }
     /* nothing had control of the sem, return control to caller */
+    addokbuf("Sys call 4 load state\n");
     LDST(caller);
 }
 
@@ -270,39 +283,49 @@ void Syscall4(state_t *caller)
     Return: Void
     */
 void Syscall5(state_t *caller)
-{
+{   
+    addokbuf("Syscall 5 start\n");
 
     if (caller->s_a1 == 0)
     { /*TLB TRAP*/
+    addokbuf("the calling state a1 is 0\n");
         if (currentProcess->p_newTLB != NULL)
         { /* already called sys5 */
+            addokbuf("Syscall 2 is called\n");
             Syscall2();
         }
         /* assign exception values */
         currentProcess->p_oldTLB = (state_t *)caller->s_a2;
         currentProcess->p_newTLB = (state_t *)caller->s_a3;
+        addokbuf("Current process TLB process is being set\n");
     }
     else if (caller->s_a1 == 1)
     { /*Program Trap*/
+    addokbuf("the calling state is 1 so new program trap \n");
         if ((currentProcess->p_newProgramTrap) != NULL)
         { /* already called sys5 */
+            addokbuf("Syscall2\n ");
             Syscall2();
         }
         /* assign exception values */
         currentProcess->p_oldProgramTrap = (state_t *)caller->s_a2;
         currentProcess->p_newProgramTrap = (state_t *)caller->s_a3;
+        addokbuf("Current Process new program or old program is set to a2 and a3\n");
     }
     else
     {
+
         if ((currentProcess->p_newSys) != NULL)
         { /* already called sys5 */
+            addokbuf("Calling sys call 2\n");
             Syscall2();
         }
         /* assign exception values */
+        addokbuf("Old sys and new sys is set to a2 and a3\n");
         currentProcess->p_oldSys = (state_t *)caller->s_a2;
         currentProcess->p_newSys = (state_t *)caller->s_a3;
     }
-
+addokbuf("Load State\n");
     LDST(caller);
 }
 
@@ -313,17 +336,21 @@ void Syscall5(state_t *caller)
         Return: Void*/
 void Syscall6(state_t *caller)
 {
+    addokbuf("Sys call 6 start\n");
     cpu_t timeSpentProcessing;
     STCK(timeSpentProcessing);
 
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
+    addokbuf("Time is being set properly\n");
     (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (timeSpentProcessing - TODStart);
     /*Store the new updated time spent processing into the v0 register of the process state*/
     (caller->s_v0) = (currentProcess->p_timeProc);
 
     /*Updates start time*/
+
     STCK(TODStart);
     /*Load the Current Processes State*/
+   addokbuf("Load State\n");
     LDST(caller);
 }
 
@@ -333,20 +360,27 @@ void Syscall6(state_t *caller)
     Return: Void*/
 void Syscall7(state_t *caller)
 {
+    addokbuf("Syscall 7 start\n");
     int *sem;
     sem = (int *)&(semD[SEMNUM - 1]);
     (*sem)--;
 
     if ((*sem) < 0)
     {
+        addokbuf("Semaphore is less than 0\n");
         /*Sem is less than 0 block the current process*/
-        insertBlocked(sem, currentProcess);
+
         CtrlPlusC(caller, &(currentProcess->p_s));
+        insertBlocked(sem, currentProcess);
+     
         /*Increment that we have another process soft block so that it does not starve*/
         softBlockCount++;
     }
+
+
     fuckme(1616);
     /*Process is soft blocked call to run another process*/
+    addokbuf("Call Scheduler\n");
     scheduler();
 }
 
@@ -357,7 +391,7 @@ void Syscall7(state_t *caller)
                 interrupt)*/
 void Syscall8(state_t *caller)
 {
-
+    addokbuf("Syscall 8 \n");
     fuckme(2);
     int lineNo; /*  line number*/
     int dnum;   /*  device number*/
@@ -370,16 +404,19 @@ void Syscall8(state_t *caller)
     termRead = caller->s_a3; /* terminal read  or write */
 
     /* what device is going to be computed*/
-
+    addokbuf("Store values from registers a1 a2 a3 \n");
     if (lineNo < DISKINT || lineNo > TERMINT)
     {
+        addokbuf("Call sys call 2 \n");
         Syscall2();
     }
 
     if (lineNo == TERMINT && termRead == TRUE)
     {
+        addokbuf("THe line number is that of a terminal int and is reading \n");
         fuckme(4);
         /* terminal read */
+        addokbuf("Index is the following value\n");
         index = DEVPERINT * (lineNo - DEVWOSEM + termRead) + dnum;
     }
 
@@ -387,14 +424,17 @@ void Syscall8(state_t *caller)
     {
         fuckme(34);
         /* anything else */
+        addokbuf("Line number is not a terminal integer or not reading \n");
         index = DEVPERINT * (lineNo - DEVWOSEM) + dnum;
     }
 
     sem = &(semD[index]);
     (*sem)--;
-
+addokbuf("We are messing with semaphores again\n");
     if (*sem < 0)
     {
+
+        addokbuf("Copying state and inserting it onto the blocked list\n");
          CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
        
@@ -406,8 +446,11 @@ void Syscall8(state_t *caller)
         will get its turn to play with the processor*/
         /*LDST(caller);*/
         fuckme(30);
+        addokbuf("Calling scheduler\n");
         scheduler();
     }
+
+    /*What happens in this else???*/
 }
 
 /**************************  HANDLERS FUNCTIONS    ******************************/

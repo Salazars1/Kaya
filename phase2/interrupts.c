@@ -210,7 +210,7 @@ testingbaby(14);
         {
             
             /*Save the status*/
-            devsemnum =  (DEVPERINT * (lineNumber - 2)) + devicenumber;
+            devsemnum =  (DEVPERINT * (lineNumber - 3)) + devicenumber;
             deviceStatus = testing->t_recv_status;
             /*Acknowledge*/
             testing->t_recv_command = ACK;
