@@ -217,7 +217,7 @@ testingbaby(14);
 
         if ((testing->t_transm_status & 0x0F) != READY)
         {
-                   addokbuf("We are transmitting \n");
+                   /*addokbuf("We are transmitting \n");*/
                 /*Acknowledge*/
             testingbaby(15);
                 deviceStatus = devaddrbase->t_transm_status;
@@ -231,7 +231,7 @@ testingbaby(14);
         }
         else
         {
-               addokbuf("We are recieving  \n");
+               /*addokbuf("We are recieving  \n");*/
             /*Save the status*/
             devsemnum =  (DEVPERINT * (lineNumber - 3)) + devicenumber;
             deviceStatus = testing->t_recv_status;
@@ -243,7 +243,7 @@ testingbaby(14);
     }
     else
     {
-           addokbuf("Not a terminal \n");
+           /*addokbuf("Not a terminal \n");*/
         /*Non terminal Interrupt*/
         deviceStatus = testing->d_status;
         /*Acknowledge the interrupt*/
@@ -253,7 +253,7 @@ testingbaby(14);
 
     testingbaby(43);
     /*V op */
-       addokbuf("Playing with semaphores go ahead and check these in the debug functions \n");
+       /*addokbuf("Playing with semaphores go ahead and check these in the debug functions \n");*/
     int * semad; 
 
     semad =(int*) &(semD[devsemnum]);
@@ -265,11 +265,11 @@ testingbaby(14);
     testingbaby(3);
     if (semad <= 0)
     {
-           addokbuf("Value is less than 0 \n");
+           /*addokbuf("Value is less than 0 \n");*/
         t = removeBlocked(*semad);
         if (t != NULL)
         {
-               addokbuf("t is a process that was on the blocked queue \n");
+               /*addokbuf("t is a process that was on the blocked queue \n");*/
             t->p_semAdd = NULL;
             t-> p_s.s_v0 = deviceStatus; 
             insertProcQ(&readyQue, t);
@@ -277,12 +277,12 @@ testingbaby(14);
             
         }
         else{
-               addokbuf("Process is null halt \n");
+               /*addokbuf("Process is null halt \n");*/
             HALT();
         }
     }
     testingbaby(17);
-       addokbuf("Call scheduler \n");
+       /*addokbuf("Call scheduler \n");*/
     CallScheduler();
     /*Interrupt has been Handled!*/
 }
@@ -291,7 +291,7 @@ testingbaby(14);
 
 int finddevice(int linenumber)
 {
-       addokbuf("Finding this fucking device number  \n");
+       /*addokbuf("Finding this fucking device number  \n");*/
     /*Set some local variables*/
     int i;
     devregarea_t * tOffendingDevice;
@@ -328,20 +328,20 @@ int finddevice(int linenumber)
 
 HIDDEN void CallScheduler()
 {
-       addokbuf("Calling the shceduler has started \n");
+       /*addokbuf("Calling the shceduler has started \n");*/
     state_t *temp;
     temp =  (state_t *)INTERRUPTOLDAREA;
     
     if (currentProcess != NULL)
     {
-           addokbuf("Current process is not null \n");
+           /*addokbuf("Current process is not null \n");*/
          /*if the process is still around need to copy its contents over*/
         CtrlPlusC(temp, &(currentProcess->p_s));
         insertProcQ(&readyQue, currentProcess);
         /*Load the state back */
         /**LDST(temp);*/
         fuckmylife(100);
-           addokbuf("Calling scheduler \n");
+           /*addokbuf("Calling scheduler \n");*/
        scheduler();
     
         
@@ -349,7 +349,7 @@ HIDDEN void CallScheduler()
 
     }
     else{
-           addokbuf("Calling scheduler \n");
+           /*addokbuf("Calling scheduler \n");*/
    /* LDST(currentProcess);*/
       scheduler();
     }
