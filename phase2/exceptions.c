@@ -462,6 +462,7 @@ addokbuf("We are messing with semaphores again\n");
     */
 void PassUpOrDie(state_t *caller, int triggerReason)
 {
+    addokbuf("Pass up or die is being run \n");
     state_t *oldState;
     state_t *newState;
 
@@ -469,6 +470,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     {
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
+    addokbuf("TLB Trap \n");
         if ((currentProcess->p_newTLB) != NULL)
         {
             oldState = currentProcess->p_oldTLB;
@@ -481,6 +483,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         break;
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
+    addokbuf("Program trap \n");
         if ((currentProcess->p_newProgramTrap) != NULL)
         {
             oldState = currentProcess->p_oldProgramTrap;
@@ -493,6 +496,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         break;
 
     case SYSTRAP: /*2 is SYS Exception!*/
+    addokbuf("Sys trap");
         if ((currentProcess->p_newSys) != NULL)
         {
             oldState = currentProcess->p_oldSys;
@@ -508,9 +512,10 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         Syscall2(); /*No vector is defined. Nuke it till it pukes*/
         break;
     }
+    addokbuf("Copyinng and loading a new state\n");
 
     CtrlPlusC(oldState, newState);
-    LDST(&newState);
+    LDST(newState);
 }
 
 /*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is 
@@ -521,6 +526,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
      */
 void PrgTrapHandler()
 {
+    addokbuf("Progrma trap handler is being called\n");
     state_t *caller = (state_t *)PRGMTRAPOLDAREA;
     /*Call Pass Up Or Die*/
     PassUpOrDie(caller, PROGTRAP);
@@ -535,6 +541,7 @@ void PrgTrapHandler()
      */
 void TLBTrapHandler()
 {
+    addokbuf("TLB Program trap is being called\n");
     state_t *caller = (state_t *)TLBMGMTOLDAREA;
     /*Call Pass Up Or Die*/
     PassUpOrDie(caller, TLBTRAP);
