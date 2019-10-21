@@ -238,7 +238,7 @@ testingbaby(14);
     testingbaby(3);
     if (semad <= 0)
     {
-        t = removeBlocked(*semad);
+        t = removeBlocked(semad);
         if (t != NULL)
         {
             t->p_semAdd = NULL;
