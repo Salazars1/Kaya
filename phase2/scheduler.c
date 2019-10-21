@@ -42,20 +42,20 @@ int debugthisfuckingshit(int b);
     */
 void scheduler()
 {
-    addokbuf("We are at the beginning of the scheduler\n");
+    ?/*addokbuf("We are at the beginning of the scheduler\n");*/
     /*#1 we have succeeded in Initial and we are in scheduler*/
     /*Tested*/
 
     if (!emptyProcQ(readyQue))
     { /*  Starts next process in Queue*/
-        addokbuf("The ready Queue has a process\n");
+       /* addokbuf("The ready Queue has a process\n");*/
         /*If the value is 2 then we know that we are in the first if*/
         /*Tested*/
         currentProcess = removeProcQ(&(readyQue)); /* Remove process from Queue */
         STCK(TODStart);                            /* Gets start time */
 
         setTIMER(QUANTUM); /* Defines Quantum to 5 ms */
-        addokbuf("We have set the timer to be a new quantum\n");
+        /*addokbuf("We have set the timer to be a new quantum\n");*/
         LDST(&(currentProcess->p_s));
     }
     else

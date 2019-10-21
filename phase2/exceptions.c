@@ -171,11 +171,13 @@ addokbuf("calling Alloc PCB\n");
     if (birthedProc == NULL)
     { /*Check space in the ready queue to make sure we have room to allocate*/
         /*We did not have any more processses able to be made so we send back a -1*/
+        addokbuf("No More processes left load state\n");
         caller->s_v0 = -1;
         LDST(caller);
     }
     else
     {
+        addokbuf("Process count gets incremented\n");
         processCount++;
 
         /*Makes the new process a child of the currently running process calling the sys call */
@@ -186,10 +188,10 @@ addokbuf("calling Alloc PCB\n");
 
         /*Copy the calling state into the new processes state*/
         CtrlPlusC(((state_t *)caller->s_a1), &(birthedProc->p_s));
-
+        addokbuf("INserted into the process and child Copy state\n");
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
-
+        addokbuf("Load state and we done\n");
         LDST(caller);
     }
 }
@@ -201,11 +203,14 @@ addokbuf("calling Alloc PCB\n");
     Return: Void*/
 void Syscall2()
 {
+    addokbuf("Sys call 2 Time to die\n");
     if (emptyChild(currentProcess))
     { /*current process has no children*/
+        addokbuf("THe current process has no child\n");
         outChild(currentProcess);
         freePcb(currentProcess);
         processCount--;
+        addokbuf("Free the pcb and Decrement process count\n");
     }
     else
     {
