@@ -218,7 +218,7 @@ HIDDEN void Syscall3(state_t *caller)
 
     if ((caller->s_a1) <= 0)
     { /* waiting in the semaphore */
-        newProccess = removeBlocked((caller->s_a1));
+        newProccess = (pcb_t*) removeBlocked((caller->s_a1));
         if (newProccess != NULL)
         { /* add it to the ready queue */
             insertProcQ(&readyQue, newProccess);
@@ -239,7 +239,7 @@ HIDDEN void Syscall4(state_t *caller)
     if ((caller->s_a1) < 0)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
-        insertBlocked((caller->s_a1), currentProcess);
+        insertBlocked((int*) (caller->s_a1), currentProcess);
         scheduler();
     }
     /* nothing had control of the sem, return control to caller */
