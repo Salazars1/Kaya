@@ -199,9 +199,6 @@ HIDDEN void Syscall2()
         NukeThemTillTheyPuke(currentProcess);
     }
 
-    /*  Clean up after myself*/
-    currentProcess = NULL;
-
     /*call scheduler*/
     scheduler();
 }
