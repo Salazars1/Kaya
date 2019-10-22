@@ -236,9 +236,10 @@ void Syscall2()
     */
 void Syscall3(state_t *caller)
 {
-    addokbuf("Creating a new process\n");
+    addokbuf("SYSCALL 3 \n");
+   /* addokbuf("Creating a new process\n");*/
     pcb_t* newProccess = NULL;
-    addokbuf("Get the semaphore Callers A1\n");
+   /* addokbuf("Get the semaphore Callers A1\n");*/
     (caller->s_a1)++; /* increment semaphore  */
    /* testb(caller -> s_a1);*/
     if ((caller->s_a1) <= 0)
