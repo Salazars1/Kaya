@@ -272,7 +272,7 @@ void Syscall4(state_t *caller)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked((int*) (caller->s_a1), currentProcess);
-        addokbuf("the sa1 is less than 0 COpy state and block the process\n");
+     /*   addokbuf("the sa1 is less than 0 COpy state and block the process\n");*/
         scheduler();
 
     }
@@ -413,7 +413,7 @@ void Syscall8(state_t *caller)
 testb(dnum);
 testb(termRead);*/
     /* what device is going to be computed*/
-    addokbuf("Store values from registers a1 a2 a3 \n");
+   /* addokbuf("Store values from registers a1 a2 a3 \n");*/
     if (lineNo < DISKINT || lineNo > TERMINT)
     {
         addokbuf("Call sys call 2 \n");
@@ -438,7 +438,7 @@ testb(termRead);*/
     }
 
     (semD[index])--;
-addokbuf("We are messing with semaphores again\n");
+/*addokbuf("We are messing with semaphores again\n");*/
    /* test(*sem);*/
     if ((semD[index]) < 0)
     {
@@ -454,8 +454,8 @@ addokbuf("We are messing with semaphores again\n");
         will get its turn to play with the processor*/
         /*LDST(caller);*/
         fuckme(30);
-        addokbuf("Calling scheduler\n");
-        scheduler();
+        /*addokbuf("Calling scheduler\n");*/
+        LDST(caller);
     }
 
     LDST(caller);
