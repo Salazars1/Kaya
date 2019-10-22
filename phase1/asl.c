@@ -132,13 +132,7 @@ pcb_t *headBlocked(int *semAdd){
     
 	semd_t *temp;
     temp = searchForParent(semAdd);                         /*Gets the parent of the node whose semAdd equals the parameters*/
-   
-   if(temp->s_next ->s_semAdd == NULL){                              /*New node doesnt have a semAdd*/
-       return NULL; 
-   }else if(temp ->s_next ->s_procQ == NULL){            /*Node whose semAdd equals the parameter and s_procQ is NULL*/
-        return NULL; 
-    } 
-
+ 
     return headProcQ(temp->s_next->s_procQ);            
 }
 
