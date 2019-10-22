@@ -349,7 +349,7 @@ HIDDEN void CallScheduler()
 
     }
     else{
-           addokbuf("Calling scheduler \n");
+           addokbuf("Current Proc null \n");
    /* LDST(currentProcess);*/
       scheduler();
     }
