@@ -42,7 +42,7 @@ int debugthisfuckingshit(int b);
     */
 void scheduler()
 {
-    addokbuf("\n WE ARE AT THE BEGGINING OF SCHEDULER");
+/*    addokbuf("\n WE ARE AT THE BEGGINING OF SCHEDULER");*/
 
     if (!emptyProcQ(readyQue))
     { /*  Starts next process in Queue*/
