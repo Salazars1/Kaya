@@ -80,14 +80,14 @@ finish UNSURE*/
 
     if ((offendingLine & MULTICORE) != ZERO)
     { /*Mutli Core is on */
-       /*addokbuf("Multi Core go ahead and panic \n");*/
+       addokbuf("Multi Core go ahead and panic \n");
         testingbaby(3);
         PANIC();
        
     }
     else if ((offendingLine & CLOCK1) != ZERO)
     {
-           /*addokbuf("QUantum is up CLock 1 call scheduler \n");*/
+           addokbuf("QUantum is up CLock 1 call scheduler \n");
         /*The process has spent its quantum. Its time to start a new process .*/
         testingbaby(4);
         CallScheduler();
@@ -96,8 +96,8 @@ finish UNSURE*/
    
     else if ((offendingLine & CLOCK2) != ZERO)
     {
-        /*Load the clock with 100 Milliseconds
-           addokbuf("Line number is 2 (4) \n");*/
+        /*Load the clock with 100 Milliseconds*/
+           addokbuf("Psuedo Clock\n");
         LDIT(PSUEDOCLOCKTIME);
         /*Access the Last clock which is the psuedo clock*/
         semaphoreAddress = (int *) &(semD[SEMNUM-1]);
@@ -123,7 +123,7 @@ finish UNSURE*/
     }
     else if ((offendingLine & DISKDEVICE) != ZERO)
     {
-           /*addokbuf("The offending line is 3 or a disk device \n");*/
+           addokbuf("The offending line is 3 or a disk device \n");
         /*Disk Device is on  */
          testingbaby(8);
         lineNumber = DI;
@@ -131,34 +131,34 @@ finish UNSURE*/
     else if ((offendingLine & TAPEDEVICE) != ZERO)
     {
         /*Tape Device is on */
-           /*addokbuf("The offending line is a tape device \n");*/
+           addokbuf("The offending line is a tape device \n");
          testingbaby(9);
         lineNumber = TI;
     }
     else if ((offendingLine & NETWORKDEVICE) != ZERO)
     {
         /*Network Device is on */
-           /*addokbuf("THe offending line is a network device 5 \n");*/
+           addokbuf("THe offending line is a network device 5 \n");
          testingbaby(10);
         lineNumber = NETWORKI;
     }
     else if ((offendingLine & PRINTERDEVICE) != ZERO)
     {
-           /*addokbuf("The offending linne is printer device 6  \n");*/
+           addokbuf("The offending linne is printer device 6  \n");
         /*Printer Device is on */
          testingbaby(11);
         lineNumber = PRINTERI;
     }
     else if ((offendingLine & TERMINALDEVICE) != ZERO)
     {
-           /*addokbuf("the offending line is a terminal device -> FUck  \n");*/
+           addokbuf("the offending line is a terminal device -> FUck  \n");
         /*Terminal Device is on */
          testingbaby(12);
         lineNumber = TERMINALI;
     }
     else
     {
-           /*addokbuf("Not a known line number PANIC \n");*/
+           addokbuf("Not a known line number PANIC \n");
         testingbaby(32);
         PANIC();
     }
