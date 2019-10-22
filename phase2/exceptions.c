@@ -434,7 +434,7 @@ testb(termRead);*/
         fuckme(34);
         /* anything else */
         addokbuf("Line number is not a terminal integer or not reading \n");
-        index = DEVPERINT * (lineNo - DEVWOSEM) + dnum;
+        index = DEVPERINT * (lineNo - DEVWOSEM + termRead) + dnum;
     }
 
     (semD[index])--;
