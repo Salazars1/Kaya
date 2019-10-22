@@ -118,7 +118,7 @@ finish UNSURE*/
         }
          testingbaby(7);
         (*semaphoreAddress) = 0;
-        /*addokbuf("Reset the semaphore address and call scheduler \n");*/
+        addokbuf("Reset the semaphore address and call scheduler \n");
         CallScheduler();
     }
     else if ((offendingLine & DISKDEVICE) != ZERO)
@@ -349,7 +349,7 @@ HIDDEN void CallScheduler()
 
     }
     else{
-           /*addokbuf("Calling scheduler \n");*/
+           addokbuf("Calling scheduler \n");
    /* LDST(currentProcess);*/
       scheduler();
     }
