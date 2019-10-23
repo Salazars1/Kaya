@@ -337,8 +337,7 @@ HIDDEN void Syscall6(state_t *caller)
     STCK(timeSpentProcessing);
 
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
-    /*addokbuf("Time is being set properly\n");*/
-    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (timeSpentProcessing - TODStart);
+    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (TODStart - timeSpentProcessing);
     /*Store the new updated time spent processing into the v0 register of the process state*/
     (caller->s_v0) = (currentProcess->p_timeProc);
 
@@ -346,7 +345,6 @@ HIDDEN void Syscall6(state_t *caller)
 
     STCK(TODStart);
     /*Load the Current Processes State*/
-   /*addokbuf("Load State\n");*/
     LDST(caller);
 }
 
