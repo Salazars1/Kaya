@@ -88,7 +88,7 @@ void scheduler()
                 
                 setTIMER(MAXINT);
                 /*FIXME:?*/
-                setSTATUS(ALLOFF | IEON | IECON | IMON);
+                setSTATUS(getSTATUS() | ALLOFF | IEON | IECON | IMON);
                 
                 addokbuf("Begin Waiting\n");
                 
@@ -100,12 +100,7 @@ void scheduler()
         }
     }
    
-    }
-
-   /* addokbuf("\n\n________________________________________________________\n\n");*/
-
 }
-
 int debugthisfuckingshit(int b)
 {
 
