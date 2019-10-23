@@ -420,14 +420,14 @@ testb(termRead);*/
     index = index + dnum; 
 
     sem = &(semD[index]);
-/*/*addokbuf("We are messing with semaphores again\n");*/*/
+/*/*addokbuf("We are messing with semaphores again\n");*/
    /* test(*sem);*/
 
    (*sem)--;
     if (*sem < 0)
     {
 
-      /*  /*addokbuf("Copying state and inserting it onto the blocked list\n");*/*/
+      /*  /*addokbuf("Copying state and inserting it onto the blocked list\n");*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
        
@@ -439,7 +439,7 @@ testb(termRead);*/
         will get its turn to play with the processor*/
         /*LDST(caller);*/
         fuckme(30);
-        /*/*addokbuf("Calling scheduler\n");*/*/
+        /*/*addokbuf("Calling scheduler\n");*/
         scheduler();
     }
 
