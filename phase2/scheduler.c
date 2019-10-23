@@ -75,7 +75,7 @@ pcb_t * tryprc;
         
         if (processCount > 0)
         {
-            /*addokbuf("Process count is greater than 0 meaning that we have processes to run\n");*/
+            addokbuf("Process count is greater than 0 meaning that we have processes to run\n");
             if (softBlockCount == 0)
             { /* DEADLOCK CASE */
                 debugthisfuckingshit(5);
