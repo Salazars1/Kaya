@@ -82,26 +82,26 @@ void SYSCALLHandler()
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;
     casel = prevState->s_a0;
-    /*/*addokbuf("Exceptions have been loaded check fuck me test for casel sys call val\n");*/
+    /*addokbuf("Exceptions have been loaded check fuck me test for casel sys call val\n");*/
  /*   testb(casel);*/
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
 
     if (((prevStatus > 0) && (prevStatus < 9) && mode) != ALLOFF)
     { /* It is User Mode*/
-       /* /*addokbuf("We are in the part where the program will die\n");*/    
+        /*addokbuf("We are in the part where the program will die\n");*/    
         program = (state_t *)PRGMTRAPOLDAREA;
         CtrlPlusC(prevState, program);
 
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         (program->s_cause) = (((program->s_cause) & ~(0xFF)) | (10 << 2));
-       /* /*addokbuf("Program will be killed\n");*/
+        /*addokbuf("Program will be killed\n");*/
         /*Program Trap Handler */
         PrgTrapHandler();
     }
 
     /* increment prevState's PC to next instruction */
     (prevState->s_pc) = (prevState->s_pc) + 4;
-    /*/*addokbuf("Get the next instruction\n");*/
+    /*addokbuf("Get the next instruction\n");*/
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
     switch (casel)
@@ -237,9 +237,9 @@ HIDDEN void Syscall2()
 HIDDEN void Syscall3(state_t *caller)
 {
     /*addokbuf("SYSCALL 3 \n");*/
-   /* /*addokbuf("Creating a new process\n");*/
+    /*addokbuf("Creating a new process\n");*/
     pcb_t* newProccess = NULL;
-   /* /*addokbuf("Get the semaphore Callers A1\n");*/
+    /*addokbuf("Get the semaphore Callers A1\n");*/
     (caller->s_a1)++; /* increment semaphore  */
    /* testb(caller -> s_a1);*/
     if ((caller->s_a1) <= 0)
@@ -273,7 +273,7 @@ HIDDEN void Syscall4(state_t *caller)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked((int*) (caller->s_a1), currentProcess);
-     /*   /*addokbuf("the sa1 is less than 0 COpy state and block the process\n");*/
+       /*addokbuf("the sa1 is less than 0 COpy state and block the process\n");*/
         scheduler();
 
     }
@@ -420,7 +420,7 @@ testb(termRead);*/
     index = index + dnum; 
 
     sem = &(semD[index]);
-/*/*addokbuf("We are messing with semaphores again\n");*/
+/*addokbuf("We are messing with semaphores again\n");*/
    /* test(*sem);*/
 
    (*sem)--;
@@ -439,7 +439,7 @@ testb(termRead);*/
         will get its turn to play with the processor*/
         /*LDST(caller);*/
         fuckme(30);
-        /*/*addokbuf("Calling scheduler\n");*/
+        /*addokbuf("Calling scheduler\n");*/
         scheduler();
     }
 
@@ -455,7 +455,7 @@ testb(termRead);*/
     */
 void PassUpOrDie(state_t *caller, int triggerReason)
 {
-    /*/*addokbuf("Pass up or die is being run \n");*/
+    /*addokbuf("Pass up or die is being run \n");*/
     state_t *oldState;
     state_t *newState;
 
@@ -476,7 +476,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         break;
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
-    /*/*addokbuf("Program trap \n");*/
+    /*addokbuf("Program trap \n");*/
         if ((currentProcess->p_newProgramTrap) != NULL)
         {
             oldState = currentProcess->p_oldProgramTrap;
