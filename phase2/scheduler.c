@@ -43,7 +43,7 @@ int debugthisfuckingshit(int b);
 void scheduler()
 {
     /*addokbuf("\n WE ARE AT THE BEGGINING OF SCHEDULER");*/
-
+pcb_t * tryprc; 
     if (!emptyProcQ(readyQue))
     { /*  Starts next process in Queue*/
 
@@ -57,7 +57,16 @@ void scheduler()
     else
     { /* There is nothing on the ReadyQueue */
 
-        currentProcess = NULL; /* no process is running*/
+      
+    }
+    if(currentProcess == NULL){
+        STCK(currentTOD);
+        currentProcess -> p_timeProc += (currentTOD - TODStart);
+
+    }
+    tryprc = removeProcQ(&(readyQue));
+    if(tryprc == NULL){
+          currentProcess = NULL; /* no process is running*/
         if (processCount == 0)
         { /* Everything finished running correctly */
             debugthisfuckingshit(4);
@@ -84,7 +93,21 @@ void scheduler()
                 WAIT();
             }
         }
+
+
+
     }
+    currentProcess = tryprc;
+    STCK(TODStart);
+    setTIMER(QUANTUM);
+    LDST(&(tryprc ->p_s));
+
+
+
+
+
+
+
 }
 int debugthisfuckingshit(int b)
 {
