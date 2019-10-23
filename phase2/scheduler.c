@@ -58,7 +58,7 @@ void scheduler()
 
         setTIMER(QUANTUM); /* Defines Quantum to 5 ms */
         /*addokbuf("\n\n___________LOADING CURRENT PROCESS_________________\n\n");*/
-        LDST(&(test->p_s));
+        LDST(&(try->p_s));
         }
         else{
 
@@ -99,43 +99,7 @@ void scheduler()
 
         }
     }
-    else
-    { /* There is nothing on the ReadyQueue */
-        /*addokbuf("\nThere is nothing on the ready queue");*/
-        /*Tested*/
-        currentProcess = NULL; /* no process is running*/
-        if (processCount == 0)
-        { /* Everything finished running correctly */
-            addokbuf("\nProcess Count is 0 we are halting the machine");
-            debugthisfuckingshit(4);
-            HALT();
-        }
-        
-        if (processCount > 0)
-        {
-            /*addokbuf("Process count is greater than 0 meaning that we have processes to run\n");*/
-            if (softBlockCount == 0)
-            { /* DEADLOCK CASE */
-                addokbuf("No processes are soft blocked we hit dead lock PANIC\n");
-                debugthisfuckingshit(5);
-                PANIC();
-            }
-            else
-            {
-                /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
-                /*Tested*/
-                addokbuf("Soft block count is not 0 thus we are waiting for them to be put back on the queue\n");
-                debugthisfuckingshit(2);
-                
-                setTIMER(MAXINT);
-                /*FIXME:?*/
-                setSTATUS(ALLOFF | IEON | IECON | IMON);
-                
-                addokbuf("Begin Waiting\n");
-                
-                WAIT();
-            }
-        }
+   
     }
 
    /* addokbuf("\n\n________________________________________________________\n\n");*/
