@@ -151,7 +151,7 @@ finish UNSURE*/
     }
     else if ((offendingLine & TERMINALDEVICE) != ZERO)
     {
-           addokbuf("the offending line is a terminal device -> FUck  \n");
+          /* addokbuf("the offending line is a terminal device -> FUck  \n");*/
         /*Terminal Device is on */
          testingbaby(12);
         lineNumber = TERMINALI;
