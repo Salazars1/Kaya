@@ -582,7 +582,7 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
         else
         {
             /*  Increment Semaphore*/
-            (*sema4)++;
+            *sema4++;
         }
     }
     /*  We have no more children! Good to go*/
