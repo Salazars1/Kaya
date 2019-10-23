@@ -419,7 +419,7 @@ testb(termRead);*/
     index = index * 8; 
     index = index + dnum; 
 
-    sem = &(SemD(index));
+    sem = &(SemD[index]);
 /*addokbuf("We are messing with semaphores again\n");*/
    /* test(*sem);*/
 
