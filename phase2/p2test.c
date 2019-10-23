@@ -152,35 +152,30 @@ void test() {
 	p2state.s_pc = p2state.s_t9 = (memaddr)p2;		/* p2 starts executing function p2 */
 	p2state.s_status = p2state.s_status | IEPBITON | CAUSEINTMASK;
 		
-	print("---------------------------------------------\n");
 	STST(&p3state);
 
 	p3state.s_sp = p2state.s_sp - QPAGE;
 	p3state.s_pc = p3state.s_t9 = (memaddr)p3;
 	p3state.s_status = p3state.s_status | IEPBITON | CAUSEINTMASK;
 	
-	print("---------------------------------------------\n");
 	STST(&p4state);
 
 	p4state.s_sp = p3state.s_sp - QPAGE;
 	p4state.s_pc = p4state.s_t9 = (memaddr)p4;
 	p4state.s_status = p4state.s_status | IEPBITON | CAUSEINTMASK;
 	
-	print("----------------------------------------------\n");
 	STST(&p5state);
 	
 	p5Stack = p5state.s_sp = p4state.s_sp - (2 * QPAGE);	/* because there will 2 p4 running*/
 	p5state.s_pc = p5state.s_t9 = (memaddr)p5;
 	p5state.s_status = p5state.s_status | IEPBITON | CAUSEINTMASK;
 
-	print("-----------------------------------------------\n");
 	STST(&p6state);
 	
 	p6state.s_sp = p5state.s_sp - (2 * QPAGE);
 	p6state.s_pc = p6state.s_t9 = (memaddr)p6;
 	p6state.s_status = p6state.s_status | IEPBITON | CAUSEINTMASK;
 	
-	print("--------------------------------------------------\n");
 	STST(&p7state);
 	
 	p7state.s_sp = p6state.s_sp - QPAGE;
