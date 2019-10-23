@@ -415,38 +415,22 @@ testb(dnum);
 testb(termRead);*/
     /* what device is going to be computed*/
    /* addokbuf("Store values from registers a1 a2 a3 \n");*/
-    if (lineNo < DISKINT || lineNo > TERMINT)
-    {
-        addokbuf("Call sys call 2 \n");
-        Syscall2();
-    }
+    index = lineNo -3 + termRead; 
+    index = index * 8; 
+    index = index + dnum; 
 
-    if (lineNo == TERMINT && termRead == TRUE)
-    {
-        addokbuf("THe line number is that of a terminal int and is reading \n");
-        fuckme(4);
-        /* terminal read */
-        addokbuf("Index is the following value\n");
-        index = DEVPERINT * (lineNo - DEVWOSEM + termRead) + dnum;
-    }
-
-    else
-    {
-        fuckme(34);
-        /* anything else */
-        addokbuf("Line number is not a terminal integer or not reading \n");
-        index = DEVPERINT * (lineNo - DEVWOSEM + termRead) + dnum;
-    }
-
-    (semD[index])--;
+    sem = &(SemD(index));
 /*addokbuf("We are messing with semaphores again\n");*/
    /* test(*sem);*/
-    if ((semD[index]) < 0)
+
+   (*sem)--;
+    if (sem < 0)
     {
 
         addokbuf("Copying state and inserting it onto the blocked list\n");
-        insertBlocked((semD[index]), currentProcess);
         CtrlPlusC(caller, &(currentProcess->p_s));
+        insertBlocked((semD[index]), currentProcess);
+       
 
         softBlockCount = softBlockCount + 1;
 
@@ -456,10 +440,10 @@ testb(termRead);*/
         /*LDST(caller);*/
         fuckme(30);
         /*addokbuf("Calling scheduler\n");*/
-        LDST(caller);
+        scheduler();
     }
 
-    LDST(caller);
+    scheduler();
 }
 
 /**************************  HANDLERS FUNCTIONS    ******************************/
