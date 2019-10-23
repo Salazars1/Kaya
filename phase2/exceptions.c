@@ -558,7 +558,7 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
     while (!emptyChild(headPtr))
     {
         /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
-        addokbuf("inf\n");
+        addokbuf("inf \n");
         NukeThemTillTheyPuke(removeChild(headPtr));
     }
 
