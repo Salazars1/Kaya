@@ -406,9 +406,9 @@ void Syscall8(state_t *caller)
     int index;
     int *sem;
 
-    lineNo = caller->s_a1;
-    dnum = caller->s_a2;
-    termRead = caller->s_a3; /* terminal read  or write */
+    lineNo = (int)caller->s_a1;
+    dnum = (int)caller->s_a2;
+    termRead = (int)caller->s_a3; /* terminal read  or write */
 /*testb(lineNo);
 
 testb(dnum);
@@ -605,3 +605,6 @@ extern void CtrlPlusC(state_t *oldState, state_t *newState)
 }
 
 
+int debugSys8(int a, int b, int c){
+
+}
