@@ -224,9 +224,9 @@ void test() {
 	print("p2 was started\n");
 
 	SYSCALL(VERHOGEN, (int)&startp2, 0, 0);					/* V(startp2)   */
-	print("fuck me");
-	SYSCALL(PASSERN, (int)&endp2, 0, 0);					/* P(endp2)     */
 	
+	SYSCALL(PASSERN, (int)&endp2, 0, 0);					/* P(endp2)     */
+	print("fuck me");
 	/* make sure we really blocked */
 	if (p1p2synch == 0)
 		print("error: p1/p2 synchronization bad\n");
