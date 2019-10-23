@@ -165,6 +165,7 @@ void SYSCALLHandler()
 
 HIDDEN void Syscall1(state_t *caller)
 {
+    addokbuf("Sys1");
     /*addokbuf("calling Alloc PCB\n");*/
     pcb_t *birthedProc = allocPcb();
 
@@ -202,7 +203,7 @@ HIDDEN void Syscall1(state_t *caller)
     Return: Void*/
 HIDDEN void Syscall2()
 {
-
+addokbuf("Sys2");
    /*addokbuf("Sys call 2 Time to die\n");*/
     if (emptyChild(currentProcess))
     { /*current process has no children*/
@@ -292,7 +293,7 @@ HIDDEN void Syscall4(state_t *caller)
 HIDDEN void Syscall5(state_t *caller)
 {   
     /*addokbuf("Syscall 5 start\n");*/
-
+    addokbuf("Sys5");
     if (caller->s_a1 == 0)
     { /*TLB TRAP*/
     /*addokbuf("the calling state a1 is 0\n");*/
@@ -344,7 +345,7 @@ HIDDEN void Syscall5(state_t *caller)
 HIDDEN void Syscall6(state_t *caller)
 {
     /*addokbuf("Sys call 6 start\n");*/
-    
+    addokbuf("Sys6");
     STCK(currentTOD);
     
     CtrlPlusC(caller, &(currentProcess ->p_s));
@@ -368,6 +369,7 @@ HIDDEN void Syscall6(state_t *caller)
     Return: Void*/
 HIDDEN void Syscall7(state_t *caller)
 {
+    addokbuf("Sys7");
     /*addokbuf("Syscall 7 start\n");*/
     int *sem;
     sem = (int *)&(semD[SEMNUM - 1]);
@@ -400,7 +402,7 @@ HIDDEN void Syscall7(state_t *caller)
 HIDDEN void Syscall8(state_t *caller)
 {
     /*addokbuf("Syscall 8 \n");*/
-  
+  addokbuf("Sys8");
     int lineNo; /*  line number*/
     int dnum;   /*  device number*/
     int termRead;
