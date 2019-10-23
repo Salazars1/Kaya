@@ -330,7 +330,7 @@ HIDDEN void Syscall5(state_t *caller)
     each Process Block that is running. 
         Parameters: State_t * caller
         Return: Void*/
-HIDDEN cpu_t Syscall6(state_t *caller)
+HIDDEN void Syscall6(state_t *caller)
 {
     /*addokbuf("Sys call 6 start\n");*/
     
