@@ -266,8 +266,8 @@ testingbaby(14);
     testingbaby(3);
     if (*semad <= 0)
     {
-           addokbuf("Value is less than 0 \n");
-        t = removeBlocked(*semad);
+        addokbuf("Value is less than 0 \n");
+        t = removeBlocked(semad);
         if (t != NULL)
         {
                /*addokbuf("t is a process that was on the blocked queue \n");*/
