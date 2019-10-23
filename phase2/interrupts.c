@@ -87,7 +87,7 @@ finish UNSURE*/
     }
     else if ((offendingLine & CLOCK1) != ZERO)
     {
-           addokbuf("QUantum is up CLock 1 call scheduler \n");
+         /*  addokbuf("QUantum is up CLock 1 call scheduler \n");*/
         /*The process has spent its quantum. Its time to start a new process .*/
         testingbaby(4);
         CallScheduler();
@@ -97,7 +97,7 @@ finish UNSURE*/
     else if ((offendingLine & CLOCK2) != ZERO)
     {
         /*Load the clock with 100 Milliseconds*/
-           addokbuf("Psuedo Clock\n");
+          /*addokbuf("Psuedo Clock\n");*/
         LDIT(PSUEDOCLOCKTIME);
         /*Access the Last clock which is the psuedo clock*/
         semaphoreAddress = (int *) &(semD[SEMNUM-1]);
@@ -118,7 +118,7 @@ finish UNSURE*/
         }
          testingbaby(7);
         (*semaphoreAddress) = 0;
-        addokbuf("Reset the semaphore address and call scheduler \n");
+      /* addokbuf("Reset the semaphore address and call scheduler \n");*/
         CallScheduler();
     }
     else if ((offendingLine & DISKDEVICE) != ZERO)
@@ -348,7 +348,7 @@ HIDDEN void CallScheduler()
 
     }
     else{
-           addokbuf("Current Proc null \n");
+           /*addokbuf("Current Proc null \n");*/
    /* LDST(currentProcess);*/
       scheduler();
     }
