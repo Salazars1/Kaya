@@ -44,7 +44,7 @@ void scheduler()
 {
     /*addokbuf("\n WE ARE AT THE BEGGINING OF SCHEDULER");*/
     if(currentProcess == NULL){
-
+        addokbuf("We fucked it");
     }
     else{
     STCK(currentTOD);
