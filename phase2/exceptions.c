@@ -208,6 +208,9 @@ HIDDEN void Syscall1(state_t *caller)
     Return: Void*/
 HIDDEN void Syscall2()
 {
+
+    NukeThemTillTheyPuke(currentProcess);
+
     /*addokbuf("Sys call 2 Time to die\n");*/
     if (emptyChild(currentProcess))
     { /*current process has no children*/
@@ -221,7 +224,7 @@ HIDDEN void Syscall2()
     {
         /*Helper Function*/
         /*addokbuf("Current procss is being killed\n");*/
-        NukeThemTillTheyPuke(currentProcess);
+        
     }
 
     /*call scheduler*/
