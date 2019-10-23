@@ -313,7 +313,7 @@ void p2() {
 
 	if (((now2 - now1) >= (cpu_t2 - cpu_t1)) &&
 			((cpu_t2 - cpu_t1) >= (MINLOOPTIME / (* ((cpu_t *)TIMESCALEADDR)))))
-		print("p2 is OK\n");
+		
 	else  {
 		if ((now2 - now1) < (cpu_t2 - cpu_t1))
 			print ("error: more cpu time than real time\n");
@@ -325,7 +325,7 @@ void p2() {
 	p1p2synch = 1;				/* p1 will check this */
 
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
-	print("\n");
+	print("p2 is OK\n");
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p2 */
 
 	/* just did a SYS2, so should not get to this point */
@@ -336,7 +336,6 @@ void p2() {
 
 /* p3 -- clock semaphore test process */
 void p3() {
-	print("GETTING TO P3\n");
 	cpu_t	time1, time2;
 	cpu_t	cpu_t1,cpu_t2;		/* cpu time used       */
 	int		i;
