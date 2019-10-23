@@ -197,7 +197,7 @@ HIDDEN void Syscall1(state_t *caller)
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
         /*addokbuf("Load state and we done\n");*/
-        
+        LDST(caller);
     }
 }
 
