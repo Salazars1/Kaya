@@ -267,12 +267,14 @@ HIDDEN void Syscall4(state_t *caller)
 {
 
     /*addokbuf("Syscall 4 start\n ");*/
-    (caller->s_a1)--; /* decrement semaphore */
+    int * sema = (int * ) caller->s_a1; /* decrement semaphore */
   /*  testb(caller -> s_a1);*/
-    if ((caller->s_a1) < 0)
+
+  (*sema)--;
+    if (*sema < 0)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
-        insertBlocked((int*) (caller->s_a1), currentProcess);
+        insertBlocked(sema, currentProcess);
        /*addokbuf("the sa1 is less than 0 COpy state and block the process\n");*/
         scheduler();
 
