@@ -547,7 +547,7 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
     if (headPtr == currentProcess)
     {
         /*  Children services comes for you and take your child*/
-        outChild(headPts);
+        outChild(headPtr);
     }
     if ((headPtr->p_semAdd) == NULL)
     {
