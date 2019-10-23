@@ -410,7 +410,7 @@ void p4() {
 	print("p4 is OK\n");
 
 	SYSCALL(VERHOGEN, (int)&endp4, 0, 0);				/* V(endp4)          */
-
+	print("---------BEFORE TERMINATE THREAD----------------\n");
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p4      */
 
 	/* just did a SYS2, so should not get to this point */
