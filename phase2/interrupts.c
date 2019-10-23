@@ -238,7 +238,7 @@ testingbaby(14);
             /*Acknowledge*/
             testing->t_recv_command = ACK;
             /*fix the semaphore number for terminal readers sub device */
-            devsemnum = devsemnum + DEVPERINT;
+           /* devsemnum = devsemnum + DEVPERINT;*/
         }
     }
     else
@@ -263,7 +263,7 @@ testingbaby(14);
    /* tes(*semad);*/
     
     testingbaby(3);
-    if (semad <= 0)
+    if (*semad <= 0)
     {
            addokbuf("Value is less than 0 \n");
         t = removeBlocked(*semad);
