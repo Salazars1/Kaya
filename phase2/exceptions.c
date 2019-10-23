@@ -410,7 +410,6 @@ HIDDEN void Syscall8(state_t *caller)
     dnum = (int)caller->s_a2;
     termRead = (int)caller->s_a3; /* terminal read  or write */
 /*testb(lineNo);
-
 testb(dnum);
 testb(termRead);*/
     /* what device is going to be computed*/
@@ -603,6 +602,4 @@ extern void CtrlPlusC(state_t *oldState, state_t *newState)
         newState->s_reg[i] = oldState->s_reg[i];
     }
 }
-
-
 
