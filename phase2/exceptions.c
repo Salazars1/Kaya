@@ -82,26 +82,26 @@ void SYSCALLHandler()
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;
     casel = prevState->s_a0;
-    /*/*addokbuf("Exceptions have been loaded check fuck me test for casel sys call val\n");*/*/
+    /*/*addokbuf("Exceptions have been loaded check fuck me test for casel sys call val\n");*/
  /*   testb(casel);*/
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
 
     if (((prevStatus > 0) && (prevStatus < 9) && mode) != ALLOFF)
     { /* It is User Mode*/
-       /* /*addokbuf("We are in the part where the program will die\n");*/    */
+       /* /*addokbuf("We are in the part where the program will die\n");*/    
         program = (state_t *)PRGMTRAPOLDAREA;
         CtrlPlusC(prevState, program);
 
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         (program->s_cause) = (((program->s_cause) & ~(0xFF)) | (10 << 2));
-       /* /*addokbuf("Program will be killed\n");*/*/
+       /* /*addokbuf("Program will be killed\n");*/
         /*Program Trap Handler */
         PrgTrapHandler();
     }
 
     /* increment prevState's PC to next instruction */
     (prevState->s_pc) = (prevState->s_pc) + 4;
-    /*/*addokbuf("Get the next instruction\n");*/*/
+    /*/*addokbuf("Get the next instruction\n");*/
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
     switch (casel)
@@ -237,9 +237,9 @@ HIDDEN void Syscall2()
 HIDDEN void Syscall3(state_t *caller)
 {
     /*addokbuf("SYSCALL 3 \n");*/
-   /* /*addokbuf("Creating a new process\n");*/*/
+   /* /*addokbuf("Creating a new process\n");*/
     pcb_t* newProccess = NULL;
-   /* /*addokbuf("Get the semaphore Callers A1\n");*/*/
+   /* /*addokbuf("Get the semaphore Callers A1\n");*/
     (caller->s_a1)++; /* increment semaphore  */
    /* testb(caller -> s_a1);*/
     if ((caller->s_a1) <= 0)
