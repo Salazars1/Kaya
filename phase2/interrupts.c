@@ -234,7 +234,7 @@ testingbaby(14);
         {
                /*addokbuf("We are recieving  \n");*/
             /*Save the status*/
-            devsemnum += 1; 
+            devsemnum += 8; 
           
             deviceStatus = testing->t_recv_status;
             /*Acknowledge*/
