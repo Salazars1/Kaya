@@ -574,7 +574,7 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
         int *sema4 = (headPtr->p_semAdd);
         /*  remove process from ASL*/
         outBlocked(headPtr);
-        if ((sema4 >= &(semD[0])) && (sema4 <= &(semD[SEMNUM - 1])))
+        if (sema4 >= &(semD[0]) && sema4 <= &(semD[SEMNUM - 1]))
         { /*SemAdd count is somewhere in between the SemD array*/
             softBlockCount--;
         }
