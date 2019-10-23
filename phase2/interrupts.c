@@ -256,14 +256,14 @@ testingbaby(14);
        /*addokbuf("Playing with semaphores go ahead and check these in the debug functions \n");*/
     int * semad; 
 
-    semad =(int*) &(semD[devsemnum]);
+    semad =&(semD[devsemnum]);
 
     
     (*semad)--; 
    /* tes(*semad);*/
     
     testingbaby(3);
-    if (*semad <= 0)
+    if ((*semad) <= 0)
     {
            /*addokbuf("Value is less than 0 \n");*/
         t = removeBlocked(*semad);
