@@ -33,7 +33,7 @@ extern pcb_t *currentProcess;
 extern pcb_t *readyQueue;
 
 
-int debugthisfuckingshit(int b);
+
 
 /*  Round Robin algorithm that schedules each process that it is going to be executed by the system.
     Under certain conditions, it PANICS or performs the appropiate function call. 
@@ -64,7 +64,7 @@ void scheduler()
         currentProcess = NULL; /* no process is running*/
         if (processCount == 0)
         { /* Everything finished running correctly */
-            debugthisfuckingshit(4);
+            
             HALT();
         }
         
@@ -73,14 +73,14 @@ void scheduler()
             /*addokbuf("Process count is greater than 0 meaning that we have processes to run\n");*/
             if (softBlockCount == 0)
             { /* DEADLOCK CASE */
-                debugthisfuckingshit(5);
+                
                 PANIC();
             }
             else
             {
                 /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
                 /*Tested*/
-                debugthisfuckingshit(2);
+             
                 
                 setTIMER(MAXINT);
                 setSTATUS(getSTATUS()|ALLOFF | IEON | IECON | IMON);
@@ -89,9 +89,4 @@ void scheduler()
             }
         }
     }
-}
-int debugthisfuckingshit(int b)
-{
-
-    return b;
 }
