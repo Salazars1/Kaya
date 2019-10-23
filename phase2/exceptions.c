@@ -335,14 +335,10 @@ HIDDEN cpu_t Syscall6(state_t *caller)
     /*addokbuf("Sys call 6 start\n");*/
     
     STCK(currentTOD);
-    CtrlPlusC(caller, currentProcess ->p_s);
+    CtrlPlusC(caller, &(currentProcess ->p_s));
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
-<<<<<<< HEAD
     /*addokbuf("Time is being set properly\n");*/
     (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (currentTOD - TODStart);
-=======
-    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (TODStart - timeSpentProcessing);
->>>>>>> 25ff9a258f24fd126b036fa782b7bc4ad326aa01
     /*Store the new updated time spent processing into the v0 register of the process state*/
     (caller->s_v0) = (currentProcess->p_timeProc);
 
