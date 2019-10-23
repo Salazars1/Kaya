@@ -208,7 +208,7 @@ HIDDEN void Syscall1(state_t *caller)
     Return: Void*/
 HIDDEN void Syscall2()
 {
-  NukeThemTillTheyPuke(CurrentProcess);
+  NukeThemTillTheyPuke(currentProcess);
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
     scheduler();
