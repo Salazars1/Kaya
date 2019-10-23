@@ -340,7 +340,7 @@ HIDDEN void Syscall6(state_t *caller)
     /*addokbuf("Time is being set properly\n");*/
     (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (currentTOD - TODStart);
     /*Store the new updated time spent processing into the v0 register of the process state*/
-    (caller->s_v0) = (currentProcess->p_timeProc);
+    (caller.s_v0) = (currentProcess->p_timeProc);
 
     /*Updates start time*/
 
