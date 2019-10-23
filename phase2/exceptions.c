@@ -489,7 +489,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         break;
 
     case SYSTRAP: /*2 is SYS Exception!*/
-    /*addokbuf("Sys trap");
+    /*addokbuf("Sys trap");*/
         if ((currentProcess->p_newSys) != NULL)
         {
             oldState = currentProcess->p_oldSys;
