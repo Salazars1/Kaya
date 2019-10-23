@@ -183,7 +183,7 @@ HIDDEN void Syscall1(state_t *caller)
     {
         /*addokbuf("Process count gets incremented\n");*/
         processCount++;
-
+        CtrlPlusC(((state_t *)caller->s_a1), &(birthedProc->p_s));
         /*Makes the new process a child of the currently running process calling the sys call */
         insertChild(currentProcess, birthedProc);
 
@@ -191,7 +191,7 @@ HIDDEN void Syscall1(state_t *caller)
         insertProcQ(&readyQue, birthedProc);
 
         /*Copy the calling state into the new processes state*/
-        CtrlPlusC(((state_t *)caller->s_a1), &(birthedProc->p_s));
+       
         /*addokbuf("INserted into the process and child Copy state\n");*/
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
@@ -330,15 +330,15 @@ HIDDEN void Syscall5(state_t *caller)
     each Process Block that is running. 
         Parameters: State_t * caller
         Return: Void*/
-HIDDEN void Syscall6(state_t *caller)
+HIDDEN cpu_t Syscall6(state_t *caller)
 {
     /*addokbuf("Sys call 6 start\n");*/
-    cpu_t timeSpentProcessing;
-    STCK(timeSpentProcessing);
-
+    
+    STCK(currentTOD);
+    CtrlPlusC(caller, currentProcess ->p_s)''
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
     /*addokbuf("Time is being set properly\n");*/
-    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (timeSpentProcessing - TODStart);
+    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (currentTOD - TODStart);
     /*Store the new updated time spent processing into the v0 register of the process state*/
     (caller->s_v0) = (currentProcess->p_timeProc);
 
@@ -579,16 +579,21 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
     Return: Void*/
 extern void CtrlPlusC(state_t *oldState, state_t *newState)
 {
-    /*Move all of the contents from the old state into the new*/
-    newState->s_asid = oldState->s_asid;
-    newState->s_status = oldState->s_status;
-    newState->s_pc = oldState->s_pc;
-    newState->s_cause = oldState->s_cause;
+    
     /*Loop through all of the registers in the old state and write them into the new state*/
     int i;
     for (i = 0; i < STATEREGNUM; i++)
     {
         newState->s_reg[i] = oldState->s_reg[i];
     }
+
+    /*Move all of the contents from the old state into the new*/
+    newState->s_asid = oldState->s_asid;
+    newState->s_status = oldState->s_status;
+    newState->s_pc = oldState->s_pc;
+    newState->s_cause = oldState->s_cause;
+    /*All States Copied */
+
+
 }
 

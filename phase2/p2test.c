@@ -367,7 +367,7 @@ void p3() {
 	SYSCALL(VERHOGEN, (int)&endp3, 0, 0);				/* V(endp3)        */
 	print("---------BEFORE TERMINATE THREAD----------------\n");
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p3    */
-
+	
 	/* just did a SYS2, so should not get to this point */
 	print("error: p3 didn't terminate\n");
 	PANIC();					/* PANIC            */
