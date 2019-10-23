@@ -152,7 +152,6 @@ void test() {
 	p2state.s_pc = p2state.s_t9 = (memaddr)p2;		/* p2 starts executing function p2 */
 	p2state.s_status = p2state.s_status | IEPBITON | CAUSEINTMASK;
 		
-	print("BEFORE p3\n");
 
 	STST(&p3state);
 
@@ -326,7 +325,7 @@ void p2() {
 	p1p2synch = 1;				/* p1 will check this */
 
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
-	print("BEFORE TERMINATE THREAD\n");
+	
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p2 */
 
 	/* just did a SYS2, so should not get to this point */
@@ -337,7 +336,7 @@ void p2() {
 
 /* p3 -- clock semaphore test process */
 void p3() {
-	print("GETTING TO P3\n");
+	
 	cpu_t	time1, time2;
 	cpu_t	cpu_t1,cpu_t2;		/* cpu time used       */
 	int		i;
