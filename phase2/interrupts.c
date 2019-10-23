@@ -208,6 +208,9 @@ finish UNSURE*/
     
    /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
     
+    devsemnum = lineNumber -3; 
+    devsemnum = devsemnum * 8; 
+    devsemnum = devsemnum + devicenumber; 
 testingbaby(14);
     if (lineNumber == TERMINT)
     {
@@ -225,15 +228,14 @@ testingbaby(14);
                 /*Acknowledge*/
                 devaddrbase->t_transm_command = ACK;
 
-                devsemnum =  (DEVPERINT * (lineNumber - DEVWOSEM)) + devicenumber;
-                
                 testingbaby(34);
         }
         else
         {
                /*addokbuf("We are recieving  \n");*/
             /*Save the status*/
-            devsemnum =  (DEVPERINT * (lineNumber - 3)) + devicenumber;
+            devsemnum += 1; 
+          
             deviceStatus = testing->t_recv_status;
             /*Acknowledge*/
             testing->t_recv_command = ACK;
@@ -248,7 +250,6 @@ testingbaby(14);
         deviceStatus = testing->d_status;
         /*Acknowledge the interrupt*/
         testing->d_command = ACK;
-        devsemnum =  (DEVPERINT * (lineNumber - DEVWOSEM)) + devicenumber;
     }
 
     testingbaby(43);
