@@ -152,7 +152,7 @@ void test() {
 	p2state.s_pc = p2state.s_t9 = (memaddr)p2;		/* p2 starts executing function p2 */
 	p2state.s_status = p2state.s_status | IEPBITON | CAUSEINTMASK;
 		
-
+	print("__________________\n");
 	STST(&p3state);
 
 	p3state.s_sp = p2state.s_sp - QPAGE;
@@ -325,7 +325,7 @@ void p2() {
 	p1p2synch = 1;				/* p1 will check this */
 
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
-	print("_________________________\n");
+	print("BEFORE TERMINATE THREAD\n");
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p2 */
 
 	/* just did a SYS2, so should not get to this point */
