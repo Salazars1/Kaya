@@ -44,21 +44,7 @@ void scheduler()
 {
     /*addokbuf("\n WE ARE AT THE BEGGINING OF SCHEDULER");*/
 pcb_t * tryprc; 
-    if (!emptyProcQ(readyQue))
-    { /*  Starts next process in Queue*/
 
-        currentProcess = removeProcQ(&(readyQue)); /* Remove process from Queue */
-        STCK(TODStart);                            /* Gets start time */
-
-        setTIMER(QUANTUM); /* Defines Quantum to 5 ms */
-        LDST(&(currentProcess->p_s));
-        
-    }
-    else
-    { /* There is nothing on the ReadyQueue */
-
-      
-    }
     if(currentProcess == NULL){
         STCK(currentTOD);
         currentProcess -> p_timeProc += (currentTOD - TODStart);
