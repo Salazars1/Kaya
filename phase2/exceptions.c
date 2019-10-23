@@ -37,18 +37,18 @@ extern cpu_t TODStart;
 
 /*  Declaration of exceptions and helper fucntions. Further documentation will be provided
     in the actual function.*/
-void Syscall1(state_t *caller);
-void Syscall2();
-void Syscall3(state_t *caller);
-void Syscall4(state_t *caller);
-void Syscall5(state_t *caller);
-void Syscall6(state_t *caller);
-void Syscall7(state_t *caller);
-void Syscall8(state_t *caller);
+HIDDEN void Syscall1(state_t *caller);
+HIDDEN void Syscall2();
+HIDDEN void Syscall3(state_t *caller);
+HIDDEN void Syscall4(state_t *caller);
+HIDDEN void Syscall5(state_t *caller);
+HIDDEN void Syscall6(state_t *caller);
+HIDDEN void Syscall7(state_t *caller);
+HIDDEN void Syscall8(state_t *caller);
 
-void PassUpOrDie(state_t *caller, int triggerReason);
-void PrgTrapHandler();
-void TLBTrapHandler();
+HIDDEN void PassUpOrDie(state_t *caller, int triggerReason);
+HIDDEN void PrgTrapHandler();
+HIDDEN void TLBTrapHandler();
 
 extern void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr);
@@ -429,10 +429,10 @@ testb(termRead);*/
 
         addokbuf("Copying state and inserting it onto the blocked list\n");
         CtrlPlusC(caller, &(currentProcess->p_s));
-        insertBlocked((semD[index]), currentProcess);
+        insertBlocked(sem, currentProcess);
        
 
-        softBlockCount = softBlockCount + 1;
+        softBlockCount++; 
 
         /*DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
         Keeps the overall flow of the program and since there is no starvation, eventually that process
