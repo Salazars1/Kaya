@@ -240,13 +240,15 @@ HIDDEN void Syscall3(state_t *caller)
     /*addokbuf("Creating a new process\n");*/
     pcb_t* newProccess = NULL;
     /*addokbuf("Get the semaphore Callers A1\n");*/
-    (caller->s_a1)++; /* increment semaphore  */
+    int * sema = caller ->s_a1; 
+    ++(*sema);
+     /* increment semaphore  */
    /* testb(caller -> s_a1);*/
-    if ((caller->s_a1) <= 0)
+    if ((*sema) <= 0)
     { /* waiting in the semaphore */
 
         /*addokbuf("Caller A1 is less than or equal to 0\n");*/
-        newProccess = (pcb_t*) removeBlocked((int*) (caller->s_a1));
+        newProccess = (pcb_t*) removeBlocked(sema);
         if (newProccess != NULL)
         { /* add it to the ready queue */
             /*addokbuf("Newprocess is not null put that on the ready queue\n");*/
