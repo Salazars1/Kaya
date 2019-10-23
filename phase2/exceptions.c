@@ -208,7 +208,22 @@ HIDDEN void Syscall1(state_t *caller)
     Return: Void*/
 HIDDEN void Syscall2()
 {
-  NukeThemTillTheyPuke(currentProcess);
+    /*addokbuf("Sys call 2 Time to die\n");*/
+    if (emptyChild(currentProcess))
+    { /*current process has no children*/
+        /*addokbuf("THe current process has no child\n");*/
+        outChild(currentProcess);
+        freePcb(currentProcess);
+        processCount--;
+        /*addokbuf("Free the pcb and Decrement process count\n");*/
+    }
+    else
+    {
+        /*Helper Function*/
+        /*addokbuf("Current procss is being killed\n");*/
+        NukeThemTillTheyPuke(currentProcess);
+    }
+
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
     scheduler();
@@ -547,7 +562,7 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
     if (headPtr == currentProcess)
     {
         /*  Children services comes for you and take your child*/
-        outChild(headPtr);
+        outChild(currentProcess);
     }
     if ((headPtr->p_semAdd) == NULL)
     {
@@ -559,7 +574,7 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
         int *sema4 = (headPtr->p_semAdd);
         /*  remove process from ASL*/
         outBlocked(headPtr);
-        if (sema4 >= &semD[0] && sema4 <= &(semD[SEMNUM - 1]))
+        if (sema4 >= &(semD[0]) && sema4 <= &(semD[SEMNUM - 1]))
         { /*SemAdd count is somewhere in between the SemD array*/
             softBlockCount--;
         }
