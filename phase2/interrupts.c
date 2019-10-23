@@ -277,10 +277,7 @@ testingbaby(14);
             softBlockCount--;
             
         }
-        else{
-               /*addokbuf("Process is null halt \n");*/
-            HALT();
-        }
+       
     }
     testingbaby(17);
        /*addokbuf("Call scheduler \n");*/
