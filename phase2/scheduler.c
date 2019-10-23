@@ -43,7 +43,7 @@ int debugthisfuckingshit(int b);
 void scheduler()
 {
     /*addokbuf("\n WE ARE AT THE BEGGINING OF SCHEDULER");*/
-pcb_t * tryprc; 
+
     if (!emptyProcQ(readyQue))
     { /*  Starts next process in Queue*/
 
@@ -57,16 +57,7 @@ pcb_t * tryprc;
     else
     { /* There is nothing on the ReadyQueue */
 
-      
-    }
-    if(currentProcess == NULL){
-        STCK(currentTOD);
-        currentProcess -> p_timeProc += (currentTOD - TODStart);
-
-    }
-    tryprc = removeProcQ(&(readyQue));
-    if(tryprc == NULL){
-          currentProcess = NULL; /* no process is running*/
+        currentProcess = NULL; /* no process is running*/
         if (processCount == 0)
         { /* Everything finished running correctly */
             debugthisfuckingshit(4);
@@ -75,7 +66,7 @@ pcb_t * tryprc;
         
         if (processCount > 0)
         {
-            addokbuf("Process count is greater than 0 meaning that we have processes to run\n");
+            /*addokbuf("Process count is greater than 0 meaning that we have processes to run\n");*/
             if (softBlockCount == 0)
             { /* DEADLOCK CASE */
                 debugthisfuckingshit(5);
@@ -93,21 +84,7 @@ pcb_t * tryprc;
                 WAIT();
             }
         }
-
-
-
     }
-    currentProcess = tryprc;
-    STCK(TODStart);
-    setTIMER(QUANTUM);
-    LDST(&(tryprc ->p_s));
-
-
-
-
-
-
-
 }
 int debugthisfuckingshit(int b)
 {
