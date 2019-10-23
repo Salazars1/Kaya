@@ -605,8 +605,4 @@ extern void CtrlPlusC(state_t *oldState, state_t *newState)
 }
 
 
-int debugSys8(int a, int b, int c){
-
-}
-
 
