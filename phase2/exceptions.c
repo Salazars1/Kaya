@@ -426,7 +426,7 @@ testb(termRead);*/
     if (*sem < 0)
     {
 
-      /*  /*addokbuf("Copying state and inserting it onto the blocked list\n");*/
+        /*addokbuf("Copying state and inserting it onto the blocked list\n");*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
        
