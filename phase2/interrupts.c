@@ -105,7 +105,7 @@ finish UNSURE*/
         while(headBlocked(semaphoreAddress) != NULL)
         {
                /*addokbuf("Headblocked is running \n");*/
-             testingbaby(6);
+            
             t = removeBlocked(semaphoreAddress);
                /*addokbuf("Remove the process from the blocked \n");*/
 
@@ -155,8 +155,6 @@ finish UNSURE*/
     }
     else
     {
-         
-        testingbaby(32);
         PANIC();
     }
 
@@ -170,10 +168,10 @@ finish UNSURE*/
     if (devicenumber == -1)
     {
            /*addokbuf("Device number is -1 panic  \n");*/
-        testingbaby(10200202);
+
         PANIC();
     }
-    testingbaby(13);
+   
     /*Need to Determine Device Address and the Device semaphore number*/
     int templinenum;
     /*Offest the Line number*/
@@ -208,7 +206,7 @@ finish UNSURE*/
     devsemnum = lineNumber -3; 
     devsemnum = devsemnum * 8; 
     devsemnum = devsemnum + devicenumber; 
-testingbaby(14);
+
     if (lineNumber == TERMINT)
     {
 
@@ -219,13 +217,13 @@ testingbaby(14);
         {
                    /*addokbuf("We are transmitting \n");*/
                 /*Acknowledge*/
-            testingbaby(15);
+            
                 deviceStatus = devaddrbase->t_transm_status;
-                testingbaby(23);
+         
                 /*Acknowledge*/
                 devaddrbase->t_transm_command = ACK;
 
-                testingbaby(34);
+       
         }
         else
         {
@@ -249,7 +247,7 @@ testingbaby(14);
         testing->d_command = ACK;
     }
 
-    testingbaby(43);
+
     /*V op */
        /*addokbuf("Playing with semaphores go ahead and check these in the debug functions \n");*/
     int * semad; 
@@ -260,7 +258,7 @@ testingbaby(14);
     (*semad)--; 
    /* tes(*semad);*/
     
-    testingbaby(3);
+    
     if ((*semad) <= 0)
     {
         /*addokbuf("Value is less than 0 \n");*/
@@ -277,7 +275,7 @@ testingbaby(14);
         }
        
     }
-    testingbaby(17);
+    
        /*addokbuf("Call scheduler \n");*/
     CallScheduler();
     /*Interrupt has been Handled!*/
@@ -296,7 +294,7 @@ int finddevice(int linenumber)
     unsigned int map = tOffendingDevice->interrupt_dev[linenumber-3];
     unsigned int  t = FIRSTBIT; 
     int devn;
-    testingbaby(19);
+   
     /*8 Total devices to look through */
     for (i = 0; i < TOTALDEVICES; i++)
     {
@@ -317,7 +315,7 @@ int finddevice(int linenumber)
             t << 1;
         }
     }
-    testingbaby(20);
+    
     /*Return the device number*/
     return devn;
 }
@@ -336,7 +334,7 @@ HIDDEN void CallScheduler()
         insertProcQ(&readyQue, currentProcess);
         /*Load the state back */
         /**LDST(temp);*/
-        fuckmylife(100);
+    
            /*addokbuf("Calling scheduler \n");*/
        scheduler();
     
@@ -352,8 +350,3 @@ HIDDEN void CallScheduler()
 }
 
 
-int fuckmylife(int asd){
-
-
-    return asd; 
-}
