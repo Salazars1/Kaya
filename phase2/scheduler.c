@@ -43,7 +43,10 @@ int debugthisfuckingshit(int b);
 void scheduler()
 {
     /*addokbuf("\n WE ARE AT THE BEGGINING OF SCHEDULER");*/
-    if(currentProcess != NULL){
+    if(currentProcess == NULL){
+
+    }
+    else{
     STCK(currentTOD);
     currentProcess -> p_timeProc = currentProcess -> p_timeProc + (currentTOD - TODStart);
     }
