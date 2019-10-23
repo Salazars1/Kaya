@@ -66,7 +66,7 @@ int fuckme(int b)
      */
 
     int testb(int a){
-        return a ;
+        return a;
     }
 void SYSCALLHandler()
 {
@@ -311,7 +311,7 @@ HIDDEN void Syscall5(state_t *caller)
     /*addokbuf("the calling state is 1 so new program trap \n");*/
         if ((currentProcess->p_newProgramTrap) != NULL)
         { /* already called sys5 */
-            /*addokbuf("Syscall2\n ");
+            /*addokbuf("Syscall2\n ");*/
             Syscall2();
         }
         /* assign exception values */
