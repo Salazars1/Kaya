@@ -473,7 +473,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         }
         else
         {
-            addokbuf("TLB TRAP \n")
+            addokbuf("TLB TRAP \n");
             Syscall2();
         }
         break;
