@@ -208,10 +208,26 @@ HIDDEN void Syscall1(state_t *caller)
 HIDDEN void Syscall2()
 {
 
-    NukeThemTillTheyPuke(currentProcess);
+   /*addokbuf("Sys call 2 Time to die\n");*/
+    if (emptyChild(currentProcess))
+    { /*current process has no children*/
+       /* addokbuf("THe current process has no child\n");*/
+        outChild(currentProcess);
+        freePcb(currentProcess);
+        processCount--;
+   /*    addokbuf("Free the pcb and Decrement process count\n");*/
+    }
+    else
+    {
+        /*Helper Function*/
+      /*  addokbuf("Current procss is being killed\n");*/
+        NukeThemTillTheyPuke(currentProcess);
+    }
+
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
-    scheduler();
+scheduler();
+    
 }
 
 /*  When this service is requested, it is interpreted by the nucleus to request to perform a Verhogen
