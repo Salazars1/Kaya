@@ -266,7 +266,7 @@ HIDDEN void Syscall3(state_t *caller)
 HIDDEN void Syscall4(state_t *caller)
 {
 
-    /*addokbuf("Syscall 4 start\n ");
+    /*addokbuf("Syscall 4 start\n ");*/
     (caller->s_a1)--; /* decrement semaphore */
   /*  testb(caller -> s_a1);*/
     if ((caller->s_a1) < 0)
