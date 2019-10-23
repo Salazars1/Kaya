@@ -424,7 +424,7 @@ testb(termRead);*/
    /* test(*sem);*/
 
    (*sem)--;
-    if (sem < 0)
+    if (*sem < 0)
     {
 
         addokbuf("Copying state and inserting it onto the blocked list\n");
