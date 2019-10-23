@@ -263,7 +263,7 @@ testingbaby(14);
    /* tes(*semad);*/
     
     testingbaby(3);
-    if (semad <= 0)
+    if (*semad <= 0)
     {
            /*addokbuf("Value is less than 0 \n");*/
         t = removeBlocked(*semad);
