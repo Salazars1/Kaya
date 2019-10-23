@@ -414,7 +414,7 @@ void Syscall8(state_t *caller)
 testb(dnum);
 testb(termRead);*/
     /* what device is going to be computed*/
-   /* addokbuf("Store values from registers a1 a2 a3 \n");*/
+    addokbuf("Store values from registers a1 a2 a3 \n");
     index = lineNo -3 + termRead; 
     index = index * 8; 
     index = index + dnum; 
