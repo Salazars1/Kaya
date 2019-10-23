@@ -210,23 +210,6 @@ HIDDEN void Syscall2()
 {
 
     NukeThemTillTheyPuke(currentProcess);
-
-    /*addokbuf("Sys call 2 Time to die\n");*/
-    if (emptyChild(currentProcess))
-    { /*current process has no children*/
-        /*addokbuf("THe current process has no child\n");*/
-        outChild(currentProcess);
-        freePcb(currentProcess);
-        processCount--;
-        /*addokbuf("Free the pcb and Decrement process count\n");*/
-    }
-    else
-    {
-        /*Helper Function*/
-        /*addokbuf("Current procss is being killed\n");*/
-        
-    }
-
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
     scheduler();
@@ -565,7 +548,7 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
     if (headPtr == currentProcess)
     {
         /*  Children services comes for you and take your child*/
-        outChild(currentProcess);
+        outChild(headPtr);
     }
     if ((headPtr->p_semAdd) == NULL)
     {
