@@ -42,30 +42,24 @@ int debugthisfuckingshit(int b);
     */
 void scheduler()
 {
-/*    addokbuf("\n WE ARE AT THE BEGGINING OF SCHEDULER");*/
+    /*addokbuf("\n WE ARE AT THE BEGGINING OF SCHEDULER");*/
 
     if (!emptyProcQ(readyQue))
     { /*  Starts next process in Queue*/
-        /*addokbuf("\nThe ready Queue has a process");*/
-        STCK(currentTOD);
-        pcb_t * try; 
-        currentProcess -> p_timeProc += currentTOD - TODStart; 
-        try = removeProcQ(&(readyQue)); /* Remove process from Queue */
-        if(try != NULL){
-        currentProcess = try; 
-        
+
+        currentProcess = removeProcQ(&(readyQue)); /* Remove process from Queue */
         STCK(TODStart);                            /* Gets start time */
 
         setTIMER(QUANTUM); /* Defines Quantum to 5 ms */
-        /*addokbuf("\n\n___________LOADING CURRENT PROCESS_________________\n\n");*/
-        LDST(&(try->p_s));
-        }
-        else{
+        LDST(&(currentProcess->p_s));
+        
+    }
+    else
+    { /* There is nothing on the ReadyQueue */
 
- currentProcess = NULL; /* no process is running*/
+        currentProcess = NULL; /* no process is running*/
         if (processCount == 0)
         { /* Everything finished running correctly */
-            addokbuf("\nProcess Count is 0 we are halting the machine");
             debugthisfuckingshit(4);
             HALT();
         }
@@ -75,7 +69,6 @@ void scheduler()
             /*addokbuf("Process count is greater than 0 meaning that we have processes to run\n");*/
             if (softBlockCount == 0)
             { /* DEADLOCK CASE */
-                addokbuf("No processes are soft blocked we hit dead lock PANIC\n");
                 debugthisfuckingshit(5);
                 PANIC();
             }
@@ -83,23 +76,15 @@ void scheduler()
             {
                 /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
                 /*Tested*/
-                addokbuf("Soft block count is not 0 thus we are waiting for them to be put back on the queue\n");
                 debugthisfuckingshit(2);
                 
                 setTIMER(MAXINT);
-                /*FIXME:?*/
-                setSTATUS(getSTATUS() | ALLOFF | IEON | IECON | IMON);
-                
-                addokbuf("Begin Waiting\n");
+                setSTATUS(getSTATUS()|ALLOFF | IEON | IECON | IMON);
                 
                 WAIT();
             }
-
-
-
         }
     }
-   
 }
 int debugthisfuckingshit(int b)
 {
