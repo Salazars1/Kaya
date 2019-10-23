@@ -230,7 +230,7 @@ void test() {
 	/* make sure we really blocked */
 	if (p1p2synch == 0)
 		print("error: p1/p2 synchronization bad\n");
-	
+	print("fuck me");
 	SYSCALL(CREATETHREAD, (int)&p3state, 0, 0);				/* start p3     */
 	print("p3 is started\n");
 
