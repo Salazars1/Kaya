@@ -366,12 +366,12 @@ HIDDEN void Syscall7(state_t *caller)
     {
         /*addokbuf("Semaphore is less than 0\n");*/
         /*Sem is less than 0 block the current process*/
-
+        softBlockCount++;
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
      
         /*Increment that we have another process soft block so that it does not starve*/
-        softBlockCount++;
+        
     }
 
 
