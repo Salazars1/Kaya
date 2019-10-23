@@ -360,7 +360,7 @@ HIDDEN void Syscall7(state_t *caller)
     sem = (int *)&(semD[SEMNUM - 1]);
     (*sem)--;
   /*  testb(*sem);*/
-    if ((*sem) < 0)
+    if (*sem < 0)
     {
         /*addokbuf("Semaphore is less than 0\n");*/
         /*Sem is less than 0 block the current process*/
