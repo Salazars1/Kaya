@@ -264,7 +264,7 @@ testingbaby(14);
    /* tes(*semad);*/
     
     testingbaby(3);
-    if (*semad <= 0)
+    if ((*semad) <= 0)
     {
         addokbuf("Value is less than 0 \n");
         t = removeBlocked(semad);
@@ -273,8 +273,9 @@ testingbaby(14);
                /*addokbuf("t is a process that was on the blocked queue \n");*/
             t->p_semAdd = NULL;
             t-> p_s.s_v0 = deviceStatus; 
+             softBlockCount--;
             insertProcQ(&readyQue, t);
-            softBlockCount--;
+           
             
         }
        
