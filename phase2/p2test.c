@@ -321,7 +321,7 @@ void p2() {
 	p1p2synch = 1;				/* p1 will check this */
 
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
-	print("---------BEFORE TERMINATE THREAD----------------\n");
+
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p2 */
 
 	/* just did a SYS2, so should not get to this point */
@@ -365,7 +365,7 @@ void p3() {
 
 
 	SYSCALL(VERHOGEN, (int)&endp3, 0, 0);				/* V(endp3)        */
-	print("---------BEFORE TERMINATE THREAD----------------\n");
+
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p3    */
 	
 	/* just did a SYS2, so should not get to this point */
@@ -406,7 +406,7 @@ void p4() {
 	print("p4 is OK\n");
 
 	SYSCALL(VERHOGEN, (int)&endp4, 0, 0);				/* V(endp4)          */
-	print("---------BEFORE TERMINATE THREAD----------------\n");
+
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p4      */
 
 	/* just did a SYS2, so should not get to this point */

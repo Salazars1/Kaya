@@ -55,7 +55,6 @@ int main()
         /*  Initialize the PCB and ASL lists  */
     initPcbs();
     initASL();
-    addokbuf("\nInitialization of Pcbs and ASL is done");
 
 
     /*  Initialize phase2 global variables  */
@@ -114,11 +113,6 @@ int main()
     currentProcess = NULL;
     
     LDIT(IOCLOCK);  /*Sets the semaphore pseudoclock*/
-
-
-    addokbuf("\nPsuedo Clock has been loaded");
-    addokbuf("\nInitial is done");
-    addokbuf("\n\n________________________________________________________\n\n");
 
     /* Lets the scheduler file take over.*/
     scheduler();
