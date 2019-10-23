@@ -501,7 +501,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         }
         else
         {
-            addok("sys trap\n");
+            addokbuf("sys trap\n");
             Syscall2();
         }
         break;
