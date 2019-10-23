@@ -70,7 +70,7 @@ int fuckme(int b)
     }
 void SYSCALLHandler()
 {
-    /*addokbuf("An Exception has happened we are in the SYscall handler\n");
+    /*addokbuf("An Exception has happened we are in the SYscall handler\n");*/
     state_t *prevState;
     state_t *program;
     unsigned int prevStatus;
@@ -82,80 +82,80 @@ void SYSCALLHandler()
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;
     casel = prevState->s_a0;
-    /*/*addokbuf("Exceptions have been loaded check fuck me test for casel sys call val\n");*/
+    /*/*addokbuf("Exceptions have been loaded check fuck me test for casel sys call val\n");*/*/
  /*   testb(casel);*/
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
 
     if (((prevStatus > 0) && (prevStatus < 9) && mode) != ALLOFF)
     { /* It is User Mode*/
-       /* /*addokbuf("We are in the part where the program will die\n");    */
+       /* /*addokbuf("We are in the part where the program will die\n");*/    */
         program = (state_t *)PRGMTRAPOLDAREA;
         CtrlPlusC(prevState, program);
 
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         (program->s_cause) = (((program->s_cause) & ~(0xFF)) | (10 << 2));
-       /* /*addokbuf("Program will be killed\n");*/
+       /* /*addokbuf("Program will be killed\n");*/*/
         /*Program Trap Handler */
         PrgTrapHandler();
     }
 
     /* increment prevState's PC to next instruction */
     (prevState->s_pc) = (prevState->s_pc) + 4;
-    /*/*addokbuf("Get the next instruction\n");*/
+    /*/*addokbuf("Get the next instruction\n");*/*/
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
     switch (casel)
     {
 
     case SYSCALL1:
-    /*addokbuf("SysCall1 \n");
+    /*addokbuf("SysCall1 \n");*/
         
         Syscall1(prevState);
         break;
 
     case SYSCALL2:
-    /*addokbuf("SysCall2 \n");
+    /*addokbuf("SysCall2 \n");*/
         Syscall2();
         break;
 
     case SYSCALL3:
         Syscall3(prevState);
-    /*addokbuf("Syscall 3\n");
+    /*addokbuf("Syscall 3\n");*/
         break;
 
     case SYSCALL4:
-    /*addokbuf("Syscall 4\n");
+    /*addokbuf("Syscall 4\n");*/
         Syscall4(prevState);
         break;
 
     case SYSCALL5:
-    /*addokbuf("Sys call 5 \n");
+    /*addokbuf("Sys call 5 \n");*/
         Syscall5(prevState);
         break;
 
     case SYSCALL6:
-    /*addokbuf("Sys call 6 \n");
+    /*addokbuf("Sys call 6 \n");*/
         Syscall6(prevState);
         break;
 
     case SYSCALL7:
-    /*addokbuf("Sys call 7 \n");
+    /*addokbuf("Sys call 7 \n");*/
         Syscall7(prevState);
         break;
 
     case SYSCALL8:
-    /*addokbuf("Syscall 8 \n");
+    /*addokbuf("Syscall 8 \n");*/
         Syscall8(prevState);
         break;
 
     default:
-    /*addokbuf("Pass up or die (Default case\n");
+    /*addokbuf("Pass up or die (Default case\n");*/
         PassUpOrDie(prevState, SYSTRAP);
         break;
     }
 
     /*We should NEVER GET HERE. IF WE DO, WE DIE*/
-    /*addokbuf("Panic\n");
+    /*addokbuf("Panic\n");*/
     PANIC();
 }
 
@@ -170,19 +170,19 @@ void SYSCALLHandler()
 
 void Syscall1(state_t *caller)
 {
-    /*addokbuf("calling Alloc PCB\n");
+    /*addokbuf("calling Alloc PCB\n");*/
     pcb_t *birthedProc = allocPcb();
 
     if (birthedProc == NULL)
     { /*Check space in the ready queue to make sure we have room to allocate*/
         /*We did not have any more processses able to be made so we send back a -1*/
-        /*addokbuf("No More processes left load state\n");
+        /*addokbuf("No More processes left load state\n");*/
         caller->s_v0 = -1;
         LDST(caller);
     }
     else
     {
-        /*addokbuf("Process count gets incremented\n");
+        /*addokbuf("Process count gets incremented\n");*/
         processCount++;
 
         /*Makes the new process a child of the currently running process calling the sys call */
@@ -193,10 +193,10 @@ void Syscall1(state_t *caller)
 
         /*Copy the calling state into the new processes state*/
         CtrlPlusC(((state_t *)caller->s_a1), &(birthedProc->p_s));
-        /*addokbuf("INserted into the process and child Copy state\n");
+        /*addokbuf("INserted into the process and child Copy state\n");*/
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
-        /*addokbuf("Load state and we done\n");
+        /*addokbuf("Load state and we done\n");*/
         LDST(caller);
     }
 }
@@ -208,24 +208,24 @@ void Syscall1(state_t *caller)
     Return: Void*/
 void Syscall2()
 {
-    /*addokbuf("Sys call 2 Time to die\n");
+    /*addokbuf("Sys call 2 Time to die\n");*/
     if (emptyChild(currentProcess))
     { /*current process has no children*/
-        /*addokbuf("THe current process has no child\n");
+        /*addokbuf("THe current process has no child\n");*/
         outChild(currentProcess);
         freePcb(currentProcess);
         processCount--;
-        /*addokbuf("Free the pcb and Decrement process count\n");
+        /*addokbuf("Free the pcb and Decrement process count\n");*/
     }
     else
     {
         /*Helper Function*/
-        /*addokbuf("Current procss is being killed\n");
+        /*addokbuf("Current procss is being killed\n");*/
         NukeThemTillTheyPuke(currentProcess);
     }
 
     /*call scheduler*/
-    /*addokbuf("Schedule is called\n");
+    /*addokbuf("Schedule is called\n");*/
     scheduler();
 }
 
@@ -236,25 +236,25 @@ void Syscall2()
     */
 void Syscall3(state_t *caller)
 {
-    /*addokbuf("SYSCALL 3 \n");
-   /* /*addokbuf("Creating a new process\n");*/
+    /*addokbuf("SYSCALL 3 \n");*/
+   /* /*addokbuf("Creating a new process\n");*/*/
     pcb_t* newProccess = NULL;
-   /* /*addokbuf("Get the semaphore Callers A1\n");*/
+   /* /*addokbuf("Get the semaphore Callers A1\n");*/*/
     (caller->s_a1)++; /* increment semaphore  */
    /* testb(caller -> s_a1);*/
     if ((caller->s_a1) <= 0)
     { /* waiting in the semaphore */
 
-        /*addokbuf("Caller A1 is less than or equal to 0\n");
+        /*addokbuf("Caller A1 is less than or equal to 0\n");*/
         newProccess = (pcb_t*) removeBlocked((int*) (caller->s_a1));
         if (newProccess != NULL)
         { /* add it to the ready queue */
-            /*addokbuf("Newprocess is not null put that on the ready queue\n");
+            /*addokbuf("Newprocess is not null put that on the ready queue\n");*/
             insertProcQ(&readyQue, newProccess);
         }
     }
     
-    /*addokbuf("Load State\n");
+    /*addokbuf("Load State\n");*/
     LDST(caller); /* returns control to caller */
 }
 
@@ -278,7 +278,7 @@ void Syscall4(state_t *caller)
 
     }
     /* nothing had control of the sem, return control to caller */
-    /*addokbuf("Sys call 4 load state\n");
+    /*addokbuf("Sys call 4 load state\n");*/
     LDST(caller);
 }
 
@@ -291,24 +291,24 @@ void Syscall4(state_t *caller)
     */
 void Syscall5(state_t *caller)
 {   
-    /*addokbuf("Syscall 5 start\n");
+    /*addokbuf("Syscall 5 start\n");*/
 
     if (caller->s_a1 == 0)
     { /*TLB TRAP*/
-    /*addokbuf("the calling state a1 is 0\n");
+    /*addokbuf("the calling state a1 is 0\n");*/
         if (currentProcess->p_newTLB != NULL)
         { /* already called sys5 */
-            /*addokbuf("Syscall 2 is called\n");
+            /*addokbuf("Syscall 2 is called\n");*/
             Syscall2();
         }
         /* assign exception values */
         currentProcess->p_oldTLB = (state_t *)caller->s_a2;
         currentProcess->p_newTLB = (state_t *)caller->s_a3;
-        /*addokbuf("Current process TLB process is being set\n");
+        /*addokbuf("Current process TLB process is being set\n");*/
     }
     else if (caller->s_a1 == 1)
     { /*Program Trap*/
-    /*addokbuf("the calling state is 1 so new program trap \n");
+    /*addokbuf("the calling state is 1 so new program trap \n");*/
         if ((currentProcess->p_newProgramTrap) != NULL)
         { /* already called sys5 */
             /*addokbuf("Syscall2\n ");
@@ -317,22 +317,22 @@ void Syscall5(state_t *caller)
         /* assign exception values */
         currentProcess->p_oldProgramTrap = (state_t *)caller->s_a2;
         currentProcess->p_newProgramTrap = (state_t *)caller->s_a3;
-        /*addokbuf("Current Process new program or old program is set to a2 and a3\n");
+        /*addokbuf("Current Process new program or old program is set to a2 and a3\n");*/
     }
     else
     {
 
         if ((currentProcess->p_newSys) != NULL)
         { /* already called sys5 */
-            /*addokbuf("Calling sys call 2\n");
+            /*addokbuf("Calling sys call 2\n");*/
             Syscall2();
         }
         /* assign exception values */
-        /*addokbuf("Old sys and new sys is set to a2 and a3\n");
+        /*addokbuf("Old sys and new sys is set to a2 and a3\n");*/
         currentProcess->p_oldSys = (state_t *)caller->s_a2;
         currentProcess->p_newSys = (state_t *)caller->s_a3;
     }
-/*addokbuf("Load State\n");
+/*addokbuf("Load State\n");*/
     LDST(caller);
 }
 
@@ -343,12 +343,12 @@ void Syscall5(state_t *caller)
         Return: Void*/
 void Syscall6(state_t *caller)
 {
-    /*addokbuf("Sys call 6 start\n");
+    /*addokbuf("Sys call 6 start\n");*/
     cpu_t timeSpentProcessing;
     STCK(timeSpentProcessing);
 
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
-    /*addokbuf("Time is being set properly\n");
+    /*addokbuf("Time is being set properly\n");*/
     (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (timeSpentProcessing - TODStart);
     /*Store the new updated time spent processing into the v0 register of the process state*/
     (caller->s_v0) = (currentProcess->p_timeProc);
@@ -357,7 +357,7 @@ void Syscall6(state_t *caller)
 
     STCK(TODStart);
     /*Load the Current Processes State*/
-   /*addokbuf("Load State\n");
+   /*addokbuf("Load State\n");*/
     LDST(caller);
 }
 
@@ -367,14 +367,14 @@ void Syscall6(state_t *caller)
     Return: Void*/
 void Syscall7(state_t *caller)
 {
-    /*addokbuf("Syscall 7 start\n");
+    /*addokbuf("Syscall 7 start\n");*/
     int *sem;
     sem = (int *)&(semD[SEMNUM - 1]);
     (*sem)--;
   /*  testb(*sem);*/
     if ((*sem) < 0)
     {
-        /*addokbuf("Semaphore is less than 0\n");
+        /*addokbuf("Semaphore is less than 0\n");*/
         /*Sem is less than 0 block the current process*/
 
         CtrlPlusC(caller, &(currentProcess->p_s));
@@ -387,7 +387,7 @@ void Syscall7(state_t *caller)
 
     fuckme(1616);
     /*Process is soft blocked call to run another process*/
-    /*addokbuf("Call Scheduler\n");
+    /*addokbuf("Call Scheduler\n");*/
     scheduler();
 }
 
@@ -398,7 +398,7 @@ void Syscall7(state_t *caller)
                 interrupt)*/
 void Syscall8(state_t *caller)
 {
-    /*addokbuf("Syscall 8 \n");
+    /*addokbuf("Syscall 8 \n");*/
     fuckme(2);
     int lineNo; /*  line number*/
     int dnum;   /*  device number*/
@@ -414,20 +414,20 @@ void Syscall8(state_t *caller)
 testb(dnum);
 testb(termRead);*/
     /* what device is going to be computed*/
-    /*addokbuf("Store values from registers a1 a2 a3 \n");
+    /*addokbuf("Store values from registers a1 a2 a3 \n");*/
     index = lineNo -3 + termRead; 
     index = index * 8; 
     index = index + dnum; 
 
     sem = &(semD[index]);
-/*/*addokbuf("We are messing with semaphores again\n");*/
+/*/*addokbuf("We are messing with semaphores again\n");*/*/
    /* test(*sem);*/
 
    (*sem)--;
     if (*sem < 0)
     {
 
-      /*  /*addokbuf("Copying state and inserting it onto the blocked list\n");*/
+      /*  /*addokbuf("Copying state and inserting it onto the blocked list\n");*/*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
        
@@ -439,7 +439,7 @@ testb(termRead);*/
         will get its turn to play with the processor*/
         /*LDST(caller);*/
         fuckme(30);
-        /*/*addokbuf("Calling scheduler\n");*/
+        /*/*addokbuf("Calling scheduler\n");*/*/
         scheduler();
     }
 
@@ -455,7 +455,7 @@ testb(termRead);*/
     */
 void PassUpOrDie(state_t *caller, int triggerReason)
 {
-    /*/*addokbuf("Pass up or die is being run \n");
+    /*/*addokbuf("Pass up or die is being run \n");*/
     state_t *oldState;
     state_t *newState;
 
@@ -463,7 +463,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     {
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
-    /*addokbuf("TLB Trap \n");
+    /*addokbuf("TLB Trap \n");*/
         if ((currentProcess->p_newTLB) != NULL)
         {
             oldState = currentProcess->p_oldTLB;
@@ -476,7 +476,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         break;
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
-    /*/*addokbuf("Program trap \n");
+    /*/*addokbuf("Program trap \n");*/
         if ((currentProcess->p_newProgramTrap) != NULL)
         {
             oldState = currentProcess->p_oldProgramTrap;
@@ -505,7 +505,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         Syscall2(); /*No vector is defined. Nuke it till it pukes*/
         break;
     }
-    /*addokbuf("Copyinng and loading a new state\n");
+    /*addokbuf("Copyinng and loading a new state\n");*/
 
     CtrlPlusC(oldState, newState);
     LDST(newState);
@@ -519,7 +519,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
      */
 void PrgTrapHandler()
 {
-    /*addokbuf("Progrma trap handler is being called\n");
+    /*addokbuf("Progrma trap handler is being called\n");*/
     state_t *caller = (state_t *)PRGMTRAPOLDAREA;
     /*Call Pass Up Or Die*/
     PassUpOrDie(caller, PROGTRAP);
@@ -534,7 +534,7 @@ void PrgTrapHandler()
      */
 void TLBTrapHandler()
 {
-    /*addokbuf("TLB Program trap is being called\n");
+    /*addokbuf("TLB Program trap is being called\n");*/
     state_t *caller = (state_t *)TLBMGMTOLDAREA;
     /*Call Pass Up Or Die*/
     PassUpOrDie(caller, TLBTRAP);
