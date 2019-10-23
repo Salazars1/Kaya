@@ -51,7 +51,7 @@ HIDDEN void PassUpOrDie(state_t *caller, int triggerReason);
 void TLBTrapHandler();
 
 extern void CtrlPlusC(state_t *oldState, state_t *newState);
-HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr);
+ void NukeThemTillTheyPuke(pcb_t *headPtr);
 
 
 
@@ -473,6 +473,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         }
         else
         {
+            addokbuf("TLB TRAP \n")
             Syscall2();
         }
         break;
@@ -486,6 +487,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         }
         else
         {
+            addokbuf("PROG TRAP \n");
             Syscall2();
         }
         break;
@@ -499,11 +501,13 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         }
         else
         {
+            addok("sys trap\n");
             Syscall2();
         }
         break;
 
     default:
+    addokbuf("Default\n");
         Syscall2(); /*No vector is defined. Nuke it till it pukes*/
         break;
     }
@@ -550,7 +554,7 @@ void TLBTrapHandler()
     Parameters: pcb_t * HeadPtr
     Return: Void
     */
-HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
+ void NukeThemTillTheyPuke(pcb_t *headPtr)
 {
     addokbuf("WHile Never fucking workds");
     while (!emptyChild(headPtr))
