@@ -327,7 +327,7 @@ HIDDEN void Syscall6(state_t *caller)
     /*addokbuf("Sys call 6 start\n");*/
     cpu_t timeSpentProcessing;
     STCK(timeSpentProcessing);
-    CTRLPlusC(caller,&(currentProcess->p_s));
+    CtrlPlusC(caller,&(currentProcess->p_s));
 
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
     /*addokbuf("Time is being set properly\n");*/
