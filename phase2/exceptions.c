@@ -537,6 +537,7 @@ void TLBTrapHandler()
     */
 HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
 {
+    addokbuf("Mother fucjer");
     while (!emptyChild(headPtr))
     {
         /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
