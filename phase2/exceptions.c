@@ -449,7 +449,7 @@ testb(termRead);*/
     */
 void PassUpOrDie(state_t *caller, int triggerReason)
 {
-    addokbuf("Pass up or die is being run \n");
+   
     state_t *oldState;
     state_t *newState;
 
@@ -499,7 +499,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         Syscall2(); /*No vector is defined. Nuke it till it pukes*/
         break;
     }
-    addokbuf("Copyinng and loading a new state\n");
+
 
     CtrlPlusC(oldState, newState);
     LDST(newState);

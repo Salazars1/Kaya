@@ -58,9 +58,12 @@ void IOTrapHandler()
     int deviceStatus;
     pcb_t * t;
     devregarea_t *OffendingDevice;
+    cpu_t interruptstart; 
 
     state_PTR caller;
+    STCK(interruptstart);
     caller = (state_t *)INTERRUPTOLDAREA;
+
     /*addokbuf("Called and the rest of the variables are set \n");*/
 
 /*UNSURE 
@@ -101,6 +104,8 @@ finish UNSURE*/
         /*Access the Last clock which is the psuedo clock*/
         semaphoreAddress = (int *) &(semD[SEMNUM-1]);
         testingbaby(5);
+        cpu_t finish; 
+        STCK(finish);
        
         while(headBlocked(semaphoreAddress) != NULL)
         {
@@ -112,6 +117,7 @@ finish UNSURE*/
             if(t != NULL){
                    /*addokbuf("new process is not null \n");*/
                 insertProcQ(&readyQue, t);
+                t -> p_timeProc = t -> p_timeProc + (end - interruptstart);
                 softBlockCount--;
             }
         }
