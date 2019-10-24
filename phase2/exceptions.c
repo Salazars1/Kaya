@@ -421,7 +421,7 @@ testb(termRead);*/
         /*addokbuf("Copying state and inserting it onto the blocked list\n");*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
-       
+       addokbuf("NO LONGER BLOCKED\n\n");
 
         softBlockCount++; 
 
@@ -433,7 +433,7 @@ testb(termRead);*/
         /*addokbuf("Calling scheduler\n");*/
         scheduler();
     }
-    addokbuf("FUCKME \n\n\n\n\n\n");
+ 
     scheduler();
 }
 
