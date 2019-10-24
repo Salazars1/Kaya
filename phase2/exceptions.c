@@ -421,7 +421,7 @@ testb(termRead);*/
         /*addokbuf("Copying state and inserting it onto the blocked list\n");*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
-       addokbuf("NO LONGER BLOCKED\n\n");
+      
 
         softBlockCount++; 
 
@@ -462,7 +462,6 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         }
         else
         {
-            addokbuf("TLB TRAP \n");
             Syscall2();
         }
         break;
@@ -476,7 +475,6 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         }
         else
         {
-            addokbuf("PROG TRAP \n");
             Syscall2();
         }
         break;
@@ -490,13 +488,11 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         }
         else
         {
-            addokbuf("sys trap\n");
             Syscall2();
         }
         break;
 
     default:
-    addokbuf("Default\n");
         Syscall2(); /*No vector is defined. Nuke it till it pukes*/
         break;
     }
@@ -549,7 +545,6 @@ void TLBTrapHandler()
     while (!emptyChild(headPtr))
     {
         /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
-        addokbuf("inf \n");
         NukeThemTillTheyPuke(removeChild(headPtr));
     }
 
@@ -558,7 +553,6 @@ void TLBTrapHandler()
         
         /*  Children services comes for you and take your child*/
         outChild(headPtr);
-        addokbuf("Out Child Fucked");
     }
     if (headPtr->p_semAdd == NULL)
     {
