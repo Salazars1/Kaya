@@ -207,7 +207,7 @@ addokbuf("Sys2\n");
    /*addokbuf("Sys call 2 Time to die\n");*/
     if (emptyChild(currentProcess))
     { /*current process has no children*/
-       /* addokbuf("THe current process has no child\n");*/
+        addokbuf("THe current process has no child\n");
         outChild(currentProcess);
         freePcb(currentProcess);
         processCount--;
