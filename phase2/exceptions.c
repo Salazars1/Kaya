@@ -582,6 +582,7 @@ void TLBTrapHandler()
         }
     }
     /*  We have no more children! Good to go*/
+    addokbuf("FREE PCB\n");
     freePcb(headPtr);
     processCount--;
 }
