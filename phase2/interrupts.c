@@ -99,7 +99,7 @@ finish UNSURE*/
         /*Access the Last clock which is the psuedo clock*/
         semaphoreAddress = (int *) &(semD[SEMNUM-1]);
         cpu_t finish; 
-        STCK(finish);
+    
        
         while(headBlocked(semaphoreAddress) != NULL)
         {
@@ -110,6 +110,7 @@ finish UNSURE*/
 
             if(t != NULL){
                    /*addokbuf("new process is not null \n");*/
+                       STCK(finish);
                 insertProcQ(&readyQue, t);
                 t -> p_timeProc = t -> p_timeProc + (finish - interruptstart);
                 softBlockCount--;
