@@ -206,7 +206,7 @@ finish UNSURE*/
     devsemnum = lineNumber -3; 
     devsemnum = devsemnum * 8; 
     devsemnum = devsemnum + devicenumber; 
-
+addokbuf("WE LIVE \n\n");
     if (lineNumber == TERMINT)
     {
 
