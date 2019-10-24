@@ -153,9 +153,13 @@ void test() {
 	p2state.s_status = p2state.s_status | IEPBITON | CAUSEINTMASK;
 		
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	print("__________________\n");
 >>>>>>> parent of 6dccfe8... p5
+=======
+	
+>>>>>>> parent of f3838fc... p3 weird
 	STST(&p3state);
 
 	p3state.s_sp = p2state.s_sp - QPAGE;
@@ -339,7 +343,11 @@ void p2() {
 	p1p2synch = 1;				/* p1 will check this */
 	
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
+<<<<<<< HEAD
 	print("_________________WE ARE HERE_____________________");
+=======
+	
+>>>>>>> parent of f3838fc... p3 weird
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p2 */
 
 	/* just did a SYS2, so should not get to this point */
@@ -350,7 +358,10 @@ void p2() {
 
 /* p3 -- clock semaphore test process */
 void p3() {
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of f3838fc... p3 weird
 	cpu_t	time1, time2;
 	cpu_t	cpu_t1,cpu_t2;		/* cpu time used       */
 	int		i;
