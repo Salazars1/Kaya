@@ -117,7 +117,7 @@ finish UNSURE*/
             if(t != NULL){
                    /*addokbuf("new process is not null \n");*/
                 insertProcQ(&readyQue, t);
-                t -> p_timeProc = t -> p_timeProc + (end - interruptstart);
+                t -> p_timeProc = t -> p_timeProc + (finish - interruptstart);
                 softBlockCount--;
             }
         }

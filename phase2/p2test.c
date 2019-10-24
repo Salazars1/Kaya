@@ -152,30 +152,35 @@ void test() {
 	p2state.s_pc = p2state.s_t9 = (memaddr)p2;		/* p2 starts executing function p2 */
 	p2state.s_status = p2state.s_status | IEPBITON | CAUSEINTMASK;
 		
+	print("---------------------------------------------\n");
 	STST(&p3state);
 
 	p3state.s_sp = p2state.s_sp - QPAGE;
 	p3state.s_pc = p3state.s_t9 = (memaddr)p3;
 	p3state.s_status = p3state.s_status | IEPBITON | CAUSEINTMASK;
 	
+	print("---------------------------------------------\n");
 	STST(&p4state);
 
 	p4state.s_sp = p3state.s_sp - QPAGE;
 	p4state.s_pc = p4state.s_t9 = (memaddr)p4;
 	p4state.s_status = p4state.s_status | IEPBITON | CAUSEINTMASK;
 	
+	print("----------------------------------------------\n");
 	STST(&p5state);
 	
 	p5Stack = p5state.s_sp = p4state.s_sp - (2 * QPAGE);	/* because there will 2 p4 running*/
 	p5state.s_pc = p5state.s_t9 = (memaddr)p5;
 	p5state.s_status = p5state.s_status | IEPBITON | CAUSEINTMASK;
 
+	print("-----------------------------------------------\n");
 	STST(&p6state);
 	
 	p6state.s_sp = p5state.s_sp - (2 * QPAGE);
 	p6state.s_pc = p6state.s_t9 = (memaddr)p6;
 	p6state.s_status = p6state.s_status | IEPBITON | CAUSEINTMASK;
 	
+	print("--------------------------------------------------\n");
 	STST(&p7state);
 	
 	p7state.s_sp = p6state.s_sp - QPAGE;
@@ -231,9 +236,8 @@ void test() {
 	if (p1p2synch == 0)
 		print("error: p1/p2 synchronization bad\n");
 	
-	print("Fucker");
 	SYSCALL(CREATETHREAD, (int)&p3state, 0, 0);				/* start p3     */
-	print("p3 is started\n");
+		print("p3 is started\n");
 
 	SYSCALL(PASSERN, (int)&endp3, 0, 0);					/* P(endp3)     */
 
@@ -311,7 +315,6 @@ void p2() {
 	if (((now2 - now1) >= (cpu_t2 - cpu_t1)) &&
 			((cpu_t2 - cpu_t1) >= (MINLOOPTIME / (* ((cpu_t *)TIMESCALEADDR)))))
 		print("p2 is OK\n");
-		
 	else  {
 		if ((now2 - now1) < (cpu_t2 - cpu_t1))
 			print ("error: more cpu time than real time\n");
@@ -321,9 +324,9 @@ void p2() {
 	}
 
 	p1p2synch = 1;				/* p1 will check this */
-	
+
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
-	
+	print("---------BEFORE TERMINATE THREAD----------------\n");
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p2 */
 
 	/* just did a SYS2, so should not get to this point */
@@ -341,6 +344,7 @@ void p3() {
 
 	time1 = 0;
 	time2 = 0;
+
 	/* loop until we are delayed at least half of clock V interval */
 	while (time2-time1 < (CLOCKINTERVAL >> 1) )  {
 		STCK(time1);			/* time of day     */
@@ -366,9 +370,9 @@ void p3() {
 
 
 	SYSCALL(VERHOGEN, (int)&endp3, 0, 0);				/* V(endp3)        */
-
+	print("---------BEFORE TERMINATE THREAD----------------\n");
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p3    */
-	
+
 	/* just did a SYS2, so should not get to this point */
 	print("error: p3 didn't terminate\n");
 	PANIC();					/* PANIC            */
@@ -407,7 +411,7 @@ void p4() {
 	print("p4 is OK\n");
 
 	SYSCALL(VERHOGEN, (int)&endp4, 0, 0);				/* V(endp4)          */
-
+	print("---------BEFORE TERMINATE THREAD----------------\n");
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p4      */
 
 	/* just did a SYS2, so should not get to this point */

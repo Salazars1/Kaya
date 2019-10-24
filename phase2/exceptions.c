@@ -51,10 +51,13 @@ HIDDEN void PassUpOrDie(state_t *caller, int triggerReason);
 void TLBTrapHandler();
 
 extern void CtrlPlusC(state_t *oldState, state_t *newState);
- void NukeThemTillTheyPuke(pcb_t *headPtr);
+HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr);
 
 
-
+int fuckme(int b)
+{
+    return b;
+}
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
     for these first 8 System calls the Kernel Mode must be active in order for these commands
     to execute. If this is not the case, then the appropiate program trap would be execute. 
@@ -62,7 +65,9 @@ extern void CtrlPlusC(state_t *oldState, state_t *newState);
     Return: Void
      */
 
-   
+    int testb(int a){
+        return a;
+    }
 void SYSCALLHandler()
 {
     /*addokbuf("An Exception has happened we are in the SYscall handler\n");*/
@@ -165,7 +170,6 @@ void SYSCALLHandler()
 
 HIDDEN void Syscall1(state_t *caller)
 {
-   /* addokbuf("Sys1\n");*/
     /*addokbuf("calling Alloc PCB\n");*/
     pcb_t *birthedProc = allocPcb();
 
@@ -179,7 +183,7 @@ HIDDEN void Syscall1(state_t *caller)
     {
         /*addokbuf("Process count gets incremented\n");*/
         processCount++;
-        CtrlPlusC(((state_t *)caller->s_a1), &(birthedProc->p_s));
+
         /*Makes the new process a child of the currently running process calling the sys call */
         insertChild(currentProcess, birthedProc);
 
@@ -187,13 +191,12 @@ HIDDEN void Syscall1(state_t *caller)
         insertProcQ(&readyQue, birthedProc);
 
         /*Copy the calling state into the new processes state*/
-       
+        CtrlPlusC(((state_t *)caller->s_a1), &(birthedProc->p_s));
         /*addokbuf("INserted into the process and child Copy state\n");*/
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
         /*addokbuf("Load state and we done\n");*/
     }
-    
     LDST(caller);
 }
 
@@ -205,16 +208,10 @@ HIDDEN void Syscall1(state_t *caller)
 HIDDEN void Syscall2()
 {
 
-        /*Helper Function*/
-      /*  addokbuf("Current procss is being killed\n");*/
-     addokbuf("SYS 2 \n");
-        NukeThemTillTheyPuke(currentProcess);
-        
-
+    NukeThemTillTheyPuke(currentProcess);
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
-scheduler();
-    
+    scheduler();
 }
 
 /*  When this service is requested, it is interpreted by the nucleus to request to perform a Verhogen
@@ -284,7 +281,7 @@ HIDDEN void Syscall4(state_t *caller)
 HIDDEN void Syscall5(state_t *caller)
 {   
     /*addokbuf("Syscall 5 start\n");*/
-    addokbuf("Sys5\n");
+
     if (caller->s_a1 == 0)
     { /*TLB TRAP*/
     /*addokbuf("the calling state a1 is 0\n");*/
@@ -336,23 +333,21 @@ HIDDEN void Syscall5(state_t *caller)
 HIDDEN void Syscall6(state_t *caller)
 {
     /*addokbuf("Sys call 6 start\n");*/
-    /*addokbuf("Sys6\n");*/
-    
-    
-    CtrlPlusC(caller, &(currentProcess ->p_s));
-    STCK(currentTOD);
+    cpu_t timeSpentProcessing;
+    STCK(timeSpentProcessing);
+
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
     /*addokbuf("Time is being set properly\n");*/
-    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (currentTOD- TODStart);
+    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (timeSpentProcessing - TODStart);
     /*Store the new updated time spent processing into the v0 register of the process state*/
-    (currentProcess->p_s.s_v0) = (currentProcess->p_timeProc);
-
+    (caller->s_v0) = (currentProcess->p_timeProc);
 
     /*Updates start time*/
 
     STCK(TODStart);
     /*Load the Current Processes State*/
-    LDST(&(currentProcess ->p_s));
+   /*addokbuf("Load State\n");*/
+    LDST(caller);
 }
 
 /*  Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
@@ -361,26 +356,25 @@ HIDDEN void Syscall6(state_t *caller)
     Return: Void*/
 HIDDEN void Syscall7(state_t *caller)
 {
-  /*  addokbuf("Sys7\n");*/
     /*addokbuf("Syscall 7 start\n");*/
     int *sem;
     sem = (int *)&(semD[SEMNUM - 1]);
     (*sem)--;
   /*  testb(*sem);*/
-    if (*sem < 0)
+    if ((*sem) < 0)
     {
         /*addokbuf("Semaphore is less than 0\n");*/
         /*Sem is less than 0 block the current process*/
-      
+
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
      
         /*Increment that we have another process soft block so that it does not starve*/
-          softBlockCount++;
+        softBlockCount++;
     }
 
 
-
+    fuckme(1616);
     /*Process is soft blocked call to run another process*/
     /*addokbuf("Call Scheduler\n");*/
     scheduler();
@@ -394,7 +388,7 @@ HIDDEN void Syscall7(state_t *caller)
 HIDDEN void Syscall8(state_t *caller)
 {
     /*addokbuf("Syscall 8 \n");*/
-  /*addokbuf("Sys8\n");*/
+    fuckme(2);
     int lineNo; /*  line number*/
     int dnum;   /*  device number*/
     int termRead;
@@ -424,7 +418,7 @@ testb(termRead);*/
         /*addokbuf("Copying state and inserting it onto the blocked list\n");*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
-      
+       
 
         softBlockCount++; 
 
@@ -432,11 +426,11 @@ testb(termRead);*/
         Keeps the overall flow of the program and since there is no starvation, eventually that process
         will get its turn to play with the processor*/
         /*LDST(caller);*/
-       
-        
+        fuckme(30);
+        /*addokbuf("Calling scheduler\n");*/
         scheduler();
     }
- 
+
     scheduler();
 }
 
@@ -457,7 +451,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     {
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
-    addokbuf("TLB Trap \n");
+    /*addokbuf("TLB Trap \n");*/
         if ((currentProcess->p_newTLB) != NULL)
         {
             oldState = currentProcess->p_oldTLB;
@@ -470,7 +464,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         break;
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
-    addokbuf("Program trap \n");
+    /*addokbuf("Program trap \n");*/
         if ((currentProcess->p_newProgramTrap) != NULL)
         {
             oldState = currentProcess->p_oldProgramTrap;
@@ -483,7 +477,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         break;
 
     case SYSTRAP: /*2 is SYS Exception!*/
-    addokbuf("Sys trap");
+    /*addokbuf("Sys trap");*/
         if ((currentProcess->p_newSys) != NULL)
         {
             oldState = currentProcess->p_oldSys;
@@ -500,7 +494,6 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         break;
     }
 
-
     CtrlPlusC(oldState, newState);
     LDST(newState);
 }
@@ -513,10 +506,9 @@ void PassUpOrDie(state_t *caller, int triggerReason)
      */
 void PrgTrapHandler()
 {
-    addokbuf("Progrma trap handler is being called\n");
+    /*addokbuf("Progrma trap handler is being called\n");*/
     state_t *caller = (state_t *)PRGMTRAPOLDAREA;
     /*Call Pass Up Or Die*/
-   /* addokbuf(" Program Trap \n\n\n\n\n\n\n");*/
     PassUpOrDie(caller, PROGTRAP);
 }
 
@@ -543,53 +535,40 @@ void TLBTrapHandler()
     Parameters: pcb_t * HeadPtr
     Return: Void
     */
- void NukeThemTillTheyPuke(pcb_t *headPtr)
+HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
 {
-    
     while (!emptyChild(headPtr))
     {
         /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
         NukeThemTillTheyPuke(removeChild(headPtr));
     }
-    
-    if (currentProcess == headPtr)
-    {   
-        
+
+    if (headPtr == currentProcess)
+    {
         /*  Children services comes for you and take your child*/
-        
         outChild(headPtr);
-
-
-
-        
-        
     }
-    addokbuf("BEFORE THE SEMAPHORE");
-    if (headPtr->p_semAdd == NULL)
+    if ((headPtr->p_semAdd) == NULL)
     {
         /*  remove process from readyQueue*/
-        addokbuf("HIHIHIHIHIHIH");
         outProcQ(&readyQue, headPtr);
-        addokbuf("FAIL ON OUTPROCQ");
     }
     else
     {
-        addokbuf("SEMAPHORES");
-        int *sema4 = headPtr->p_semAdd;
+        int *sema4 = (headPtr->p_semAdd);
         /*  remove process from ASL*/
         outBlocked(headPtr);
-        if (sema4 >= &(semD[0]) && sema4 <= &(semD[SEMNUM]))
+        if (sema4 >= &(semD[0]) && sema4 <= &(semD[SEMNUM - 1]))
         { /*SemAdd count is somewhere in between the SemD array*/
             softBlockCount--;
         }
         else
         {
             /*  Increment Semaphore*/
-            *sema4++;
+            (*sema4)++;
         }
     }
     /*  We have no more children! Good to go*/
-    addokbuf("FREE PCB\n");
     freePcb(headPtr);
     processCount--;
 }
@@ -599,21 +578,15 @@ void TLBTrapHandler()
     Return: Void*/
 extern void CtrlPlusC(state_t *oldState, state_t *newState)
 {
-    
+    /*Move all of the contents from the old state into the new*/
+    newState->s_asid = oldState->s_asid;
+    newState->s_status = oldState->s_status;
+    newState->s_pc = oldState->s_pc;
+    newState->s_cause = oldState->s_cause;
     /*Loop through all of the registers in the old state and write them into the new state*/
     int i;
     for (i = 0; i < STATEREGNUM; i++)
     {
         newState->s_reg[i] = oldState->s_reg[i];
     }
-
-    /*Move all of the contents from the old state into the new*/
-    newState->s_asid = oldState->s_asid;
-    newState->s_status = oldState->s_status;
-    newState->s_pc = oldState->s_pc;
-    newState->s_cause = oldState->s_cause;
-    /*All States Copied */
-
-
 }
-
