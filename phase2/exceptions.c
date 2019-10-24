@@ -127,7 +127,7 @@ void SYSCALLHandler()
         break;
 
     case SYSCALL6:
-    addokbuf("Sys call 6 \n");
+ /*  addokbuf("Sys call 6 \n");*/
         Syscall6(prevState);
         break;
 
@@ -530,21 +530,21 @@ void TLBTrapHandler()
     */
 HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
 {
-    addokbuf("Mother fucjer");
+    /*addokbuf("Mother fucjer");*/
     while (!emptyChild(headPtr))
     {
-        addokbuf("REEEE");
+      /*  addokbuf("REEEE");*/
         /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
         NukeThemTillTheyPuke(removeChild(headPtr));
     }
 
     if (headPtr == currentProcess)
     {
-        addokbuf("COOKING");
+     /*   addokbuf("COOKING");*/
         /*  Children services comes for you and take your child*/
         outChild(headPtr);
     }
-    addokbuf("Here\n");
+    /*addokbuf("Here\n");*/
     if (headPtr->p_semAdd != NULL)
     {
         /*  remove process from readyQueue*/
