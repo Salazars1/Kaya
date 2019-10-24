@@ -561,6 +561,7 @@ void TLBTrapHandler()
         outChild(headPtr);
         addokbuf("Mother fucker \n");
     }
+    addokbuf("BEFORE THE SEMAPHORE");
     if (headPtr->p_semAdd == NULL)
     {
         /*  remove process from readyQueue*/
