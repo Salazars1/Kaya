@@ -325,13 +325,14 @@ HIDDEN void Syscall5(state_t *caller)
 HIDDEN void Syscall6(state_t *caller)
 {
     /*addokbuf("Sys call 6 start\n");*/
+   CtrlPlusC(caller,&(currentProcess->p_s));
     cpu_t timeSpentProcessing;
-    STCK(timeSpentProcessing);
-    CtrlPlusC(caller,&(currentProcess->p_s));
+    STCK(currentTOD);
+    
 
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
     /*addokbuf("Time is being set properly\n");*/
-    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (timeSpentProcessing - TODStart);
+    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (currentTOD - TODStart);
     /*Store the new updated time spent processing into the v0 register of the process state*/
     (caller->s_v0) = (currentProcess->p_timeProc);
 
@@ -540,7 +541,7 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
 
     if (headPtr == currentProcess)
     {
-        addokbuf("KOOK");
+        addokbuf("COOKING");
         /*  Children services comes for you and take your child*/
         outChild(headPtr);
     }
