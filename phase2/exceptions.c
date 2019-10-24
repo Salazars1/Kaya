@@ -545,7 +545,7 @@ void TLBTrapHandler()
     */
  void NukeThemTillTheyPuke(pcb_t *headPtr)
 {
-    addokbuf("WHile Never fucking workds");
+    
     while (!emptyChild(headPtr))
     {
         /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
@@ -553,9 +553,9 @@ void TLBTrapHandler()
         NukeThemTillTheyPuke(removeChild(headPtr));
     }
 
-    if (headPtr == currentProcess)
+    if (currentProcess == headPtr  )
     {   
-        addokbuf("we here GOAT \n\n");
+        
         /*  Children services comes for you and take your child*/
         outChild(headPtr);
         addokbuf("Out Child Fucked");
