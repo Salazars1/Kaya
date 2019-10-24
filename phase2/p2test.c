@@ -231,6 +231,7 @@ void test() {
 	if (p1p2synch == 0)
 		print("error: p1/p2 synchronization bad\n");
 	
+	print("Fucker");
 	SYSCALL(CREATETHREAD, (int)&p3state, 0, 0);				/* start p3     */
 	print("p3 is started\n");
 
@@ -322,7 +323,7 @@ void p2() {
 	p1p2synch = 1;				/* p1 will check this */
 	
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
-	print("FUck us");
+	
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p2 */
 
 	/* just did a SYS2, so should not get to this point */
