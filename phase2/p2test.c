@@ -227,11 +227,13 @@ void test() {
 
 	print("p2 was started\n");
 
+	testingP2TEST(15);
 	SYSCALL(VERHOGEN, (int)&startp2, 0, 0);					/* V(startp2)   */
 	
+	testingP2TEST(31);
 	SYSCALL(PASSERN, (int)&endp2, 0, 0);					/* P(endp2)     */
 	
-	testingP2TEST(p1p2synch);
+	
 
 	/* make sure we really blocked */
 	if (p1p2synch == 0)
