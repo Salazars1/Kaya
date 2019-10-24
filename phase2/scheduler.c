@@ -83,7 +83,7 @@ void scheduler()
              
                 
                 setTIMER(MAXINT);
-                setSTATUS(getSTATUS()|ALLOFF | IEON | IECON | IMON);
+                setSTATUS(getSTATUS() | ALLOFF | IEON | IECON | IMON);
                 
                 WAIT();
             }
