@@ -339,7 +339,7 @@ HIDDEN void CallScheduler()
         /**LDST(temp);*/
     
            /*addokbuf("Calling scheduler \n");*/
-       LDST(&(currentProcess ->p_s);
+       LDST(&(currentProcess ->p_s));
     
         
        
