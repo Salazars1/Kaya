@@ -336,12 +336,15 @@ HIDDEN void Syscall6(state_t *caller)
     /*Store the new updated time spent processing into the v0 register of the process state*/
     (currentProcess->p_s.s_v0) = (currentProcess->p_timeProc);
 
+    caller -> s_v0 = currentProcess -> p_timeProc; 
     /*Updates start time*/
+
+
 
     STCK(TODStart);
     /*Load the Current Processes State*/
    /*addokbuf("Load State\n");*/
-    LDST(&(currentProcess ->p_s));
+    LDST(caller);
 }
 
 /*  Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
