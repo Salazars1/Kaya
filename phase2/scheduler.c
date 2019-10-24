@@ -73,17 +73,13 @@ void scheduler()
             /*addokbuf("Process count is greater than 0 meaning that we have processes to run\n");*/
             if (softBlockCount == 0)
             { /* DEADLOCK CASE */
-                
                 PANIC();
             }
             else
             {
                 /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
                 /*Tested*/
-             
-                
                 setSTATUS(ALLOFF | IEON | IECON | IMON);
-                
                 WAIT();
             }
         }

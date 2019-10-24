@@ -286,17 +286,12 @@ int finddevice(int linenumber)
         /*Bit wise and if the value is not 0 Device is interrupting */
         if ((map & t) != ZERO)
         {
-
             devn = i;
             break; 
         }
-        
-            else
-            {
-
-            
-                /*Increment both the index and shift the bits 1 */
-               
+        else
+        {
+            /*Increment both the index and shift the bits 1 */      
             t << 1;
         }
     }
@@ -310,28 +305,21 @@ HIDDEN void CallScheduler()
        /*addokbuf("Calling the shceduler has started \n");*/
     state_t *temp;
     temp =  (state_t *)INTERRUPTOLDAREA;
-    
     if (currentProcess != NULL)
     {
            /*addokbuf("Current process is not null \n");*/
-         /*if the process is still around need to copy its contents over*/
-         
+         /*if the process is still around need to copy its contents over*/ 
         CtrlPlusC(temp, &(currentProcess->p_s));
         insertProcQ(&readyQue, currentProcess);
         /*Load the state back */
         /**LDST(temp);*/
-    
-           /*addokbuf("Calling scheduler \n");*/
+        /*addokbuf("Calling scheduler \n");*/
         scheduler();
-    
-        
-       
-
     }
-    else{
+    else
+    {
            /*addokbuf("Current Proc null \n");*/
    /* LDST(currentProcess);*/
-
       scheduler();
     }
 }
