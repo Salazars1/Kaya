@@ -552,12 +552,14 @@ void TLBTrapHandler()
         /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
         NukeThemTillTheyPuke(removeChild(headPtr));
     }
-    addokbuf("FUCK\n");
+    
     if (currentProcess == headPtr)
     {   
         
         /*  Children services comes for you and take your child*/
+        addokbuf("FUCK \n");
         outChild(headPtr);
+        addokbuf("Mother fucker \n");
     }
     if (headPtr->p_semAdd == NULL)
     {
