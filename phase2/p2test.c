@@ -363,8 +363,9 @@ void p3() {
 	else
 		print("p3 - CPU time correctly maintained\n");
 
-
+	print("WE Verhogen");
 	SYSCALL(VERHOGEN, (int)&endp3, 0, 0);				/* V(endp3)        */
+	print("WE terminate");
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p3    */
 
 	/* just did a SYS2, so should not get to this point */
