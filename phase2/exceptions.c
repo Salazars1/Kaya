@@ -183,7 +183,7 @@ HIDDEN void Syscall1(state_t *caller)
     {
         /*addokbuf("Process count gets incremented\n");*/
         processCount++;
-        CtrlPlusC(((state_t *)caller->s_a1), &(birthedProc->p_s));
+
         /*Makes the new process a child of the currently running process calling the sys call */
         insertChild(currentProcess, birthedProc);
 
@@ -191,7 +191,7 @@ HIDDEN void Syscall1(state_t *caller)
         insertProcQ(&readyQue, birthedProc);
 
         /*Copy the calling state into the new processes state*/
-       
+        CtrlPlusC(((state_t *)caller->s_a1), &(birthedProc->p_s));
         /*addokbuf("INserted into the process and child Copy state\n");*/
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
@@ -330,14 +330,15 @@ HIDDEN void Syscall5(state_t *caller)
     each Process Block that is running. 
         Parameters: State_t * caller
         Return: Void*/
-HIDDEN cpu_t Syscall6(state_t *caller)
+HIDDEN void Syscall6(state_t *caller)
 {
     /*addokbuf("Sys call 6 start\n");*/
-    
-    STCK(currentTOD);
-    CtrlPlusC(caller, &currentProcess ->p_s);
+    cpu_t timeSpentProcessing;
+    STCK(timeSpentProcessing);
+
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
-    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (currentTOD-TODStart);
+    /*addokbuf("Time is being set properly\n");*/
+    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (timeSpentProcessing - TODStart);
     /*Store the new updated time spent processing into the v0 register of the process state*/
     (caller->s_v0) = (currentProcess->p_timeProc);
 
@@ -345,6 +346,7 @@ HIDDEN cpu_t Syscall6(state_t *caller)
 
     STCK(TODStart);
     /*Load the Current Processes State*/
+   /*addokbuf("Load State\n");*/
     LDST(caller);
 }
 
@@ -547,17 +549,17 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
         /*  Children services comes for you and take your child*/
         outChild(headPtr);
     }
-    if (headPtr->p_semAdd == NULL)
+    if ((headPtr->p_semAdd) == NULL)
     {
         /*  remove process from readyQueue*/
         outProcQ(&readyQue, headPtr);
     }
     else
     {
-        int *sema4 = headPtr->p_semAdd;
+        int *sema4 = (headPtr->p_semAdd);
         /*  remove process from ASL*/
         outBlocked(headPtr);
-        if (sema4 >= &(semD[0]) && sema4 <= &(semD[SEMNUM]))
+        if (sema4 >= &(semD[0]) && sema4 <= &(semD[SEMNUM - 1]))
         { /*SemAdd count is somewhere in between the SemD array*/
             softBlockCount--;
         }
@@ -577,21 +579,15 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
     Return: Void*/
 extern void CtrlPlusC(state_t *oldState, state_t *newState)
 {
-    
+    /*Move all of the contents from the old state into the new*/
+    newState->s_asid = oldState->s_asid;
+    newState->s_status = oldState->s_status;
+    newState->s_pc = oldState->s_pc;
+    newState->s_cause = oldState->s_cause;
     /*Loop through all of the registers in the old state and write them into the new state*/
     int i;
     for (i = 0; i < STATEREGNUM; i++)
     {
         newState->s_reg[i] = oldState->s_reg[i];
     }
-
-    /*Move all of the contents from the old state into the new*/
-    newState->s_asid = oldState->s_asid;
-    newState->s_status = oldState->s_status;
-    newState->s_pc = oldState->s_pc;
-    newState->s_cause = oldState->s_cause;
-    /*All States Copied */
-
-
 }
-
