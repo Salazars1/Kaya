@@ -458,42 +458,25 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     {
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
+         oldState = (state_t *) TLBMGMTOLDAREA;
+        CtrlPlusC(oldState,currentProcess ->p_newTLB);
+        LDST(currentProcess ->p_newTLB);
+        break; 
     /*addokbuf("TLB Trap \n");*/
-        if ((currentProcess->p_newTLB) != NULL)
-        {
-            oldState = currentProcess->p_oldTLB;
-            newState = currentProcess->p_newTLB;
-        }
-        else
-        {
-            Syscall2();
-        }
-        break;
+      
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
     /*addokbuf("Program trap \n");*/
-        if ((currentProcess->p_newProgramTrap) != NULL)
-        {
-            oldState = currentProcess->p_oldProgramTrap;
-            newState = currentProcess->p_newProgramTrap;
-        }
-        else
-        {
-            Syscall2();
-        }
+         oldState = (state_t *) PRGMTRAPOLDAREA;
+        CtrlPlusC(oldState,currentProcess ->p_newProgramTrap);
+        LDST(currentProcess ->p_newProgramTrap);
         break;
 
     case SYSTRAP: /*2 is SYS Exception!*/
     /*addokbuf("Sys trap");*/
-        if ((currentProcess->p_newSys) != NULL)
-        {
-            oldState = currentProcess->p_oldSys;
-            newState = currentProcess->p_newSys;
-        }
-        else
-        {
-            Syscall2();
-        }
+        oldState = (state_t *) SYSCALLOLDAREA;
+        CtrlPlusC(oldState,currentProcess ->p_newSys);
+        LDST(currentProcess ->p_newSys);
         break;
 
     default:
@@ -502,8 +485,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     }
     /*addokbuf("Copyinng and loading a new state\n");*/
 
-    CtrlPlusC(oldState, newState);
-    LDST(newState);
+    
 }
 
 /*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is 
