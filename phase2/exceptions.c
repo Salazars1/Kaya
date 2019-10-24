@@ -564,7 +564,9 @@ void TLBTrapHandler()
     if (headPtr->p_semAdd == NULL)
     {
         /*  remove process from readyQueue*/
+        
         outProcQ(&readyQue, headPtr);
+        addokbuf("FAIL ON OUTPROCQ");
     }
     else
     {
