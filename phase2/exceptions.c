@@ -262,7 +262,8 @@ HIDDEN void Syscall4(state_t *caller)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sema, currentProcess);
-       /*addokbuf("the sa1 is less than 0 COpy state and block the process\n");*/
+        softBlockCount++;
+
         scheduler();
 
     }
