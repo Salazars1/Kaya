@@ -466,6 +466,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     /*addokbuf("Program trap \n");*/
         if ((currentProcess->p_newProgramTrap) == NULL)
         {
+            addokbuf("FOREVER");
             Syscall2();
            
         }
