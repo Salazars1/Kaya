@@ -165,7 +165,7 @@ void SYSCALLHandler()
 
 HIDDEN void Syscall1(state_t *caller)
 {
-    addokbuf("Sys1\n");
+   /* addokbuf("Sys1\n");*/
     /*addokbuf("calling Alloc PCB\n");*/
     pcb_t *birthedProc = allocPcb();
 
@@ -336,7 +336,7 @@ HIDDEN void Syscall5(state_t *caller)
 HIDDEN void Syscall6(state_t *caller)
 {
     /*addokbuf("Sys call 6 start\n");*/
-    addokbuf("Sys6\n");
+    /*addokbuf("Sys6\n");*/
     
     
     CtrlPlusC(caller, &(currentProcess ->p_s));
@@ -361,7 +361,7 @@ HIDDEN void Syscall6(state_t *caller)
     Return: Void*/
 HIDDEN void Syscall7(state_t *caller)
 {
-    addokbuf("Sys7\n");
+  /*  addokbuf("Sys7\n");*/
     /*addokbuf("Syscall 7 start\n");*/
     int *sem;
     sem = (int *)&(semD[SEMNUM - 1]);
