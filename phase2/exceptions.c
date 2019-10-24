@@ -108,43 +108,43 @@ void SYSCALLHandler()
     {
 
     case SYSCALL1:
-    /*addokbuf("SysCall1 \n");*/
+    addokbuf("SysCall1 \n");
         
         Syscall1(prevState);
         break;
 
     case SYSCALL2:
-    /*addokbuf("SysCall2 \n");*/
+    addokbuf("SysCall2 \n");
         Syscall2();
         break;
 
     case SYSCALL3:
         Syscall3(prevState);
-    /*addokbuf("Syscall 3\n");*/
+    addokbuf("Syscall 3\n");
         break;
 
     case SYSCALL4:
-    /*addokbuf("Syscall 4\n");*/
+    addokbuf("Syscall 4\n");
         Syscall4(prevState);
         break;
 
     case SYSCALL5:
-    /*addokbuf("Sys call 5 \n");*/
+    addokbuf("Sys call 5 \n");
         Syscall5(prevState);
         break;
 
     case SYSCALL6:
-    /*addokbuf("Sys call 6 \n");*/
+    addokbuf("Sys call 6 \n");
         Syscall6(prevState);
         break;
 
     case SYSCALL7:
-    /*addokbuf("Sys call 7 \n");*/
+    addokbuf("Sys call 7 \n");
         Syscall7(prevState);
         break;
 
     case SYSCALL8:
-    /*addokbuf("Syscall 8 \n");*/
+    addokbuf("Syscall 8 \n");
         Syscall8(prevState);
         break;
 
