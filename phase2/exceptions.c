@@ -431,7 +431,7 @@ testb(termRead);*/
         scheduler();
     }
 
-    scheduler();
+    
 }
 
 /**************************  HANDLERS FUNCTIONS    ******************************/
@@ -547,6 +547,7 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
 
     if (headPtr == currentProcess)
     {
+        addokbuf("KOOK");
         /*  Children services comes for you and take your child*/
         outChild(headPtr);
     }
