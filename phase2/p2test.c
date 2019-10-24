@@ -321,7 +321,6 @@ void p2() {
 	p1p2synch = 1;				/* p1 will check this */
 
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
-	print("HI NICK-----------------------------");
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p2 */
 
 	/* just did a SYS2, so should not get to this point */
@@ -339,7 +338,6 @@ void p3() {
 
 	time1 = 0;
 	time2 = 0;
-print("HI NICK2-----------------------------");
 	/* loop until we are delayed at least half of clock V interval */
 	while (time2-time1 < (CLOCKINTERVAL >> 1) )  {
 		STCK(time1);			/* time of day     */
