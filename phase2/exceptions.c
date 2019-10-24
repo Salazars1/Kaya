@@ -218,17 +218,18 @@ HIDDEN void Syscall3(state_t *caller)
     /*addokbuf("Creating a new process\n");*/
     pcb_t* newProccess = NULL;
     /*addokbuf("Get the semaphore Callers A1\n");*/
-    int * sema = caller ->s_a1; 
+    int * sema = (int *)caller ->s_a1; 
     ++(*sema);
      /* increment semaphore  */
    /* testb(caller -> s_a1);*/
-    if ((*sema) <= 0)
+    if (*sema <= 0)
     { /* waiting in the semaphore */
 
         /*addokbuf("Caller A1 is less than or equal to 0\n");*/
-        newProccess = (pcb_t*) removeBlocked(sema);
+        newProccess = removeBlocked(sema);
         if (newProccess != NULL)
         { /* add it to the ready queue */
+            newProccess ->p_semAdd = NULL;
             /*addokbuf("Newprocess is not null put that on the ready queue\n");*/
             insertProcQ(&readyQue, newProccess);
         }
@@ -261,7 +262,7 @@ HIDDEN void Syscall4(state_t *caller)
     }
     /* nothing had control of the sem, return control to caller */
     /*addokbuf("Sys call 4 load state\n");*/
-    LDST(caller);
+    LDST(&(currentProcess ->p_s));
 }
 
 /*  When this service is requested, it will save the contentes of a2 and a3 and pass them to handle the
