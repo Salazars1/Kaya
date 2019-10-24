@@ -62,9 +62,6 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr);
     Return: Void
      */
 
-    int testb(int a){
-        return a;
-    }
 void SYSCALLHandler()
 {
     /*addokbuf("An Exception has happened we are in the SYscall handler\n");*/
