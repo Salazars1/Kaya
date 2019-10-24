@@ -255,12 +255,11 @@ HIDDEN void Syscall4(state_t *caller)
     testingExc(processCount, softBlockCount);
     int * sema = (int * ) caller->s_a1; /* decrement semaphore */
 
-    (*sema)--;
+    --(*sema);
     if (*sema < 0)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sema, currentProcess);
-        softBlockCount++;
 
         scheduler();
 
