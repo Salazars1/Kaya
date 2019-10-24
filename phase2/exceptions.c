@@ -260,7 +260,7 @@ HIDDEN void Syscall4(state_t *caller)
     }
     /* nothing had control of the sem, return control to caller */
     /*addokbuf("Sys call 4 load state\n");*/
-    LDST(&(currentProcess->p_s));
+    LDST(caller);
 }
 
 /*  When this service is requested, it will save the contentes of a2 and a3 and pass them to handle the
@@ -314,7 +314,7 @@ HIDDEN void Syscall5(state_t *caller)
         currentProcess->p_newSys = (state_t *)caller->s_a3;
     }
 /*addokbuf("Load State\n");*/
-    LDST(&(currentProcess -> p_s));
+    LDST(caller);
 }
 
 /*Syscall6:  "Get_CPU_Time"
