@@ -548,7 +548,8 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
         /*  Children services comes for you and take your child*/
         outChild(headPtr);
     }
-    if ((headPtr->p_semAdd) != NULL)
+    addokbuf("Here\n");
+    if (headPtr->p_semAdd != NULL)
     {
         /*  remove process from readyQueue*/
         int *sema4 = (headPtr->p_semAdd);
