@@ -433,7 +433,7 @@ testb(termRead);*/
         /*addokbuf("Calling scheduler\n");*/
         scheduler();
     }
-
+    addokbuf("FUCKME \n\n\n\n\n\n");
     scheduler();
 }
 
