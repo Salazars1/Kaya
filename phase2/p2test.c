@@ -319,10 +319,11 @@ void p2() {
 	}
 
 	p1p2synch = 1;				/* p1 will check this */
-
+	print("Trying Verhogen");
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
+	print("Tryin Term");
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p2 */
-
+	print("WE Terminated");
 	/* just did a SYS2, so should not get to this point */
 	print("error: p2 didn't terminate\n");
 	PANIC();					/* PANIC!           */
