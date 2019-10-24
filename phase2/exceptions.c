@@ -459,8 +459,8 @@ void PassUpOrDie(state_t *caller, int triggerReason)
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
          oldState = (state_t *) TLBMGMTOLDAREA;
-        CtrlPlusC(oldState,currentProcess ->p_oldTLB);
-        LDST(currentProcess ->p_oldTLB);
+        CtrlPlusC(caller,currentProcess ->p_oldTLB);
+        LDST(currentProcess);
         break; 
     /*addokbuf("TLB Trap \n");*/
       
@@ -468,15 +468,15 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     case PROGTRAP: /*1 is Program Trap Exceptions*/
     /*addokbuf("Program trap \n");*/
          oldState = (state_t *) PRGMTRAPOLDAREA;
-        CtrlPlusC(oldState,currentProcess ->p_oldProgramTrap);
-        LDST(currentProcess ->p_oldProgramTrap);
+        CtrlPlusC(caller,currentProcess ->p_oldProgramTrap);
+        LDST(currentProcess );
         break;
 
     case SYSTRAP: /*2 is SYS Exception!*/
     /*addokbuf("Sys trap");*/
         oldState = (state_t *) SYSCALLOLDAREA;
-        CtrlPlusC(oldState,currentProcess ->p_oldSys);
-        LDST(currentProcess ->p_oldSys);
+        CtrlPlusC(caller,currentProcess ->p_oldSys);
+        LDST(currentProcess);
         break;
 
     default:
