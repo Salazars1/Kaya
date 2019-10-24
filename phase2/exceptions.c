@@ -458,7 +458,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         }
         else
         {
-             oldState = currentProcess->p_oldTLB;
+             oldState = caller;
             newState = currentProcess->p_newTLB;
         }
         break;
@@ -473,9 +473,8 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         }
         else
         {
-           CtrlPlusC(caller,currentProcess ->p_oldProgramTrap);
-           CtrlPlusC(currentProcess ->p_newProgramTrap, &(currentProcess ->p_s));
-           LDST(&(currentProcess ->p_s));
+            oldState = caller;
+            newState = currentProcess ->p_newTLB;
         }
         break;
 
@@ -488,7 +487,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         }
         else
         {
-oldState = currentProcess->p_oldSys;
+oldState = caller;
             newState = currentProcess->p_newSys;        }
         break;
 
