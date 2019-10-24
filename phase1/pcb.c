@@ -337,6 +337,7 @@ pcb_PTR removeChild(pcb_PTR p){
     child of its parent. */
 pcb_PTR outChild(pcb_PTR p){
     if(p == NULL){
+        addokbuf("T\n\n\n\n\n");
         return NULL; 
     }
     if(p ->p_prnt == NULL){
