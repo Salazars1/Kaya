@@ -68,7 +68,7 @@ void IOTrapHandler()
 finish UNSURE*/
 
 
-    offendingLine = ((caller ->s_cause) & IPAREA) >> 8;
+    offendingLine = ((caller ->s_cause) >> 8;
    /*addokbuf("check the test suite to see the offending line \n");*/
     /*offendingLine = caller ->s_cause >> 8;*/ 
 
