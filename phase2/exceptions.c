@@ -553,7 +553,7 @@ void TLBTrapHandler()
         NukeThemTillTheyPuke(removeChild(headPtr));
     }
 
-    if (currentProcess == headPtr  )
+    if (currentProcess == headPtr)
     {   
         
         /*  Children services comes for you and take your child*/

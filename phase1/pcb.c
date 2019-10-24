@@ -346,6 +346,7 @@ pcb_PTR outChild(pcb_PTR p){
     if(p == p->p_prnt ->p_child){
         p -> p_prnt ->p_child = p->p_nextSib;
         p->p_nextSib ->p_prevSib = NULL; 
+        p->p_prnt = NULL; 
         return p; 
     }
     /*Last child */
