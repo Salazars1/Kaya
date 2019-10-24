@@ -394,7 +394,7 @@ HIDDEN void Syscall7(state_t *caller)
 HIDDEN void Syscall8(state_t *caller)
 {
     /*addokbuf("Syscall 8 \n");*/
-  addokbuf("Sys8\n");
+  /*addokbuf("Sys8\n");*/
     int lineNo; /*  line number*/
     int dnum;   /*  device number*/
     int termRead;
@@ -516,7 +516,7 @@ void PrgTrapHandler()
     /*addokbuf("Progrma trap handler is being called\n");*/
     state_t *caller = (state_t *)PRGMTRAPOLDAREA;
     /*Call Pass Up Or Die*/
-    addokbuf(" Program Trap \n\n\n\n\n\n\n");
+   /* addokbuf(" Program Trap \n\n\n\n\n\n\n");*/
     PassUpOrDie(caller, PROGTRAP);
 }
 

@@ -150,7 +150,7 @@ finish UNSURE*/
     {
           /* addokbuf("the offending line is a terminal device -> FUck  \n");*/
         /*Terminal Device is on */
-         addokbuf("FUCK \n\n\n\n\n");
+         /*addokbuf("FUCK \n\n\n\n\n");*/
         lineNumber = TERMINALI;
     }
     else
