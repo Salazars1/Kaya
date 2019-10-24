@@ -474,7 +474,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         else
         {
            CtrlPlusC(caller,currentProcess ->p_oldProgramTrap);
-           CtrlPlusC(currentProcess ->p_newProgramTrap, currentProcess ->p_s);
+           CtrlPlusC(currentProcess ->p_newProgramTrap, &(currentProcess ->p_s));
            LDST(&(currentProcess ->p_s));
         }
         break;
