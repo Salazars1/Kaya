@@ -336,6 +336,9 @@ pcb_PTR removeChild(pcb_PTR p){
     return p. Note that the element pointed to by p need not be the first
     child of its parent. */
 pcb_PTR outChild(pcb_PTR p){
+    if(p == NULL){
+        return NULL; 
+    }
     if(p ->p_prnt == NULL){
         return NULL; 
     }
