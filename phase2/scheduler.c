@@ -82,7 +82,6 @@ void scheduler()
                 /*Tested*/
              
                 
-                setTIMER(MAXINT);
                 setSTATUS(getSTATUS() | ALLOFF | IEON | IECON | IMON);
                 
                 WAIT();
