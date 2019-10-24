@@ -453,7 +453,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         if ((currentProcess->p_newTLB) == NULL)
         {
             Syscall2();
-           ewTLB;
+           
         }
         else
         {
