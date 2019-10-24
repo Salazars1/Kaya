@@ -548,13 +548,9 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
         /*  Children services comes for you and take your child*/
         outChild(headPtr);
     }
-    if ((headPtr->p_semAdd) == NULL)
+    if ((headPtr->p_semAdd) != NULL)
     {
         /*  remove process from readyQueue*/
-        outProcQ(&readyQue, headPtr);
-    }
-    else
-    {
         int *sema4 = (headPtr->p_semAdd);
         /*  remove process from ASL*/
         outBlocked(headPtr);
@@ -567,6 +563,13 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
             /*  Increment Semaphore*/
             (*sema4)++;
         }
+    }
+    else
+    {
+       
+
+
+         outProcQ(&readyQue, headPtr);
     }
     /*  We have no more children! Good to go*/
     freePcb(headPtr);
