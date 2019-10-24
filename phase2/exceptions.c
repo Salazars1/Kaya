@@ -129,6 +129,7 @@ void SYSCALLHandler()
         break;
 
     case SYSCALL6:
+    addokbuf("Sys call 6 \n");
         Syscall6(prevState);
         break;
 
@@ -325,7 +326,7 @@ HIDDEN void Syscall5(state_t *caller)
 HIDDEN void Syscall6(state_t *caller)
 {
     /*addokbuf("Sys call 6 start\n");*/
-   CtrlPlusC(caller,&(currentProcess->p_s));
+   CtrlPlusC(caller, &(currentProcess->p_s));
     cpu_t timeSpentProcessing;
     STCK(currentTOD);
     
