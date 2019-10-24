@@ -328,11 +328,13 @@ HIDDEN void Syscall6(state_t *caller)
    CtrlPlusC(caller, &(currentProcess->p_s));
     
     STCK(currentTOD);
+    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (currentTOD - TODStart);
+
+    caller.s_v0 = currentProcess ->p_timeProc; 
     
 
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
     /*addokbuf("Time is being set properly\n");*/
-    (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (currentTOD - TODStart);
     /*Store the new updated time spent processing into the v0 register of the process state*/
     (currentProcess->p_s.s_v0) = (currentProcess->p_timeProc);
 
