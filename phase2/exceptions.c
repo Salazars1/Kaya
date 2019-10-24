@@ -559,7 +559,11 @@ void TLBTrapHandler()
         /*  Children services comes for you and take your child*/
         
         outChild(headPtr);
-        addokbuf("Mother fucker \n");
+
+
+
+        
+        
     }
     addokbuf("BEFORE THE SEMAPHORE");
     if (headPtr->p_semAdd == NULL)
