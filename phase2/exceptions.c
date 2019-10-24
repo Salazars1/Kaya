@@ -554,9 +554,11 @@ void TLBTrapHandler()
     }
 
     if (headPtr == currentProcess)
-    {
+    {   
+        addokbuf("we here GOAT \n\n");
         /*  Children services comes for you and take your child*/
         outChild(headPtr);
+        addokbuf("Out Child Fucked");
     }
     if (headPtr->p_semAdd == NULL)
     {
