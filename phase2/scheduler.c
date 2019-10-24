@@ -49,7 +49,7 @@ void scheduler()
     }
     if (!emptyProcQ(readyQue))
     { /*  Starts next process in Queue*/
-        STCK(currentTOD);
+        
         /*currentProcess -> p_timeProc = currentProcess -> p_timeProc + (currentTOD -TODStart);*/
         currentProcess = removeProcQ(&(readyQue)); /* Remove process from Queue */
         STCK(TODStart);                            /* Gets start time */
