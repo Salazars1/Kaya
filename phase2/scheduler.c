@@ -45,7 +45,7 @@ void scheduler()
     /*addokbuf("\n WE ARE AT THE BEGGINING OF SCHEDULER");*/
     if(currentProcess != NULL){
     STCK(currentTOD);
-    currentProcess -> p_timeProc = currentProcess -> p_timeProc + (currentTOD - TODStart);
+    currentProcess -> p_timeProc = (currentProcess -> p_timeProc) + (currentTOD - TODStart);
     }
     if (!emptyProcQ(readyQue))
     { /*  Starts next process in Queue*/
