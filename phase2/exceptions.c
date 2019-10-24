@@ -514,7 +514,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
      */
 void PrgTrapHandler()
 {
-    /*addokbuf("Progrma trap handler is being called\n");*/
+    addokbuf("Progrma trap handler is being called\n");
     state_t *caller = (state_t *)PRGMTRAPOLDAREA;
     /*Call Pass Up Or Die*/
    /* addokbuf(" Program Trap \n\n\n\n\n\n\n");*/
