@@ -203,24 +203,11 @@ HIDDEN void Syscall1(state_t *caller)
     Return: Void*/
 HIDDEN void Syscall2()
 {
-addokbuf("Sys2\n");
-   /*addokbuf("Sys call 2 Time to die\n");*/
-    if (emptyChild(currentProcess))
-    { /*current process has no children*/
-        
-        outChild(currentProcess);
-        addokbuf("THe current process has no child\n");
-        freePcb(currentProcess);
-        
-        processCount--;
-   /*    addokbuf("Free the pcb and Decrement process count\n");*/
-    }
-    else
-    {
+
         /*Helper Function*/
       /*  addokbuf("Current procss is being killed\n");*/
         NukeThemTillTheyPuke(currentProcess);
-    }
+        addokbuf("Nuke");
 
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
