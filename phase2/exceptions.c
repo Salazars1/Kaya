@@ -207,7 +207,7 @@ HIDDEN void Syscall2()
 
         /*Helper Function*/
       /*  addokbuf("Current procss is being killed\n");*/
-     addokbuf("hi");
+     addokbuf("SYS 2 \n");
         NukeThemTillTheyPuke(currentProcess);
         
 
@@ -449,6 +449,7 @@ testb(termRead);*/
     */
 void PassUpOrDie(state_t *caller, int triggerReason)
 {
+    addokbuf("Pass up or die mother fucker \n");
     /*addokbuf("Pass up or die is being run \n");*/
     state_t *oldState;
     state_t *newState;
