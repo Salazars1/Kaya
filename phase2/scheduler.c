@@ -82,7 +82,7 @@ void scheduler()
                 /*Tested*/
              
                 
-                setSTATUS(getSTATUS() | ALLOFF | IEON | IECON | IMON);
+                setSTATUS(ALLOFF | IEON | IECON | IMON);
                 
                 WAIT();
             }
