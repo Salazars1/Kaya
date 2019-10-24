@@ -133,6 +133,9 @@ void print(char *msg) {
 	SYSCALL(VERHOGEN, (int)&term_mut, 0, 0);				/* V(term_mut) */
 }
 
+void testingP2TEST(int a){
+	
+}
 
 /*                                                                   */
 /*                 p1 -- the root process                            */
@@ -228,6 +231,7 @@ void test() {
 	
 	SYSCALL(PASSERN, (int)&endp2, 0, 0);					/* P(endp2)     */
 	
+
 	/* make sure we really blocked */
 	if (p1p2synch == 0)
 		print("error: p1/p2 synchronization bad\n");

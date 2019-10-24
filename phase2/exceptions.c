@@ -218,7 +218,7 @@ HIDDEN void Syscall2()
 HIDDEN void Syscall3(state_t *caller)
 {
 
-    testingExc(currentProcess, softBlockCount);
+    testingExc(processCount, softBlockCount);
 
     /*addokbuf("SYSCALL 3 \n");*/
     /*addokbuf("Creating a new process\n");*/
