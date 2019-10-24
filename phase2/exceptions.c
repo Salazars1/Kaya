@@ -233,7 +233,7 @@ HIDDEN void Syscall3(state_t *caller)
     }
     
     /*addokbuf("Load State\n");*/
-   /* LDST(caller);*/ /* returns control to caller */
+    LDST(caller); /* returns control to caller */
 }
 
 /*  When this service is requested, it is interpreted by the nucleus to request to perform a Passeren
