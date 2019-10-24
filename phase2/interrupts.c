@@ -310,14 +310,12 @@ HIDDEN void CallScheduler()
        /*addokbuf("Calling the shceduler has started \n");*/
     state_t *temp;
     temp =  (state_t *)INTERRUPTOLDAREA;
-    cpu_t finished; 
     
     if (currentProcess != NULL)
     {
            /*addokbuf("Current process is not null \n");*/
          /*if the process is still around need to copy its contents over*/
-         STCK(finished);
-         TODStart = finished + interruptstart;
+         
         CtrlPlusC(temp, &(currentProcess->p_s));
         insertProcQ(&readyQue, currentProcess);
         /*Load the state back */
