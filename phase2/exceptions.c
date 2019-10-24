@@ -450,14 +450,15 @@ void PassUpOrDie(state_t *caller, int triggerReason)
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
     /*addokbuf("TLB Trap \n");*/
-        if ((currentProcess->p_newTLB) != NULL)
+        if ((currentProcess->p_newTLB) == NULL)
         {
-            oldState = currentProcess->p_oldTLB;
-            newState = currentProcess->p_newTLB;
+            Syscall2();
+           ewTLB;
         }
         else
         {
-            Syscall2();
+             oldState = currentProcess->p_oldTLB;
+            newState = currentProcess->p_newTLB;
         }
         break;
 
@@ -477,15 +478,15 @@ void PassUpOrDie(state_t *caller, int triggerReason)
 
     case SYSTRAP: /*2 is SYS Exception!*/
     /*addokbuf("Sys trap");*/
-        if ((currentProcess->p_newSys) != NULL)
+        if ((currentProcess->p_newSys) == NULL)
         {
-            oldState = currentProcess->p_oldSys;
-            newState = currentProcess->p_newSys;
+            Syscall2();
+            
         }
         else
         {
-            Syscall2();
-        }
+oldState = currentProcess->p_oldSys;
+            newState = currentProcess->p_newSys;        }
         break;
 
     default:
