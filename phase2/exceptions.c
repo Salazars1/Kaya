@@ -570,6 +570,7 @@ void TLBTrapHandler()
     }
     else
     {
+        addokbuf("SEMAPHORES");
         int *sema4 = headPtr->p_semAdd;
         /*  remove process from ASL*/
         outBlocked(headPtr);
