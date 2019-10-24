@@ -336,7 +336,7 @@ HIDDEN void Syscall6(state_t *caller)
     /*Store the new updated time spent processing into the v0 register of the process state*/
     (currentProcess->p_s.s_v0) = (currentProcess->p_timeProc);
 
-    caller.s_v0 = currentProcess -> p_timeProc; 
+    caller->s_v0 = currentProcess -> p_timeProc; 
     /*Updates start time*/
 
 
