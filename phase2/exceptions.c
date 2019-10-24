@@ -342,7 +342,7 @@ HIDDEN void Syscall6(state_t *caller)
     STCK(TODStart);
     /*Load the Current Processes State*/
    /*addokbuf("Load State\n");*/
-    LDST(&(currentProcess -> p_s));
+    LDST(caller);
 }
 
 /*  Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
