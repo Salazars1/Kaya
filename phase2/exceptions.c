@@ -330,7 +330,7 @@ HIDDEN void Syscall6(state_t *caller)
     STCK(currentTOD);
     (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (currentTOD - TODStart);
 
-    caller.s_v0 = currentProcess ->p_timeProc; 
+    caller->s_v0 = currentProcess ->p_timeProc; 
     
 
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
