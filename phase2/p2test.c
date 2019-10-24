@@ -134,7 +134,7 @@ void print(char *msg) {
 }
 
 void testingP2TEST(int a){
-	
+
 }
 
 /*                                                                   */
@@ -231,6 +231,7 @@ void test() {
 	
 	SYSCALL(PASSERN, (int)&endp2, 0, 0);					/* P(endp2)     */
 	
+	testingP2TEST(p1p2synch);
 
 	/* make sure we really blocked */
 	if (p1p2synch == 0)
