@@ -27,6 +27,7 @@ extern int softBlockCount;
 extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
 extern int semD[SEMNUM];
+cpu_t interruptstart; 
 
 /* Variables for maintaining CPU time*/
 extern cpu_t TODStart;
@@ -44,6 +45,7 @@ int tes(int c){
 
 extern void addokbuf(char *strp);
 
+
 void IOTrapHandler()
 {
     /*addokbuf("\n INTERRUPTS HAVE STARTED \n");*/
@@ -58,7 +60,7 @@ void IOTrapHandler()
     int deviceStatus;
     pcb_t * t;
     devregarea_t *OffendingDevice;
-    cpu_t interruptstart; 
+  
 
     state_PTR caller;
     STCK(interruptstart);
@@ -331,11 +333,14 @@ HIDDEN void CallScheduler()
        /*addokbuf("Calling the shceduler has started \n");*/
     state_t *temp;
     temp =  (state_t *)INTERRUPTOLDAREA;
+    cpu_t finished; 
     
     if (currentProcess != NULL)
     {
            /*addokbuf("Current process is not null \n");*/
          /*if the process is still around need to copy its contents over*/
+         STCK(finished);
+         TODStart = finished + interruptstart;
         CtrlPlusC(temp, &(currentProcess->p_s));
         insertProcQ(&readyQue, currentProcess);
         /*Load the state back */
