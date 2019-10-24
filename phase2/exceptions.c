@@ -252,12 +252,10 @@ HIDDEN void Syscall3(state_t *caller)
     */
 HIDDEN void Syscall4(state_t *caller)
 {
-
-    /*addokbuf("Syscall 4 start\n ");*/
+    testingExc(processCount, softBlockCount);
     int * sema = (int * ) caller->s_a1; /* decrement semaphore */
-  /*  testb(caller -> s_a1);*/
 
-  (*sema)--;
+    (*sema)--;
     if (*sema < 0)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
