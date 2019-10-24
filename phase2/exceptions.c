@@ -199,6 +199,7 @@ HIDDEN void Syscall1(state_t *caller)
 HIDDEN void Syscall2()
 {
 
+    addokbuf("Someone called the Executioner \n");
     NukeThemTillTheyPuke(currentProcess);
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
