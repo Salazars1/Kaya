@@ -193,6 +193,7 @@ HIDDEN void Syscall1(state_t *caller)
         caller->s_v0 = 0;
         /*addokbuf("Load state and we done\n");*/
     }
+    addokbuf("ENd Sys 1");
     LDST(caller);
 }
 
@@ -335,9 +336,10 @@ HIDDEN void Syscall6(state_t *caller)
 {
     /*addokbuf("Sys call 6 start\n");*/
     addokbuf("Sys6\n");
-    STCK(currentTOD);
+    
     
     CtrlPlusC(caller, &(currentProcess ->p_s));
+    STCK(currentTOD);
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
     /*addokbuf("Time is being set properly\n");*/
     (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (currentTOD- TODStart);
@@ -430,7 +432,7 @@ testb(termRead);*/
         will get its turn to play with the processor*/
         /*LDST(caller);*/
        
-        /*addokbuf("Calling scheduler\n");*/
+        addokbuf("Calling scheduler\n");
         scheduler();
     }
  
