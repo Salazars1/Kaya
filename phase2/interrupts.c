@@ -35,13 +35,7 @@ extern cpu_t TODStart;
 extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
 HIDDEN int findDevice(int lineNumber);
 
-HIDDEN int testingbaby(int aaaaaa){
-    return aaaaaa; 
 
-}
-int tes(int c){
-    return c; 
-}
 
 extern void addokbuf(char *strp);
 
@@ -49,8 +43,7 @@ extern void addokbuf(char *strp);
 void IOTrapHandler()
 {
     /*addokbuf("\n INTERRUPTS HAVE STARTED \n");*/
-    int b = 1; 
-    testingbaby(b);
+    
     unsigned int offendingLine;
     int lineNumber;
     int devsemnum;
@@ -105,7 +98,6 @@ finish UNSURE*/
         LDIT(PSUEDOCLOCKTIME);
         /*Access the Last clock which is the psuedo clock*/
         semaphoreAddress = (int *) &(semD[SEMNUM-1]);
-        testingbaby(5);
         cpu_t finish; 
         STCK(finish);
        
