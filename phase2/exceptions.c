@@ -54,10 +54,7 @@ extern void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr);
 
 
-int fuckme(int b)
-{
-    return b;
-}
+
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
     for these first 8 System calls the Kernel Mode must be active in order for these commands
     to execute. If this is not the case, then the appropiate program trap would be execute. 
@@ -328,7 +325,7 @@ HIDDEN void Syscall6(state_t *caller)
 {
     /*addokbuf("Sys call 6 start\n");*/
    CtrlPlusC(caller, &(currentProcess->p_s));
-    cpu_t timeSpentProcessing;
+    
     STCK(currentTOD);
     
 
@@ -370,7 +367,6 @@ HIDDEN void Syscall7(state_t *caller)
     }
 
 
-    fuckme(1616);
     /*Process is soft blocked call to run another process*/
     /*addokbuf("Call Scheduler\n");*/
     scheduler();
@@ -384,7 +380,7 @@ HIDDEN void Syscall7(state_t *caller)
 HIDDEN void Syscall8(state_t *caller)
 {
     /*addokbuf("Syscall 8 \n");*/
-    fuckme(2);
+
     int lineNo; /*  line number*/
     int dnum;   /*  device number*/
     int termRead;
@@ -422,7 +418,7 @@ testb(termRead);*/
         Keeps the overall flow of the program and since there is no starvation, eventually that process
         will get its turn to play with the processor*/
         /*LDST(caller);*/
-        fuckme(30);
+       
         /*addokbuf("Calling scheduler\n");*/
         scheduler();
     }
