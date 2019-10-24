@@ -557,7 +557,7 @@ void TLBTrapHandler()
     {   
         
         /*  Children services comes for you and take your child*/
-        addokbuf("FUCK \n");
+        
         outChild(headPtr);
         addokbuf("Mother fucker \n");
     }
