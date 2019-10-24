@@ -53,6 +53,10 @@ void TLBTrapHandler();
 extern void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr);
 
+void testingExc(int processCount, int softBlockCount){
+
+}
+
 
 
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
@@ -199,8 +203,7 @@ HIDDEN void Syscall1(state_t *caller)
 HIDDEN void Syscall2()
 {
 
-    addokbuf(processCount);
-    addokbuf(&readyQue);
+    testingExc(currentProcess, softBlockCount);
     NukeThemTillTheyPuke(currentProcess);
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
