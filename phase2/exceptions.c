@@ -207,6 +207,7 @@ HIDDEN void Syscall2()
 
         /*Helper Function*/
       /*  addokbuf("Current procss is being killed\n");*/
+      addokbuf("Syscall 2\n");
         NukeThemTillTheyPuke(currentProcess);
         addokbuf("Nuke");
 
