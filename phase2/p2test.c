@@ -320,8 +320,9 @@ void p2() {
 	}
 
 	p1p2synch = 1;				/* p1 will check this */
-
+	print("WE Verhogen");
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
+	print("we terminate");
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p2 */
 
 	/* just did a SYS2, so should not get to this point */
