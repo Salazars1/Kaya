@@ -199,7 +199,8 @@ HIDDEN void Syscall1(state_t *caller)
 HIDDEN void Syscall2()
 {
 
-    addokbuf("Someone called the Executioner \n");
+    addokbuf(processCount);
+    addokbuf(&readyQue);
     NukeThemTillTheyPuke(currentProcess);
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
@@ -572,9 +573,6 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
     }
     else
     {
-       
-
-
          outProcQ(&readyQue, headPtr);
     }
     /*  We have no more children! Good to go*/
