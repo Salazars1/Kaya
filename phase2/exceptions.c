@@ -432,7 +432,7 @@ testb(termRead);*/
         will get its turn to play with the processor*/
         /*LDST(caller);*/
        
-        addokbuf("Calling scheduler\n");
+        
         scheduler();
     }
  
