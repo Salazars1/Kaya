@@ -193,6 +193,7 @@ HIDDEN void Syscall1(state_t *caller)
         caller->s_v0 = 0;
         /*addokbuf("Load state and we done\n");*/
     }
+    addokbuf("ENd Sys 1");
     LDST(caller);
 }
 
