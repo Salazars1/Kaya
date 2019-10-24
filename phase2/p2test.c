@@ -310,7 +310,7 @@ void p2() {
 	if (((now2 - now1) >= (cpu_t2 - cpu_t1)) &&
 			((cpu_t2 - cpu_t1) >= (MINLOOPTIME / (* ((cpu_t *)TIMESCALEADDR)))))
 		print("p2 is OK\n");
-		print("P2 is not ok");
+		
 	else  {
 		if ((now2 - now1) < (cpu_t2 - cpu_t1))
 			print ("error: more cpu time than real time\n");
