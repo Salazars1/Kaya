@@ -209,8 +209,9 @@ addokbuf("Sys2\n");
     { /*current process has no children*/
         
         outChild(currentProcess);
-        freePcb(currentProcess);
         addokbuf("THe current process has no child\n");
+        freePcb(currentProcess);
+        
         processCount--;
    /*    addokbuf("Free the pcb and Decrement process count\n");*/
     }
