@@ -252,7 +252,7 @@ HIDDEN void Syscall3(state_t *caller)
     */
 HIDDEN void Syscall4(state_t *caller)
 {
-    testingExc(processCount, softBlockCount);
+    
     int * sema = (int * ) caller->s_a1; /* decrement semaphore */
 
     --(*sema);
@@ -261,12 +261,13 @@ HIDDEN void Syscall4(state_t *caller)
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sema, currentProcess);
 
+        testingExc(processCount, softBlockCount);
+
         scheduler();
 
     }
     /* nothing had control of the sem, return control to caller */
     /*addokbuf("Sys call 4 load state\n");*/
-    LDST(caller);
 }
 
 /*  When this service is requested, it will save the contentes of a2 and a3 and pass them to handle the
