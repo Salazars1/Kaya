@@ -114,13 +114,13 @@ void SYSCALLHandler()
         break;
 
     case SYSCALL3:
-        addokbuf("Sys call 3 \n");
+        /*addokbuf("Sys call 3 \n");*/
 
         Syscall3(prevState);
         break;
 
     case SYSCALL4:
-        addokbuf("Sys call 4 \n");
+        /*addokbuf("Sys call 4 \n");*/
 
         Syscall4(prevState);
         break;
