@@ -449,8 +449,7 @@ testb(termRead);*/
     */
 void PassUpOrDie(state_t *caller, int triggerReason)
 {
-    addokbuf("Pass up or die mother fucker \n");
-    /*addokbuf("Pass up or die is being run \n");*/
+    addokbuf("Pass up or die is being run \n");
     state_t *oldState;
     state_t *newState;
 
@@ -458,34 +457,52 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     {
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
-         oldState = (state_t *) TLBMGMTOLDAREA;
-        CtrlPlusC(caller,currentProcess ->p_oldTLB);
-        LDST(currentProcess);
-        break; 
-    /*addokbuf("TLB Trap \n");*/
-      
+    addokbuf("TLB Trap \n");
+        if ((currentProcess->p_newTLB) != NULL)
+        {
+            oldState = currentProcess->p_oldTLB;
+            newState = currentProcess->p_newTLB;
+        }
+        else
+        {
+            Syscall2();
+        }
+        break;
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
-    /*addokbuf("Program trap \n");*/
-         oldState = (state_t *) PRGMTRAPOLDAREA;
-        CtrlPlusC(caller,currentProcess ->p_oldProgramTrap);
-        LDST(currentProcess );
+    addokbuf("Program trap \n");
+        if ((currentProcess->p_newProgramTrap) != NULL)
+        {
+            oldState = currentProcess->p_oldProgramTrap;
+            newState = currentProcess->p_newProgramTrap;
+        }
+        else
+        {
+            Syscall2();
+        }
         break;
 
     case SYSTRAP: /*2 is SYS Exception!*/
-    /*addokbuf("Sys trap");*/
-        oldState = (state_t *) SYSCALLOLDAREA;
-        CtrlPlusC(caller,currentProcess ->p_oldSys);
-        LDST(currentProcess);
+    addokbuf("Sys trap");
+        if ((currentProcess->p_newSys) != NULL)
+        {
+            oldState = currentProcess->p_oldSys;
+            newState = currentProcess->p_newSys;
+        }
+        else
+        {
+            Syscall2();
+        }
         break;
 
     default:
         Syscall2(); /*No vector is defined. Nuke it till it pukes*/
         break;
     }
-    /*addokbuf("Copyinng and loading a new state\n");*/
+    addokbuf("Copyinng and loading a new state\n");
 
-    
+    CtrlPlusC(oldState, newState);
+    LDST(newState);
 }
 
 /*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is 
