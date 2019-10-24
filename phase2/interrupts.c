@@ -170,16 +170,28 @@ void IOTrapHandler()
 
 
     device_t * testing;
-   
+    int mathishard; 
+    int mathishard2; 
+    mathishard = 0; 
+    mathishard2 = 0; 
+    /*The base + 32 (4 words in the device + the size of each register * the register number*/
+    /*deviceRegisterNumber = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
+*/
+   /*addokbuf("The math is being computated for the device number and device base  \n");*/
+    mathishard2 = lineNumber - 3; 
+    mathishard = mathishard2 * 16; 
+    mathishard = mathishard * 8; 
+    mathishard2 = devicenumber * 16; 
+    mathishard = mathishard + mathishard2; 
     testing = (device_t *) (0x10000050 + mathishard); 
-    device_t * devaddrbase; 
-    devaddrbase = (device_t *) (0x10000050 + ((lineNumber - 3) * 8*16) + (devicenumber * 16));
+  
     
+   /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
     
     devsemnum = lineNumber -3; 
     devsemnum = devsemnum * 8; 
     devsemnum = devsemnum + devicenumber; 
-
+/*addokbuf("WE LIVE \n\n");*/
     if (lineNumber == TERMINT)
     {
 
@@ -191,10 +203,10 @@ void IOTrapHandler()
                    /*addokbuf("We are transmitting \n");*/
                 /*Acknowledge*/
             
-                deviceStatus = devaddrbase->t_transm_status;
+                deviceStatus = testing->t_transm_status;
          
                 /*Acknowledge*/
-                devaddrbase->t_transm_command = ACK;
+                testing->t_transm_command = ACK;
 
        
         }
