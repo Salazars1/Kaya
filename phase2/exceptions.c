@@ -451,7 +451,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
     /*addokbuf("TLB Trap \n");*/
-        if ((currentProcess->p_newTLB) == NULL)
+        if ((currentProcess->p_newTLB) != NULL)
         {
             Syscall2();
            
@@ -480,7 +480,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
 
     case SYSTRAP: /*2 is SYS Exception!*/
     /*addokbuf("Sys trap");*/
-        if ((currentProcess->p_newSys) == NULL)
+        if ((currentProcess->p_newSys) != NULL)
         {
             Syscall2();
             
