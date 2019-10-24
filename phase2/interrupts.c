@@ -59,20 +59,10 @@ void IOTrapHandler()
     STCK(interruptstart);
     caller = (state_t *)INTERRUPTOLDAREA;
 
-    /*addokbuf("Called and the rest of the variables are set \n");*/
-
-/*UNSURE 
-    offendingLine = caller -> s_cause >> 8; 
-    testingbaby(2);
-
-finish UNSURE*/
 
 
     offendingLine = caller ->s_cause >> 8;
-   /*addokbuf("check the test suite to see the offending line \n");*/
-    /*offendingLine = caller ->s_cause >> 8;*/ 
-
-   /* test(offendingLine);*/
+  
 
 
 
@@ -166,12 +156,7 @@ finish UNSURE*/
     /*with Dev Reg and Line number Do literal magic*/
     devregarea_t *temporary = (devregarea_t *)DEVPHYS;
 
-    if (devicenumber == -1)
-    {
-           /*addokbuf("Device number is -1 panic  \n");*/
-
-        PANIC();
-    }
+    
    
     /*Need to Determine Device Address and the Device semaphore number*/
     int templinenum;
@@ -185,29 +170,16 @@ finish UNSURE*/
 
 
     device_t * testing;
-    int mathishard; 
-    int mathishard2; 
-    mathishard = 0; 
-    mathishard2 = 0; 
-    /*The base + 32 (4 words in the device + the size of each register * the register number*/
-    /*deviceRegisterNumber = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
-*/
-   /*addokbuf("The math is being computated for the device number and device base  \n");*/
-    mathishard2 = lineNumber - 3; 
-    mathishard = mathishard2 * 16; 
-    mathishard = mathishard * 8; 
-    mathishard2 = devicenumber * 16; 
-    mathishard = mathishard + mathishard2; 
+   
     testing = (device_t *) (0x10000050 + mathishard); 
     device_t * devaddrbase; 
     devaddrbase = (device_t *) (0x10000050 + ((lineNumber - 3) * 8*16) + (devicenumber * 16));
     
-   /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
     
     devsemnum = lineNumber -3; 
     devsemnum = devsemnum * 8; 
     devsemnum = devsemnum + devicenumber; 
-/*addokbuf("WE LIVE \n\n");*/
+
     if (lineNumber == TERMINT)
     {
 
