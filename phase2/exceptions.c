@@ -204,7 +204,6 @@ HIDDEN void Syscall1(state_t *caller)
 HIDDEN void Syscall2()
 {
 
-    testingExc(currentProcess, softBlockCount);
     NukeThemTillTheyPuke(currentProcess);
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
@@ -562,7 +561,7 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
         outChild(headPtr);
     }
     /*addokbuf("Here\n");*/
-    if (headPtr->p_semAdd != NULL)
+    else if (headPtr->p_semAdd != NULL)
     {
         /*  remove process from readyQueue*/
         int *sema4 = (headPtr->p_semAdd);
