@@ -19,9 +19,6 @@
 
 typedef unsigned int devregtr;
 
-
-extern void addokbuf(char *strp);
-
 /* hardware constants */
 #define PRINTCHR	2
 #define BYTELEN	8
@@ -133,9 +130,6 @@ void print(char *msg) {
 	SYSCALL(VERHOGEN, (int)&term_mut, 0, 0);				/* V(term_mut) */
 }
 
-void testingP2TEST(int a){
-
-}
 
 /*                                                                   */
 /*                 p1 -- the root process                            */
@@ -162,12 +156,14 @@ void test() {
 	p3state.s_pc = p3state.s_t9 = (memaddr)p3;
 	p3state.s_status = p3state.s_status | IEPBITON | CAUSEINTMASK;
 	
+	
 	STST(&p4state);
 
 	p4state.s_sp = p3state.s_sp - QPAGE;
 	p4state.s_pc = p4state.s_t9 = (memaddr)p4;
 	p4state.s_status = p4state.s_status | IEPBITON | CAUSEINTMASK;
-
+	
+	
 	STST(&p5state);
 	
 	p5Stack = p5state.s_sp = p4state.s_sp - (2 * QPAGE);	/* because there will 2 p4 running*/
@@ -179,6 +175,7 @@ void test() {
 	p6state.s_sp = p5state.s_sp - (2 * QPAGE);
 	p6state.s_pc = p6state.s_t9 = (memaddr)p6;
 	p6state.s_status = p6state.s_status | IEPBITON | CAUSEINTMASK;
+	
 	
 	STST(&p7state);
 	
@@ -227,20 +224,17 @@ void test() {
 
 	print("p2 was started\n");
 
-	testingP2TEST(15);
 	SYSCALL(VERHOGEN, (int)&startp2, 0, 0);					/* V(startp2)   */
-	print("Can I get some dick? ");
-	testingP2TEST(31);
+
 	SYSCALL(PASSERN, (int)&endp2, 0, 0);					/* P(endp2)     */
-	
-	print("Hey AGain \n");
-	testingP2TEST(47);
+
 	/* make sure we really blocked */
 	if (p1p2synch == 0)
 		print("error: p1/p2 synchronization bad\n");
-	
+
 	SYSCALL(CREATETHREAD, (int)&p3state, 0, 0);				/* start p3     */
-		print("p3 is started\n");
+
+	print("p3 is started\n");
 
 	SYSCALL(PASSERN, (int)&endp3, 0, 0);					/* P(endp3)     */
 
@@ -327,6 +321,7 @@ void p2() {
 	}
 
 	p1p2synch = 1;				/* p1 will check this */
+
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
 
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p2 */
@@ -339,7 +334,6 @@ void p2() {
 
 /* p3 -- clock semaphore test process */
 void p3() {
-
 	cpu_t	time1, time2;
 	cpu_t	cpu_t1,cpu_t2;		/* cpu time used       */
 	int		i;
@@ -370,9 +364,9 @@ void p3() {
 	else
 		print("p3 - CPU time correctly maintained\n");
 
-	print("WE Verhogen");
+
 	SYSCALL(VERHOGEN, (int)&endp3, 0, 0);				/* V(endp3)        */
-	print("WE terminate");
+
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p3    */
 
 	/* just did a SYS2, so should not get to this point */
@@ -383,7 +377,6 @@ void p3() {
 
 /* p4 -- termination test process */
 void p4() {
-	print("hi");
 	switch (p4inc) {
 		case 1:
 			print("first incarnation of p4 starts\n");
@@ -414,7 +407,7 @@ void p4() {
 	print("p4 is OK\n");
 
 	SYSCALL(VERHOGEN, (int)&endp4, 0, 0);				/* V(endp4)          */
-	print("---------BEFORE TERMINATE THREAD----------------\n");
+
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p4      */
 
 	/* just did a SYS2, so should not get to this point */
@@ -629,3 +622,5 @@ void p8leaf() {
 
 	SYSCALL(PASSERN, (int)&blkp8, 0, 0);
 }
+
+
