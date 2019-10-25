@@ -176,7 +176,7 @@ HIDDEN void Syscall1(state_t *caller)
     }
     else
     {
-        CtrlPlusC(((state_t *)caller->s_a1), &(birthedProc->p_s));
+        CtrlPlusC((state_t *)caller->s_a1), &(birthedProc->p_s));
         /*addokbuf("Process count gets incremented\n");*/
         processCount++;
 
