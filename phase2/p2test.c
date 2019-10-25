@@ -233,7 +233,7 @@ void test() {
 	testingP2TEST(31);
 	SYSCALL(PASSERN, (int)&endp2, 0, 0);					/* P(endp2)     */
 	
-	
+	print("Hey AGain \n");
 	testingP2TEST(47);
 	/* make sure we really blocked */
 	if (p1p2synch == 0)
