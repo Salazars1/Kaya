@@ -225,7 +225,7 @@ HIDDEN void Syscall3(state_t *caller)
     /*addokbuf("Creating a new process\n");*/
     pcb_t* newProccess = NULL;
     /*addokbuf("Get the semaphore Callers A1\n");*/
-    int * sema = (int *)caller ->s_a1; 
+    int * sema = caller ->s_a1; 
     ++(*sema);
      /* increment semaphore  */
    /* testb(caller -> s_a1);*/
@@ -254,7 +254,7 @@ HIDDEN void Syscall3(state_t *caller)
 HIDDEN void Syscall4(state_t *caller)
 {
     
-    int * sema = (int * ) caller->s_a1; /* decrement semaphore */
+    int * sema = caller->s_a1; /* decrement semaphore */
 
     --(*sema);
     if (*sema < 0)
