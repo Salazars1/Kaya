@@ -229,7 +229,7 @@ void test() {
 
 	testingP2TEST(15);
 	SYSCALL(VERHOGEN, (int)&startp2, 0, 0);					/* V(startp2)   */
-	
+	print("Can I get some dick? ");
 	testingP2TEST(31);
 	SYSCALL(PASSERN, (int)&endp2, 0, 0);					/* P(endp2)     */
 	
@@ -328,7 +328,7 @@ void p2() {
 
 	p1p2synch = 1;				/* p1 will check this */
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
-	print("Nope Nope Nope");
+
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p2 */
 
 	/* just did a SYS2, so should not get to this point */
