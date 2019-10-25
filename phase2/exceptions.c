@@ -168,7 +168,7 @@ HIDDEN void Syscall1(state_t *caller)
     /*addokbuf("calling Alloc PCB\n");*/
     pcb_t *birthedProc = allocPcb();
 
-    if (emptyProcQ(birthedProc))
+    if (birthedProc == NULL)
     { /*Check space in the ready queue to make sure we have room to allocate*/
         /*We did not have any more processses able to be made so we send back a -1*/
         /*addokbuf("No More processes left load state\n");*/
@@ -176,6 +176,7 @@ HIDDEN void Syscall1(state_t *caller)
     }
     else
     {
+        CtrlPlusC(((state_t *)caller->s_a1), &(birthedProc->p_s));
         /*addokbuf("Process count gets incremented\n");*/
         processCount++;
 
@@ -186,7 +187,7 @@ HIDDEN void Syscall1(state_t *caller)
         insertProcQ(&readyQue, birthedProc);
 
         /*Copy the calling state into the new processes state*/
-        CtrlPlusC(((state_t *)caller->s_a1), &(birthedProc->p_s));
+        
         /*addokbuf("INserted into the process and child Copy state\n");*/
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
