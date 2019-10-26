@@ -468,7 +468,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
    
     state_t *oldState;
     state_t *newState;
-
+    print("You done fucked up\n");
     switch (triggerReason)
     {
 
@@ -490,6 +490,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     /*addokbuf("Program trap \n");*/
         if ((currentProcess->p_newProgramTrap) != NULL)
         {
+
             Syscall2();
            
         }
@@ -517,7 +518,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         Syscall2(); /*No vector is defined. Nuke it till it pukes*/
         break;
     }
-
+    print("Im gonna eat your ass");
     CtrlPlusC(oldState, newState);
     LDST(newState);
 }
