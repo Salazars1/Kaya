@@ -52,13 +52,12 @@ void TLBTrapHandler();
  void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void TimeToDie(pcb_t *harambe);
 
-int debugC(int fucker){
-
-    return fucker; 
+void debugC(){
+     
 }
-int debugD(int fucker){
+void debugD(){
 
-    return fucker; 
+     
 }
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
     for these first 8 System calls the Kernel Mode must be active in order for these commands
@@ -467,7 +466,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
    
     state_t *oldState;
     state_t *newState;
-   debugC(caller -> s_cause >> 2);
+   debugC();
     switch (triggerReason)
     {
 
@@ -537,9 +536,9 @@ HIDDEN void TimeToDie(pcb_t * harambe)
 
     /*Look through until we no longer have a child*/
     while(!emptyChild(harambe)){
-        debugH(1);
+        debugH();
         TimeToDie(removeChild(harambe));
-        debugH(2);
+        debugH();
     }
 
     /*If the current Process is equal to the parameter Process*/
@@ -577,8 +576,8 @@ else{
 }
 
 
-int debugH(int pus){
-    return pus; 
+void debugH(){
+     
 }
 
 /********/
