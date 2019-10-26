@@ -82,7 +82,7 @@ void SYSCALLHandler()
  /*   testb(casel);*/
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
 
-    if ((prevStatus < 0) && (prevStatus > 9))
+    if ((prevStatus < 1) && (prevStatus > 9))
     { 
         PassUpOrDie(prevState,SYSTRAP);
     }
@@ -244,7 +244,7 @@ void SYSCALLHandler()
 
     pcb_t* newProccess = NULL;
     int * sema = (int *) caller ->s_a1; 
-    ++*sema;
+    ++(*sema);
      /* increment semaphore  */
    /* testb(caller -> s_a1);*/
     if (*sema <= 0)
@@ -271,7 +271,7 @@ void SYSCALLHandler()
     
     int * sema = (int *)caller->s_a1; /* decrement semaphore */
 
-    --*sema;
+    --(*sema);
     if (*sema < 0)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
