@@ -52,7 +52,7 @@ void scheduler()
             currentProcess = removeProcQ(&readyQue);
             STCK(TODStart);
             setTIMER(QUANTUM);
-            LDST(currentProcess -> p_s);
+            LDST(&(currentProcess -> p_s));
         }
         else{
 
