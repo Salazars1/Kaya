@@ -33,6 +33,7 @@ pcb_t *readyQue;
 int semD[SEMNUM];
 
 extern void test();
+extern void SYSCALLHandler();
 /*LET THE OS KNOW WHERE TO START!*/
 int main()
 {
