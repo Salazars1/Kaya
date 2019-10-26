@@ -84,7 +84,6 @@ void SYSCALLHandler()
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;
     castle = prevState->s_a0;
-    /*addokbuf("Exceptions have been loaded check fuck me test for casel sys call val\n");*/
  /*   testb(casel);*/
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
 
@@ -94,13 +93,11 @@ void SYSCALLHandler()
     }
     if(mode != ALLOFF){
 /* It is User Mode*/
-        /*addokbuf("We are in the part where the program will die\n");*/    
         program = (state_t *)PRGMTRAPOLDAREA;
         CtrlPlusC(prevState, program);
 
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         program->s_cause = 10 << 2;
-        /*addokbuf("Program will be killed\n");*/
         /*Program Trap Handler */
         PrgTrapHandler();
         
@@ -108,7 +105,6 @@ void SYSCALLHandler()
 
     /* increment prevState's PC to next instruction */
     prevState->s_pc = prevState->s_pc + 4;
-    /*addokbuf("Get the next instruction\n");*/
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
     switch (castle)
@@ -124,13 +120,11 @@ void SYSCALLHandler()
         break;
 
     case SYSCALL3:
-        /*addokbuf("Sys call 3 \n");*/
 
         Syscall3(prevState);
         break;
 
     case SYSCALL4:
-        /*addokbuf("Sys call 4 \n");*/
 
         Syscall4(prevState);
         break;
@@ -140,7 +134,6 @@ void SYSCALLHandler()
         break;
 
     case SYSCALL6:
- /*  addokbuf("Sys call 6 \n");*/
         Syscall6(prevState);
         break;
 
@@ -156,7 +149,6 @@ void SYSCALLHandler()
     }
 
     /*We should NEVER GET HERE. IF WE DO, WE DIE*/
-    /*addokbuf("Panic\n");*/
     LDST(prevState);
 }
 
@@ -171,7 +163,6 @@ void SYSCALLHandler()
 
  void Syscall1(state_t *caller)
 {
-    /*addokbuf("calling Alloc PCB\n");*/
     pcb_t *birthedProc = allocPcb();
     /* 
     If Decide to Clean again

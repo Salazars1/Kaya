@@ -36,10 +36,6 @@ extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
 HIDDEN int findDevice(int lineNumber);
 
 
-
-extern void addokbuf(char *strp);
-
-
 void IOTrapHandler()
 {
     /*addokbuf("\n INTERRUPTS HAVE STARTED \n");*/
@@ -193,7 +189,7 @@ void IOTrapHandler()
 
         /*Terminal*/
 
-        if ((testing->t_transm_status & 0x0F) != READY)
+        if ((testing->t_transm_status & 0xF) != READY)
         {
                 /*Acknowledge*/
             
@@ -241,8 +237,9 @@ void IOTrapHandler()
         t = removeBlocked(semad);
         if (t != NULL)
         {
+            t -> p_semAdd = NULL;
             t-> p_s.s_v0 = deviceStatus; 
-             softBlockCount = softBlockCount -1;
+             softBlockCount = softBlockCount - 1;
             insertProcQ(&readyQue, t);
            
             
