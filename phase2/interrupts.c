@@ -191,12 +191,10 @@ void IOTrapHandler()
     if (lineNumber == TERMINT)
     {
 
-           /*addokbuf("We got a terminal \n");*/
         /*Terminal*/
 
         if ((testing->t_transm_status & 0x0F) != READY)
         {
-                   /*addokbuf("We are transmitting \n");*/
                 /*Acknowledge*/
             
                 deviceStatus = testing->t_transm_status;
@@ -220,7 +218,6 @@ void IOTrapHandler()
     }
     else
     {
-           /*addokbuf("Not a terminal \n");*/
         /*Non terminal Interrupt*/
         deviceStatus = testing->d_status;
         /*Acknowledge the interrupt*/
@@ -241,11 +238,9 @@ void IOTrapHandler()
     
     if ((*semad) <= 0)
     {
-        /*addokbuf("Value is less than 0 \n");*/
         t = removeBlocked(semad);
         if (t != NULL)
         {
-               /*addokbuf("t is a process that was on the blocked queue \n");*/
             t->p_semAdd = NULL;
             t-> p_s.s_v0 = deviceStatus; 
              softBlockCount--;
@@ -256,7 +251,6 @@ void IOTrapHandler()
        
     }
     
-       /*addokbuf("Call scheduler \n");*/
     CallScheduler();
     /*Interrupt has been Handled!*/
 }
