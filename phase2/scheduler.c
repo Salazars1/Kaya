@@ -90,7 +90,7 @@ void scheduler()
     }
             
 
-    
+    print("WE FUCKING SUCK ");
 }
 
 
