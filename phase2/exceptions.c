@@ -493,7 +493,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         else
         {
             oldState = caller;
-            newState = currentProcess ->p_newTLB;
+            newState = currentProcess ->p_newProgramTrap;
         }
         break;
 
@@ -506,7 +506,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         }
         else
         {
-oldState = caller;
+            oldState = caller;
             newState = currentProcess->p_newSys;        }
         break;
 
