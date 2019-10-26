@@ -235,11 +235,11 @@ void IOTrapHandler()
     semad =&(semD[devsemnum]);
 
     
-    (*semad)--; 
+    (*semad)++; 
    /* tes(*semad);*/
     
     
-    if ((*semad) <= 0)
+    if (*semad <= 0)
     {
         /*addokbuf("Value is less than 0 \n");*/
         t = removeBlocked(semad);
