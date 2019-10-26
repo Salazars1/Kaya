@@ -56,6 +56,51 @@ HIDDEN void TimeToDie(pcb_t *harambe);
 
 
 
+/********/
+
+/*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is 
+    triggered when a PgmTrap exception is raised, execution continues with the nucleus’s PgmTrap exception
+    handler. The cause of the PgmTrap exception will be set in Cause.ExcCode in the PgmTrap Old Area.
+    Parameters: None
+    Return: Void
+     */
+void PrgTrapHandler()
+{
+    /*addokbuf("Progrma trap handler is being called\n");*/
+    
+    /*Call Pass Up Or Die*/
+    PassUpOrDie((state_t *)PRGMTRAPOLDAREA, PROGTRAP);
+}
+
+/*Gets triggered when μMPS2 fails in an attempt to translate a virtual address into its corresponding 
+    physical address. Therefore, since  this is triggered when a TLB exception is raised, execution
+    continues with the nucleus’s TLB exception handler. The cause of the TLB exception will be set in
+     Cause.ExcCode in the TLB Old Area. 
+     Parameters: None
+    Return: Void
+     */
+void TLBTrapHandler()
+{
+
+    /*Call Pass Up Or Die*/
+    PassUpOrDie((state_t *)TLBMGMTOLDAREA, TLBTRAP);
+}
+
+
+/*******/
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
     for these first 8 System calls the Kernel Mode must be active in order for these commands
@@ -216,7 +261,7 @@ void SYSCALLHandler()
  void Syscall2()
 {
     /*Isolate the process being terminated from its dad and brothers*/
-    print("in SYs 2");
+    print("Fn SYs 2");
     pcb_t * t = NULL;
     t = outChild(currentProcess);
     print("ok daddy ");
@@ -523,33 +568,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     LDST(newState);
 }
 
-/*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is 
-    triggered when a PgmTrap exception is raised, execution continues with the nucleus’s PgmTrap exception
-    handler. The cause of the PgmTrap exception will be set in Cause.ExcCode in the PgmTrap Old Area.
-    Parameters: None
-    Return: Void
-     */
-void PrgTrapHandler()
-{
-    /*addokbuf("Progrma trap handler is being called\n");*/
-    
-    /*Call Pass Up Or Die*/
-    PassUpOrDie((state_t *)PRGMTRAPOLDAREA, PROGTRAP);
-}
 
-/*Gets triggered when μMPS2 fails in an attempt to translate a virtual address into its corresponding 
-    physical address. Therefore, since  this is triggered when a TLB exception is raised, execution
-    continues with the nucleus’s TLB exception handler. The cause of the TLB exception will be set in
-     Cause.ExcCode in the TLB Old Area. 
-     Parameters: None
-    Return: Void
-     */
-void TLBTrapHandler()
-{
-
-    /*Call Pass Up Or Die*/
-    PassUpOrDie((state_t *)TLBMGMTOLDAREA, TLBTRAP);
-}
 
 /**************************  HELPER FUNCTIONS    ******************************/
 
