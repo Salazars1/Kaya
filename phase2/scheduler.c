@@ -42,24 +42,19 @@ extern pcb_t *readyQueue;
     */
 void scheduler()
 {
-    /*addokbuf("\n WE ARE AT THE BEGGINING OF SCHEDULER");*/
-    if(currentProcess != NULL){
-    STCK(currentTOD);
-    currentProcess -> p_timeProc = (currentProcess -> p_timeProc) + (currentTOD - TODStart);
+    if(currentProcess !=NULL){
+        STCK(currentTOD);
+        currentProcess -> p_timeProc = (currentProcess -> p_timeProc) + (currentTOD - TODStart);
+        insertProcQ(&readyQue,currentProcess);
     }
-    if (!emptyProcQ(readyQue))
-    { /*  Starts next process in Queue*/
-        
-        /*currentProcess -> p_timeProc = currentProcess -> p_timeProc + (currentTOD -TODStart);*/
-        currentProcess = removeProcQ(&(readyQue)); /* Remove process from Queue */
-        STCK(TODStart);                            /* Gets start time */
-
-        setTIMER(QUANTUM); /* Defines Quantum to 5 ms */
-        LDST(&(currentProcess->p_s));
-        
-    }
-    else
-    { /* There is nothing on the ReadyQueue */
+    else{
+        if(!emptyProcQ(readyQue)){
+            currentProcess = removeProcQ(&readyQue);
+            STCK(TODStart);
+            setTIMER(QUANTUM);
+            LDST(currentProcess -> p_s);
+        }
+        else{
 
         currentProcess = NULL; /* no process is running*/
         if (processCount == 0)
@@ -82,6 +77,14 @@ void scheduler()
                 setSTATUS(ALLOFF | IEON | IECON | IMON);
                 WAIT();
             }
+
+
+
         }
+
+
+
     }
-}
+
+
+    

@@ -53,9 +53,7 @@ void TLBTrapHandler();
 extern void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr);
 
-void testingExc(int processCount, int softBlockCount){
 
-}
 
 
 
@@ -167,7 +165,22 @@ HIDDEN void Syscall1(state_t *caller)
 {
     /*addokbuf("calling Alloc PCB\n");*/
     pcb_t *birthedProc = allocPcb();
+    /* 
+    If Decide to Clean again
+    temp->p_child = NULL; 
+    temp->p_nextSib = NULL; 
+    temp->p_prevSib = NULL; 
+    temp->p_prnt = NULL; 
+    temp->p_next = NULL; 
+    temp->p_prev = NULL; 
 
+
+    temp->p_semAdd = 0; 
+    temp ->p_timeProc = 0; /* no CPU time */
+
+
+    /*Syscall5 exceptions pointes are going to be defined*/
+    
     if (birthedProc == NULL)
     { /*Check space in the ready queue to make sure we have room to allocate*/
         /*We did not have any more processses able to be made so we send back a -1*/
@@ -176,7 +189,7 @@ HIDDEN void Syscall1(state_t *caller)
     }
     else
     {
-        CtrlPlusC(((state_t *)caller->s_a1), &(birthedProc->p_s));
+        CtrlPlusC((state_t *)caller->s_a1, &(birthedProc->p_s));
         /*addokbuf("Process count gets incremented\n");*/
         processCount++;
 
@@ -203,8 +216,10 @@ HIDDEN void Syscall1(state_t *caller)
     Return: Void*/
 HIDDEN void Syscall2()
 {
-
-    NukeThemTillTheyPuke(currentProcess);
+    /*Isolate the process being terminated from its dad and brothers*/
+    outChild(currentProcess);
+    /*Send the Current Process to the helper function*/
+    TimeToDie(currentProcess);
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
     scheduler();
@@ -516,9 +531,9 @@ oldState = caller;
 void PrgTrapHandler()
 {
     /*addokbuf("Progrma trap handler is being called\n");*/
-    state_t *caller = (state_t *)PRGMTRAPOLDAREA;
+    
     /*Call Pass Up Or Die*/
-    PassUpOrDie(caller, PROGTRAP);
+    PassUpOrDie((state_t *)PRGMTRAPOLDAREA;, PROGTRAP);
 }
 
 /*Gets triggered when μMPS2 fails in an attempt to translate a virtual address into its corresponding 
@@ -530,10 +545,9 @@ void PrgTrapHandler()
      */
 void TLBTrapHandler()
 {
-    /*addokbuf("TLB Program trap is being called\n");*/
-    state_t *caller = (state_t *)TLBMGMTOLDAREA;
+
     /*Call Pass Up Or Die*/
-    PassUpOrDie(caller, TLBTRAP);
+    PassUpOrDie((state_t *)TLBMGMTOLDAREA, TLBTRAP);
 }
 
 /**************************  HELPER FUNCTIONS    ******************************/
@@ -544,46 +558,23 @@ void TLBTrapHandler()
     Parameters: pcb_t * HeadPtr
     Return: Void
     */
-HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
+HIDDEN void TimeToDie(pcb_t * harambe)
 {
-    /*addokbuf("Mother fucjer");*/
-    while (!emptyChild(headPtr))
-    {
-      /*  addokbuf("REEEE");*/
-        /*We are going to the bottom most child to KILL every child in list (Rinse and Repeat)*/
-        NukeThemTillTheyPuke(removeChild(headPtr));
-    }
+    if(harambe ->p_child != NULL){
+        pcb_t * pro; 
+        while(pro = removeChild(harambe)!= NULL){
+            TimeToDie(pro);
 
-    if (headPtr == currentProcess)
-    {
-     /*   addokbuf("COOKING");*/
-        /*  Children services comes for you and take your child*/
-        outChild(headPtr);
-    }
-    /*addokbuf("Here\n");*/
-    else if (headPtr->p_semAdd != NULL)
-    {
-        /*  remove process from readyQueue*/
-        int *sema4 = (headPtr->p_semAdd);
-        /*  remove process from ASL*/
-        outBlocked(headPtr);
-        if (sema4 >= &(semD[0]) && sema4 <= &(semD[SEMNUM - 1]))
-        { /*SemAdd count is somewhere in between the SemD array*/
-            softBlockCount--;
         }
-        else
-        {
-            /*  Increment Semaphore*/
-            (*sema4)++;
-        }
+
     }
-    else
-    {
-         outProcQ(&readyQue, headPtr);
+    else{
+        freePcb(harambe);
+        processCount--;
+
+
     }
-    /*  We have no more children! Good to go*/
-    freePcb(headPtr);
-    processCount--;
+ 
 }
 
 /*  This state will copy all of the contents of the old state into the new state
@@ -591,15 +582,17 @@ HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr)
     Return: Void*/
 extern void CtrlPlusC(state_t *oldState, state_t *newState)
 {
-    /*Move all of the contents from the old state into the new*/
-    newState->s_asid = oldState->s_asid;
-    newState->s_status = oldState->s_status;
-    newState->s_pc = oldState->s_pc;
-    newState->s_cause = oldState->s_cause;
     /*Loop through all of the registers in the old state and write them into the new state*/
     int i;
     for (i = 0; i < STATEREGNUM; i++)
     {
         newState->s_reg[i] = oldState->s_reg[i];
     }
+    /*Move all of the contents from the old state into the new*/
+    newState->s_asid = oldState->s_asid;
+    newState->s_status = oldState->s_status;
+    newState->s_pc = oldState->s_pc;
+    newState->s_cause = oldState->s_cause;
+
+
 }
