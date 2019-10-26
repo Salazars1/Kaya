@@ -223,6 +223,7 @@ void test() {
 	SYSCALL(CREATETHREAD, (int)&p2state,0 , 0);				/* start p2     */
 
 	print("p2 was started\n");
+	print("\n\n\n\n\n\n\n\n\n\nFUKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK\n\n\n\n\n\n\n\n FUCKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKk\n");
 
 	SYSCALL(VERHOGEN, (int)&startp2, 0, 0);					/* V(startp2)   */
 
