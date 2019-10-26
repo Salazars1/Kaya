@@ -212,7 +212,6 @@ void IOTrapHandler()
         }
         else
         {
-               addokbuf("We are recieving  \n\n\n\n\n\n\n\n");
             /*Save the status*/
             devsemnum += 8; 
           

@@ -233,7 +233,6 @@ HIDDEN void Syscall2()
 HIDDEN void Syscall3(state_t *caller)
 {
 
-    testingExc(processCount, softBlockCount);
 
     /*addokbuf("SYSCALL 3 \n");*/
     /*addokbuf("Creating a new process\n");*/
@@ -276,7 +275,6 @@ HIDDEN void Syscall4(state_t *caller)
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sema, currentProcess);
 
-        testingExc(processCount, softBlockCount);
 
         scheduler();
 
@@ -489,7 +487,6 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     /*addokbuf("Program trap \n");*/
         if ((currentProcess->p_newProgramTrap) != NULL)
         {
-            addokbuf("FOREVER");
             Syscall2();
            
         }
