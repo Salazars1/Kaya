@@ -223,11 +223,12 @@ void test() {
 	SYSCALL(CREATETHREAD, (int)&p2state,0 , 0);				/* start p2     */
 
 	print("p2 was started\n");
-
+	print("P2 \n");
 	SYSCALL(VERHOGEN, (int)&startp2, 0, 0);					/* V(startp2)   */
-
+	print("Hello\n");
 	SYSCALL(PASSERN, (int)&endp2, 0, 0);					/* P(endp2)     */
 
+	print("Dad Dies\n");
 	/* make sure we really blocked */
 	if (p1p2synch == 0)
 		print("error: p1/p2 synchronization bad\n");
