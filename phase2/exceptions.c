@@ -161,7 +161,7 @@ void SYSCALLHandler()
     Return:     -0 in V0 if the process was done effectively
                 -1 in V0 if the process was NOT done because of lack of resources.*/
 
-HIDDEN void Syscall1(state_t *caller)
+ void Syscall1(state_t *caller)
 {
     /*addokbuf("calling Alloc PCB\n");*/
     pcb_t *birthedProc = allocPcb();
@@ -214,7 +214,7 @@ HIDDEN void Syscall1(state_t *caller)
     exterminated
     Parameters: None
     Return: Void*/
-HIDDEN void Syscall2()
+ void Syscall2()
 {
     /*Isolate the process being terminated from its dad and brothers*/
     print("in SYs 2");
@@ -234,7 +234,7 @@ HIDDEN void Syscall2()
     Parameter:  state* caller
     Return: Void
     */
-HIDDEN void Syscall3(state_t *caller)
+ void Syscall3(state_t *caller)
 {
 
 
@@ -268,7 +268,7 @@ HIDDEN void Syscall3(state_t *caller)
     Parameter:  state* caller
     Return: Void
     */
-HIDDEN void Syscall4(state_t *caller)
+ void Syscall4(state_t *caller)
 {
     
     int * sema = caller->s_a1; /* decrement semaphore */
@@ -295,7 +295,7 @@ HIDDEN void Syscall4(state_t *caller)
     Parameter:  state* caller
     Return: Void
     */
-HIDDEN void Syscall5(state_t *caller)
+ void Syscall5(state_t *caller)
 {   
     /*addokbuf("Syscall 5 start\n");*/
 
@@ -347,7 +347,7 @@ HIDDEN void Syscall5(state_t *caller)
     each Process Block that is running. 
         Parameters: State_t * caller
         Return: Void*/
-HIDDEN void Syscall6(state_t *caller)
+ void Syscall6(state_t *caller)
 {
     /*addokbuf("Sys call 6 start\n");*/
    CtrlPlusC(caller, &(currentProcess->p_s));
@@ -378,7 +378,7 @@ HIDDEN void Syscall6(state_t *caller)
     Knowing that this clock also has a syscall 3 performing on it every 100 milliseconds
     Parameters: State_t* Caller
     Return: Void*/
-HIDDEN void Syscall7(state_t *caller)
+ void Syscall7(state_t *caller)
 {
     /*addokbuf("Syscall 7 start\n");*/
     int *sem;
@@ -408,7 +408,7 @@ HIDDEN void Syscall7(state_t *caller)
     semaphore whenever that device generates an interrupt. 
     Return:     Device Status in v0 (Once the process resumes after the occurrence of the anticipated
                 interrupt)*/
-HIDDEN void Syscall8(state_t *caller)
+ void Syscall8(state_t *caller)
 {
     /*addokbuf("Syscall 8 \n");*/
 
