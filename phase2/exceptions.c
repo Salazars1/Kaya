@@ -149,7 +149,7 @@ void SYSCALLHandler()
 
     /*We should NEVER GET HERE. IF WE DO, WE DIE*/
     /*addokbuf("Panic\n");*/
-    PANIC();
+    LDST(prevState);
 }
 
 /**************************  SYSCALL 1 THROUGH 8 FUNCTIONS    ******************************/
