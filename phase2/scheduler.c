@@ -50,9 +50,11 @@ void scheduler()
         
         
     }
-    currentProcess = removeProcQ(&readyQue);
-    if(currentProcess == NULL)
-    {
+    pcb_t * NotCurr;
+    NotCurr = removeProcQ(&readyQue);
+    if(NotCurr == NULL)
+    {   
+        currentProcess = NULL; 
         if (processCount == 0)
         { /* Everything finished running correctly */
             
@@ -70,7 +72,7 @@ void scheduler()
             {
                 /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
                 /*Tested*/
-                setSTATUS(getSTATUS() | ALLOFF | IEON | IECON | IMON);
+                setSTATUS(ALLOFF | IEON | IECON | IMON);
                 WAIT();
             }
         }
