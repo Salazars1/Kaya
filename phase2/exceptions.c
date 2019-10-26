@@ -51,7 +51,7 @@ HIDDEN void PassUpOrDie(state_t *caller, int triggerReason);
 void TLBTrapHandler();
 
 extern void CtrlPlusC(state_t *oldState, state_t *newState);
-HIDDEN void NukeThemTillTheyPuke(pcb_t *headPtr);
+HIDDEN void TimeToDie(pcb_t *harambe);
 
 
 
@@ -533,7 +533,7 @@ void PrgTrapHandler()
     /*addokbuf("Progrma trap handler is being called\n");*/
     
     /*Call Pass Up Or Die*/
-    PassUpOrDie((state_t *)PRGMTRAPOLDAREA;, PROGTRAP);
+    PassUpOrDie((state_t *)PRGMTRAPOLDAREA, PROGTRAP);
 }
 
 /*Gets triggered when μMPS2 fails in an attempt to translate a virtual address into its corresponding 
