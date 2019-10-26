@@ -220,7 +220,6 @@ void SYSCALLHandler()
     /*Send the Current Process to the helper function*/
     TimeToDie(currentProcess);
 
-    print("REEE");
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
     scheduler();
@@ -505,7 +504,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         Syscall2(); /*No vector is defined. Nuke it till it pukes*/
         break;
     }
-    print("Im gonna eat your ass");
+    
     CtrlPlusC(oldState, newState);
     LDST(newState);
 }
