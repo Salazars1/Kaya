@@ -241,7 +241,6 @@ void IOTrapHandler()
         t = removeBlocked(semad);
         if (t != NULL)
         {
-            t->p_semAdd = NULL;
             t-> p_s.s_v0 = deviceStatus; 
              softBlockCount--;
             insertProcQ(&readyQue, t);

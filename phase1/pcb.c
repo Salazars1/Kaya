@@ -99,7 +99,7 @@ void initPcbs(){
     i=0;
     /*Create 20 Proc blocks and Put them on the Free List*/
     for(i = 0; i < MAXPROC; i++){
-        freePcb(&(PcbInitialization[i]));
+        freePcb(&PcbInitialization[i]);
     }
 
 

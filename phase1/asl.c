@@ -22,10 +22,7 @@ list has a corresponding doubley linked circular tail pointer data structure of 
 HIDDEN semd_t *semd_h;                  /* Globally defines active list*/
 HIDDEN semd_t *semdFree_h;              /* Globally define free semaphore list */
 
-HIDDEN semd_t *searchForParent(int *semAdd);
-HIDDEN semd_t *allocASL();
-HIDDEN void deAllocASL(semd_t *s);
-void initASL();
+
 
 /*  Insert the ProcBlk pointed to by p at the tail of the process queue associated 
     with the semaphore (semAdd) and sets the semaphore address of p to semAdd. 
@@ -51,7 +48,7 @@ int insertBlocked(int *semAdd, pcb_t *p){
 
             p->p_semAdd = semAdd;
             newSemd -> s_semAdd = semAdd;
-            insertProcQ(&(temp->s_next->s_procQ),p);       
+            insertProcQ(&(newSemd->s_procQ),p);       
             return FALSE;
         }
 
