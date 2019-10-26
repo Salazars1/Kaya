@@ -57,13 +57,12 @@ void scheduler()
         currentProcess = NULL; 
         if (processCount == 0)
         { /* Everything finished running correctly */
-            print("We here mother fucker \n");
+            
             HALT();
         }
         
         if (processCount > 0)
         {
-            /*addokbuf("Process count is greater than 0 meaning that we have processes to run\n");*/
             if (softBlockCount == 0)
             { /* DEADLOCK CASE */
                 PANIC();
@@ -72,7 +71,7 @@ void scheduler()
             {
                 /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
                 /*Tested*/
-                setSTATUS(ALLOFF | IEON | IECON | IMON);
+                setSTATUS(getSTATUS()|ALLOFF | IEON | IECON | IMON);
                 WAIT();
             }
         }

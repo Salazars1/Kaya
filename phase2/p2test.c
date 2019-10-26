@@ -228,7 +228,7 @@ void test() {
 	
 	SYSCALL(PASSERN, (int)&endp2, 0, 0);					/* P(endp2)     */
 
-	print("Dad Dies\n");
+
 	/* make sure we really blocked */
 	if (p1p2synch == 0)
 		print("error: p1/p2 synchronization bad\n");
