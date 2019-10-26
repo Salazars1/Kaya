@@ -52,7 +52,7 @@ void TLBTrapHandler();
 
 extern void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void TimeToDie(pcb_t *harambe);
-
+extern SYSCALLHandler();
 
 
 
@@ -242,7 +242,7 @@ void SYSCALLHandler()
     /*addokbuf("Creating a new process\n");*/
     pcb_t* newProccess = NULL;
     /*addokbuf("Get the semaphore Callers A1\n");*/
-    int * sema = caller ->s_a1; 
+    int * sema = (int *) caller ->s_a1; 
     ++(*sema);
      /* increment semaphore  */
    /* testb(caller -> s_a1);*/
@@ -271,7 +271,7 @@ void SYSCALLHandler()
  void Syscall4(state_t *caller)
 {
     
-    int * sema = caller->s_a1; /* decrement semaphore */
+    int * sema = (int *)caller->s_a1; /* decrement semaphore */
 
     --(*sema);
     if (*sema < 0)
