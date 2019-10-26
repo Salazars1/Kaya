@@ -242,7 +242,7 @@ void IOTrapHandler()
         if (t != NULL)
         {
             t-> p_s.s_v0 = deviceStatus; 
-             softBlockCount--;
+             softBlockCount = softBlockCount -1;
             insertProcQ(&readyQue, t);
            
             
@@ -262,9 +262,10 @@ int finddevice(int linenumber)
     /*Set some local variables*/
     int i;
     devregarea_t * tOffendingDevice;
+    int tt = linenumber -3; 
     tOffendingDevice = (devregarea_t *) RAMBASEADDR;
     /*make a copy of the bit map */
-    unsigned int map = tOffendingDevice->interrupt_dev[linenumber-3];
+    unsigned int map = tOffendingDevice->interrupt_dev[tt];
     unsigned int  t = FIRSTBIT; 
     int devn;
    
@@ -272,7 +273,7 @@ int finddevice(int linenumber)
     for (i = 0; i < TOTALDEVICES; i++)
     {
         /*Bit wise and if the value is not 0 Device is interrupting */
-        if ((map & t) != ZERO)
+        if ((map & t) == t)
         {
             devn = i;
             break; 

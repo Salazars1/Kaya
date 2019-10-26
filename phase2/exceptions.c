@@ -396,7 +396,7 @@ void SYSCALLHandler()
         insertBlocked(sem, currentProcess);
      
         /*Increment that we have another process soft block so that it does not starve*/
-        softBlockCount++;
+        softBlockCount = softBlockCount + 1;
     }
 
 
@@ -433,7 +433,7 @@ testb(termRead);*/
     sem = &(semD[index]);
    /* test(*sem);*/
 
-   --(*sem);
+   (*sem) = *sem -1;
     if (*sem < 0)
     {
 
@@ -441,7 +441,7 @@ testb(termRead);*/
         insertBlocked(sem, currentProcess);
        
 
-        softBlockCount++; 
+        softBlockCount = softBlockCount + 1; 
 
         /*DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
         Keeps the overall flow of the program and since there is no starvation, eventually that process
@@ -466,7 +466,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
    
     state_t *oldState;
     state_t *newState;
-   debugC();
+ 
     switch (triggerReason)
     {
 
@@ -536,9 +536,9 @@ HIDDEN void TimeToDie(pcb_t * harambe)
 
     /*Look through until we no longer have a child*/
     while(!emptyChild(harambe)){
-        debugH();
+        
         TimeToDie(removeChild(harambe));
-        debugH();
+        
     }
 
     /*If the current Process is equal to the parameter Process*/
@@ -560,12 +560,12 @@ else{
     if (tracksem >= &(semD[0]) && tracksem <= &(semD[49]))
 	{
 			/*Decrement the softblock */
-			--softBlockCount;
+			softBlockCount = softBlockCount -1 ;
 		}
 		else 
 		{
             /*Increment the Semaphore*/
-			++*tracksem;
+			*tracksem = *tracksem + 1;
         }
     }
 
