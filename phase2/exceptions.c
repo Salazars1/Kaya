@@ -59,6 +59,11 @@ void debugD(){
 
      
 }
+void debugf(int fff){
+
+    return fff; 
+
+}
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
     for these first 8 System calls the Kernel Mode must be active in order for these commands
     to execute. If this is not the case, then the appropiate program trap would be execute. 
@@ -462,6 +467,7 @@ testb(termRead);*/
     */
 void PassUpOrDie(state_t *caller, int triggerReason)
 {
+    debugf(1);
    
     state_t *oldState;
     state_t *newState;
@@ -470,55 +476,60 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     {
 
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
-    /*addokbuf("TLB Trap \n");*/
-        if ((currentProcess->p_newTLB) != NULL)
+        if ((currentProcess->p_newTLB) == NULL)
         {
+            /*Just fucking murder it */
             Syscall2();
            
         }
         else
         {
-             oldState = caller;
-            newState = currentProcess->p_newTLB;
+            /*Copy the caller to the old and load the new*/
+            CtrlPlusC(caller,currentProcess ->p_oldTLB);
+            LDST(currentProcess ->p_newTLB);
         }
         break;
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
-    /*addokbuf("Program trap \n");*/
-        if ((currentProcess->p_newProgramTrap) != NULL)
-        {
-            print("FUCK MY LUFE");
+        debugf(3);
+        /**/
+        if ((currentProcess->p_newProgramTrap) == NULL)
+        { 
+            /*Just fucking take its life from it */  
+            debugf(4);
             Syscall2();
            
         }
         else
         {
-            oldState = caller;
-            newState = currentProcess ->p_newProgramTrap;
+           CtrlPlusC(caller,currentProcess ->p_oldProgramTrap);
+           /*Copy the caller to the old and load the new*/
+            LDST(currentProcess ->p_newProgramTrap);
         }
         break;
 
     case SYSTRAP: /*2 is SYS Exception!*/
-    /*addokbuf("Sys trap");*/
-        if ((currentProcess->p_newSys) != NULL)
+        if ((currentProcess->p_newSys) == NULL)
         {
+            /*I want this fucking annhilated*/
             Syscall2();
             
         }
         else
         {
-            oldState = caller;
-            newState = currentProcess->p_newSys;        }
+            /*Copy the caller into the old and load the new */
+            CtrlPlusC(caller,currentProcess ->p_oldSys);
+            LDST(currentProcess ->p_newSys);     
+        }
         break;
 
     default:
-        print("pls");
         Syscall2(); /*No vector is defined. Nuke it till it pukes*/
         break;
     }
     
-    CtrlPlusC(oldState, newState);
-    LDST(newState);
+   
+    
 }
 
 
