@@ -55,53 +55,6 @@ HIDDEN void TimeToDie(pcb_t *harambe);
  void SYSCALLHandler();
 
 
-
-/********/
-
-/*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is 
-    triggered when a PgmTrap exception is raised, execution continues with the nucleus’s PgmTrap exception
-    handler. The cause of the PgmTrap exception will be set in Cause.ExcCode in the PgmTrap Old Area.
-    Parameters: None
-    Return: Void
-     */
-void PrgTrapHandler()
-{
-    /*addokbuf("Progrma trap handler is being called\n");*/
-    
-    /*Call Pass Up Or Die*/
-    PassUpOrDie((state_t *)PRGMTRAPOLDAREA, PROGTRAP);
-}
-
-/*Gets triggered when μMPS2 fails in an attempt to translate a virtual address into its corresponding 
-    physical address. Therefore, since  this is triggered when a TLB exception is raised, execution
-    continues with the nucleus’s TLB exception handler. The cause of the TLB exception will be set in
-     Cause.ExcCode in the TLB Old Area. 
-     Parameters: None
-    Return: Void
-     */
-void TLBTrapHandler()
-{
-
-    /*Call Pass Up Or Die*/
-    PassUpOrDie((state_t *)TLBMGMTOLDAREA, TLBTRAP);
-}
-
-
-/*******/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
     for these first 8 System calls the Kernel Mode must be active in order for these commands
     to execute. If this is not the case, then the appropiate program trap would be execute. 
@@ -282,10 +235,8 @@ void SYSCALLHandler()
 {
 
 
-    /*addokbuf("SYSCALL 3 \n");*/
-    /*addokbuf("Creating a new process\n");*/
+
     pcb_t* newProccess = NULL;
-    /*addokbuf("Get the semaphore Callers A1\n");*/
     int * sema = (int *) caller ->s_a1; 
     ++(*sema);
      /* increment semaphore  */
@@ -293,17 +244,14 @@ void SYSCALLHandler()
     if (*sema <= 0)
     { /* waiting in the semaphore */
 
-        /*addokbuf("Caller A1 is less than or equal to 0\n");*/
         newProccess = removeBlocked(sema);
         if (newProccess != NULL)
         { /* add it to the ready queue */
             newProccess ->p_semAdd = NULL;
-            /*addokbuf("Newprocess is not null put that on the ready queue\n");*/
             insertProcQ(&readyQue, newProccess);
         }
     }
     
-    /*addokbuf("Load State\n");*/
     LDST(caller); /* returns control to caller */
 }
 
@@ -328,7 +276,6 @@ void SYSCALLHandler()
 
     }
     /* nothing had control of the sem, return control to caller */
-    /*addokbuf("Sys call 4 load state\n");*/
     LDST(caller);
 }
 
@@ -454,7 +401,6 @@ void SYSCALLHandler()
                 interrupt)*/
  void Syscall8(state_t *caller)
 {
-    /*addokbuf("Syscall 8 \n");*/
 
     int lineNo; /*  line number*/
     int dnum;   /*  device number*/
@@ -469,20 +415,17 @@ void SYSCALLHandler()
 testb(dnum);
 testb(termRead);*/
     /* what device is going to be computed*/
-    /*addokbuf("Store values from registers a1 a2 a3 \n");*/
     index = lineNo -3 + termRead; 
     index = index * 8; 
     index = index + dnum; 
 
     sem = &(semD[index]);
-/*addokbuf("We are messing with semaphores again\n");*/
    /* test(*sem);*/
 
    (*sem)--;
     if (*sem < 0)
     {
 
-        /*addokbuf("Copying state and inserting it onto the blocked list\n");*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
        
@@ -494,7 +437,6 @@ testb(termRead);*/
         will get its turn to play with the processor*/
         /*LDST(caller);*/
        
-        /*addokbuf("Calling scheduler\n");*/
         scheduler();
     }
 
@@ -601,6 +543,44 @@ HIDDEN void TimeToDie(pcb_t * harambe)
     }
  
 }
+
+
+
+
+/********/
+
+/*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is 
+    triggered when a PgmTrap exception is raised, execution continues with the nucleus’s PgmTrap exception
+    handler. The cause of the PgmTrap exception will be set in Cause.ExcCode in the PgmTrap Old Area.
+    Parameters: None
+    Return: Void
+     */
+void PrgTrapHandler()
+{
+    /*addokbuf("Progrma trap handler is being called\n");*/
+    
+    /*Call Pass Up Or Die*/
+    PassUpOrDie((state_t *)PRGMTRAPOLDAREA, PROGTRAP);
+}
+
+/*Gets triggered when μMPS2 fails in an attempt to translate a virtual address into its corresponding 
+    physical address. Therefore, since  this is triggered when a TLB exception is raised, execution
+    continues with the nucleus’s TLB exception handler. The cause of the TLB exception will be set in
+     Cause.ExcCode in the TLB Old Area. 
+     Parameters: None
+    Return: Void
+     */
+void TLBTrapHandler()
+{
+
+    /*Call Pass Up Or Die*/
+    PassUpOrDie((state_t *)TLBMGMTOLDAREA, TLBTRAP);
+}
+
+
+/*******/
+
+
 
 /*  This state will copy all of the contents of the old state into the new state
     Parameters: State_t * oldstate, State_t* NewState
