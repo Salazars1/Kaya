@@ -68,13 +68,13 @@ void SYSCALLHandler()
     state_t *program;
     unsigned int prevStatus;
 
-    int casel;
+    int castle;
     int mode;
     
 
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     prevStatus = prevState->s_status;
-    casel = prevState->s_a0;
+    castle = prevState->s_a0;
     /*addokbuf("Exceptions have been loaded check fuck me test for casel sys call val\n");*/
  /*   testb(casel);*/
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
@@ -97,7 +97,7 @@ void SYSCALLHandler()
     /*addokbuf("Get the next instruction\n");*/
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
-    switch (casel)
+    switch (castle)
     {
 
     case SYSCALL1:
