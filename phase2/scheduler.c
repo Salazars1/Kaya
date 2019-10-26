@@ -45,18 +45,14 @@ void scheduler()
     if(currentProcess !=NULL){
         STCK(currentTOD);
         currentProcess -> p_timeProc = (currentProcess -> p_timeProc) + (currentTOD - TODStart);
+        insertProcQ(&readyQue,currentProcess);
+        currentProcess = NULL; 
+        
         
     }
-    else{
-        if(!emptyProcQ(readyQue)){
-            currentProcess = removeProcQ(&readyQue);
-            STCK(TODStart);
-            setTIMER(QUANTUM);
-            LDST(&(currentProcess -> p_s));
-        }
-        else{
-
-        currentProcess = NULL; /* no process is running*/
+    currentProcess = removeProcQ(&readyQue);
+    if(currentProcess == NULL)
+    {
         if (processCount == 0)
         { /* Everything finished running correctly */
             
@@ -77,16 +73,15 @@ void scheduler()
                 setSTATUS(ALLOFF | IEON | IECON | IMON);
                 WAIT();
             }
-
-
-
         }
-
-
-
     }
+    STCK(TODStart);
+    setTIMER(QUANTUM);
+    LDST(&(currentProcess -> p_s));
+    
+            
 
-}
+    
 }
 
 
