@@ -82,7 +82,6 @@ void SYSCALLHandler()
 
     if ((prevStatus < 1) && (prevStatus > 9))
     { 
-        print("Aye lets part holmes invite all the bitches \n");
         PassUpOrDie(prevState,SYSTRAP);
     }
     if(mode != ALLOFF){
@@ -113,6 +112,7 @@ void SYSCALLHandler()
         break;
 
     case SYSCALL2:
+        print("I am so fucking over this bug");
         Syscall2();
         break;
 
@@ -596,7 +596,7 @@ void PrgTrapHandler()
      */
 void TLBTrapHandler()
 {
-
+    print("In TLB is a fucking whore");
     /*Call Pass Up Or Die*/
     PassUpOrDie((state_t *)TLBMGMTOLDAREA, TLBTRAP);
 }
