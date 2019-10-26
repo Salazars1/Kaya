@@ -90,7 +90,7 @@ void SYSCALLHandler()
         CtrlPlusC(prevState, program);
 
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
-        (program->s_cause) = (((program->s_cause) & ~(0xFF)) | (10 << 2));
+        program->s_cause = 10 << 2;
         /*addokbuf("Program will be killed\n");*/
         /*Program Trap Handler */
         PrgTrapHandler();
