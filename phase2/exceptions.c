@@ -50,9 +50,9 @@ HIDDEN void PassUpOrDie(state_t *caller, int triggerReason);
  void PrgTrapHandler();
 void TLBTrapHandler();
 
-extern void CtrlPlusC(state_t *oldState, state_t *newState);
+ void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void TimeToDie(pcb_t *harambe);
-extern SYSCALLHandler();
+ void SYSCALLHandler();
 
 
 
