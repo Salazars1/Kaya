@@ -22,15 +22,20 @@
 
 #include "/usr/local/include/umps2/umps/libumps.e"
 
+
+
+
+
+extern int processCount;
+extern int softBlockCount;
+extern pcb_t *currentProcess;
+extern pcb_t *readyQue;
 /* Variables for maintaining CPU time*/
 cpu_t currentTOD;
 cpu_t TODStart;
 
 /* Variables that the scheduler uses from initial.c*/
-extern int processCount;
-extern int softBlockCount;
-extern pcb_t *currentProcess;
-extern pcb_t *readyQueue;
+
 
 
 
@@ -42,6 +47,7 @@ extern pcb_t *readyQueue;
     */
 void scheduler()
 {
+
     if(currentProcess !=NULL){
         STCK(currentTOD);
         currentProcess -> p_timeProc = (currentProcess -> p_timeProc) + (currentTOD - TODStart);
