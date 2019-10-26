@@ -45,9 +45,7 @@ void scheduler()
     if(currentProcess !=NULL){
         STCK(currentTOD);
         currentProcess -> p_timeProc = (currentProcess -> p_timeProc) + (currentTOD - TODStart);
-        insertProcQ(&readyQue,currentProcess);
-        currentProcess = NULL;
-        scheduler();
+        
     }
     else{
         if(!emptyProcQ(readyQue)){
