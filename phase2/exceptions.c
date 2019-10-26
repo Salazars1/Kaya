@@ -544,7 +544,7 @@ else{
     int * tracksem = harambe ->p_semAdd; 
     /*Remove it from the blocked list*/
     outBlocked(harambe);
-    if (tracksem >= &(sem[0]) && tracksem <= &(sem[TOTALSEM]))
+    if (tracksem >= &(semD[0]) && tracksem <= &(semD[49]))
 	{
 			/*Decrement the softblock */
 			--softBlockCount;
