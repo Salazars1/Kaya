@@ -94,6 +94,7 @@ void SYSCALLHandler()
         program->s_cause = 10 << 2;
         /*addokbuf("Program will be killed\n");*/
         /*Program Trap Handler */
+        print("SMoking smarties while she shakin ass and titties\n");
         PrgTrapHandler();
         
     }
