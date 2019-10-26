@@ -214,12 +214,12 @@ void SYSCALLHandler()
  void Syscall2()
 {
     /*Isolate the process being terminated from its dad and brothers*/
-    print("Fn SYs 2");
-    pcb_t * t = NULL;
-    t = outChild(currentProcess);
-    print("ok daddy ");
+   
+    
+    
     /*Send the Current Process to the helper function*/
     TimeToDie(currentProcess);
+
     print("REEE");
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
@@ -522,25 +522,43 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     */
 HIDDEN void TimeToDie(pcb_t * harambe)
 {
-    print("first ttd");
-    if(harambe ->p_child != NULL){
-        print("seconds ttd");
-        pcb_t * pro; 
-        
-        while(pro = removeChild(harambe)!= NULL){
-            print("four ttd");
-            TimeToDie(pro);
+    /*Look through until we no longer have a child*/
+    while(!emptyChild(harambe)){
 
+        TimeToDie(removeChild(harambe));
+    }
+
+    /*If the current Process is equal to the parameter Process*/
+if(currentProcess == harambe){
+    /*Remove the child from the parents child list*/
+    outChild(harambe);
+}
+/*If the semaphore is NULL it is not blocked*/
+if(harambe ->p_semAdd == NULL){
+    /*Remove it from the Ready Queue */
+    outProcQ(&readyQue, harambe);
+
+}
+else{
+    /*We know the process is blocked*/
+    int * tracksem = harambe ->p_semAdd; 
+    /*Remove it from the blocked list*/
+    outBlocked(harambe);
+    if (tracksem >= &(sem[0]) && tracksem <= &(sem[TOTALSEM]))
+	{
+			/*Decrement the softblock */
+			--softBlockCount;
+		}
+		else 
+		{
+            /*Increment the Semaphore*/
+			++*tracksem;
         }
-
     }
-    else{
-        print("last ttd");
-        freePcb(harambe);
-        processCount--;
 
 
-    }
+    freePcb(harambe);
+    processCount--; 
  
 }
 
