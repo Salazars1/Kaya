@@ -59,7 +59,7 @@ void debugD(){
 
      
 }
-void debugf(int fff){
+int debugf(int fff){
 
     return fff; 
 
@@ -187,13 +187,12 @@ void SYSCALLHandler()
     temp ->p_timeProc = 0; 
 
 
-    /*Syscall5 exceptions pointes are going to be defined*/
+    Syscall5 exceptions pointes are going to be defined*/
     
     if (!emptyProcQ(birthedProc))
     { 
 
     CtrlPlusC((state_t *)caller->s_a1, &(birthedProc->p_s));
-        /*addokbuf("Process count gets incremented\n");*/
         processCount++;
 
         /*Makes the new process a child of the currently running process calling the sys call */
@@ -204,7 +203,6 @@ void SYSCALLHandler()
 
         /*Copy the calling state into the new processes state*/
         
-        /*addokbuf("INserted into the process and child Copy state\n");*/
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
 
