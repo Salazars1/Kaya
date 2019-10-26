@@ -249,7 +249,7 @@ void SYSCALLHandler()
 
     pcb_t* newProccess = NULL;
     int * sema = (int *) caller ->s_a1; 
-    ++(*sema);
+    (*sema) = (*sema) + 1;
      /* increment semaphore  */
    /* testb(caller -> s_a1);*/
     if (*sema <= 0)
@@ -276,7 +276,7 @@ void SYSCALLHandler()
     
     int * sema = (int *)caller->s_a1; /* decrement semaphore */
 
-    --(*sema);
+    (*sema) = (*sema) - 1;
     if (*sema < 0)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
@@ -352,7 +352,7 @@ void SYSCALLHandler()
  void Syscall6(state_t *caller)
 {
     /*addokbuf("Sys call 6 start\n");*/
-   CtrlPlusC(caller, &(currentProcess->p_s));
+   
     
     STCK(currentTOD);
     (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (currentTOD - TODStart);
@@ -368,8 +368,8 @@ void SYSCALLHandler()
     /*caller->s_v0 = currentProcess -> p_timeProc; */
     /*Updates start time*/
 
-
-
+            
+    CtrlPlusC(caller, &(currentProcess->p_s));
     STCK(TODStart);
     /*Load the Current Processes State*/
    /*addokbuf("Load State\n");*/

@@ -232,7 +232,7 @@ void IOTrapHandler()
     semad =&(semD[devsemnum]);
 
     
-    (*semad)++; 
+    (*semad)= (*semad) +1; 
    /* tes(*semad);*/
     
     
