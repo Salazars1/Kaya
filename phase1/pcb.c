@@ -369,4 +369,6 @@ pcb_PTR outChild(pcb_PTR p){
         return p; 
     }
 
+    return NULL; 
+
 }
