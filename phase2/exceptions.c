@@ -217,7 +217,9 @@ HIDDEN void Syscall1(state_t *caller)
 HIDDEN void Syscall2()
 {
     /*Isolate the process being terminated from its dad and brothers*/
-    outChild(currentProcess);
+    print("in SYs 2");
+    pcb_t * t;
+    t = outChild(currentProcess);
     print("ok daddy ");
     /*Send the Current Process to the helper function*/
     TimeToDie(currentProcess);
