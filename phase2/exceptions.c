@@ -529,9 +529,9 @@ HIDDEN void TimeToDie(pcb_t * harambe)
 
     /*Look through until we no longer have a child*/
     while(!emptyChild(harambe)){
-        pus(1);
+        debugH(1);
         TimeToDie(removeChild(harambe));
-        pus(2);
+        debugH(2);
     }
 
     /*If the current Process is equal to the parameter Process*/
