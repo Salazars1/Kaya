@@ -184,7 +184,7 @@ void SYSCALLHandler()
 
 
     temp->p_semAdd = 0; 
-    temp ->p_timeProc = 0; /* no CPU time */
+    temp ->p_timeProc = 0; 
 
 
     /*Syscall5 exceptions pointes are going to be defined*/
