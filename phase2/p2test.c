@@ -223,9 +223,9 @@ void test() {
 	SYSCALL(CREATETHREAD, (int)&p2state,0 , 0);				/* start p2     */
 
 	print("p2 was started\n");
-	print("P2 \n");
+	
 	SYSCALL(VERHOGEN, (int)&startp2, 0, 0);					/* V(startp2)   */
-	print("Hello\n");
+	
 	SYSCALL(PASSERN, (int)&endp2, 0, 0);					/* P(endp2)     */
 
 	print("Dad Dies\n");
@@ -320,7 +320,7 @@ void p2() {
 			print ("error: not enough cpu time went by\n");
 		print("p2 blew it!\n");
 	}
-
+	print("p1p2 sync is set");
 	p1p2synch = 1;				/* p1 will check this */
 
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
