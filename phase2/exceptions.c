@@ -56,6 +56,10 @@ int debugC(int fucker){
 
     return fucker; 
 }
+int debugD(int fucker){
+
+    return fucker; 
+}
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
     for these first 8 System calls the Kernel Mode must be active in order for these commands
     to execute. If this is not the case, then the appropiate program trap would be execute. 
@@ -103,6 +107,7 @@ void SYSCALLHandler()
     /*addokbuf("Get the next instruction\n");*/
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
+    debugD(castle);
     switch (castle)
     {
 
