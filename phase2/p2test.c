@@ -130,9 +130,7 @@ void print(char *msg) {
 	SYSCALL(VERHOGEN, (int)&term_mut, 0, 0);				/* V(term_mut) */
 }
 
-int debug(int a){
-	return a; 
-}
+
 /*                                                                   */
 /*                 p1 -- the root process                            */
 /*                                                                   */
@@ -225,11 +223,10 @@ void test() {
 	SYSCALL(CREATETHREAD, (int)&p2state,0 , 0);				/* start p2     */
 
 	print("p2 was started\n");
-	
-	SYSCALL(VERHOGEN, (int)&startp2, 0, 0);					/* V(startp2)   */
-	
-	SYSCALL(PASSERN, (int)&endp2, 0, 0);					/* P(endp2)     */
 
+	SYSCALL(VERHOGEN, (int)&startp2, 0, 0);					/* V(startp2)   */
+
+	SYSCALL(PASSERN, (int)&endp2, 0, 0);					/* P(endp2)     */
 
 	/* make sure we really blocked */
 	if (p1p2synch == 0)
@@ -322,11 +319,11 @@ void p2() {
 			print ("error: not enough cpu time went by\n");
 		print("p2 blew it!\n");
 	}
-	
+
 	p1p2synch = 1;				/* p1 will check this */
 
 	SYSCALL(VERHOGEN, (int)&endp2, 0, 0);				/* V(endp2)     */
-	debug(120);
+
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p2 */
 
 	/* just did a SYS2, so should not get to this point */
