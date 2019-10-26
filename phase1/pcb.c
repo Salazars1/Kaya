@@ -62,7 +62,7 @@ pcb_PTR allocPcb(){
     temp->p_prev = NULL; 
 
 
-    temp->p_semAdd = 0; 
+    temp->p_semAdd = NULL; 
     temp ->p_timeProc = 0; /* no CPU time */
 
 
