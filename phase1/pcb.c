@@ -360,7 +360,7 @@ pcb_PTR outChild(pcb_PTR p){
       /*
     middle child 
     */
-    else{ 
+    if(p->p_prevSib != NULL && p->p_nextSib != NULL){ 
         p->p_prevSib ->p_nextSib = p->p_nextSib; 
         p->p_nextSib ->p_prevSib = p->p_prevSib; 
         p->p_nextSib = NULL; 
