@@ -54,7 +54,10 @@ void TLBTrapHandler();
 HIDDEN void TimeToDie(pcb_t *harambe);
  void SYSCALLHandler();
 
+int debugC(int fucker){
 
+    return fucker; 
+}
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
     for these first 8 System calls the Kernel Mode must be active in order for these commands
     to execute. If this is not the case, then the appropiate program trap would be execute. 
@@ -458,7 +461,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
    
     state_t *oldState;
     state_t *newState;
-   
+   debugC(caller -> s_cause >> 2);
     switch (triggerReason)
     {
 
