@@ -82,6 +82,7 @@ void SYSCALLHandler()
 
     if ((prevStatus < 1) && (prevStatus > 9))
     { 
+        print("Aye lets part holmes invite all the bitches \n");
         PassUpOrDie(prevState,SYSTRAP);
     }
     if(mode != ALLOFF){
@@ -94,7 +95,6 @@ void SYSCALLHandler()
         program->s_cause = 10 << 2;
         /*addokbuf("Program will be killed\n");*/
         /*Program Trap Handler */
-        print("SMoking smarties while she shakin ass and titties\n");
         PrgTrapHandler();
         
     }
