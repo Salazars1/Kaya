@@ -487,7 +487,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     /*addokbuf("Program trap \n");*/
         if ((currentProcess->p_newProgramTrap) != NULL)
         {
-
+            print("FUCK MY LUFE");
             Syscall2();
            
         }
