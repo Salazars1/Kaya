@@ -214,7 +214,7 @@ void SYSCALLHandler()
  void Syscall2()
 {
     /*Isolate the process being terminated from its dad and brothers*/
-   
+   print("Dad I dont ask for much, But pllease pay the nice man money so I can pass");
     
     
     /*Send the Current Process to the helper function*/
