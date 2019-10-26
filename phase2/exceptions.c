@@ -66,7 +66,6 @@ HIDDEN void TimeToDie(pcb_t *harambe);
 
 void SYSCALLHandler()
 {
-    /*addokbuf("An Exception has happened we are in the SYscall handler\n");*/
     state_t *prevState;
     state_t *program;
     unsigned int prevStatus;
