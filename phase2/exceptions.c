@@ -455,7 +455,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
    
     state_t *oldState;
     state_t *newState;
-    print("You done fucked up\n");
+    print("Eou done fucked up\n");
     switch (triggerReason)
     {
 
