@@ -79,8 +79,12 @@ void SYSCALLHandler()
  /*   testb(casel);*/
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
 
-    if (((prevStatus > 0) && (prevStatus < 9) && mode) != ALLOFF)
-    { /* It is User Mode*/
+    if ((prevStatus < 0) && (prevStatus > 9))
+    { 
+        PassUpOrDie(prevState,SYSTRAP);
+    }
+    if(mode != ALLOFF){
+/* It is User Mode*/
         /*addokbuf("We are in the part where the program will die\n");*/    
         program = (state_t *)PRGMTRAPOLDAREA;
         CtrlPlusC(prevState, program);
@@ -90,6 +94,7 @@ void SYSCALLHandler()
         /*addokbuf("Program will be killed\n");*/
         /*Program Trap Handler */
         PrgTrapHandler();
+        
     }
 
     /* increment prevState's PC to next instruction */
