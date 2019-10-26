@@ -526,10 +526,12 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     */
 HIDDEN void TimeToDie(pcb_t * harambe)
 {
+
     /*Look through until we no longer have a child*/
     while(!emptyChild(harambe)){
-
+        pus(1);
         TimeToDie(removeChild(harambe));
+        pus(2);
     }
 
     /*If the current Process is equal to the parameter Process*/
@@ -567,7 +569,9 @@ else{
 }
 
 
-
+int debugH(int pus){
+    return pus; 
+}
 
 /********/
 
