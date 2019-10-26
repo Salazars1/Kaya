@@ -107,11 +107,10 @@ void SYSCALLHandler()
     }
 
     /* increment prevState's PC to next instruction */
-    (prevState->s_pc) = (prevState->s_pc) + 4;
+    prevState->s_pc = prevState->s_pc + 4;
     /*addokbuf("Get the next instruction\n");*/
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
-    debugD(castle);
     switch (castle)
     {
 
@@ -344,8 +343,7 @@ void SYSCALLHandler()
         currentProcess->p_oldSys = (state_t *)caller->s_a2;
         currentProcess->p_newSys = (state_t *)caller->s_a3;
     }
-/*addokbuf("Load State\n");*/
-    LDST(caller);
+    LDST(&(currentProcess ->p_s));
 }
 
 /*Syscall6:  "Get_CPU_Time"
@@ -355,8 +353,7 @@ void SYSCALLHandler()
         Return: Void*/
  void Syscall6(state_t *caller)
 {
-    /*addokbuf("Sys call 6 start\n");*/
-   
+    CtrlPlusC(caller, &(currentProcess->p_s));
     
     STCK(currentTOD);
     (currentProcess->p_timeProc) = (currentProcess->p_timeProc) + (currentTOD - TODStart);
@@ -365,7 +362,6 @@ void SYSCALLHandler()
     
 
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
-    /*addokbuf("Time is being set properly\n");*/
     /*Store the new updated time spent processing into the v0 register of the process state*/
     (currentProcess->p_s.s_v0) = (currentProcess->p_timeProc);
 
@@ -373,10 +369,9 @@ void SYSCALLHandler()
     /*Updates start time*/
 
             
-    CtrlPlusC(caller, &(currentProcess->p_s));
+    
     STCK(TODStart);
     /*Load the Current Processes State*/
-   /*addokbuf("Load State\n");*/
     LDST(&(currentProcess ->p_s));
 }
 
