@@ -187,7 +187,7 @@ void SYSCALLHandler()
 
     /*Syscall5 exceptions pointes are going to be defined*/
     
-    if (birthedProc != NULL)
+    if (!emptyChild(birthedProc))
     { 
 
     CtrlPlusC((state_t *)caller->s_a1, &(birthedProc->p_s));
