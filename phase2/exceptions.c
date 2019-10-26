@@ -187,15 +187,10 @@ void SYSCALLHandler()
 
     /*Syscall5 exceptions pointes are going to be defined*/
     
-    if (birthedProc == NULL)
-    { /*Check space in the ready queue to make sure we have room to allocate*/
-        /*We did not have any more processses able to be made so we send back a -1*/
-        /*addokbuf("No More processes left load state\n");*/
-        caller->s_v0 = -1;
-    }
-    else
-    {
-        CtrlPlusC((state_t *)caller->s_a1, &(birthedProc->p_s));
+    if (birthedProc != NULL)
+    { 
+
+    CtrlPlusC((state_t *)caller->s_a1, &(birthedProc->p_s));
         /*addokbuf("Process count gets incremented\n");*/
         processCount++;
 
@@ -210,7 +205,17 @@ void SYSCALLHandler()
         /*addokbuf("INserted into the process and child Copy state\n");*/
         /*WE were able to allocate thus we put 0 in the v0 register*/
         caller->s_v0 = 0;
-        /*addokbuf("Load state and we done\n");*/
+
+
+
+    }
+    else
+    {
+        
+        /*addokbuf("Load state and we done\n");*//*Check space in the ready queue to make sure we have room to allocate*/
+        /*We did not have any more processses able to be made so we send back a -1*/
+        /*addokbuf("No More processes left load state\n");*/
+        caller->s_v0 = -1;
     }
     LDST(caller);
 }
