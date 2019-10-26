@@ -231,7 +231,7 @@ void SYSCALLHandler()
  void Syscall2()
 {
     /*Isolate the process being terminated from its dad and brothers*/
-    
+    print("Mother fucker get too mad gonna be a homicide... \n");
     
     /*Send the Current Process to the helper function*/
     TimeToDie(currentProcess);
