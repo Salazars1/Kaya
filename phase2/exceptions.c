@@ -144,10 +144,7 @@ void SYSCALLHandler()
         Syscall8(prevState);
         break;
 
-    default:
-    /*addokbuf("Pass up or die (Default case\n");*/
-        PassUpOrDie(prevState, SYSTRAP);
-        break;
+    
     }
 
     /*We should NEVER GET HERE. IF WE DO, WE DIE*/
