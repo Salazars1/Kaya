@@ -218,8 +218,10 @@ HIDDEN void Syscall2()
 {
     /*Isolate the process being terminated from its dad and brothers*/
     outChild(currentProcess);
+    print("ok daddy ");
     /*Send the Current Process to the helper function*/
     TimeToDie(currentProcess);
+    print("REEE");
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
     scheduler();
@@ -557,15 +559,20 @@ void TLBTrapHandler()
     */
 HIDDEN void TimeToDie(pcb_t * harambe)
 {
+    print("first ttd");
     if(harambe ->p_child != NULL){
+        print("seconds ttd");
         pcb_t * pro; 
+        
         while(pro = removeChild(harambe)!= NULL){
+            print("four ttd");
             TimeToDie(pro);
 
         }
 
     }
     else{
+        print("last ttd");
         freePcb(harambe);
         processCount--;
 
