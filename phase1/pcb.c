@@ -347,20 +347,26 @@ pcb_PTR outChild(pcb_PTR p){
         p -> p_prnt ->p_child = p->p_nextSib;
         p->p_nextSib ->p_prevSib = NULL; 
         p->p_prnt = NULL; 
+        p->p_nextSib = NULL; 
         return p; 
     }
     /*Last child */
    if(p->p_nextSib == NULL){
         p->p_prevSib ->p_nextSib = NULL; 
+        p->p_prevSib = NULL; 
+        p->p_prnt = NULL; 
         return p; 
     }   
       /*
     middle child 
     */
     else{ 
-       p-> p_prevSib ->p_nextSib = p->p_nextSib; 
-       p->p_nextSib -> p_prevSib = p->p_prevSib;
-       return p; 
+        p->p_prevSib ->p_nextSib = p->p_nextSib; 
+        p->p_nextSib ->p_prevSib = p->p_prevSib; 
+        p->p_nextSib = NULL; 
+        p-> p_prevSib = NULL; 
+        p->p_prnt = NULL;  
+        return p; 
     }
 
 }
