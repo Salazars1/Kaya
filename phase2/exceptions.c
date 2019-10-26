@@ -450,7 +450,7 @@ testb(termRead);*/
     */
 void PassUpOrDie(state_t *caller, int triggerReason)
 {
-    debugf(1);
+ 
    
     state_t *oldState;
     state_t *newState;
@@ -474,12 +474,11 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         break;
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
-        debugf(3);
+        
         /**/
         if ((currentProcess->p_newProgramTrap) == NULL)
         { 
             /*Just fucking take its life from it */  
-            debugf(4);
             Syscall2();
            
         }
