@@ -52,7 +52,6 @@ void TLBTrapHandler();
 
  void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void TimeToDie(pcb_t *harambe);
- void SYSCALLHandler();
 
 int debugC(int fucker){
 
