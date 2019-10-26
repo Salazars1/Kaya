@@ -57,7 +57,7 @@ void scheduler()
         currentProcess = NULL; 
         if (processCount == 0)
         { /* Everything finished running correctly */
-            
+            print("We here mother fucker \n");
             HALT();
         }
         
