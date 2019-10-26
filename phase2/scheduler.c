@@ -77,6 +77,7 @@ void scheduler()
             }
         }
     }
+    currentProcess = NotCurr; 
     STCK(TODStart);
     setTIMER(QUANTUM);
     LDST(&(currentProcess -> p_s));
