@@ -512,6 +512,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         break;
 
     default:
+        print("pls");
         Syscall2(); /*No vector is defined. Nuke it till it pukes*/
         break;
     }
