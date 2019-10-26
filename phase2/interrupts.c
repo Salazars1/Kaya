@@ -93,13 +93,10 @@ void IOTrapHandler()
        
         while(headBlocked(semaphoreAddress) != NULL)
         {
-               /*addokbuf("Headblocked is running \n");*/
             
             t = removeBlocked(semaphoreAddress);
-               /*addokbuf("Remove the process from the blocked \n");*/
 
             if(t != NULL){
-                   /*addokbuf("new process is not null \n");*/
                        STCK(finish);
                 insertProcQ(&readyQue, t);
                 t -> p_timeProc = t -> p_timeProc + (finish - interruptstart);
@@ -107,8 +104,7 @@ void IOTrapHandler()
             }
         }
          
-        (*semaphoreAddress) = 0;
-      /* addokbuf("Reset the semaphore address and call scheduler \n");*/
+        *semaphoreAddress = 0;
         CallScheduler();
     }
     else if ((offendingLine & DISKDEVICE) != ZERO)

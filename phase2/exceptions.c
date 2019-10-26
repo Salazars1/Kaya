@@ -238,7 +238,7 @@ void SYSCALLHandler()
 
     pcb_t* newProccess = NULL;
     int * sema = (int *) caller ->s_a1; 
-    ++(*sema);
+    ++*sema;
      /* increment semaphore  */
    /* testb(caller -> s_a1);*/
     if (*sema <= 0)
@@ -265,7 +265,7 @@ void SYSCALLHandler()
     
     int * sema = (int *)caller->s_a1; /* decrement semaphore */
 
-    --(*sema);
+    --*sema;
     if (*sema < 0)
     { /* there is something controlling the semaphore */
         CtrlPlusC(caller, &(currentProcess->p_s));
@@ -455,7 +455,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
    
     state_t *oldState;
     state_t *newState;
-    print("Eou done fucked up\n");
+   
     switch (triggerReason)
     {
 
