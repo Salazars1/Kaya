@@ -107,6 +107,7 @@ void SYSCALLHandler()
     prevState->s_pc = prevState->s_pc + 4;
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
+    debugf(castle);
     switch (castle)
     {
 
