@@ -99,7 +99,7 @@ void SYSCALLHandler()
     }
 
     /* increment prevState's PC to next instruction */
-    (prevState->s_pc) = (prevState->s_pc) + 4;
+    (prevState->s_pc) = (prevState->s_pc) + 8;
     /*addokbuf("Get the next instruction\n");*/
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
@@ -426,7 +426,7 @@ testb(termRead);*/
     sem = &(semD[index]);
    /* test(*sem);*/
 
-   (*sem)--;
+   --(*sem);
     if (*sem < 0)
     {
 
