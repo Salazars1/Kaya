@@ -39,10 +39,7 @@ extern cpu_t Quantumstart;
     in the actual function.*/
 HIDDEN void Syscall1(state_t *caller);
 HIDDEN void Syscall2();
-HIDDEN void Syscall3(state_t *caller);
-HIDDEN void Syscall4(state_t *caller);
 HIDDEN void Syscall5(state_t *caller);
-HIDDEN void Syscall6(state_t *caller);
 HIDDEN void Syscall7(state_t *caller);
 HIDDEN void Syscall8(state_t *caller);
 HIDDEN void PassUpOrDie(state_t *caller, int triggerReason);
@@ -181,7 +178,7 @@ void SYSCALLHandler()
         Parameters: State_t * caller
         Return: Void*/
     case SYSCALL6:
-    
+
         /*Copy the state of the caller*/
         CtrlPlusC(prevState, &(currentProcess->p_s));
         /*Get the updated time then add the difference to the time spent processing*/
