@@ -83,68 +83,66 @@ void SYSCALLHandler()
     /*Sys call less than 1 or greater than 9 pass up or die they are not built to be handled */
     if ((castle < 1) && (castle > 9))
     { 
+        /*Passup or die the previous state and specify a sys trap*/
         PassUpOrDie(prevState,SYSTRAP);
     }
+    /*If the sys call is calling a 1-8 and is in user mode*/
     else if(mode != ALLOFF){
 /* It is User Mode*/
-        program = (state_t *)PRGMTRAPOLDAREA;
-        CtrlPlusC(prevState, program);
-
+        /*Copy the old state to the program trap old area to call program trap handler*/
+        CtrlPlusC(prevState, (state_t *)PRGMTRAPOLDAREA;);
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         program->s_cause = 10 << 2;
         /*Program Trap Handler */
         PrgTrapHandler();
         
     }
-
     /* increment prevState's PC to next instruction */
     prevState->s_pc = prevState->s_pc + 4;
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
+    /*Debug to look at what sys call is being called*/
     debugf(castle);
     switch (castle)
     {
-
+    /*Create process (1)*/
     case SYSCALL1:
-        
         Syscall1(prevState);
         break;
-
+    /*Terminate Process (2) BROKEN */
     case SYSCALL2:
         Syscall2();
         break;
-
+    /*Verhogen Process (3)*/
     case SYSCALL3:
 
         Syscall3(prevState);
         break;
-
+    /*Passeren Process (4)*/
     case SYSCALL4:
 
         Syscall4(prevState);
         break;
-
+    /*Specify the Exception State Vector (5)*/
     case SYSCALL5:
         Syscall5(prevState);
         break;
-
+    /*Get CPU Time Process (6)*/
     case SYSCALL6:
+    /*No Function needed QUick and easy function that can be in the switch */
         Syscall6(prevState);
         break;
-
+    /*Wait for clock Process (7)*/
     case SYSCALL7:
+    /*No Function needed quick and dirty in the switch */
         Syscall7(prevState);
         break;
-
+    /*Wait for IO Device Process (8)*/
     case SYSCALL8:
         Syscall8(prevState);
         break;
-
-    
     }
 
-    /*We should NEVER GET HERE. IF WE DO, WE DIE*/
-    LDST(prevState);
 }
 
 /**************************  SYSCALL 1 THROUGH 8 FUNCTIONS    ******************************/
@@ -158,51 +156,31 @@ void SYSCALLHandler()
 
  void Syscall1(state_t *caller)
 {
+    /*make a new process and allocate a process block to it */
     pcb_t *birthedProc = allocPcb();
-    /* 
-    If Decide to Clean again
-    temp->p_child = NULL; 
-    temp->p_nextSib = NULL; 
-    temp->p_prevSib = NULL; 
-    temp->p_prnt = NULL; 
-    temp->p_next = NULL; 
-    temp->p_prev = NULL; 
-
-
-    temp->p_semAdd = 0; 
-    temp ->p_timeProc = 0; 
-
-
-    Syscall5 exceptions pointes are going to be defined*/
-    
-    if (!emptyProcQ(birthedProc))
+    /*Clean the new process block just in case*/
+    birthedProc = clean(birthedProc);
+    /*If the new process is null then We know there is no way to allocate a process*/
+    if (birthedProc == NULL)
     { 
-
-    CtrlPlusC((state_t *)caller->s_a1, &(birthedProc->p_s));
-        processCount++;
-
+        /*Copy the state into the prorcess state of the new process that we have allocated*/
+        CtrlPlusC((state_t *)caller->s_a1, &(birthedProc->p_s));
+        /*Increment process count */
+        processCount = processCount + 1;
         /*Makes the new process a child of the currently running process calling the sys call */
         insertChild(currentProcess, birthedProc);
-
         /* Inserts the new process into the Ready Queue*/
         insertProcQ(&readyQue, birthedProc);
-
-        /*Copy the calling state into the new processes state*/
-        
-        /*WE were able to allocate thus we put 0 in the v0 register*/
+        /*WE were able to allocate thus we put 0 in the v0 register SUCCESS!*/
         caller->s_v0 = 0;
-
-
-
     }
     else
     {
-        
-        /*addokbuf("Load state and we done\n");*//*Check space in the ready queue to make sure we have room to allocate*/
         /*We did not have any more processses able to be made so we send back a -1*/
-        /*addokbuf("No More processes left load state\n");*/
+        /*FAILURE*/
         caller->s_v0 = -1;
     }
+    /*Load the state of the state that called the sys 1*/
     LDST(caller);
 }
 
@@ -215,14 +193,13 @@ void SYSCALLHandler()
 {
     /*Isolate the process being terminated from its dad and brothers*/
     if(currentProcess == NULL){
-        gg(31);
-        scheduler();
+        /*No Current Process then we panic*/
+        PANIC();
     }
     /*Send the Current Process to the helper function*/
     TimeToDie(currentProcess);
-
     /*call scheduler*/
-    /*addokbuf("Schedule is called\n");*/
+    /*Debug Guy we never get here :(*/
     debugff(3);
     scheduler();
 }
@@ -626,3 +603,18 @@ extern void CtrlPlusC(state_t *oldState, state_t *newState)
     newState->s_pc = oldState->s_pc;
     newState->s_cause = oldState->s_cause;
 }
+
+pcb_PTR clean(pcb_PTR temp){
+    /*Just in case re clean the process block*/
+    temp->p_child = NULL; 
+    temp->p_nextSib = NULL; 
+    temp->p_prevSib = NULL; 
+    temp->p_prnt = NULL; 
+    temp->p_next = NULL; 
+    temp->p_prev = NULL; 
+    temp->p_semAdd = 0; 
+    temp ->p_timeProc = 0; 
+    return temp; 
+}
+
+
