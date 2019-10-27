@@ -209,22 +209,24 @@ void SYSCALLHandler()
     */
  void Syscall3(state_t *caller)
 {
+    /*Create a new process block and set it to NULL*/
     pcb_t* newProccess = NULL;
+    /*Cast the semaphore value in a1 to an int start and set it to a variable*/
     int * sema = (int *) caller ->s_a1; 
+    /*Increment that bitch */
     (*sema) = (*sema) + 1;
      /* increment semaphore  */
    /* testb(caller -> s_a1);*/
     if (*sema <= 0)
     { /* waiting in the semaphore */
-
+        /*Set the new process to a blocked process to the corresponding semaphore*/
         newProccess = removeBlocked(sema);
+        /*If its not null*/
         if (newProccess != NULL)
         { /* add it to the ready queue */
-            newProccess ->p_semAdd = NULL;
             insertProcQ(&readyQue, newProccess);
         }
     }
-    
     LDST(caller); /* returns control to caller */
 }
 
@@ -235,18 +237,17 @@ void SYSCALLHandler()
     */
  void Syscall4(state_t *caller)
 {
-    
+    /*Same process cast the semahore value from a1 and set it to a variable*/
     int * sema = (int *)caller->s_a1; /* decrement semaphore */
-
+    /*Decrement that bitch */
     (*sema) = (*sema) - 1;
     if (*sema < 0)
     { /* there is something controlling the semaphore */
+        /*Copy the state then insert onto the blocked and increment the softblock count and call scheduler*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sema, currentProcess);
-
-
+        softBlockCount = softBlockCount + 1; 
         scheduler();
-
     }
     /* nothing had control of the sem, return control to caller */
     LDST(caller);
@@ -607,6 +608,7 @@ pcb_PTR clean(pcb_PTR temp){
     temp->p_prnt = NULL; 
     temp->p_next = NULL; 
     temp->p_prev = NULL; 
+    temp ->p_semAdd = 0; 
     temp ->p_timeProc = 0; 
     return temp; 
 }
