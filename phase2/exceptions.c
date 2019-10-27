@@ -120,12 +120,12 @@ void SYSCALLHandler()
     /*Verhogen Process (3)*/
     /*  When this service is requested, it is interpreted by the nucleus to request to perform a Verhogen
     (V) operation on a sempahore. This is requested by placing 3 in a0, abd Verhogened in a1.
-    Parameter:  state* caller
+    Parameter:  state_PTR caller
     Return: Void
     */
     case SYSCALL3:
         /*Create a new process block and set it to NULL*/
-        pcb_t * newProccesss = NULL;
+        pcb_PTR newProcesss = NULL; 
         /*Cast the semaphore value in a1 to an int start and set it to a variable*/
         int * sema = (int *) prevState ->s_a1; 
         /*Increment that bitch */
