@@ -48,6 +48,13 @@ void IOTrapHandler()
     int devsemnum;
     int devicenumber;
 
+    device_t * testing;
+    int mathishard; 
+    int mathishard2; 
+    /*V op */
+    int * semad;
+
+
     int* semaphoreAddress;
     int deviceStatus;
     cpu_t finish;
@@ -156,9 +163,7 @@ void IOTrapHandler()
     devsemnum = devsemnum + devicenumber;
 
 
-    device_t * testing;
-    int mathishard; 
-    int mathishard2; 
+
     mathishard = 0; 
     mathishard2 = 0; 
     /*The base + 32 (4 words in the device + the size of each register * the register number*/
@@ -216,9 +221,7 @@ void IOTrapHandler()
     }
 
 
-    /*V op */
-       /*addokbuf("Playing with semaphores go ahead and check these in the debug functions \n");*/
-    int * semad; 
+     
 
     semad =&(semD[devsemnum]);
 
@@ -249,18 +252,22 @@ void IOTrapHandler()
 /*HELPER FUNCTIONS*/
 
 int finddevice(int linenumber)
-{
-       /*addokbuf("Finding this fucking device number  \n");*/
+{    
     /*Set some local variables*/
     int i;
     devregarea_t * tOffendingDevice;
-    int tt = linenumber -3; 
+    int tt;
+    unsigned int map;
+    unsigned int  t;
+    int devn;
+
     tOffendingDevice = (devregarea_t *) RAMBASEADDR;
     /*make a copy of the bit map */
-    unsigned int map = tOffendingDevice->interrupt_dev[tt];
-    unsigned int  t = FIRSTBIT; 
-    int devn;
+    map = tOffendingDevice->interrupt_dev[tt];
+    t = FIRSTBIT; 
+    
    
+   tt = linenumber -3;
     /*8 Total devices to look through */
     for (i = 0; i < TOTALDEVICES; i++)
     {
