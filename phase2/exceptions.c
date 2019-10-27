@@ -262,44 +262,34 @@ void SYSCALLHandler()
     */
  void Syscall5(state_t *caller)
 {   
-    /*addokbuf("Syscall 5 start\n");*/
-
     if (caller->s_a1 == 0)
     { /*TLB TRAP*/
-    /*addokbuf("the calling state a1 is 0\n");*/
         if (currentProcess->p_newTLB != NULL)
         { /* already called sys5 */
-            /*addokbuf("Syscall 2 is called\n");*/
             Syscall2();
         }
         /* assign exception values */
         currentProcess->p_oldTLB = (state_t *)caller->s_a2;
         currentProcess->p_newTLB = (state_t *)caller->s_a3;
-        /*addokbuf("Current process TLB process is being set\n");*/
     }
     else if (caller->s_a1 == 1)
     { /*Program Trap*/
-    /*addokbuf("the calling state is 1 so new program trap \n");*/
         if ((currentProcess->p_newProgramTrap) != NULL)
         { /* already called sys5 */
-            /*addokbuf("Syscall2\n ");*/
             Syscall2();
         }
         /* assign exception values */
         currentProcess->p_oldProgramTrap = (state_t *)caller->s_a2;
         currentProcess->p_newProgramTrap = (state_t *)caller->s_a3;
-        /*addokbuf("Current Process new program or old program is set to a2 and a3\n");*/
     }
     else
     {
 
         if ((currentProcess->p_newSys) != NULL)
         { /* already called sys5 */
-            /*addokbuf("Calling sys call 2\n");*/
             Syscall2();
         }
         /* assign exception values */
-        /*addokbuf("Old sys and new sys is set to a2 and a3\n");*/
         currentProcess->p_oldSys = (state_t *)caller->s_a2;
         currentProcess->p_newSys = (state_t *)caller->s_a3;
     }
@@ -313,22 +303,16 @@ void SYSCALLHandler()
         Return: Void*/
  void Syscall6(state_t *caller)
 {
+    /*Copy the state of the caller*/
     CtrlPlusC(caller, &(currentProcess->p_s));
-    
+    /*Get the updated time then add the difference to the time spent processing*/
     STCK(quantumrun);
     currentProcess->p_timeProc = currentProcess->p_timeProc + (quantumrun - Quantumstart);
-
-    
-
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
     /*Store the new updated time spent processing into the v0 register of the process state*/
     currentProcess->p_s.s_v0 = currentProcess->p_timeProc;
-
     /*caller->s_v0 = currentProcess -> p_timeProc; */
     /*Updates start time*/
-
-            
-    
     STCK(Quantumstart);
     /*Load the Current Processes State*/
     LDST(&(currentProcess ->p_s));
@@ -340,26 +324,21 @@ void SYSCALLHandler()
     Return: Void*/
  void Syscall7(state_t *caller)
 {
-    /*addokbuf("Syscall 7 start\n");*/
+    /*Ah shit here we go again with these fucking semaphores*/
     int *sem;
     sem = (int *)&(semD[SEMNUM - 1]);
-    (*sem)--;
+    (*sem) = (*sem) -1 ;
   /*  testb(*sem);*/
     if (*sem < 0)
     {
-        /*addokbuf("Semaphore is less than 0\n");*/
         /*Sem is less than 0 block the current process*/
-
+        /*Copy the state increment it onto the blocked list and increment softblock count*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
-     
         /*Increment that we have another process soft block so that it does not starve*/
         softBlockCount = softBlockCount + 1;
     }
-
-
     /*Process is soft blocked call to run another process*/
-    /*addokbuf("Call Scheduler\n");*/
     scheduler();
 }
 
