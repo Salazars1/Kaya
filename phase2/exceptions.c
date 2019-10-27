@@ -554,7 +554,7 @@ if(currentProcess == harambe){
 if(harambe ->p_semAdd == NULL){
     /*Remove it from the Ready Queue */
 
-    gg(1);
+    gg(100);
     outProcQ(&readyQue, harambe);
 
 }
