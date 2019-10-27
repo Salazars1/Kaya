@@ -124,25 +124,7 @@ void SYSCALLHandler()
     Return: Void
     */
     case SYSCALL3:
-        /*Create a new process block and set it to NULL*/
-        pcb_PTR newProcesss = NULL; 
-        /*Cast the semaphore value in a1 to an int start and set it to a variable*/
-        int * sema = (int *) prevState ->s_a1; 
-        /*Increment that bitch */
-        (*sema) = (*sema) + 1;
-        /* increment semaphore  */
-    /* testb(caller -> s_a1);*/
-        if (*sema <= 0)
-        { /* waiting in the semaphore */
-            /*Set the new process to a blocked process to the corresponding semaphore*/
-            newProccesss = removeBlocked(sema);
-            /*If its not null*/
-            if (newProccesss != NULL)
-            { /* add it to the ready queue */
-                insertProcQ(&readyQue, newProccesss);
-            }
-        }
-        LDST(prevState); /* returns control to caller */
+        Syscall3(prevState);
         break;
 
     /*Passeren Process (4)*/
@@ -263,6 +245,28 @@ void SYSCALLHandler()
     /*Debug Guy we never get here :(*/
     debugff(3);
     scheduler();
+}
+
+void Syscall3(state_t * caller){
+        /*Create a new process block and set it to NULL*/
+        pcb_t * newProccesss = NULL;
+        /*Cast the semaphore value in a1 to an int start and set it to a variable*/
+        int * sema = (int *) caller ->s_a1; 
+        /*Increment that bitch */
+        (*sema) = (*sema) + 1;
+        /* increment semaphore  */
+    /* testb(caller -> s_a1);*/
+        if (*sema <= 0)
+        { /* waiting in the semaphore */
+            /*Set the new process to a blocked process to the corresponding semaphore*/
+            newProccesss = removeBlocked(sema);
+            /*If its not null*/
+            if (newProccesss != NULL)
+            { /* add it to the ready queue */
+                insertProcQ(&readyQue, newProccesss);
+            }
+        }
+        LDST(caller); /* returns control to caller */
 }
 
 /*  When this service is requested, it will save the contentes of a2 and a3 and pass them to handle the
