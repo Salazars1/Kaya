@@ -124,7 +124,6 @@ void SYSCALLHandler()
     Return: Void
     */
     case SYSCALL3:
-        /*Create a new process block and set it to NULL*/
         pcb_t * newProccess = NULL;
         /*Cast the semaphore value in a1 to an int start and set it to a variable*/
         int * sema = (int *) prevState ->s_a1; 
