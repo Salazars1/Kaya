@@ -157,7 +157,7 @@ void SYSCALLHandler()
     /*make a new process and allocate a process block to it */
     pcb_t *birthedProc = allocPcb();
     /*Clean the new process block just in case*/
-    birthedProc = clean(birthedProc);
+   /* birthedProc = clean(birthedProc);*/
     /*If the new process is null then We know there is no way to allocate a process*/
     if (birthedProc == NULL)
     { 
@@ -209,9 +209,6 @@ void SYSCALLHandler()
     */
  void Syscall3(state_t *caller)
 {
-
-
-
     pcb_t* newProccess = NULL;
     int * sema = (int *) caller ->s_a1; 
     (*sema) = (*sema) + 1;
