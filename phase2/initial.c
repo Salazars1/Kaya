@@ -36,34 +36,36 @@ extern void test();
 /*LET THE OS KNOW WHERE TO START!*/
 int main()
 {
-    int i;
-    devregarea_t* deviceBus;
-    unsigned int RAMTOP;                                         /* Defines RAMTOP as an unsigned integer*/
-    state_t* newLocation; /* Initialize the new Processor State Areas */
-
-    /*  Initialize phase2 global variables  */
+    initPcbs();
+    initASL();
     processCount = 0;
     softBlockCount = 0;
     currentProcess = NULL;
     readyQue = mkEmptyProcQ();
-
-    /*  Initialize the PCB and ASL lists  */
-    initPcbs();
-    initASL();
-
-    /* iniltialize semaphores to 0*/
+  /* iniltialize semaphores to 0*/
+    int i;
     for (i = 0; i < SEMNUM; i++)
     {
         semD[i] = 0;
     }
 
     currentProcess = allocPcb();
-    /* Adds one more process to the process count */
-    processCount++;   
+    processCount = processCount + 1;   
 
-    
-    deviceBus = (devregarea_t*) RAMBASEADDR;    
+    devregarea_t* deviceBus;
+    deviceBus = (devregarea_t*) RAMBASEADDR;
+    unsigned int RAMTOP;                                         /* Defines RAMTOP as an unsigned integer*/
     RAMTOP = (deviceBus->rambase) + (deviceBus->ramsize);   /*Sets RAMTOP according to the hardware memory*/
+
+    state_t* newLocation; /* Initialize the new Processor State Areas */
+
+        /*  Initialize the PCB and ASL lists  */
+
+
+    /*  Initialize phase2 global variables  */
+   
+
+  
 
     /* SYSCALL BREAK*/
     newLocation = (state_t*) SYSCALLNEWAREA;
@@ -94,7 +96,7 @@ int main()
     newLocation->s_status = ALLOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
     /* Create initial process (alloc PCB)*/
-
+    /* Adds one more process to the process count */
 
     /* Initialize p_s with all the requirements */
     currentProcess->p_s.s_sp = (RAMTOP - PAGESIZE);
@@ -103,8 +105,7 @@ int main()
     currentProcess->p_s.s_status = ALLOFF | IEON | IMON | TEBITON; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
     
-    /* Inserts the process into the pcb data structure */
-    insertProcQ(&readyQue, currentProcess); 
+    insertProcQ(&readyQue, currentProcess); /* Inserts the process into the pcb data structure */
     currentProcess = NULL;
     
     LDIT(IOCLOCK);  /*Sets the semaphore pseudoclock*/
