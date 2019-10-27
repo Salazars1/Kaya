@@ -194,7 +194,7 @@ void SYSCALLHandler()
     /*Isolate the process being terminated from its dad and brothers*/
     if(currentProcess == NULL){
         /*No Current Process then we panic*/
-        PANIC();
+       /* PANIC();*/
     }
     /*Send the Current Process to the helper function*/
     TimeToDie(currentProcess);
