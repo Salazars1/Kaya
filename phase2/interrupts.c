@@ -33,7 +33,8 @@ cpu_t interruptstart;
 extern cpu_t TODStart;
 
 extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
-HIDDEN int findDevice(int lineNumber);
+int finddevice(int linenumber);
+void CallScheduler();
 
 
 void IOTrapHandler()
@@ -286,7 +287,7 @@ int finddevice(int linenumber)
     return devn;
 }
 
-HIDDEN void CallScheduler()
+void CallScheduler()
 {
        /*addokbuf("Calling the shceduler has started \n");*/
     state_t *temp;
