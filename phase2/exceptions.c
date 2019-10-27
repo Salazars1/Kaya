@@ -74,6 +74,7 @@ void SYSCALLHandler()
     int castle;
     int mode;
     int * sema;
+    int *sem;
     /*Assign a State * to be the SYS CALL OLD areaa*/
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     /*Assign the status*/
@@ -105,6 +106,10 @@ void SYSCALLHandler()
     execute the default case */
     /*Debug to look at what sys call is being called*/
     debugf(castle);
+    /*The following switch statement utilizes function calls on sys calls that are complex and are better seperated by calling
+    *Multiple functions. The sys calls that are listed in the switch statement are several lines long and are easy to follow
+    *The functions that are not in the switch statement are SYS 1,2, 5, 8 with the others being listed in the sys call. 
+    * */
     switch (castle)
     {
     /*Create process (1)*/
@@ -176,7 +181,6 @@ void SYSCALLHandler()
         Return: Void*/
     case SYSCALL6:
     /*No Function needed QUick and easy function that can be in the switch */
-    
     /*Copy the state of the caller*/
     CtrlPlusC(prevState, &(currentProcess->p_s));
     /*Get the updated time then add the difference to the time spent processing*/
@@ -192,13 +196,27 @@ void SYSCALLHandler()
     LDST(&(currentProcess ->p_s));
     break;
     /*Wait for clock Process (7)*/
+    /*  Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
+        Knowing that this clock also has a syscall 3 performing on it every 100 milliseconds
+        Parameters: State_t* Caller
+        Return: Void*/
     case SYSCALL7:
     /*No Function needed quick and dirty in the switch */
-     
-     
-        Syscall7(prevState);
-     
-     
+        /*Ah shit here we go again with these fucking semaphores*/
+        sem = (int *)&(semD[SEMNUM - 1]);
+        (*sem) = (*sem) -1 ;
+    /*  testb(*sem);*/
+        if (*sem < 0)
+        {
+            /*Sem is less than 0 block the current process*/
+            /*Copy the state increment it onto the blocked list and increment softblock count*/
+            CtrlPlusC(prevState, &(currentProcess->p_s));
+            insertBlocked(sem, currentProcess);
+            /*Increment that we have another process soft block so that it does not starve*/
+            softBlockCount = softBlockCount + 1;
+        }
+        /*Process is soft blocked call to run another process*/
+        scheduler();
         break;
     /*Wait for IO Device Process (8)*/
     case SYSCALL8:
@@ -308,30 +326,6 @@ void SYSCALLHandler()
         currentProcess->p_newSys = (state_t *)caller->s_a3;
     }
     LDST(&(currentProcess ->p_s));
-}
-
-/*  Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
-    Knowing that this clock also has a syscall 3 performing on it every 100 milliseconds
-    Parameters: State_t* Caller
-    Return: Void*/
- void Syscall7(state_t *caller)
-{
-    /*Ah shit here we go again with these fucking semaphores*/
-    int *sem;
-    sem = (int *)&(semD[SEMNUM - 1]);
-    (*sem) = (*sem) -1 ;
-  /*  testb(*sem);*/
-    if (*sem < 0)
-    {
-        /*Sem is less than 0 block the current process*/
-        /*Copy the state increment it onto the blocked list and increment softblock count*/
-        CtrlPlusC(caller, &(currentProcess->p_s));
-        insertBlocked(sem, currentProcess);
-        /*Increment that we have another process soft block so that it does not starve*/
-        softBlockCount = softBlockCount + 1;
-    }
-    /*Process is soft blocked call to run another process*/
-    scheduler();
 }
 
 /*  This service perofroms a Syscall 5 operation on the semaphore that the nucles maintains for the IO 
