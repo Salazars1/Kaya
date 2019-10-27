@@ -161,8 +161,9 @@ void IOTrapHandler()
     mathishard2 = devicenumber * DEVREGSIZE; 
     /*Add the two values together*/
     mathishard = mathishard + mathishard2; 
+    DEVPHYS
     /*Dev phys + the value of the computation above to find the device location*/
-    testing = (device_t *) (DEVPHYS + mathishard);     
+    testing = (device_t *) (0x10000050  + mathishard);     
     devsemnum = lineNumber -3; 
     devsemnum = devsemnum * 8; 
     devsemnum = devsemnum + devicenumber; 
