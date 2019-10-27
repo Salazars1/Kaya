@@ -115,11 +115,48 @@ void SYSCALLHandler()
         break;
     /*Verhogen Process (3)*/
     case SYSCALL3:
-        Syscall3(prevState);
+    /*Create a new process block and set it to NULL*/
+        pcb_t* newProccess = NULL;
+        /*Cast the semaphore value in a1 to an int start and set it to a variable*/
+        int * sema = (int *) caller ->s_a1; 
+        /*Increment that bitch */
+        (*sema) = (*sema) + 1;
+        /* increment semaphore  */
+    /* testb(caller -> s_a1);*/
+        if (*sema <= 0)
+        { /* waiting in the semaphore */
+            /*Set the new process to a blocked process to the corresponding semaphore*/
+            newProccess = removeBlocked(sema);
+            /*If its not null*/
+            if (newProccess != NULL)
+            { /* add it to the ready queue */
+                insertProcQ(&readyQue, newProccess);
+            }
+        }
+        LDST(caller); /* returns control to caller */
+
+
+
+
+
+
+
+
+
+
+
+/* Syscall3(prevState);*/
+    
+    
+    
         break;
     /*Passeren Process (4)*/
     case SYSCALL4:
+    
+    
         Syscall4(prevState);
+    
+    
         break;
     /*Specify the Exception State Vector (5)*/
     case SYSCALL5:
@@ -128,12 +165,20 @@ void SYSCALLHandler()
     /*Get CPU Time Process (6)*/
     case SYSCALL6:
     /*No Function needed QUick and easy function that can be in the switch */
+    
+    
         Syscall6(prevState);
+    
+    
         break;
     /*Wait for clock Process (7)*/
     case SYSCALL7:
     /*No Function needed quick and dirty in the switch */
+     
+     
         Syscall7(prevState);
+     
+     
         break;
     /*Wait for IO Device Process (8)*/
     case SYSCALL8:
@@ -163,14 +208,14 @@ void SYSCALLHandler()
     { 
         /*Copy the state into the prorcess state of the new process that we have allocated*/
         CtrlPlusC((state_t *)caller->s_a1, &(birthedProc->p_s));
-        /*Increment process count */
-        processCount = processCount + 1;
         /*Makes the new process a child of the currently running process calling the sys call */
         insertChild(currentProcess, birthedProc);
         /* Inserts the new process into the Ready Queue*/
         insertProcQ(&readyQue, birthedProc);
         /*WE were able to allocate thus we put 0 in the v0 register SUCCESS!*/
         caller->s_v0 = 0;
+         /*Increment process count */
+        processCount = processCount + 1;
     }
     else
     {
@@ -192,7 +237,7 @@ void SYSCALLHandler()
     /*Isolate the process being terminated from its dad and brothers*/
     if(currentProcess == NULL){
         /*No Current Process then we panic*/
-       /* PANIC();*/
+      /* PANIC();*/
     }
     /*Send the Current Process to the helper function*/
     TimeToDie(currentProcess);
@@ -246,7 +291,7 @@ void SYSCALLHandler()
         /*Copy the state then insert onto the blocked and increment the softblock count and call scheduler*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sema, currentProcess);
-        /*softBlockCount = softBlockCount + 1;*/ 
+        softBlockCount = softBlockCount + 1;
         scheduler();
     }
     /* nothing had control of the sem, return control to caller */
@@ -349,13 +394,11 @@ void SYSCALLHandler()
                 interrupt)*/
  void Syscall8(state_t *caller)
 {
-
     int lineNo; /*  line number*/
     int dnum;   /*  device number*/
     int termRead;
     int index;
     int *sem;
-
     lineNo = (int)caller->s_a1;
     dnum = (int)caller->s_a2;
     termRead = (int)caller->s_a3; /* terminal read  or write */
@@ -377,21 +420,14 @@ testb(termRead);*/
         /*Copy state put it on the blcok queue increment softblock and call scheduler*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
-       
-
         softBlockCount = softBlockCount + 1; 
-
         /*DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
         Keeps the overall flow of the program and since there is no starvation, eventually that process
         will get its turn to play with the processor*/
-        /*LDST(caller);*/
-       
+        /*LDST(caller);*/  
         scheduler();
-    }
-
-    
+    }   
 }
-
 /**************************  HANDLERS FUNCTIONS    ******************************/
 
 /*If an exception has been encountered, it passes the error to the appropiate handler, if no exception
@@ -401,20 +437,15 @@ testb(termRead);*/
     */
 void PassUpOrDie(state_t *caller, int triggerReason)
 {
- 
-   
     state_t *oldState;
     state_t *newState;
- 
     switch (triggerReason)
     {
-
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
         if ((currentProcess->p_newTLB) == NULL)
         {
             /*Just fucking murder it */
             Syscall2();
-           
         }
         else
         {
@@ -430,8 +461,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         if ((currentProcess->p_newProgramTrap) == NULL)
         { 
             /*Just fucking take its life from it */  
-            Syscall2();
-           
+            Syscall2();      
         }
         else
         {
@@ -460,9 +490,6 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         Syscall2(); /*No vector is defined. Nuke it till it pukes*/
         break;
     }
-    
-   
-    
 }
 
 /*Test function that will be removed before turn in but used for testing a0,a1,a2,a3 values*/
