@@ -115,6 +115,11 @@ void SYSCALLHandler()
         Syscall2();
         break;
     /*Verhogen Process (3)*/
+    /*  When this service is requested, it is interpreted by the nucleus to request to perform a Verhogen
+    (V) operation on a sempahore. This is requested by placing 3 in a0, abd Verhogened in a1.
+    Parameter:  state* caller
+    Return: Void
+    */
     case SYSCALL3:
     /*Create a new process block and set it to NULL*/
         newprocess = NULL;
@@ -134,30 +139,29 @@ void SYSCALLHandler()
                 insertProcQ(&readyQue, newprocess);
             }
         }
-        LDST(prevState); /* returns control to caller */
-
-
-
-
-
-
-
-
-
-
-
-/* Syscall3(prevState);*/
-    
-    
-    
+        LDST(prevState); /* returns control to caller */    
         break;
     /*Passeren Process (4)*/
+    /*  When this service is requested, it is interpreted by the nucleus to request to perform a Passeren
+    (P) operation on a sempahore. This is requested by placing 4 in a0, and Passerened in a1.
+    Parameter:  state* caller
+    Return: Void
+    */
     case SYSCALL4:
-    
-    
-        Syscall4(prevState);
-    
-    
+        /*Same process cast the semahore value from a1 and set it to a variable*/
+        int * sema = (int *)prevState->s_a1; /* decrement semaphore */
+        /*Decrement that bitch */
+        (*sema) = (*sema) - 1;
+        if (*sema < 0)
+        { /* there is something controlling the semaphore */
+            /*Copy the state then insert onto the blocked and increment the softblock count and call scheduler*/
+            CtrlPlusC(prevState, &(currentProcess->p_s));
+            insertBlocked(sema, currentProcess);
+            softBlockCount = softBlockCount + 1;
+            scheduler();
+        }
+        /* nothing had control of the sem, return control to caller */
+        LDST(prevState);
         break;
     /*Specify the Exception State Vector (5)*/
     case SYSCALL5:
@@ -246,57 +250,6 @@ void SYSCALLHandler()
     /*Debug Guy we never get here :(*/
     debugff(3);
     scheduler();
-}
-
-/*  When this service is requested, it is interpreted by the nucleus to request to perform a Verhogen
-    (V) operation on a sempahore. This is requested by placing 3 in a0, abd Verhogened in a1.
-    Parameter:  state* caller
-    Return: Void
-    */
- void Syscall3(state_t *caller)
-{
-    /*Create a new process block and set it to NULL*/
-    pcb_t* newProccess = NULL;
-    /*Cast the semaphore value in a1 to an int start and set it to a variable*/
-    int * sema = (int *) caller ->s_a1; 
-    /*Increment that bitch */
-    (*sema) = (*sema) + 1;
-     /* increment semaphore  */
-   /* testb(caller -> s_a1);*/
-    if (*sema <= 0)
-    { /* waiting in the semaphore */
-        /*Set the new process to a blocked process to the corresponding semaphore*/
-        newProccess = removeBlocked(sema);
-        /*If its not null*/
-        if (newProccess != NULL)
-        { /* add it to the ready queue */
-            insertProcQ(&readyQue, newProccess);
-        }
-    }
-    LDST(caller); /* returns control to caller */
-}
-
-/*  When this service is requested, it is interpreted by the nucleus to request to perform a Passeren
-    (P) operation on a sempahore. This is requested by placing 4 in a0, and Passerened in a1.
-    Parameter:  state* caller
-    Return: Void
-    */
- void Syscall4(state_t *caller)
-{
-    /*Same process cast the semahore value from a1 and set it to a variable*/
-    int * sema = (int *)caller->s_a1; /* decrement semaphore */
-    /*Decrement that bitch */
-    (*sema) = (*sema) - 1;
-    if (*sema < 0)
-    { /* there is something controlling the semaphore */
-        /*Copy the state then insert onto the blocked and increment the softblock count and call scheduler*/
-        CtrlPlusC(caller, &(currentProcess->p_s));
-        insertBlocked(sema, currentProcess);
-        softBlockCount = softBlockCount + 1;
-        scheduler();
-    }
-    /* nothing had control of the sem, return control to caller */
-    LDST(caller);
 }
 
 /*  When this service is requested, it will save the contentes of a2 and a3 and pass them to handle the
