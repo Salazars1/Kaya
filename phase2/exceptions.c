@@ -115,12 +115,10 @@ void SYSCALLHandler()
         break;
     /*Verhogen Process (3)*/
     case SYSCALL3:
-
         Syscall3(prevState);
         break;
     /*Passeren Process (4)*/
     case SYSCALL4:
-
         Syscall4(prevState);
         break;
     /*Specify the Exception State Vector (5)*/
@@ -612,7 +610,6 @@ pcb_PTR clean(pcb_PTR temp){
     temp->p_prnt = NULL; 
     temp->p_next = NULL; 
     temp->p_prev = NULL; 
-    temp->p_semAdd = 0; 
     temp ->p_timeProc = 0; 
     return temp; 
 }
