@@ -42,17 +42,18 @@ void IOTrapHandler()
     /*addokbuf("\n INTERRUPTS HAVE STARTED \n");*/
     
     unsigned int offendingLine;
+    /*Need to Determine Device Address and the Device semaphore number*/
+    int templinenum;
     int lineNumber;
     int devsemnum;
     int devicenumber;
-    device_t *  deviceRegisterNumber;
+
     int* semaphoreAddress;
     int deviceStatus;
+    cpu_t finish;
     pcb_t * t;
-    devregarea_t *OffendingDevice;
-  
-
     state_PTR caller;
+    
     STCK(interruptstart);
     caller = (state_t *)INTERRUPTOLDAREA;
 
@@ -84,8 +85,9 @@ void IOTrapHandler()
           /*addokbuf("Psuedo Clock\n");*/
         LDIT(PSUEDOCLOCKTIME);
         /*Access the Last clock which is the psuedo clock*/
+        
         semaphoreAddress = (int *) &(semD[SEMNUM-1]);
-        cpu_t finish; 
+         
     
        
         while(headBlocked(semaphoreAddress) != NULL)
@@ -94,7 +96,7 @@ void IOTrapHandler()
             t = removeBlocked(semaphoreAddress);
 
             if(t != NULL){
-                       STCK(finish);
+                STCK(finish);
                 insertProcQ(&readyQue, t);
                 t -> p_timeProc = t -> p_timeProc + (finish - interruptstart);
                 softBlockCount--;
@@ -144,15 +146,7 @@ void IOTrapHandler()
 
        /*addokbuf("Geting the device number \n");*/
     devicenumber = finddevice(lineNumber);
-  /*  tes(devicenumber);*/
-       /*addokbuf("Check the device number in a debug fun \n");*/
-    /*with Dev Reg and Line number Do literal magic*/
-    devregarea_t *temporary = (devregarea_t *)DEVPHYS;
-
-    
-   
-    /*Need to Determine Device Address and the Device semaphore number*/
-    int templinenum;
+       
     /*Offest the Line number*/
     templinenum = lineNumber - 3;
 
