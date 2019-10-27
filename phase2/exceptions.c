@@ -159,7 +159,7 @@ void SYSCALLHandler()
     /*Clean the new process block just in case*/
    /* birthedProc = clean(birthedProc);*/
     /*If the new process is null then We know there is no way to allocate a process*/
-    if (birthedProc == NULL)
+    if (birthedProc != NULL)
     { 
         /*Copy the state into the prorcess state of the new process that we have allocated*/
         CtrlPlusC((state_t *)caller->s_a1, &(birthedProc->p_s));
