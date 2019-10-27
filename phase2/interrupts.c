@@ -257,7 +257,7 @@ int finddevice(int linenumber)
         else
         {
             /* shift the map to the right 1 to check the next device */      
-            map = map >> 1; 
+            t = t << 1; 
         }
     }
     /*Return the device number*/
