@@ -246,7 +246,7 @@ void SYSCALLHandler()
         /*Copy the state then insert onto the blocked and increment the softblock count and call scheduler*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sema, currentProcess);
-        softBlockCount = softBlockCount + 1; 
+        /*softBlockCount = softBlockCount + 1;*/ 
         scheduler();
     }
     /* nothing had control of the sem, return control to caller */
