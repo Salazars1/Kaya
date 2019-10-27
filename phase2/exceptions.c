@@ -39,7 +39,10 @@ extern cpu_t Quantumstart;
     in the actual function.*/
 HIDDEN void Syscall1(state_t *caller);
 HIDDEN void Syscall2();
+HIDDEN void Syscall3(state_t *caller);
+HIDDEN void Syscall4(state_t *caller);
 HIDDEN void Syscall5(state_t *caller);
+HIDDEN void Syscall6(state_t *caller);
 HIDDEN void Syscall7(state_t *caller);
 HIDDEN void Syscall8(state_t *caller);
 HIDDEN void PassUpOrDie(state_t *caller, int triggerReason);
@@ -100,13 +103,6 @@ void SYSCALLHandler()
     execute the default case */
     /*Debug to look at what sys call is being called*/
     debugf(castle);
-    /*
-    *Funtions that are high in complexity have been seperated into its own function that will call other helper functions
-    * Some functions are easy to follow and there for in order to make the program easier to read did not break down 
-    * into other functions. These functions being only a few lines of code such as SYS 6 (Get cpu time ...)
-    * 
-    * 
-    */
     switch (castle)
     {
     /*Create process (1)*/
@@ -118,62 +114,21 @@ void SYSCALLHandler()
         Syscall2();
         break;
     /*Verhogen Process (3)*/
-    /*  When this service is requested, it is interpreted by the nucleus to request to perform a Verhogen
-    (V) operation on a sempahore. This is requested by placing 3 in a0, abd Verhogened in a1.
-    Parameter:  state_PTR caller
-    Return: Void
-    */
     case SYSCALL3:
         Syscall3(prevState);
         break;
-
     /*Passeren Process (4)*/
-    /*  When this service is requested, it is interpreted by the nucleus to request to perform a Passeren
-    (P) operation on a sempahore. This is requested by placing 4 in a0, and Passerened in a1.
-    Parameter:  state* caller
-    Return: Void
-    */
     case SYSCALL4:
-    /*Same process cast the semahore value from a1 and set it to a variable*/
-        int * sema = (int *)prevState->s_a1; /* decrement semaphore */
-        /*Decrement that bitch */
-        (*sema) = (*sema) - 1;
-        if (*sema < 0)
-        { /* there is something controlling the semaphore */
-            /*Copy the state then insert onto the blocked and increment the softblock count and call scheduler*/
-            CtrlPlusC(caller, &(currentProcess->p_s));
-            insertBlocked(sema, currentProcess);
-            softBlockCount = softBlockCount + 1; 
-            scheduler();
-        }
-        /* nothing had control of the sem, return control to caller */
-        LDST(prevState);
+        Syscall4(prevState);
         break;
     /*Specify the Exception State Vector (5)*/
     case SYSCALL5:
         Syscall5(prevState);
         break;
     /*Get CPU Time Process (6)*/
-/*Syscall6:  "Get_CPU_Time"
-    This service is in charge of making sure that the amount of time spent being processed is tracked by 
-    each Process Block that is running. 
-        Parameters: State_t * caller
-        Return: Void*/
     case SYSCALL6:
-
-        /*Copy the state of the caller*/
-        CtrlPlusC(prevState, &(currentProcess->p_s));
-        /*Get the updated time then add the difference to the time spent processing*/
-        STCK(quantumrun);
-        currentProcess->p_timeProc = currentProcess->p_timeProc + (quantumrun - Quantumstart);
-        /*Track the amout of time spent processing and add this to the previous amount of process time*/
-        /*Store the new updated time spent processing into the v0 register of the process state*/
-        currentProcess->p_s.s_v0 = currentProcess->p_timeProc;
-        /*caller->s_v0 = currentProcess -> p_timeProc; */
-        /*Updates start time*/
-        STCK(Quantumstart);
-        /*Load the Current Processes State*/
-        LDST(&(currentProcess ->p_s));
+    /*No Function needed QUick and easy function that can be in the switch */
+        Syscall6(prevState);
         break;
     /*Wait for clock Process (7)*/
     case SYSCALL7:
@@ -247,26 +202,55 @@ void SYSCALLHandler()
     scheduler();
 }
 
-void Syscall3(state_t * caller){
-        /*Create a new process block and set it to NULL*/
-        pcb_t * newProccesss = NULL;
-        /*Cast the semaphore value in a1 to an int start and set it to a variable*/
-        int * sema = (int *) caller ->s_a1; 
-        /*Increment that bitch */
-        (*sema) = (*sema) + 1;
-        /* increment semaphore  */
-    /* testb(caller -> s_a1);*/
-        if (*sema <= 0)
-        { /* waiting in the semaphore */
-            /*Set the new process to a blocked process to the corresponding semaphore*/
-            newProccesss = removeBlocked(sema);
-            /*If its not null*/
-            if (newProccesss != NULL)
-            { /* add it to the ready queue */
-                insertProcQ(&readyQue, newProccesss);
-            }
+/*  When this service is requested, it is interpreted by the nucleus to request to perform a Verhogen
+    (V) operation on a sempahore. This is requested by placing 3 in a0, abd Verhogened in a1.
+    Parameter:  state* caller
+    Return: Void
+    */
+ void Syscall3(state_t *caller)
+{
+    /*Create a new process block and set it to NULL*/
+    pcb_t* newProccess = NULL;
+    /*Cast the semaphore value in a1 to an int start and set it to a variable*/
+    int * sema = (int *) caller ->s_a1; 
+    /*Increment that bitch */
+    (*sema) = (*sema) + 1;
+     /* increment semaphore  */
+   /* testb(caller -> s_a1);*/
+    if (*sema <= 0)
+    { /* waiting in the semaphore */
+        /*Set the new process to a blocked process to the corresponding semaphore*/
+        newProccess = removeBlocked(sema);
+        /*If its not null*/
+        if (newProccess != NULL)
+        { /* add it to the ready queue */
+            insertProcQ(&readyQue, newProccess);
         }
-        LDST(caller); /* returns control to caller */
+    }
+    LDST(caller); /* returns control to caller */
+}
+
+/*  When this service is requested, it is interpreted by the nucleus to request to perform a Passeren
+    (P) operation on a sempahore. This is requested by placing 4 in a0, and Passerened in a1.
+    Parameter:  state* caller
+    Return: Void
+    */
+ void Syscall4(state_t *caller)
+{
+    /*Same process cast the semahore value from a1 and set it to a variable*/
+    int * sema = (int *)caller->s_a1; /* decrement semaphore */
+    /*Decrement that bitch */
+    (*sema) = (*sema) - 1;
+    if (*sema < 0)
+    { /* there is something controlling the semaphore */
+        /*Copy the state then insert onto the blocked and increment the softblock count and call scheduler*/
+        CtrlPlusC(caller, &(currentProcess->p_s));
+        insertBlocked(sema, currentProcess);
+        softBlockCount = softBlockCount + 1; 
+        scheduler();
+    }
+    /* nothing had control of the sem, return control to caller */
+    LDST(caller);
 }
 
 /*  When this service is requested, it will save the contentes of a2 and a3 and pass them to handle the
@@ -312,7 +296,27 @@ void Syscall3(state_t * caller){
     LDST(&(currentProcess ->p_s));
 }
 
-
+/*Syscall6:  "Get_CPU_Time"
+    This service is in charge of making sure that the amount of time spent being processed is tracked by 
+    each Process Block that is running. 
+        Parameters: State_t * caller
+        Return: Void*/
+ void Syscall6(state_t *caller)
+{
+    /*Copy the state of the caller*/
+    CtrlPlusC(caller, &(currentProcess->p_s));
+    /*Get the updated time then add the difference to the time spent processing*/
+    STCK(quantumrun);
+    currentProcess->p_timeProc = currentProcess->p_timeProc + (quantumrun - Quantumstart);
+    /*Track the amout of time spent processing and add this to the previous amount of process time*/
+    /*Store the new updated time spent processing into the v0 register of the process state*/
+    currentProcess->p_s.s_v0 = currentProcess->p_timeProc;
+    /*caller->s_v0 = currentProcess -> p_timeProc; */
+    /*Updates start time*/
+    STCK(Quantumstart);
+    /*Load the Current Processes State*/
+    LDST(&(currentProcess ->p_s));
+}
 
 /*  Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
     Knowing that this clock also has a syscall 3 performing on it every 100 milliseconds
