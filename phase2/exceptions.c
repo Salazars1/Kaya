@@ -519,6 +519,11 @@ void PassUpOrDie(state_t *caller, int triggerReason)
 }
 
 
+int gg(int f){
+
+    return f; 
+}
+
 
 /**************************  HELPER FUNCTIONS    ******************************/
 
@@ -546,6 +551,8 @@ if(currentProcess == harambe){
 /*If the semaphore is NULL it is not blocked*/
 if(harambe ->p_semAdd == NULL){
     /*Remove it from the Ready Queue */
+
+    gg(1);
     outProcQ(&readyQue, harambe);
 
 }
@@ -553,6 +560,7 @@ else{
     /*We know the process is blocked*/
     int * tracksem = harambe ->p_semAdd; 
     /*Remove it from the blocked list*/
+    gg(3);
     outBlocked(harambe);
     if (tracksem >= &(semD[0]) && tracksem <= &(semD[49]))
 	{
@@ -566,7 +574,7 @@ else{
         }
     }
 
-
+    
     freePcb(harambe);
     processCount--; 
  
