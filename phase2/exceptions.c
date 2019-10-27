@@ -179,7 +179,7 @@ void SYSCALLHandler()
         caller->s_v0 = -1;
     }
     /*Load the state of the state that called the sys 1*/
-    LDST(&caller);
+    LDST(caller);
 }
 
 /*  This services causes the executing process to be anihilated along with all its children, grand
@@ -227,7 +227,7 @@ void SYSCALLHandler()
             insertProcQ(&readyQue, newProccess);
         }
     }
-    LDST(&caller); /* returns control to caller */
+    LDST(caller); /* returns control to caller */
 }
 
 /*  When this service is requested, it is interpreted by the nucleus to request to perform a Passeren
@@ -250,7 +250,7 @@ void SYSCALLHandler()
         scheduler();
     }
     /* nothing had control of the sem, return control to caller */
-    LDST(&caller);
+    LDST(caller);
 }
 
 /*  When this service is requested, it will save the contentes of a2 and a3 and pass them to handle the
@@ -420,7 +420,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         {
             /*Copy the caller to the old and load the new*/
             CtrlPlusC(caller,currentProcess ->p_oldTLB);
-            LDST(&(currentProcess ->p_newTLB));
+            LDST((currentProcess ->p_newTLB));
         }
         break;
 
@@ -437,7 +437,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         {
            CtrlPlusC(caller,currentProcess ->p_oldProgramTrap);
            /*Copy the caller to the old and load the new*/
-            LDST(&(currentProcess ->p_newProgramTrap));
+            LDST((currentProcess ->p_newProgramTrap));
         }
         break;
 
@@ -452,7 +452,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
         {
             /*Copy the caller into the old and load the new */
             CtrlPlusC(caller,currentProcess ->p_oldSys);
-            LDST(&(currentProcess ->p_newSys));     
+            LDST((currentProcess ->p_newSys));     
         }
         break;
 
