@@ -117,7 +117,7 @@ void SYSCALLHandler()
     /*Verhogen Process (3)*/
     case SYSCALL3:
     /*Create a new process block and set it to NULL*/
-        newproccess = NULL;
+        newprocess = NULL;
         /*Cast the semaphore value in a1 to an int start and set it to a variable*/
         int * sema = (int *) prevState ->s_a1; 
         /*Increment that bitch */
@@ -127,7 +127,7 @@ void SYSCALLHandler()
         if (*sema <= 0)
         { /* waiting in the semaphore */
             /*Set the new process to a blocked process to the corresponding semaphore*/
-            newProccess = removeBlocked(sema);
+            newprocess = removeBlocked(sema);
             /*If its not null*/
             if (newProccess != NULL)
             { /* add it to the ready queue */
