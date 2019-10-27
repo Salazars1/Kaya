@@ -546,7 +546,7 @@ HIDDEN void TimeToDie(pcb_t * harambe)
     /*If the current Process is equal to the parameter Process*/
 if(currentProcess == harambe){
     /*Remove the child from the parents child list*/
-    gg(1);
+    gg(15);
     gg(0);
     outChild(harambe);
     gg(13);
