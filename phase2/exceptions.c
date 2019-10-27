@@ -59,6 +59,9 @@ void debugD(){
 
      
 }
+int debugff(int b){
+    return b; 
+}
 int debugf(int fff){
 
     return fff; 
@@ -226,6 +229,7 @@ void SYSCALLHandler()
 
     /*call scheduler*/
     /*addokbuf("Schedule is called\n");*/
+    debugff(3);
     scheduler();
 }
 
