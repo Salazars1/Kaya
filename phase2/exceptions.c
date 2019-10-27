@@ -555,7 +555,7 @@ if(currentProcess == harambe){
 
     test = outChild(harambe);
     if(test != NULL){
-
+        gg(79);
 
         freePcb(test);
         processCount = processCount -1; 
