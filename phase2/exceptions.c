@@ -129,9 +129,9 @@ void SYSCALLHandler()
             /*Set the new process to a blocked process to the corresponding semaphore*/
             newprocess = removeBlocked(sema);
             /*If its not null*/
-            if (newProccess != NULL)
+            if (newprocess != NULL)
             { /* add it to the ready queue */
-                insertProcQ(&readyQue, newProccess);
+                insertProcQ(&readyQue, newprocess);
             }
         }
         LDST(prevState); /* returns control to caller */
