@@ -26,18 +26,26 @@
 
 
 /* Global Variables*/
+/*The number of processes on the ready QUeue*/
 int processCount;
+/*The number of processes on the blocked queue */
 int softBlockCount;
+/*Pointer to the current running process*/
 pcb_t *currentProcess;
+/*Pointer to the */
 pcb_t *readyQue;
+/*49 Synchronization Semaphores in a list*/
 int semD[SEMNUM];
 
+/*Import the test function from the test file */
 extern void test();
 /*LET THE OS KNOW WHERE TO START!*/
 int main()
 {
+    /*INitialize PCV and ASL */
     initPcbs();
     initASL();
+    /*Set the global variables to the starting values... 0,0,NULL, NULL*/
     processCount = 0;
     softBlockCount = 0;
     currentProcess = NULL;
@@ -49,24 +57,16 @@ int main()
         semD[i] = 0;
     }
 
+    /*Allocate a process to be set as the current Process and increment process count*/
     currentProcess = allocPcb();
     processCount = processCount + 1;   
-
+    /*Define the Device bus and set the value of the RAMTOP*/
     devregarea_t* deviceBus;
     deviceBus = (devregarea_t*) RAMBASEADDR;
     unsigned int RAMTOP;                                         /* Defines RAMTOP as an unsigned integer*/
     RAMTOP = (deviceBus->rambase) + (deviceBus->ramsize);   /*Sets RAMTOP according to the hardware memory*/
 
     state_t* newLocation; /* Initialize the new Processor State Areas */
-
-        /*  Initialize the PCB and ASL lists  */
-
-
-    /*  Initialize phase2 global variables  */
-   
-
-  
-
     /* SYSCALL BREAK*/
     newLocation = (state_t*) SYSCALLNEWAREA;
     newLocation->s_pc = (memaddr) SYSCALLHandler;     
@@ -87,27 +87,23 @@ int main()
     newLocation->s_t9 = (memaddr) TLBTrapHandler;
     newLocation->s_sp = RAMTOP;
     newLocation->s_status = ALLOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
-
     /* INTERRUPTS */
     newLocation = (state_t*) INTERRUPTNEWAREA;
     newLocation->s_pc = (memaddr) IOTrapHandler;
     newLocation->s_t9 = (memaddr) IOTrapHandler;
     newLocation->s_sp = RAMTOP;
     newLocation->s_status = ALLOFF; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
-
-    /* Create initial process (alloc PCB)*/
-    /* Adds one more process to the process count */
-
     /* Initialize p_s with all the requirements */
     currentProcess->p_s.s_sp = (RAMTOP - PAGESIZE);
     currentProcess->p_s.s_pc = (memaddr) test;
     currentProcess->p_s.s_t9 = (memaddr) test;
     currentProcess->p_s.s_status = ALLOFF | IEON | IMON | TEBITON; /* Turns the VMOFF, IMON, UMOFF (Checks const.h for info in the names) */
 
-    
+    /*Insert the current process onto the ready Queue (Not Blocked)*/    
     insertProcQ(&readyQue, currentProcess); /* Inserts the process into the pcb data structure */
+    /*Since process is now on the ready queue Current Process is NULL*/
     currentProcess = NULL;
-    
+    /*Load 100 Milliseconds onto the psueodo clock */
     LDIT(IOCLOCK);  /*Sets the semaphore pseudoclock*/
 
     /* Lets the scheduler file take over.*/

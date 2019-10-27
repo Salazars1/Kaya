@@ -24,16 +24,16 @@
 
 #include "/usr/local/include/umps2/umps/libumps.e"
 
-/* Global Variables*/
+/* Global Variables from initial.e */
 extern int processCount;
 extern int softBlockCount;
 extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
 extern int semD[SEMNUM];
 
-/* Variables for maintaining CPU time*/
-extern cpu_t currentTOD;
-extern cpu_t TODStart;
+/* Variables for maintaining CPU time in scheduler.e*/
+extern cpu_t quantumrun;
+extern cpu_t Quantumstart;
 
 /*  Declaration of exceptions and helper fucntions. Further documentation will be provided
     in the actual function.*/
@@ -45,28 +45,18 @@ HIDDEN void Syscall5(state_t *caller);
 HIDDEN void Syscall6(state_t *caller);
 HIDDEN void Syscall7(state_t *caller);
 HIDDEN void Syscall8(state_t *caller);
-
 HIDDEN void PassUpOrDie(state_t *caller, int triggerReason);
- void PrgTrapHandler();
+void PrgTrapHandler();
 void TLBTrapHandler();
- void CtrlPlusC(state_t *oldState, state_t *newState);
+void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void TimeToDie(pcb_t *harambe);
+/*These are test functions that are break points for different Sys calls*/
+void debugC(){}
+void debugD(){}
+/*Test functions designed to view parameters of varying sys calls*/
+int debugff(int b){return b;}
+int debugf(int fff){return fff;}
 
-void debugC(){
-     
-}
-void debugD(){
-
-     
-}
-int debugff(int b){
-    return b; 
-}
-int debugf(int fff){
-
-    return fff; 
-
-}
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
     for these first 8 System calls the Kernel Mode must be active in order for these commands
     to execute. If this is not the case, then the appropiate program trap would be execute. 
@@ -76,25 +66,26 @@ int debugf(int fff){
 
 void SYSCALLHandler()
 {
+    /*Create variables to be used throughout this function*/
     state_t *prevState;
     state_t *program;
     unsigned int prevStatus;
-
     int castle;
     int mode;
-    
-
+    /*Assign a State * to be the SYS CALL OLD areaa*/
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
+    /*Assign the status*/
     prevStatus = prevState->s_status;
+    /*Assign which sys call is being called*/
     castle = prevState->s_a0;
  /*   testb(casel);*/
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
-
-    if ((prevStatus < 1) && (prevStatus > 9))
+    /*Sys call less than 1 or greater than 9 pass up or die they are not built to be handled */
+    if ((castle < 1) && (castle > 9))
     { 
         PassUpOrDie(prevState,SYSTRAP);
     }
-    if(mode != ALLOFF){
+    else if(mode != ALLOFF){
 /* It is User Mode*/
         program = (state_t *)PRGMTRAPOLDAREA;
         CtrlPlusC(prevState, program);
@@ -351,8 +342,8 @@ void SYSCALLHandler()
 {
     CtrlPlusC(caller, &(currentProcess->p_s));
     
-    STCK(currentTOD);
-    currentProcess->p_timeProc = currentProcess->p_timeProc + (currentTOD - TODStart);
+    STCK(quantumrun);
+    currentProcess->p_timeProc = currentProcess->p_timeProc + (quantumrun - Quantumstart);
 
     
 
@@ -365,7 +356,7 @@ void SYSCALLHandler()
 
             
     
-    STCK(TODStart);
+    STCK(Quantumstart);
     /*Load the Current Processes State*/
     LDST(&(currentProcess ->p_s));
 }
@@ -521,12 +512,8 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     
 }
 
-
-int gg(int f){
-
-    return f; 
-}
-
+/*Test function that will be removed before turn in but used for testing a0,a1,a2,a3 values*/
+int gg(int f){return f;}
 
 /**************************  HELPER FUNCTIONS    ******************************/
 
@@ -538,10 +525,10 @@ int gg(int f){
     */
 HIDDEN void TimeToDie(pcb_t * harambe)
 {
-
     /*Look through until we no longer have a child*/
     while(!emptyChild(harambe)){
         gg(4);
+        /*Recursive call with the first child*/
         TimeToDie(removeChild(harambe));
         gg(8);    
     }
@@ -552,18 +539,15 @@ if(currentProcess == harambe){
     gg(15);
     gg(0);
     pcb_t * test;
-
+    /**/
     test = outChild(harambe);
     if(test != NULL){
         gg(79);
-
+        /*If the test is not NULL then we free the pcb and decrement the process count then call scheduler*/
         freePcb(test);
         processCount = processCount -1; 
         scheduler();
     }
-
-
-
     gg(13);
 }
 /*If the semaphore is NULL it is not blocked*/
@@ -571,7 +555,6 @@ if(harambe ->p_semAdd == NULL){
     /*Remove it from the Ready Queue */
     gg(100);
     outProcQ(&readyQue, harambe);
-   
 }
 else{
     /*We know the process is blocked*/
@@ -591,19 +574,15 @@ else{
         }
     }
 
-    
+    /*Free the process block then decrement the process count */
     freePcb(harambe);
     gg(2);
     processCount--; 
  
 }
 
-
-void debugH(){
-     
-}
-
-/********/
+/*Test function that will be removed before turn in but used for break point without touching any a- register*/
+void debugH(){}
 
 /*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is 
     triggered when a PgmTrap exception is raised, execution continues with the nucleus’s PgmTrap exception
@@ -612,10 +591,8 @@ void debugH(){
     Return: Void
      */
 void PrgTrapHandler()
-{
-    /*addokbuf("Progrma trap handler is being called\n");*/
-    
-    /*Call Pass Up Or Die*/
+{    
+    /*Set a State to be the program trap old area specify a program trap then call pass up or die */
     PassUpOrDie((state_t *)PRGMTRAPOLDAREA, PROGTRAP);
 }
 
@@ -628,14 +605,9 @@ void PrgTrapHandler()
      */
 void TLBTrapHandler()
 {
-    /*Call Pass Up Or Die*/
+    /*Set State to the TLBMGOLDAREA and specify a TLB Trap then call pass up or die*/
     PassUpOrDie((state_t *)TLBMGMTOLDAREA, TLBTRAP);
 }
-
-
-/*******/
-
-
 
 /*  This state will copy all of the contents of the old state into the new state
     Parameters: State_t * oldstate, State_t* NewState
@@ -653,6 +625,4 @@ extern void CtrlPlusC(state_t *oldState, state_t *newState)
     newState->s_status = oldState->s_status;
     newState->s_pc = oldState->s_pc;
     newState->s_cause = oldState->s_cause;
-
-
 }

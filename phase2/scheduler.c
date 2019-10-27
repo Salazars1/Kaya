@@ -25,16 +25,18 @@
 
 
 
-
+/* Variables that the scheduler uses from initial.c These are Initial global variables and extern in initial.e*/
 extern int processCount;
 extern int softBlockCount;
 extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
-/* Variables for maintaining CPU time*/
-cpu_t currentTOD;
-cpu_t TODStart;
 
-/* Variables that the scheduler uses from initial.c*/
+
+/* Set global variables in scheduler in order to track timing that each process is running*/
+cpu_t quantumrun;
+cpu_t Quantumstart;
+
+
 
 
 
@@ -47,47 +49,61 @@ cpu_t TODStart;
     */
 void scheduler()
 {
-
+    /*If the current Process is not null Meaning that the Quantum is up*/
     if(currentProcess !=NULL){
-        STCK(currentTOD);
-        currentProcess -> p_timeProc = (currentProcess -> p_timeProc) + (currentTOD - TODStart);
+        /*Get the time that the clock is right now (how long the process has been running)*/
+        STCK(quantumrun);
+        /*Set the current Process time to be the old time added to the difference the quantum started and how long the store clock value was */
+        currentProcess -> p_timeProc = (currentProcess -> p_timeProc) + (quantumrun - Quantumstart);
+        /*Kernel Panic when these are active but We might need these */
         /*insertProcQ(&readyQue,currentProcess);*/
         /*currentProcess = NULL;*/ 
         
         
     }
+    /*Set a new process block pointer*/
     pcb_t * NotCurr;
+    /*Remove a process from the ready queue and set it to the new pointer*/
     NotCurr = removeProcQ(&readyQue);
+    /*If the removed process is Not NULL*/
+    if(Notcurr != NULL){
+        currentProcess = NotCurr; 
+        STCK(Quantumstart);
+        setTIMER(QUANTUM);
+        LDST(&(currentProcess -> p_s));
+    }
+    /*If the new process removed from the ready queue is NULL*/
     if(NotCurr == NULL)
     {   
+        /*Set current process to NULL (No processes ready to be run) */
         currentProcess = NULL; 
+        /*Check to see if we have any processes remainning */
         if (processCount == 0)
         { /* Everything finished running correctly */
             
             HALT();
         }
-        
+        /*Still processes that need to be run */
         if (processCount > 0)
         {
+            /*WE have processes but we have no processes on the ready queue or the blocked queue
+            * This is an Oh fuck moment and a deadlock case PANIC
+            */
             if (softBlockCount == 0)
             { /* DEADLOCK CASE */
                 PANIC();
             }
             else
             {
+                /*We have processes that are blocked and we need to wait with interrupts and exceptions enabled*/
                 /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
                 /*Tested*/
-                setSTATUS(getSTATUS()|ALLOFF | IEON | IECON | IMON);
+                setSTATUS(ALLOFF | IEON | IECON | IMON);
                 WAIT();
             }
         }
     }
-    else{
-    currentProcess = NotCurr; 
-    STCK(TODStart);
-    setTIMER(QUANTUM);
-    LDST(&(currentProcess -> p_s));
-    }
+    
             
 
 }
