@@ -69,6 +69,7 @@ void SYSCALLHandler()
     /*Create variables to be used throughout this function*/
     state_t *prevState;
     state_t *program;
+    pcb_PTR newprocess;
     unsigned int prevStatus;
     int castle;
     int mode;
@@ -116,9 +117,9 @@ void SYSCALLHandler()
     /*Verhogen Process (3)*/
     case SYSCALL3:
     /*Create a new process block and set it to NULL*/
-        pcb_t* newProccess = NULL;
+        newproccess = NULL;
         /*Cast the semaphore value in a1 to an int start and set it to a variable*/
-        int * sema = (int *) caller ->s_a1; 
+        int * sema = (int *) prevState ->s_a1; 
         /*Increment that bitch */
         (*sema) = (*sema) + 1;
         /* increment semaphore  */
@@ -133,7 +134,7 @@ void SYSCALLHandler()
                 insertProcQ(&readyQue, newProccess);
             }
         }
-        LDST(caller); /* returns control to caller */
+        LDST(prevState); /* returns control to caller */
 
 
 
