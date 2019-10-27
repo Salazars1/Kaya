@@ -90,7 +90,7 @@ void SYSCALLHandler()
     else if(mode != ALLOFF){
 /* It is User Mode*/
         /*Copy the old state to the program trap old area to call program trap handler*/
-        CtrlPlusC(prevState, (state_t *)PRGMTRAPOLDAREA;);
+        CtrlPlusC(prevState, (state_t *)PRGMTRAPOLDAREA);
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         program->s_cause = 10 << 2;
         /*Program Trap Handler */
