@@ -113,8 +113,8 @@
 
 /* ON/OFF bit manipulation*/
 #define ALLOFF  0x00000000
-#define VMOFF   0xFDFFFFFF      /* Virtual Memory OFF*/
-#define VMON    0x02000000      /* Virtual Memory ON*/
+#define VMOFF   0xF8FFFFFF      /* Virtual Memory OFF*/
+#define VMON    0x07000000      /* Virtual Memory ON*/
 #define UMOFF   0x00000008       /* User Mode OFF (Kernel Mode ON)*/
 #define UMON    0xFFFFFFF7     /* User Mode ON (Kernel Mode OFF)*/
 #define IMOFF   0xFFFF00FF      /* Interrupt UNMasked */
