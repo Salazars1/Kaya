@@ -172,7 +172,7 @@ void initASL(){
     Parameter:
     Return:     -NULL (If the Head Node is is empty)*/
 
-HIDDEN semd_t *allocASL(){
+ semd_t *allocASL(){
     semd_t * temp;
 
     if(semdFree_h == NULL){
@@ -200,7 +200,7 @@ HIDDEN semd_t *allocASL(){
     Return:         -semAdd parent: if semAdd is found
                     -dummy node parent: if semAdd is not found.*/
     
-HIDDEN semd_t *searchForParent(int *semAdd){
+ semd_t *searchForParent(int *semAdd){
 	semd_t *temp = (semd_t*) semd_h;
     
 	if(semAdd == NULL){
@@ -219,7 +219,7 @@ HIDDEN semd_t *searchForParent(int *semAdd){
     value. 
     Parameter:  semd_t
     Return:     */
-HIDDEN void deAllocASL(semd_t *s){
+ void deAllocASL(semd_t *s){
     if(semdFree_h==NULL){                           /*semdFreeList was empty*/
         semdFree_h = s;                             /*adds the node pointer to semdFreeList*/
         semdFree_h -> s_next = NULL;                
