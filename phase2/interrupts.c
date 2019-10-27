@@ -45,14 +45,12 @@ void IOTrapHandler()
     int lineNumber;
     int devsemnum;
     int devicenumber;
-    device_t *  deviceRegisterNumber;
+
     int* semaphoreAddress;
     int deviceStatus;
     pcb_t * t;
-    devregarea_t *OffendingDevice;
-  
-
     state_PTR caller;
+    
     STCK(interruptstart);
     caller = (state_t *)INTERRUPTOLDAREA;
 
@@ -147,8 +145,6 @@ void IOTrapHandler()
   /*  tes(devicenumber);*/
        /*addokbuf("Check the device number in a debug fun \n");*/
     /*with Dev Reg and Line number Do literal magic*/
-    devregarea_t *temporary = (devregarea_t *)DEVPHYS;
-
     
    
     /*Need to Determine Device Address and the Device semaphore number*/
