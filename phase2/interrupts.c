@@ -287,7 +287,7 @@ int finddevice(int linenumber)
     return devn;
 }
 
-int proof(int gg){
+int proof(unsigned int gg){
     return gg; 
 }
 
