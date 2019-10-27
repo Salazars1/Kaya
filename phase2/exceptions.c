@@ -223,7 +223,10 @@ void SYSCALLHandler()
  void Syscall2()
 {
     /*Isolate the process being terminated from its dad and brothers*/
-    
+    if(currentProcess == NULL){
+        gg(31);
+        scheduler();
+    }
     /*Send the Current Process to the helper function*/
     TimeToDie(currentProcess);
 
@@ -551,7 +554,7 @@ if(currentProcess == harambe){
     pcb_t * test;
 
     test = outChild(harambe);
-     if(test != NULL){
+    if(test != NULL){
 
 
         freePcb(test);
