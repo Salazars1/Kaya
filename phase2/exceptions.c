@@ -540,13 +540,14 @@ HIDDEN void TimeToDie(pcb_t * harambe)
     while(!emptyChild(harambe)){
         
         TimeToDie(removeChild(harambe));
-        
+        gg(4);    
     }
 
     /*If the current Process is equal to the parameter Process*/
 if(currentProcess == harambe){
     /*Remove the child from the parents child list*/
     outChild(harambe);
+    gg(1);
 }
 /*If the semaphore is NULL it is not blocked*/
 if(harambe ->p_semAdd == NULL){
@@ -576,6 +577,7 @@ else{
 
     
     freePcb(harambe);
+    gg(2);
     processCount--; 
  
 }
