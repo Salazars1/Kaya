@@ -41,7 +41,7 @@ void CallScheduler();
 
 void IOTrapHandler()
 {
-    /**/    
+    /*Line number bit map that is in the cause register of the state stored in interrupt old area*/
     unsigned int offendingLine;
     /*Need to Determine Device Address and the Device semaphore number*/
     int templinenum;
@@ -188,6 +188,7 @@ void IOTrapHandler()
             /*fix the semaphore number for terminal readers sub device */
         }
     }
+    /*Not a terminal pretty straight forward*/
     else
     {
         /*Non terminal Interrupt*/
@@ -195,31 +196,26 @@ void IOTrapHandler()
         /*Acknowledge the interrupt*/
         testing->d_command = ACK;
     }
-
+    /*Get the semaphore for the device causing the interrupt*/
     semad =&(semD[devsemnum]);
+    /*Increment by 1 */
     (*semad)= (*semad) +1; 
     if ((*semad) <= 0)
-    {
+    {   /*Remove one from the blocked list and if that is not null*/
         t = removeBlocked(semad);
         if (t != NULL)
         {
-            t -> p_semAdd = NULL;
+            /*Set the status in the v0 register decrement the softblock count and insert it onto the ready queue*/
             t-> p_s.s_v0 = deviceStatus; 
              softBlockCount = softBlockCount - 1;
             insertProcQ(&readyQue, t);
-           
-            
         }
-       
     }
-    
     CallScheduler();
     /*Interrupt has been Handled!*/
 }
 
 /*HELPER FUNCTIONS*/
-
-
 /**
  * Take in the line number of the interrupt that is offending. We will then bit shift until we find the first device causing
  * The interrupt
@@ -248,7 +244,6 @@ int finddevice(int linenumber)
     map = tOffendingDevice->interrupt_dev[tt];
     /*Only care about the first bit */
     t = FIRSTBIT; 
-    
     /*8 Total devices to look through */
     for (i = 0; i < TOTALDEVICES; i++)
     {
@@ -261,12 +256,10 @@ int finddevice(int linenumber)
         }
         else
         {
-            /*Increment both the index and shift the bits 1 */      
+            /* shift the map to the right 1 to check the next device */      
             map = map >> 1; 
-        
         }
     }
-    
     /*Return the device number*/
     return devn;
 }
