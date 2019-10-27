@@ -28,7 +28,7 @@
 /* Global Variables*/
 int processCount;
 int softBlockCount;
-HIDDEN pcb_t *currentProcess;
+pcb_t *currentProcess;
 pcb_t *readyQue;
 int semD[SEMNUM];
 

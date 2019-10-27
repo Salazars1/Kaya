@@ -17,7 +17,7 @@ Null terminated. Pcb_t is located in Types.h
 
 
 /*Globally defines pcbList_h.*/
-HIDDEN pcb_PTR pcbList_h;
+pcb_PTR pcbList_h;
 
 
 /*  Insert the element pointed to by p into the pcbFree list

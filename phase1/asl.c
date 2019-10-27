@@ -19,8 +19,8 @@ list has a corresponding doubley linked circular tail pointer data structure of 
 #include "../e/pcb.e"
 
 
-HIDDEN semd_t *semd_h;                  /* Globally defines active list*/
-HIDDEN semd_t *semdFree_h;              /* Globally define free semaphore list */
+ semd_t *semd_h;                  /* Globally defines active list*/
+ semd_t *semdFree_h;              /* Globally define free semaphore list */
 
 
 
