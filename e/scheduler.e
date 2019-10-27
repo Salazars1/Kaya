@@ -3,8 +3,8 @@
 #ifndef SCHEDULER
 #define SCHEDULER
 
-extern cpu_t currentTOD;
-extern cpu_t TODStart;
+extern cpu_t quantumrun;
+extern cpu_t Quantumstart;
 
 extern void scheduler();
 

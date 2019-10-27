@@ -21,7 +21,7 @@
 #include "/usr/local/include/umps2/umps/libumps.e"
 
 
-/* Global Variables*/
+/* Global Variables from initial.e*/
 extern int processCount;
 extern int softBlockCount;
 extern pcb_t *currentProcess;
@@ -29,48 +29,45 @@ extern pcb_t *readyQue;
 extern int semD[SEMNUM];
 cpu_t interruptstart; 
 
-/* Variables for maintaining CPU time*/
-extern cpu_t TODStart;
+/* Variables for maintaining CPU time from scheduler.e*/
+extern cpu_t Quantumstart;
 
+/*We want to use the copy state fucntion from exceptions*/
 extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
+/*2 additional functions to help compute the device number and call the scheduler*/
 int finddevice(int linenumber);
 void CallScheduler();
 
 
 void IOTrapHandler()
 {
-    /*addokbuf("\n INTERRUPTS HAVE STARTED \n");*/
-    
+    /**/    
     unsigned int offendingLine;
     /*Need to Determine Device Address and the Device semaphore number*/
     int templinenum;
     int lineNumber;
     int devsemnum;
     int devicenumber;
-
     device_t * testing;
     int mathishard; 
     int mathishard2; 
-    /*V op */
+    /*V operation sempahore variables */
     int * semad;
-
-
     int* semaphoreAddress;
+    /*Store the device status to place in v0*/
     int deviceStatus;
+    /*Another timing variable*/
     cpu_t finish;
     pcb_t * t;
     state_PTR caller;
-    
+    /*Get the time the interrupt stated*/
     STCK(interruptstart);
+    /*Get the state of the offending interrupt*/
     caller = (state_t *)INTERRUPTOLDAREA;
 
 
-
+    /*Shift 8 since we only care about bits 8-15*/
     offendingLine = caller ->s_cause >> 8;
-  
-
-
-
     if ((offendingLine & MULTICORE) != ZERO)
     { /*Mutli Core is on */
       
@@ -80,48 +77,41 @@ void IOTrapHandler()
     else if ((offendingLine & CLOCK1) != ZERO)
     {
         /*The process has spent its quantum. Its time to start a new process .*/
-    
         CallScheduler();
         /*Clock 1 Has an Interrupt */
     }
    
     else if ((offendingLine & CLOCK2) != ZERO)
     {
-        /*Load the clock with 100 Milliseconds*/
-        LDIT(PSUEDOCLOCKTIME);
         /*Access the Last clock which is the psuedo clock*/
-        
         semaphoreAddress = (int *) &(semD[SEMNUM-1]);
-         
-    
-       
+       /*Free all of the processes that are currently blocked and put them onto the ready queue*/
         while(headBlocked(semaphoreAddress) != NULL)
         {
-            
+            /*Remove from the blocked list*/
             t = removeBlocked(semaphoreAddress);
-
+            /*if not null then we put that bitch back onto the ready queue*/
             if(t != NULL){
                 STCK(finish);
                 insertProcQ(&readyQue, t);
-                t -> p_timeProc = t -> p_timeProc + (finish - interruptstart);
+                /*One less softblock process */
                 softBlockCount--;
             }
         }
-         
+         /*Set the semaphore back to 0*/
         *semaphoreAddress = 0;
+        /*Load the clock with 100 Milliseconds*/
+        LDIT(PSUEDOCLOCKTIME);
         CallScheduler();
     }
     else if ((offendingLine & DISKDEVICE) != ZERO)
     {
-           
         /*Disk Device is on  */
-    
         lineNumber = DI;
     }
     else if ((offendingLine & TAPEDEVICE) != ZERO)
     {
-        /*Tape Device is on */
-         
+        /*Tape Device is on */    
         lineNumber = TI;
     }
     else if ((offendingLine & NETWORKDEVICE) != ZERO)
@@ -139,75 +129,63 @@ void IOTrapHandler()
     }
     else if ((offendingLine & TERMINALDEVICE) != ZERO)
     {
-          /* addokbuf("the offending line is a terminal device -> FUck  \n");*/
         /*Terminal Device is on */
-         /*addokbuf("FUCK \n\n\n\n\n");*/
         lineNumber = TERMINALI;
     }
+    /*Not recognized so go ahead and panic for me*/
     else
     {
         PANIC();
     }
 
-       /*addokbuf("Geting the device number \n");*/
+    /*Call the helper function since we have the line number and need to find the device number*/
     devicenumber = finddevice(lineNumber);
        
     /*Offest the Line number*/
-    templinenum = lineNumber - 3;
+    templinenum = lineNumber - DEVWOSEM;
 
     /* 8 devices per line number*/
-    devsemnum = templinenum * 8;
+    devsemnum = templinenum * DEVPERINT;
     /*We know which device it is */
     devsemnum = devsemnum + devicenumber;
-
-
-
+    /*Reset these values back to 0 */
     mathishard = 0; 
     mathishard2 = 0; 
-    /*The base + 32 (4 words in the device + the size of each register * the register number*/
-    /*deviceRegisterNumber = (device_t *)((temporary->rambase + 32) + (devsemnum * DEVREGSIZE));
-*/
-   /*addokbuf("The math is being computated for the device number and device base  \n");*/
-    mathishard2 = lineNumber - 3; 
-    mathishard = mathishard2 * 16; 
-    mathishard = mathishard * 8; 
-    mathishard2 = devicenumber * 16; 
+    /*Offset the line number*/
+    mathishard2 = templinenum;
+    /*Multiply by the size of the registers (16 bytes)*/ 
+    mathishard = mathishard2 * DEVREGSIZE; 
+    /*Mutliply by the number of devices*/
+    mathishard = mathishard * DEVPERINT; 
+    /*Multiply the size of the regsiters*/
+    mathishard2 = devicenumber * DEVREGSIZE; 
+    /*Add the two values together*/
     mathishard = mathishard + mathishard2; 
-    testing = (device_t *) (0x10000050 + mathishard); 
-  
-    
-   /* testing = (device_t *)(0x10000050 + ((lineNumber - 3 ) * (8 * 16) + (devsemnum * DEVREGSIZE)));*/
-    
+    /*Dev phys + the value of the computation above to find the device location*/
+    testing = (device_t *) (DEVPHYS + mathishard);     
     devsemnum = lineNumber -3; 
     devsemnum = devsemnum * 8; 
     devsemnum = devsemnum + devicenumber; 
-/*addokbuf("WE LIVE \n\n");*/
+    /*If the line number is a terminal which is why we dont decrement line number by 3 and assign a new variable!*/
     if (lineNumber == TERMINT)
     {
-
         /*Terminal*/
-
         if ((testing->t_transm_status & 0xF) != READY)
         {
-                /*Acknowledge*/
-            
+                /*Set the device status*/
                 deviceStatus = testing->t_transm_status;
-         
                 /*Acknowledge*/
                 testing->t_transm_command = ACK;
-
-       
         }
         else
         {
+            /*Semaphore number + 8 */
+            devsemnum = devsemnum + DEVPERINT; 
             /*Save the status*/
-            devsemnum += 8; 
-          
             deviceStatus = testing->t_recv_status;
             /*Acknowledge*/
             testing->t_recv_command = ACK;
             /*fix the semaphore number for terminal readers sub device */
-           /* devsemnum = devsemnum + DEVPERINT;*/
         }
     }
     else
@@ -218,16 +196,8 @@ void IOTrapHandler()
         testing->d_command = ACK;
     }
 
-
-     
-
     semad =&(semD[devsemnum]);
-
-    
     (*semad)= (*semad) +1; 
-   /* tes(*semad);*/
-    
-    
     if ((*semad) <= 0)
     {
         t = removeBlocked(semad);
@@ -249,29 +219,43 @@ void IOTrapHandler()
 
 /*HELPER FUNCTIONS*/
 
+
+/**
+ * Take in the line number of the interrupt that is offending. We will then bit shift until we find the first device causing
+ * The interrupt
+ * parameter: Int Line number of interrupt
+ * Return type: Int of the offending device number
+*/
 int finddevice(int linenumber)
 {    
     /*Set some local variables*/
+    /*For loop counter*/
     int i;
+    /*area that is causing the interrupt that has the map of the device*/
     devregarea_t * tOffendingDevice;
+    /*tt is to track the line number - 3 */
     int tt;
+    /*The bit map of the device bit map and a bit map only containning the first bit*/
     unsigned int map;
     unsigned int  t;
+    /*Device number*/
     int devn;
- 
+    /*WE know that the line number - 3 DEVNOSEM*/
    tt = linenumber -3;
+   /*SEt this to be the RAMBASEADDR*/
     tOffendingDevice = (devregarea_t *) RAMBASEADDR;
     /*make a copy of the bit map */
     map = tOffendingDevice->interrupt_dev[tt];
+    /*Only care about the first bit */
     t = FIRSTBIT; 
     
-  
     /*8 Total devices to look through */
     for (i = 0; i < TOTALDEVICES; i++)
     {
         /*Bit wise and if the value is not 0 Device is interrupting */
         if ((map & t) == t)
         {
+            /*Device number is equal to the index and we are done looping */
             devn = i;
             break; 
         }
@@ -287,12 +271,17 @@ int finddevice(int linenumber)
     return devn;
 }
 
-
+/*Function in charge of either putting the current process back on the ready queue and calling the scheduler
+* Or just going to call the scheduler
+* Parameters: None
+* Return: void 
+*/
 void CallScheduler()
 {
-       /*addokbuf("Calling the shceduler has started \n");*/
+    /*set a temp state to point to the interrupt old area*/
     state_t *temp;
     temp =  (state_t *)INTERRUPTOLDAREA;
+    /*If the current process is null we need to put it back onto the ready queue*/
     if (currentProcess != NULL)
     {
          /*if the process is still around need to copy its contents over*/ 
@@ -303,8 +292,10 @@ void CallScheduler()
        
         scheduler();
     }
+    /*No Current Process go ahead and call the scheduler for the next process*/
     else
     {
+        /*No extra work need to be done just go ahead and call scheduler since there is no currentProcess*/
       scheduler();
     }
 }
