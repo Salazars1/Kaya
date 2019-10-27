@@ -79,7 +79,6 @@ void IOTrapHandler()
     }
     else if ((offendingLine & CLOCK1) != ZERO)
     {
-         /*  addokbuf("QUantum is up CLock 1 call scheduler \n");*/
         /*The process has spent its quantum. Its time to start a new process .*/
     
         CallScheduler();
@@ -89,7 +88,6 @@ void IOTrapHandler()
     else if ((offendingLine & CLOCK2) != ZERO)
     {
         /*Load the clock with 100 Milliseconds*/
-          /*addokbuf("Psuedo Clock\n");*/
         LDIT(PSUEDOCLOCKTIME);
         /*Access the Last clock which is the psuedo clock*/
         
@@ -310,7 +308,6 @@ void CallScheduler()
     }
     else
     {
-   /* LDST(currentProcess);*/
       scheduler();
     }
 }
