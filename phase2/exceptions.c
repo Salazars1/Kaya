@@ -538,16 +538,17 @@ HIDDEN void TimeToDie(pcb_t * harambe)
 
     /*Look through until we no longer have a child*/
     while(!emptyChild(harambe)){
-        
+        gg(4);
         TimeToDie(removeChild(harambe));
-        gg(4);    
+        gg(8);    
     }
 
     /*If the current Process is equal to the parameter Process*/
 if(currentProcess == harambe){
     /*Remove the child from the parents child list*/
-    outChild(harambe);
     gg(1);
+    outChild(harambe);
+    gg(13);
 }
 /*If the semaphore is NULL it is not blocked*/
 if(harambe ->p_semAdd == NULL){
