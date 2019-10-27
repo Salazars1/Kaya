@@ -548,16 +548,27 @@ if(currentProcess == harambe){
     /*Remove the child from the parents child list*/
     gg(15);
     gg(0);
-    outChild(harambe);
+    pcb_t * test;
+
+    test = outChild(harambe);
+     if(test != NULL){
+
+
+        freePcb(test);
+        processCount = processCount -1; 
+        scheduler();
+    }
+
+
+
     gg(13);
 }
 /*If the semaphore is NULL it is not blocked*/
 if(harambe ->p_semAdd == NULL){
     /*Remove it from the Ready Queue */
-
     gg(100);
     outProcQ(&readyQue, harambe);
-
+   
 }
 else{
     /*We know the process is blocked*/
