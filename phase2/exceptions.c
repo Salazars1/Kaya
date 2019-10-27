@@ -106,7 +106,7 @@ void SYSCALLHandler()
     * into other functions. These functions being only a few lines of code such as SYS 6 (Get cpu time ...)
     * 
     * 
-    * */
+    */
     switch (castle)
     {
     /*Create process (1)*/
@@ -125,7 +125,7 @@ void SYSCALLHandler()
     */
     case SYSCALL3:
         /*Create a new process block and set it to NULL*/
-        pcb_t* newProccess = NULL;
+        pcb_t * newProccess = NULL;
         /*Cast the semaphore value in a1 to an int start and set it to a variable*/
         int * sema = (int *) prevState ->s_a1; 
         /*Increment that bitch */
