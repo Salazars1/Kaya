@@ -281,11 +281,16 @@ int finddevice(int linenumber)
         {
             /*Increment both the index and shift the bits 1 */      
             t << 1;
+            proof(t);
         }
     }
     
     /*Return the device number*/
     return devn;
+}
+
+int proof(int gg){
+    return gg; 
 }
 
 void CallScheduler()
@@ -295,18 +300,16 @@ void CallScheduler()
     temp =  (state_t *)INTERRUPTOLDAREA;
     if (currentProcess != NULL)
     {
-           /*addokbuf("Current process is not null \n");*/
          /*if the process is still around need to copy its contents over*/ 
         CtrlPlusC(temp, &(currentProcess->p_s));
         insertProcQ(&readyQue, currentProcess);
         /*Load the state back */
         /**LDST(temp);*/
-        /*addokbuf("Calling scheduler \n");*/
+       
         scheduler();
     }
     else
     {
-           /*addokbuf("Current Proc null \n");*/
    /* LDST(currentProcess);*/
       scheduler();
     }
