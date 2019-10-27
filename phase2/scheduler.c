@@ -66,7 +66,7 @@ void scheduler()
     /*Remove a process from the ready queue and set it to the new pointer*/
     NotCurr = removeProcQ(&readyQue);
     /*If the removed process is Not NULL*/
-    if(Notcurr != NULL){
+    if(NotCurr != NULL){
         currentProcess = NotCurr; 
         STCK(Quantumstart);
         setTIMER(QUANTUM);
