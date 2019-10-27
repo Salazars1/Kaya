@@ -169,14 +169,28 @@ void SYSCALLHandler()
         Syscall5(prevState);
         break;
     /*Get CPU Time Process (6)*/
+/*Syscall6:  "Get_CPU_Time"
+    This service is in charge of making sure that the amount of time spent being processed is tracked by 
+    each Process Block that is running. 
+        Parameters: State_t * caller
+        Return: Void*/
     case SYSCALL6:
     /*No Function needed QUick and easy function that can be in the switch */
     
-    
-        Syscall6(prevState);
-    
-    
-        break;
+    /*Copy the state of the caller*/
+    CtrlPlusC(prevState, &(currentProcess->p_s));
+    /*Get the updated time then add the difference to the time spent processing*/
+    STCK(quantumrun);
+    currentProcess->p_timeProc = currentProcess->p_timeProc + (quantumrun - Quantumstart);
+    /*Track the amout of time spent processing and add this to the previous amount of process time*/
+    /*Store the new updated time spent processing into the v0 register of the process state*/
+    currentProcess->p_s.s_v0 = currentProcess->p_timeProc;
+    /*caller->s_v0 = currentProcess -> p_timeProc; */
+    /*Updates start time*/
+    STCK(Quantumstart);
+    /*Load the Current Processes State*/
+    LDST(&(currentProcess ->p_s));
+    break;
     /*Wait for clock Process (7)*/
     case SYSCALL7:
     /*No Function needed quick and dirty in the switch */
@@ -293,28 +307,6 @@ void SYSCALLHandler()
         currentProcess->p_oldSys = (state_t *)caller->s_a2;
         currentProcess->p_newSys = (state_t *)caller->s_a3;
     }
-    LDST(&(currentProcess ->p_s));
-}
-
-/*Syscall6:  "Get_CPU_Time"
-    This service is in charge of making sure that the amount of time spent being processed is tracked by 
-    each Process Block that is running. 
-        Parameters: State_t * caller
-        Return: Void*/
- void Syscall6(state_t *caller)
-{
-    /*Copy the state of the caller*/
-    CtrlPlusC(caller, &(currentProcess->p_s));
-    /*Get the updated time then add the difference to the time spent processing*/
-    STCK(quantumrun);
-    currentProcess->p_timeProc = currentProcess->p_timeProc + (quantumrun - Quantumstart);
-    /*Track the amout of time spent processing and add this to the previous amount of process time*/
-    /*Store the new updated time spent processing into the v0 register of the process state*/
-    currentProcess->p_s.s_v0 = currentProcess->p_timeProc;
-    /*caller->s_v0 = currentProcess -> p_timeProc; */
-    /*Updates start time*/
-    STCK(Quantumstart);
-    /*Load the Current Processes State*/
     LDST(&(currentProcess ->p_s));
 }
 
