@@ -278,7 +278,7 @@ int finddevice(int linenumber)
         else
         {
             /*Increment both the index and shift the bits 1 */      
-            t = t << 1;
+            map = map >> 1; 
         
         }
     }
