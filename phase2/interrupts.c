@@ -278,8 +278,8 @@ int finddevice(int linenumber)
         else
         {
             /*Increment both the index and shift the bits 1 */      
-            t << 1;
-            proof(t);
+            t = t << 1;
+        
         }
     }
     
@@ -287,9 +287,6 @@ int finddevice(int linenumber)
     return devn;
 }
 
-int proof(unsigned int gg){
-    return gg; 
-}
 
 void CallScheduler()
 {
