@@ -73,6 +73,7 @@ void SYSCALLHandler()
     unsigned int prevStatus;
     int castle;
     int mode;
+    int * sema;
     /*Assign a State * to be the SYS CALL OLD areaa*/
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     /*Assign the status*/
@@ -149,7 +150,7 @@ void SYSCALLHandler()
     */
     case SYSCALL4:
         /*Same process cast the semahore value from a1 and set it to a variable*/
-        int * sema = (int *)prevState->s_a1; /* decrement semaphore */
+        sema = (int *)prevState->s_a1; /* decrement semaphore */
         /*Decrement that bitch */
         (*sema) = (*sema) - 1;
         if (*sema < 0)
