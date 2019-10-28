@@ -353,7 +353,7 @@ pcb_PTR outChild(pcb_PTR p){
     }
     /*first child*/
 
-    if(p == p->p_prnt ->p_child && p->p_nextSib != NULL){
+    if(p == p->p_prnt ->p_child){
         p -> p_prnt ->p_child = p->p_nextSib;
         /*Referencing a NULL pointer*/
         p->p_nextSib ->p_prevSib = NULL; 
