@@ -106,8 +106,7 @@ void SYSCALLHandler()
     prevState->s_pc = prevState->s_pc + 4;
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
-    /*Debug to look at what sys call is being called*/
-    debugf(castle);
+
     /*The following switch statement utilizes function calls on sys calls that are complex and are better seperated by calling
     *Multiple functions. The sys calls that are listed in the switch statement are several lines long and are easy to follow
     *The functions that are not in the switch statement are SYS 1,2, 5, 8 with the others being listed in the sys call. 
@@ -287,7 +286,6 @@ void SYSCALLHandler()
     TimeToDie(currentProcess);
     /*call scheduler*/
     /*Debug Guy we never get here :(*/
-    debugff(3);
     scheduler();
 }
 
