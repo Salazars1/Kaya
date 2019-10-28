@@ -53,9 +53,10 @@ HIDDEN void TimeToDie(pcb_t *harambe);
 /*These are test functions that are break points for different Sys calls*/
 void debugC(){}
 void debugD(){}
+void debugE(){}
+void debugF(){}
+
 /*Test functions designed to view parameters of varying sys calls*/
-int debugff(int b){return b;}
-int debugf(int fff){return fff;}
 
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
     for these first 8 System calls the Kernel Mode must be active in order for these commands
@@ -183,7 +184,7 @@ void SYSCALLHandler()
         Parameters: State_t * caller
         Return: Void*/
     case SYSCALL6:
-    debugf();
+    debugE();
     /*No Function needed QUick and easy function that can be in the switch */
     /*Copy the state of the caller*/
     CtrlPlusC(prevState, &(currentProcess->p_s));
@@ -205,7 +206,7 @@ void SYSCALLHandler()
         Parameters: State_t* Caller
         Return: Void*/
     case SYSCALL7:
-    debugff();
+    debugF();
     /*No Function needed quick and dirty in the switch */
         /*Ah shit here we go again with these fucking semaphores*/
         sem = (int *)&(semD[SEMNUM - 1]);
