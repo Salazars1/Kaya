@@ -63,7 +63,6 @@ int debugf(int fff){return fff;}
     Parameters: None
     Return: Void
      */
-
 void SYSCALLHandler()
 {
     /*Create variables to be used throughout this function*/

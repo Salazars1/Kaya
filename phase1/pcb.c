@@ -293,7 +293,8 @@ void insertChild(pcb_PTR p_prnt, pcb_PTR p){
         p -> p_prnt = p_prnt;
         p -> p_prevSib = NULL;
         p -> p_nextSib = NULL;
-    }else{                              /*There is 1 or more children*/
+    }
+    else{                              /*There is 1 or more children*/
         p -> p_prnt = p_prnt;
         p_prnt -> p_child-> p_prevSib = p;
         p -> p_nextSib = p_prnt -> p_child;
@@ -342,9 +343,19 @@ pcb_PTR outChild(pcb_PTR p){
     if(p ->p_prnt == NULL){
         return NULL; 
     }
+    
+    /*Only CHild*/
+
+    if(p->p_prevSib == NULL && p->p_nextSib == NULL && p == p->p_prnt ->p_child){
+        p->p_prnt ->p_child = NULL; 
+        p-> p_prnt = NULL; 
+        return p; 
+    }
     /*first child*/
-    if(p == p->p_prnt ->p_child){
+
+    if(p == p->p_prnt ->p_child && p->p_nextSib != NULL){
         p -> p_prnt ->p_child = p->p_nextSib;
+        /*Referencing a NULL pointer*/
         p->p_nextSib ->p_prevSib = NULL; 
         p->p_prnt = NULL; 
         p->p_nextSib = NULL; 
