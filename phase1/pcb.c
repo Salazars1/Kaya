@@ -370,15 +370,7 @@ pcb_PTR outChild(pcb_PTR p){
     }
 
 
-/*Only CHild*/
 
-    if(p->p_prevSib == NULL && p->p_nextSib == NULL && p == p->p_prnt ->p_child){
-        p->p_prnt ->p_child = NULL; 
-        p-> p_prnt = NULL; 
-        return p; 
-
-
-    }
 
 
     return NULL; 
