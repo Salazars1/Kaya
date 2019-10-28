@@ -454,6 +454,12 @@ HIDDEN void TimeToDie(pcb_t * harambe)
         gg(8);    
     }
 
+/*If the semaphore is NULL it is not blocked*/
+if(harambe ->p_semAdd == NULL){
+    /*Remove it from the Ready Queue */
+    gg(100);
+    outProcQ(&readyQue, harambe);
+}
     /*If the current Process is equal to the parameter Process*/
 if(currentProcess == harambe){
     /*Remove the child from the parents child list*/
@@ -470,12 +476,6 @@ if(currentProcess == harambe){
         scheduler();
     }
     gg(13);
-}
-/*If the semaphore is NULL it is not blocked*/
-if(harambe ->p_semAdd == NULL){
-    /*Remove it from the Ready Queue */
-    gg(100);
-    outProcQ(&readyQue, harambe);
 }
 else{
     /*We know the process is blocked*/
