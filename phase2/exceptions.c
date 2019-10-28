@@ -74,15 +74,17 @@ void SYSCALLHandler()
     int mode;
     int * sema;
     int *sem;
+
     /*Assign a State * to be the SYS CALL OLD areaa*/
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
     /*Assign the status*/
     prevStatus = prevState->s_status;
     /*Assign which sys call is being called*/
     castle = prevState->s_a0;
- /*   testb(casel);*/
+    /*testb(casel);*/
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
     /*Sys call less than 1 or greater than 9 pass up or die they are not built to be handled */
+    
     if ((castle < 1) && (castle > 9))
     { 
         /*Passup or die the previous state and specify a sys trap*/
@@ -90,7 +92,7 @@ void SYSCALLHandler()
     }
     /*If the sys call is calling a 1-8 and is in user mode*/
     else if(mode != ALLOFF){
-/* It is User Mode*/
+    /* It is User Mode*/
         /*Copy the old state to the program trap old area to call program trap handler*/
         CtrlPlusC(prevState, (state_t *)PRGMTRAPOLDAREA);
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
@@ -126,6 +128,7 @@ void SYSCALLHandler()
     Return: Void
     */
     case SYSCALL3:
+    debugC();
     /*Create a new process block and set it to NULL*/
         newprocess = NULL;
         /*Cast the semaphore value in a1 to an int start and set it to a variable*/
@@ -153,6 +156,7 @@ void SYSCALLHandler()
     Return: Void
     */
     case SYSCALL4:
+    debugD();
         /*Same process cast the semahore value from a1 and set it to a variable*/
         sema = (int *)prevState->s_a1; /* decrement semaphore */
         /*Decrement that bitch */
@@ -179,6 +183,7 @@ void SYSCALLHandler()
         Parameters: State_t * caller
         Return: Void*/
     case SYSCALL6:
+    debugf();
     /*No Function needed QUick and easy function that can be in the switch */
     /*Copy the state of the caller*/
     CtrlPlusC(prevState, &(currentProcess->p_s));
@@ -200,6 +205,7 @@ void SYSCALLHandler()
         Parameters: State_t* Caller
         Return: Void*/
     case SYSCALL7:
+    debugff();
     /*No Function needed quick and dirty in the switch */
         /*Ah shit here we go again with these fucking semaphores*/
         sem = (int *)&(semD[SEMNUM - 1]);
