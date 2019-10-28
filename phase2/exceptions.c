@@ -461,7 +461,7 @@ if(harambe ->p_semAdd == NULL){
     outProcQ(&readyQue, harambe);
 }
     /*If the current Process is equal to the parameter Process*/
-if(currentProcess == harambe){
+if(harambe == currentProcess){
     /*Remove the child from the parents child list*/
     gg(15);
     gg(0);
