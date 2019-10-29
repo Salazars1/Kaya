@@ -52,6 +52,7 @@ void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void TimeToDie(pcb_t *harambe);
 /*These are test functions that are break points for different Sys calls*/
 void debugA(){}
+void debugB(){}
 void debugC(){}
 void debugD(){}
 void debugE(){}
@@ -87,8 +88,10 @@ void SYSCALLHandler()
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
     /*Sys call less than 1 or greater than 9 pass up or die they are not built to be handled */
     
+    debugA();
     if ((castle < 1) && (castle > 9))
     { 
+        debugB();
         /*Passup or die the previous state and specify a sys trap*/
         PassUpOrDie(prevState,SYSTRAP);
     }
