@@ -89,7 +89,7 @@ void SYSCALLHandler()
     /*Sys call less than 1 or greater than 9 pass up or die they are not built to be handled */
     
     debugA();
-    if ((castle < 1) && (castle > 8))
+    if ((castle < 1) || (castle > 8))
     { 
         debugB();
         /*Passup or die the previous state and specify a sys trap*/
