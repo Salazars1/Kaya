@@ -268,6 +268,7 @@ void SYSCALLHandler()
     {
         /*We did not have any more processses able to be made so we send back a -1*/
         /*FAILURE*/
+        debugA();
         caller->s_v0 = -1;
     }
     /*Load the state of the state that called the sys 1*/
