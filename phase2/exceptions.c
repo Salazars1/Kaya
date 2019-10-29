@@ -522,6 +522,7 @@ void debugH(){}
      */
 void PrgTrapHandler()
 {    
+    debugA();
     /*Set a State to be the program trap old area specify a program trap then call pass up or die */
     PassUpOrDie((state_t *)PRGMTRAPOLDAREA, PROGTRAP);
 }
