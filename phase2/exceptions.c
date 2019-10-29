@@ -477,14 +477,7 @@ if(harambe == currentProcess){
     pcb_t * test;
     /**/
     test = outChild(harambe);
-    if(test != NULL){
-        gg(79);
-        /*If the test is not NULL then we free the pcb and decrement the process count then call scheduler*/
-        freePcb(test);
-        processCount = processCount -1; 
-        scheduler();
-    }
-    gg(13);
+    
 }
 else{
     /*We know the process is blocked*/
@@ -506,7 +499,6 @@ else{
 
     /*Free the process block then decrement the process count */
     freePcb(harambe);
-    gg(2);
     processCount--; 
  
 }
