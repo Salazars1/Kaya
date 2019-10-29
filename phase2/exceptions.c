@@ -51,6 +51,7 @@ void TLBTrapHandler();
 void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void TimeToDie(pcb_t *harambe);
 /*These are test functions that are break points for different Sys calls*/
+void debugA(){}
 void debugC(){}
 void debugD(){}
 void debugE(){}
