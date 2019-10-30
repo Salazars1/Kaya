@@ -224,11 +224,6 @@ void initASL(){
     Parameter:  semd_t
     Return:     */
  void deAllocASL(semd_t *s){
-    if(semdFree_h==NULL){                           /*semdFreeList was empty*/
-        semdFree_h = s;                             /*adds the node pointer to semdFreeList*/
-        semdFree_h -> s_next = NULL;                
-    }else{                                          /*semdFreeList was empty*/
-        s->s_next = semdFree_h;                     
-        semdFree_h = s;                             /*adds the node pointer to semdFreeList*/
-    }
-}
+     s->s_next = semdFree_h;
+     semdFree_h = s;
+ }
