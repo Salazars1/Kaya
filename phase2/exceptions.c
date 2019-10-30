@@ -263,12 +263,12 @@ void SYSCALLHandler()
     /*If the new process is null then We know there is no way to allocate a process*/
     if (!emptyProcQ(birthedProc))
     { 
-        /*Copy the state into the prorcess state of the new process that we have allocated*/
-        CtrlPlusC((state_t *)caller->s_a1, &(birthedProc->p_s));
         /*Makes the new process a child of the currently running process calling the sys call */
         insertChild(currentProcess, birthedProc);
         /* Inserts the new process into the Ready Queue*/
         insertProcQ(&readyQue, birthedProc);
+        /*Copy the state into the prorcess state of the new process that we have allocated*/
+        CtrlPlusC((state_t *)caller->s_a1, &(birthedProc->p_s));
         /*WE were able to allocate thus we put 0 in the v0 register SUCCESS!*/
         caller->s_v0 = 0;
          /*Increment process count */
