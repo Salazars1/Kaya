@@ -422,6 +422,7 @@ print("start a new p4 \n");
 void p5prog() {
 	unsigned int exeCode = pstat_o.s_cause;
 	exeCode = (exeCode & CAUSEMASK) >> 2;
+	print("p5 prog");
 	switch (exeCode) {
 	case BUSERROR:
 		print("Access non-existent memory\n");
@@ -462,6 +463,7 @@ void p5mm(unsigned int cause) {
 void p5sys(unsigned int cause) {
 	unsigned int p5status = sstat_o.s_status;
 	p5status = (p5status << 28) >> 31; 
+	print("p5 sys");
 	switch(p5status) {
 	case ON:
 		print("High level SYS call from user mode process\n");
@@ -492,7 +494,7 @@ void p5() {
 	/* trap handlers should operate in complete mutex: no interrupts on */
 	/* this because they must restart using some BIOS area */
 	/* thus, IEP bit is not set for them (see test() for an example of it) */
-
+	print("p5");
 	/* specify trap vectors */
 	SYSCALL(SPECTRAPVEC, PROGTRAP, (int)&pstat_o, (int)&pstat_n);
 
@@ -501,11 +503,13 @@ void p5() {
 	SYSCALL(SPECTRAPVEC, SYSTRAP, (int)&sstat_o, (int)&sstat_n);
 	
 	/* to cause a pgm trap access some non-existent memory */	
+	print("p5 \n");
 	*p5MemLocation = *p5MemLocation + 1;		 /* Should cause a program trap */
 }
 
 void p5a() {
 	unsigned int p5Status;
+	print("p5a");
 	
 	/* generage a TLB exception by turning on VM without setting up the seg tables */
 	p5Status = getSTATUS();
