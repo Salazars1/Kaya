@@ -493,6 +493,7 @@ void p5() {
 	/* thus, IEP bit is not set for them (see test() for an example of it) */
 
 	/* specify trap vectors */
+	print("HEre");
 	SYSCALL(SPECTRAPVEC, PROGTRAP, (int)&pstat_o, (int)&pstat_n);
 	print("Proof");
 	SYSCALL(SPECTRAPVEC, TLBTRAP, (int)&mstat_o, (int)&mstat_n);
