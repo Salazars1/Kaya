@@ -315,7 +315,7 @@ void SYSCALLHandler()
 {   
     if (caller->s_a1 == 0)
     { /*TLB TRAP*/
-        if (currentProcess->p_newTLB != NULL)
+        if (currentProcess->p_newTLB == NULL)
         { /* already called sys5 */
             Syscall2();
         }
@@ -325,7 +325,7 @@ void SYSCALLHandler()
     }
     else if (caller->s_a1 == 1)
     { /*Program Trap*/
-        if ((currentProcess->p_newProgramTrap) != NULL)
+        if ((currentProcess->p_newProgramTrap) == NULL)
         { /* already called sys5 */
             Syscall2();
         }
@@ -336,7 +336,7 @@ void SYSCALLHandler()
     else
     {
 
-        if ((currentProcess->p_newSys) != NULL)
+        if ((currentProcess->p_newSys) == NULL)
         { /* already called sys5 */
             Syscall2();
         }
