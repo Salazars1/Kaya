@@ -205,7 +205,7 @@ pcb_PTR outProcQ(pcb_PTR *tp, pcb_PTR p){
     If the Tail pointer points to NUll then the list is empty
     Error Condition and should return NULL
     */
-    if(emptyProcQ(*tp) == TRUE){
+    if(emptyProcQ(*tp)){
         return NULL; 
     }
     /*
@@ -216,17 +216,16 @@ pcb_PTR outProcQ(pcb_PTR *tp, pcb_PTR p){
     and that that the head Node now points the prev to the tail pointer
     */
     else if((*tp)==p){
+
         if((*tp)->p_next == *tp){
-            pcb_t *temp = (*tp);
             (*tp) = mkEmptyProcQ();
-            return temp;
         }else{
-            pcb_t * temp = (*tp); 
-            (*tp) = temp -> p_prev; 
-            (*tp)->p_next ->p_prev = (*tp); 
-            (*tp)-> p_next = temp -> p_next; 
-        return temp;
+            (*tp) -> p_prev -> p_next = (*tp) -> p_next;
+            (*tp) -> p_next -> p_prev = (*tp) -> p_prev;
+            *tp = (*tp) -> p_prev;
         }
+
+        return p;
     }
     /*
     If it is not the tail pointer then we must loop through the structure to find the P pointer
@@ -237,18 +236,21 @@ pcb_PTR outProcQ(pcb_PTR *tp, pcb_PTR p){
     */
     else{
         pcb_PTR temp;
-        temp = (*tp) -> p_next; 
-        while(temp !=*tp){
-            if(temp == p){
-                temp -> p_prev -> p_next = temp ->p_next; 
-                temp ->p_next ->p_prev = temp ->p_prev; 
-                return temp; 
-            }
-            temp = temp ->p_next; 
+        temp = headProcQ(*tp);
 
+        while(temp !=*tp && temp!= p){
+            
+            temp = temp ->p_next; 
+        }
+
+        if(temp == *tp){
+                
+            return NULL; 
         }
       
-        return NULL;
+        p -> p_prev -> p_next = p ->p_next; 
+        p ->p_next ->p_prev = p ->p_prev; 
+         return temp;;
         
 
     }
