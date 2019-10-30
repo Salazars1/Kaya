@@ -337,7 +337,7 @@ void SYSCALLHandler()
         currentProcess->p_oldProgramTrap = (state_t *)caller->s_a2;
         currentProcess->p_newProgramTrap = (state_t *)caller->s_a3;
     }
-    else
+    else if (trapCause == 2)
     {
 
         if ((currentProcess->p_newSys) != NULL)
@@ -347,6 +347,8 @@ void SYSCALLHandler()
         /* assign exception values */
         currentProcess->p_oldSys = (state_t *)caller->s_a2;
         currentProcess->p_newSys = (state_t *)caller->s_a3;
+    }else{
+        Syscall2();
     }
     LDST(caller);
 }
