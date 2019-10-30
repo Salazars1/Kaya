@@ -473,7 +473,7 @@ HIDDEN void TimeToDie(pcb_t * harambe)
 {
     /*Look through until we no longer have a child*/
     while(!emptyChild(harambe)){
-       
+      
         debugS();
         /*Recursive call with the first child*/
         TimeToDie(removeChild(harambe));
@@ -485,14 +485,14 @@ HIDDEN void TimeToDie(pcb_t * harambe)
 /*If the semaphore is NULL it is not blocked*/
 if(harambe ->p_semAdd == NULL){
     /*Remove it from the Ready Queue */
-    
+  
     debugSS();
     outProcQ(&readyQue, harambe);
 }
     /*If the current Process is equal to the parameter Process*/
 if(harambe == currentProcess){
     /*Remove the child from the parents child list*/
-   
+ 
     pcb_t * test;
     
     /**/
@@ -505,7 +505,7 @@ else{
     debugSSSS();
     int * tracksem = harambe ->p_semAdd; 
     /*Remove it from the blocked list*/
-
+    
     
     outBlocked(harambe);
     if (tracksem >= &(semD[0]) && tracksem <= &(semD[49]))
