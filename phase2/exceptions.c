@@ -182,7 +182,7 @@ void SYSCALLHandler()
         break;
     /*Specify the Exception State Vector (5)*/
     case SYSCALL5:
-
+        debugA();
         Syscall5(prevState);
         break;
     /*Get CPU Time Process (6)*/
