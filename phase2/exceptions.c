@@ -397,8 +397,6 @@ testb(termRead);*/
     */
 void PassUpOrDie(state_t *caller, int triggerReason)
 {
-    state_t *oldState;
-    state_t *newState;
     switch (triggerReason)
     {
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/

@@ -163,8 +163,8 @@ void IOTrapHandler()
     mathishard = mathishard + mathishard2; 
     /*Dev phys + the value of the computation above to find the device location*/
     testing = (device_t *) (0x10000050  + mathishard);     
-    devsemnum = lineNumber -3; 
-    devsemnum = devsemnum * 8; 
+    devsemnum = lineNumber -DEVWOSEM; 
+    devsemnum = devsemnum * DEVPERINT; 
     devsemnum = devsemnum + devicenumber; 
     /*If the line number is a terminal which is why we dont decrement line number by 3 and assign a new variable!*/
     if (lineNumber == TERMINT)
