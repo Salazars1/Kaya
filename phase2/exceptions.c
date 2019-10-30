@@ -88,8 +88,6 @@ void SYSCALLHandler()
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
     /*Sys call less than 1 or greater than 9 pass up or die they are not built to be handled */
     
-    print(castle);
-    print ("\n");
 
     if ((castle < 1) || (castle > 8))
     { 
@@ -121,10 +119,13 @@ void SYSCALLHandler()
     {
     /*Create process (1)*/
     case SYSCALL1:
+    print("1\n");
         Syscall1(prevState);
         break;
     /*Terminate Process (2) BROKEN */
     case SYSCALL2:
+        print("2\n");
+
         Syscall2();
         break;
     /*Verhogen Process (3)*/
@@ -134,6 +135,8 @@ void SYSCALLHandler()
     Return: Void
     */
     case SYSCALL3:
+        print("3\n");
+
     debugC();
     /*Create a new process block and set it to NULL*/
         newprocess = NULL;
@@ -162,6 +165,8 @@ void SYSCALLHandler()
     Return: Void
     */
     case SYSCALL4:
+        print("4\n");
+
     debugD();
         /*Same process cast the semahore value from a1 and set it to a variable*/
         sema = (int *)prevState->s_a1; /* decrement semaphore */
@@ -180,6 +185,8 @@ void SYSCALLHandler()
         break;
     /*Specify the Exception State Vector (5)*/
     case SYSCALL5:
+        print("5\n");
+
         Syscall5(prevState);
         break;
     /*Get CPU Time Process (6)*/
@@ -189,6 +196,8 @@ void SYSCALLHandler()
         Parameters: State_t * caller
         Return: Void*/
     case SYSCALL6:
+        print("6\n");
+
     debugE();
     /*No Function needed QUick and easy function that can be in the switch */
     /*Copy the state of the caller*/
@@ -211,6 +220,8 @@ void SYSCALLHandler()
         Parameters: State_t* Caller
         Return: Void*/
     case SYSCALL7:
+        print("7\n");
+
     debugF();
     /*No Function needed quick and dirty in the switch */
         /*Ah shit here we go again with these fucking semaphores*/
@@ -231,6 +242,8 @@ void SYSCALLHandler()
         break;
     /*Wait for IO Device Process (8)*/
     case SYSCALL8:
+        print("8\n");
+
         Syscall8(prevState);
         break;
     }
