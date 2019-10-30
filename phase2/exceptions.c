@@ -313,7 +313,11 @@ void SYSCALLHandler()
     */
  void Syscall5(state_t *caller)
 {   
-    if (caller->s_a1 == 0)
+
+    int trapCause;
+    trapCause = (int) caller->s_a1;
+
+    if (trapCause == 0)
     { /*TLB TRAP*/
         if (currentProcess->p_newTLB != NULL)
         { /* already called sys5 */
@@ -323,7 +327,7 @@ void SYSCALLHandler()
         currentProcess->p_oldTLB = (state_t *)caller->s_a2;
         currentProcess->p_newTLB = (state_t *)caller->s_a3;
     }
-    else if (caller->s_a1 == 1)
+    else if (trapCause == 1)
     { /*Program Trap*/
         if ((currentProcess->p_newProgramTrap) != NULL)
         { /* already called sys5 */
