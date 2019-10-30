@@ -392,6 +392,7 @@ void p4() {
 	SYSCALL(PASSERN, (int)&blkp4, 0, 0);				/* P(blkp4)     */
 
 	SYSCALL(PASSERN, (int)&synp4, 0, 0);				/* P(synp4)     */
+	print("P(synp4) \n");
 
 	/* start another incarnation of p4 running, and wait for  */
 	/* a V(synp4). the new process will block at the P(blkp4),*/
@@ -401,7 +402,7 @@ void p4() {
 	p4state.s_sp -= QPAGE;		/* give another page  */
 
 	SYSCALL(CREATETHREAD, (int)&p4state, 0, 0);			/* start a new p4    */
-
+print("start a new p4 \n");
 	SYSCALL(PASSERN, (int)&synp4, 0, 0);				/* wait for it       */
 
 	print("p4 is OK\n");
@@ -493,11 +494,10 @@ void p5() {
 	/* thus, IEP bit is not set for them (see test() for an example of it) */
 
 	/* specify trap vectors */
-	print("HEre");
 	SYSCALL(SPECTRAPVEC, PROGTRAP, (int)&pstat_o, (int)&pstat_n);
-	print("Proof");
+
 	SYSCALL(SPECTRAPVEC, TLBTRAP, (int)&mstat_o, (int)&mstat_n);
-	print("Ypu fucked up\n");
+	
 	SYSCALL(SPECTRAPVEC, SYSTRAP, (int)&sstat_o, (int)&sstat_n);
 	
 	/* to cause a pgm trap access some non-existent memory */	
