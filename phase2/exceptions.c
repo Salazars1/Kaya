@@ -88,6 +88,8 @@ void SYSCALLHandler()
     mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
     /*Sys call less than 1 or greater than 9 pass up or die they are not built to be handled */
     
+    print(castle);
+    print ("\n");
 
     if ((castle < 1) || (castle > 8))
     { 
