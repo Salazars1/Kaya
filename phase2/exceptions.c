@@ -222,7 +222,7 @@ void SYSCALLHandler()
     /*No Function needed quick and dirty in the switch */
         /*Ah shit here we go again with these fucking semaphores*/
         sem = (int *)&(semD[SEMNUM - 1]);
-        (*sem) = (*sem) -1;
+        --(*sem);
     /*  testb(*sem);*/
         if (*sem < 0)
         {
