@@ -103,11 +103,14 @@ pcb_t *outBlocked(pcb_t *p){
         
 
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){         /*Fixes pointers*/ 
-            semd_t *removedNode = parentNode -> s_next; 
+            
+            semd_t *removedNode;
+            removedNode = parentNode -> s_next;
+
             parentNode -> s_next = parentNode -> s_next -> s_next;
             
             deAllocASL(removedNode);
-            removedNode -> p_semAdd = NULL;                         /*semAdd in node is not neccessary*/
+            removedNode->s_semAdd  = NULL;                         /*semAdd in node is not neccessary*/
         }
         
         returnValue -> p_semAdd = NULL;
