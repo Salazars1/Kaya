@@ -58,6 +58,7 @@ void debugC(){}
 void debugD(){}
 void debugE(){}
 void debugF(){}
+void debugk(){}
 
 /*Test functions designed to view parameters of varying sys calls*/
 
@@ -183,6 +184,7 @@ void SYSCALLHandler()
     /*Specify the Exception State Vector (5)*/
     case SYSCALL5:
         debugA();
+        debugk();
         Syscall5(prevState);
         break;
     /*Get CPU Time Process (6)*/
