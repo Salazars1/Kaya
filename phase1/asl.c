@@ -98,18 +98,22 @@ pcb_t *outBlocked(pcb_t *p){
     pcb_t* returnValue;
 
     if(parentNode -> s_next -> s_semAdd == p->p_semAdd){       /*ID is in the ASL*/
+        
         returnValue  = outProcQ(&(parentNode ->s_next ->s_procQ) ,p);
-        if(returnValue == NULL){                               /*SemAdd was not found in the list*/ 
-            return NULL; 
-        }
+        
 
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){         /*Fixes pointers*/ 
-            semd_t *removedNode = parentNode -> s_next; 
+            
+            semd_t *removedNode;
+            removedNode = parentNode -> s_next;
+
             parentNode -> s_next = parentNode -> s_next -> s_next;
+            
             deAllocASL(removedNode);
+            removedNode->s_semAdd  = NULL;                         /*semAdd in node is not neccessary*/
         }
         
-        returnValue -> p_semAdd = NULL;                         /*semAdd in node is not neccessary*/
+        returnValue -> p_semAdd = NULL;
         return returnValue;
     
     }else{
@@ -220,11 +224,6 @@ void initASL(){
     Parameter:  semd_t
     Return:     */
  void deAllocASL(semd_t *s){
-    if(semdFree_h==NULL){                           /*semdFreeList was empty*/
-        semdFree_h = s;                             /*adds the node pointer to semdFreeList*/
-        semdFree_h -> s_next = NULL;                
-    }else{                                          /*semdFreeList was empty*/
-        s->s_next = semdFree_h;                     
-        semdFree_h = s;                             /*adds the node pointer to semdFreeList*/
-    }
-}
+     s->s_next = semdFree_h;
+     semdFree_h = s;
+ }

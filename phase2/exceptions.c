@@ -443,10 +443,6 @@ void PassUpOrDie(state_t *caller, int triggerReason)
             LDST((currentProcess ->p_newSys));     
         }
         break;
-
-    default:
-        Syscall2(); /*No vector is defined. Nuke it till it pukes*/
-        break;
     }
 }
 
