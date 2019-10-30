@@ -496,7 +496,7 @@ void p5() {
 	SYSCALL(SPECTRAPVEC, PROGTRAP, (int)&pstat_o, (int)&pstat_n);
 
 	SYSCALL(SPECTRAPVEC, TLBTRAP, (int)&mstat_o, (int)&mstat_n);
-
+	print("Ypu fucked up\n");
 	SYSCALL(SPECTRAPVEC, SYSTRAP, (int)&sstat_o, (int)&sstat_n);
 	
 	/* to cause a pgm trap access some non-existent memory */	
