@@ -506,7 +506,7 @@ else{
     int * tracksem = harambe ->p_semAdd; 
     /*Remove it from the blocked list*/
 
-    gg(harambe ->p_s.s_cause);
+    
     outBlocked(harambe);
     if (tracksem >= &(semD[0]) && tracksem <= &(semD[49]))
 	{
