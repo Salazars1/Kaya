@@ -344,7 +344,7 @@ void SYSCALLHandler()
         currentProcess->p_oldSys = (state_t *)caller->s_a2;
         currentProcess->p_newSys = (state_t *)caller->s_a3;
     }
-    LDST(&(currentProcess ->p_s));
+    LDST(caller);
 }
 
 /*  This service perofroms a Syscall 5 operation on the semaphore that the nucles maintains for the IO 
