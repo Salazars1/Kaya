@@ -98,18 +98,19 @@ pcb_t *outBlocked(pcb_t *p){
     pcb_t* returnValue;
 
     if(parentNode -> s_next -> s_semAdd == p->p_semAdd){       /*ID is in the ASL*/
+        
         returnValue  = outProcQ(&(parentNode ->s_next ->s_procQ) ,p);
-        if(returnValue == NULL){                               /*SemAdd was not found in the list*/ 
-            return NULL; 
-        }
+        
 
         if(emptyProcQ(parentNode ->s_next ->s_procQ)){         /*Fixes pointers*/ 
             semd_t *removedNode = parentNode -> s_next; 
             parentNode -> s_next = parentNode -> s_next -> s_next;
             deAllocASL(removedNode);
+        
+            returnValue -> p_semAdd = NULL;                         /*semAdd in node is not neccessary*/
         }
         
-        returnValue -> p_semAdd = NULL;                         /*semAdd in node is not neccessary*/
+        
         return returnValue;
     
     }else{
