@@ -495,8 +495,10 @@ if(harambe == currentProcess){
     gg(15);
     gg(0);
     pcb_t * test;
+    
     /**/
-    test = outChild(harambe);
+    
+   outChild(harambe);
     
 }
 else{
