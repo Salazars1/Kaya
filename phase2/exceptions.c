@@ -315,7 +315,7 @@ void SYSCALLHandler()
 {   
     if (caller->s_a1 == 0)
     { /*TLB TRAP*/
-        if (currentProcess->p_oldTLB != NULL)
+        if (currentProcess->p_newTLB != NULL)
         { /* already called sys5 */
             Syscall2();
         }
@@ -325,7 +325,7 @@ void SYSCALLHandler()
     }
     else if (caller->s_a1 == 1)
     { /*Program Trap*/
-        if ((currentProcess->p_oldProgramTrap) != NULL)
+        if ((currentProcess->p_newProgramTrap) != NULL)
         { /* already called sys5 */
             Syscall2();
         }
@@ -336,7 +336,7 @@ void SYSCALLHandler()
     else
     {
 
-        if ((currentProcess->p_oldSys) != NULL)
+        if ((currentProcess->p_newSys) != NULL)
         { /* already called sys5 */
             Syscall2();
         }
@@ -568,6 +568,14 @@ pcb_PTR clean(pcb_PTR temp){
     temp->p_prev = NULL; 
     temp ->p_semAdd = 0; 
     temp ->p_timeProc = 0; 
+    temp->p_oldSys = NULL;
+    temp->p_newSys = NULL;
+    temp->p_oldTLB = NULL;
+    temp->p_newTLB = NULL;
+    temp->p_oldProgramTrap = NULL;
+    temp->p_newProgramTrap = NULL;
+
+
     return temp; 
 }
 

@@ -282,7 +282,6 @@ void CallScheduler()
         insertProcQ(&readyQue, currentProcess);
         /*Load the state back */
         /**LDST(temp);*/
-       
         scheduler();
     }
     /*No Current Process go ahead and call the scheduler for the next process*/
