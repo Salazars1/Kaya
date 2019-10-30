@@ -46,7 +46,6 @@ HIDDEN void Syscall6(state_t *caller);
 HIDDEN void Syscall7(state_t *caller);
 HIDDEN void Syscall8(state_t *caller);
 HIDDEN void PassUpOrDie(state_t *caller, int triggerReason);
-extern void print(char *msg);
 
 void PrgTrapHandler();
 void TLBTrapHandler();
@@ -121,12 +120,10 @@ void SYSCALLHandler()
     {
     /*Create process (1)*/
     case SYSCALL1:
-    print("1\n");
         Syscall1(prevState);
         break;
     /*Terminate Process (2) BROKEN */
     case SYSCALL2:
-        print("2\n");
 
         Syscall2();
         break;
@@ -137,7 +134,6 @@ void SYSCALLHandler()
     Return: Void
     */
     case SYSCALL3:
-        print("3\n");
 
     debugC();
     /*Create a new process block and set it to NULL*/
@@ -167,7 +163,6 @@ void SYSCALLHandler()
     Return: Void
     */
     case SYSCALL4:
-        print("4\n");
 
     debugD();
         /*Same process cast the semahore value from a1 and set it to a variable*/
@@ -187,7 +182,6 @@ void SYSCALLHandler()
         break;
     /*Specify the Exception State Vector (5)*/
     case SYSCALL5:
-        print("5\n");
 
         Syscall5(prevState);
         break;
@@ -198,7 +192,6 @@ void SYSCALLHandler()
         Parameters: State_t * caller
         Return: Void*/
     case SYSCALL6:
-        print("6\n");
 
     debugE();
     /*No Function needed QUick and easy function that can be in the switch */
@@ -222,7 +215,6 @@ void SYSCALLHandler()
         Parameters: State_t* Caller
         Return: Void*/
     case SYSCALL7:
-        print("7\n");
 
     debugF();
     /*No Function needed quick and dirty in the switch */
@@ -244,7 +236,6 @@ void SYSCALLHandler()
         break;
     /*Wait for IO Device Process (8)*/
     case SYSCALL8:
-        print("8\n");
 
         Syscall8(prevState);
         break;
