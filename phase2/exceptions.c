@@ -463,20 +463,30 @@ int gg(int f){return f;}
     Parameters: pcb_t * HeadPtr
     Return: Void
     */
+
+
+   void debugS(){}
+   void debugSS(){}
+   void debugSSS(){}
+   void debugSSSS(){}
 HIDDEN void TimeToDie(pcb_t * harambe)
 {
     /*Look through until we no longer have a child*/
     while(!emptyChild(harambe)){
         gg(4);
+        debugS();
         /*Recursive call with the first child*/
         TimeToDie(removeChild(harambe));
         gg(8);    
     }
 
+
+
 /*If the semaphore is NULL it is not blocked*/
 if(harambe ->p_semAdd == NULL){
     /*Remove it from the Ready Queue */
     gg(100);
+    debugSS();
     outProcQ(&readyQue, harambe);
 }
     /*If the current Process is equal to the parameter Process*/
@@ -491,6 +501,7 @@ if(harambe == currentProcess){
 }
 else{
     /*We know the process is blocked*/
+    debugSSSS();
     int * tracksem = harambe ->p_semAdd; 
     /*Remove it from the blocked list*/
     gg(3);
