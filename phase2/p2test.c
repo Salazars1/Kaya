@@ -520,7 +520,7 @@ void p5a() {
 /* second part of p5 - should be entered in user mode */
 void p5b() {
 	cpu_t		time1, time2;
-
+	print("p5 B!");
 	SYSCALL(9, 0, 0, 0);
 	/* the first time through, we are in user mode */
 	/* and the P should generate a program trap */
