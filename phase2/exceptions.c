@@ -222,7 +222,7 @@ void SYSCALLHandler()
     /*No Function needed quick and dirty in the switch */
         /*Ah shit here we go again with these fucking semaphores*/
         sem = (int *)&(semD[SEMNUM - 1]);
-        (*sem) = (*sem) -1 ;
+        (*sem) = (*sem) -1;
     /*  testb(*sem);*/
         if (*sem < 0)
         {
@@ -315,7 +315,7 @@ void SYSCALLHandler()
 {   
     if (caller->s_a1 == 0)
     { /*TLB TRAP*/
-        if (currentProcess->p_newTLB != NULL)
+        if (currentProcess->p_oldTLB != NULL)
         { /* already called sys5 */
             Syscall2();
         }
@@ -325,7 +325,7 @@ void SYSCALLHandler()
     }
     else if (caller->s_a1 == 1)
     { /*Program Trap*/
-        if ((currentProcess->p_newProgramTrap) != NULL)
+        if ((currentProcess->p_oldProgramTrap) != NULL)
         { /* already called sys5 */
             Syscall2();
         }
@@ -336,7 +336,7 @@ void SYSCALLHandler()
     else
     {
 
-        if ((currentProcess->p_newSys) != NULL)
+        if ((currentProcess->p_oldSys) != NULL)
         { /* already called sys5 */
             Syscall2();
         }
