@@ -46,6 +46,8 @@ HIDDEN void Syscall6(state_t *caller);
 HIDDEN void Syscall7(state_t *caller);
 HIDDEN void Syscall8(state_t *caller);
 HIDDEN void PassUpOrDie(state_t *caller, int triggerReason);
+extern void print(char *msg);
+
 void PrgTrapHandler();
 void TLBTrapHandler();
 void CtrlPlusC(state_t *oldState, state_t *newState);
