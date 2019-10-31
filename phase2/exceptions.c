@@ -93,7 +93,7 @@ void SYSCALLHandler()
 
     if ((castle < 1) || (castle > 8))
     { 
-        debugB();
+        
         /*Passup or die the previous state and specify a sys trap*/
         PassUpOrDie(prevState,SYSTRAP);
     }
@@ -105,7 +105,8 @@ void SYSCALLHandler()
         CtrlPlusC(prevState, (state_t *)PRGMTRAPOLDAREA);
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         temp = (program->s_cause)& ~(0xFF);
-        program->s_cause = (temp |(12 << 2));
+        debugB();
+        program->s_cause = (temp |(10 << 2))+2;
         /*Program Trap Handler */
         PrgTrapHandler();
         
