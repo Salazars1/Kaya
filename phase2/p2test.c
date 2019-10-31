@@ -130,6 +130,9 @@ void print(char *msg) {
 	SYSCALL(VERHOGEN, (int)&term_mut, 0, 0);				/* V(term_mut) */
 }
 
+int debu(int a){
+	return a; 
+}
 
 /*                                                                   */
 /*                 p1 -- the root process                            */
@@ -416,9 +419,7 @@ void p4() {
 	PANIC();					/* PANIC            */
 }
 
-int debu(int a){
-	return a; 
-}
+
 
 /* p5's program trap handler */
 void p5prog() {
