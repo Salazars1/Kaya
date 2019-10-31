@@ -422,7 +422,7 @@ void p4() {
 void p5prog() {
 	unsigned int exeCode = pstat_o.s_cause;
 	exeCode = (exeCode & CAUSEMASK) >> 2;
-	print("p5 prog");
+	
 	switch (exeCode) {
 	case BUSERROR:
 		print("Access non-existent memory\n");
@@ -454,9 +454,9 @@ void p5prog() {
 void p5mm(unsigned int cause) {
 	print("memory management tfrap\n");
 	mstat_o.s_status = (mstat_o.s_status & VMOFF) | KUPBITON;  /* VM off, user mode on */
-	print("preparing for p5 b \n");
+
 	mstat_o.s_pc = mstat_o.s_t9 = (memaddr)p5b;  /* return to p5b */
-	print("p5 b has executed \n");
+	
 	mstat_o.s_sp = p5Stack-QPAGE;				/* Start with a fresh stack */
 	LDST(&mstat_o);
 }
@@ -511,7 +511,7 @@ void p5() {
 
 void p5a() {
 	unsigned int p5Status;
-	print("p5a");
+
 	
 	/* generage a TLB exception by turning on VM without setting up the seg tables */
 	p5Status = getSTATUS();
