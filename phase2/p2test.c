@@ -452,7 +452,7 @@ void p5prog() {
 
 /* p5's memory management trap handler */
 void p5mm(unsigned int cause) {
-	print("memory management trap\n");
+	print("memory management tfrap\n");
 	mstat_o.s_status = (mstat_o.s_status & VMOFF) | KUPBITON;  /* VM off, user mode on */
 	print("preparing for p5 b \n");
 	mstat_o.s_pc = mstat_o.s_t9 = (memaddr)p5b;  /* return to p5b */
@@ -496,7 +496,7 @@ void p5() {
 	/* trap handlers should operate in complete mutex: no interrupts on */
 	/* this because they must restart using some BIOS area */
 	/* thus, IEP bit is not set for them (see test() for an example of it) */
-	print("p5");
+
 	/* specify trap vectors */
 	SYSCALL(SPECTRAPVEC, PROGTRAP, (int)&pstat_o, (int)&pstat_n);
 
@@ -505,7 +505,7 @@ void p5() {
 	SYSCALL(SPECTRAPVEC, SYSTRAP, (int)&sstat_o, (int)&sstat_n);
 	
 	/* to cause a pgm trap access some non-existent memory */	
-	print("p5 \n");
+	
 	*p5MemLocation = *p5MemLocation + 1;		 /* Should cause a program trap */
 }
 
