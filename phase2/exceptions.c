@@ -99,10 +99,11 @@ void SYSCALLHandler()
     }
     /*If the sys call is calling a 1-8 and is in user mode*/
     if(mode != ALLOFF){
+        program = (state_t *)PRGMTRAPOLDAREA;
         unsigned int temp;
     /* It is User Mode*/
         /*Copy the old state to the program trap old area to call program trap handler*/
-        CtrlPlusC(prevState, (state_t *)PRGMTRAPOLDAREA);
+        CtrlPlusC(prevState, program);
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         temp = (program->s_cause)& ~(0xFF);
         debugB();
