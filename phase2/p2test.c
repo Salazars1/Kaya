@@ -392,7 +392,7 @@ void p4() {
 	SYSCALL(PASSERN, (int)&blkp4, 0, 0);				/* P(blkp4)     */
 
 	SYSCALL(PASSERN, (int)&synp4, 0, 0);				/* P(synp4)     */
-	print("P(synp4) \n");
+	
 
 	/* start another incarnation of p4 running, and wait for  */
 	/* a V(synp4). the new process will block at the P(blkp4),*/
@@ -402,13 +402,13 @@ void p4() {
 	p4state.s_sp -= QPAGE;		/* give another page  */
 
 	SYSCALL(CREATETHREAD, (int)&p4state, 0, 0);			/* start a new p4    */
-print("start a new p4 \n");
+
 	SYSCALL(PASSERN, (int)&synp4, 0, 0);				/* wait for it       */
 
 	print("p4 is OK\n");
 
 	SYSCALL(VERHOGEN, (int)&endp4, 0, 0);				/* V(endp4)          */
-	print("We kill this bich ");
+	
 	SYSCALL(TERMINATETHREAD, 0, 0, 0);			/* terminate p4      */
 
 	/* just did a SYS2, so should not get to this point */
@@ -465,7 +465,7 @@ void p5mm(unsigned int cause) {
 void p5sys(unsigned int cause) {
 	unsigned int p5status = sstat_o.s_status;
 	p5status = (p5status << 28) >> 31; 
-	print("p5 sys");
+
 	switch(p5status) {
 	case ON:
 		print("High level SYS call from user mode process\n");
