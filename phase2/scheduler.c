@@ -98,7 +98,7 @@ void scheduler()
                 /*We have processes that are blocked and we need to wait with interrupts and exceptions enabled*/
                 /* Processor is twiddling its thumbs (JOBS WAITING FOR IO BUT NONE IN THE PROCESSQUEUE) */
                 /*Tested*/
-                setSTATUS(ALLOFF | IEON | IECON | IMON);
+                setSTATUS(getSTATUS()|ALLOFF | IEON | IECON | IMON);
                 WAIT();
             }
         }
