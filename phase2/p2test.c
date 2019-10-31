@@ -416,13 +416,15 @@ void p4() {
 	PANIC();					/* PANIC            */
 }
 
-
+int debu(int a){
+	return a; 
+}
 
 /* p5's program trap handler */
 void p5prog() {
 	unsigned int exeCode = pstat_o.s_cause;
 	exeCode = (exeCode & CAUSEMASK) >> 2;
-	
+	debu(a);
 	switch (exeCode) {
 	case BUSERROR:
 		print("Access non-existent memory\n");
@@ -432,6 +434,7 @@ void p5prog() {
 	case RESVINSTR:
 		print("privileged instruction\n");
 		/* return in kernel mode */
+
 		pstat_o.s_status = pstat_o.s_status & KUPBITOFF;
 		pstat_o.s_pc = pstat_o.s_t9 = (memaddr)p5b;
 		break;
