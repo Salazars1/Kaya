@@ -106,7 +106,7 @@ void SYSCALLHandler()
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         temp = (program->s_cause)& ~(0xFF);
         debugB();
-        program->s_cause = (temp |(10 << 2))+2;
+        program->s_cause = (temp |(10 << 2));
         /*Program Trap Handler */
         PrgTrapHandler();
         
@@ -586,6 +586,15 @@ pcb_PTR clean(pcb_PTR temp){
     temp->p_prev = NULL; 
     temp ->p_semAdd = 0; 
     temp ->p_timeProc = 0; 
+    temp ->p_s.s_asid =0; 
+    temp -> p_s.s_cause = 0; 
+    temp ->p_s.s_pc = 0; 
+     int i;
+    for (i = 0; i < STATEREGNUM; i++)
+    {
+       temp->p_s.s_reg[i] = 0;
+    }
+    temp ->p_s.s_status = 0; 
     temp->p_oldSys = NULL;
     temp->p_newSys = NULL;
     temp->p_oldTLB = NULL;
