@@ -98,7 +98,7 @@ void SYSCALLHandler()
         PassUpOrDie(prevState,SYSTRAP);
     }
     /*If the sys call is calling a 1-8 and is in user mode*/
-    else if(mode != ALLOFF){
+    if(mode != ALLOFF){
         unsigned int temp;
     /* It is User Mode*/
         /*Copy the old state to the program trap old area to call program trap handler*/
