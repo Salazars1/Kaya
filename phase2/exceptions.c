@@ -105,7 +105,7 @@ void SYSCALLHandler()
         CtrlPlusC(prevState, (state_t *)PRGMTRAPOLDAREA);
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         temp = (program->s_cause)& ~(0xFF);
-        program->s_cause = (temp |(10 << 2));
+        program->s_cause = (temp |(12 << 2));
         /*Program Trap Handler */
         PrgTrapHandler();
         
