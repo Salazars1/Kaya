@@ -452,7 +452,7 @@ void p5prog() {
 
 /* p5's memory management trap handler */
 void p5mm(unsigned int cause) {
-	print("memory management tfrap\n");
+	print("memory management trap\n");
 	mstat_o.s_status = (mstat_o.s_status & VMOFF) | KUPBITON;  /* VM off, user mode on */
 
 	mstat_o.s_pc = mstat_o.s_t9 = (memaddr)p5b;  /* return to p5b */
