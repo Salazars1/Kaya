@@ -53,7 +53,7 @@ void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void TimeToDie(pcb_t *harambe);
 /*These are test functions that are break points for different Sys calls*/
 
-void debugB(){}
+
 void debugC(){}
 void debugD(){}
 void debugE(){}
@@ -106,7 +106,6 @@ void SYSCALLHandler()
         CtrlPlusC(prevState, program);
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         temp = (program->s_cause)& ~(0xFF);
-        debugB();
         program->s_cause = (temp |(10 << 2));
         /*Program Trap Handler */
         PrgTrapHandler();
