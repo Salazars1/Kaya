@@ -453,54 +453,54 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     Return: Void
     */
 
-HIDDEN void TimeToDie(pcb_t * harambe)
-{
-    /*Look through until we no longer have a child*/
-    while(!emptyChild(harambe)){
+    HIDDEN void TimeToDie(pcb_t * harambe)
+    {
+        /*Look through until we no longer have a child*/
+        while(!emptyChild(harambe)){
 
-        /*Recursive call with the first child*/
-        TimeToDie(removeChild(harambe));
+            /*Recursive call with the first child*/
+            TimeToDie(removeChild(harambe));
 
-    }
-/*If the semaphore is NULL it is not blocked*/
-if(harambe ->p_semAdd == NULL){
-    /*Remove it from the Ready Queue */
-
-    outProcQ(&readyQue, harambe);
-}
-    /*If the current Process is equal to the parameter Process*/
-if(harambe == currentProcess){
-    /*Remove the child from the parents child list*/
-
-    pcb_t * test;
-
-    /**/
-
-   outChild(harambe);
-
-}
-else{
-    /*We know the process is blocked*/
-    int * tracksem = harambe ->p_semAdd;
-    /*Remove it from the blocked list*/
-    outBlocked(harambe);
-    if (tracksem >= &(semD[0]) && tracksem <= &(semD[49]))
-        {
-                        /*Decrement the softblock */
-                        softBlockCount = softBlockCount -1 ;
-                }
-                else
-                {
-            /*Increment the Semaphore*/
-                        *tracksem = *tracksem + 1;
         }
+    /*If the semaphore is NULL it is not blocked*/
+    if(harambe ->p_semAdd == NULL){
+        /*Remove it from the Ready Queue */
+
+        outProcQ(&readyQue, harambe);
     }
+        /*If the current Process is equal to the parameter Process*/
+    if(harambe == currentProcess){
+        /*Remove the child from the parents child list*/
 
-    /*Free the process block then decrement the process count */
-    freePcb(harambe);
-    processCount--;
+        pcb_t * test;
 
-}
+        /**/
+
+    outChild(harambe);
+
+    }
+    else{
+        /*We know the process is blocked*/
+        int * tracksem = harambe ->p_semAdd;
+        /*Remove it from the blocked list*/
+        outBlocked(harambe);
+        if (tracksem >= &(semD[0]) && tracksem <= &(semD[49]))
+            {
+                            /*Decrement the softblock */
+                            softBlockCount = softBlockCount -1 ;
+                    }
+                    else
+                    {
+                /*Increment the Semaphore*/
+                            *tracksem = *tracksem + 1;
+            }
+        }
+
+        /*Free the process block then decrement the process count */
+        freePcb(harambe);
+        processCount--;
+
+    }
 
 
 

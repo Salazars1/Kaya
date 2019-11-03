@@ -27,17 +27,11 @@ extern int softBlockCount;
 extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
 extern int semD[SEMNUM];
-
-/* Variables for maintaining CPU time from scheduler.e*/
-extern cpu_t Quantumstart;
-
 /*We want to use the copy state fucntion from exceptions*/
 extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
 /*2 additional functions to help compute the device number and call the scheduler*/
 int finddevice(int linenumber);
 void CallScheduler();
-
-
 void IOTrapHandler()
 {
     /*Line number bit map that is in the cause register of the state stored in interrupt old area*/
