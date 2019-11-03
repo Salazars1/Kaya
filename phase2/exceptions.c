@@ -1,7 +1,7 @@
 /*  PHASE 2
     Written by NICK STONE AND SANTIAGO SALAZAR
     Base code and Comments from PROFESSOR MIKEY G
-    Finished on
+    Finished on 10/30/19
 */
 
 /*********************************************************************************************
@@ -15,8 +15,10 @@
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
+
 #include "../e/asl.e"
 #include "../e/pcb.e"
+
 #include "../e/initial.e"
 #include "../e/interrupts.e"
 #include "../e/exceptions.e"
@@ -50,76 +52,77 @@ void PrgTrapHandler();
 void TLBTrapHandler();
 void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void TimeToDie(pcb_t *harambe);
-/*These are test functions that are break points for different Sys calls*/
-/*Test functions designed to view parameters of varying sys calls*/
 
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
     for these first 8 System calls the Kernel Mode must be active in order for these commands
-    to execute. If this is not the case, then the appropiate program trap would be execute.
+    to execute. If this is not the case, then the appropiate program trap would be execute. 
     Parameters: None
-    Return: Void
-     */
+    Return: Void*/
 void SYSCALLHandler()
 {
     /*Create variables to be used throughout this function*/
     state_t *prevState;
     state_t *program;
     pcb_PTR newprocess;
+
     unsigned int prevStatus;
-    int castle;
+    int sysReason;
     int mode;
+
     int * sema;
     int *sem;
 
     /*Assign a State * to be the SYS CALL OLD areaa*/
     prevState = (state_t *)SYSCALLOLDAREA; /* prevState status*/
+    
     /*Assign the status*/
     prevStatus = prevState->s_status;
+    
     /*Assign which sys call is being called*/
-    castle = prevState->s_a0;
-    /*testb(casel);*/
-    mode = (prevStatus & UMOFF); /*Uses the compliment to determine the mode I'm in*/
+    sysReason = prevState->s_a0;
+    
+    /*Uses the compliment to determine the mode I'm in*/
+    mode = (prevStatus & UMOFF); 
+    
     /*Sys call less than 1 or greater than 9 pass up or die they are not built to be handled */
-
-
-    if ((castle < SYSCALL1) || (castle > SYSCALL8))
+    if ((sysReason < SYSCALL1) || (sysReason > SYSCALL8))
     {
-
         /*Passup or die the previous state and specify a sys trap*/
         PassUpOrDie(prevState,SYSTRAP);
     }
-    /*If the sys call is calling a 1-8 and is in user mode*/
-    if(mode != ALLOFF){
+
+    if(mode != ALLOFF){/*If the sys call is calling a 1-8 and is in user mode*/
         program = (state_t *)PRGMTRAPOLDAREA;
         unsigned int temp;
-    /* It is User Mode*/
+    
         /*Copy the old state to the program trap old area to call program trap handler*/
         CtrlPlusC(prevState, program);
+        
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
         temp = (program->s_cause)& ~(0xFF);
         program->s_cause = (temp |(10 << 2));
+
         /*Program Trap Handler */
         PrgTrapHandler();
 
     }
     /* increment prevState's PC to next instruction */
     prevState->s_pc = prevState->s_pc + FOUR;
-    /*Switch statement to determine which Syscall we are about to do. If there is no case, we
-    execute the default case */
 
-    /*The following switch statement utilizes function calls on sys calls that are complex and are better seperated by calling
-    *Multiple functions. The sys calls that are listed in the switch statement are several lines long and are easy to follow
-    *The functions that are not in the switch statement are SYS 1,2, 5, 8 with the others being listed in the sys call.
-    * */
-    switch (castle)
+    /*Switch statement to determine which Syscall we are about to do. If there is no case, we
+        execute the default case. The following switch statement utilizes function calls on 
+        sys calls that are complex and are better seperated by calling multiple functions. The
+        sys calls that are listed in the switch statement are several lines long and are easy 
+        to follow the functions that are not in the switch statement are SYS 1,2, 5, 8 with the
+        others being listed in the sys call. */
+    switch (sysReason)
     {
     /*Create process (1)*/
     case SYSCALL1:
         Syscall1(prevState);
         break;
-    /*Terminate Process (2) BROKEN */
+    /*Terminate Process (2)*/
     case SYSCALL2:
-
         Syscall2();
         break;
     /*Verhogen Process (3)*/
@@ -130,26 +133,30 @@ void SYSCALLHandler()
     */
     case SYSCALL3:
 
-    /*Create a new process block and set it to NULL*/
+        /*Create a new process block and set it to NULL*/
         newprocess = NULL;
+
         /*Cast the semaphore value in a1 to an int start and set it to a variable*/
         int * sema = (int *) prevState ->s_a1;
-        /*Increment that bitch */
+        
+        /* increment semaphore*/
         (*sema) = (*sema) + ONE;
-        /* increment semaphore  */
-    /* testb(caller -> s_a1);*/
+        
         if (*sema <= ZERO)
         { /* waiting in the semaphore */
+
             /*Set the new process to a blocked process to the corresponding semaphore*/
             newprocess = removeBlocked(sema);
+            
             /*If its not null*/
             if (newprocess != NULL)
-            { /* add it to the ready queue */
+            { /*add it to the ready queue */
                 insertProcQ(&readyQue, newprocess);
             }
         }
         LDST(prevState); /* returns control to caller */
         break;
+
     /*Passeren Process (4)*/
     /*  When this service is requested, it is interpreted by the nucleus to request to perform a Passeren
     (P) operation on a sempahore. This is requested by placing 4 in a0, and Passerened in a1.
@@ -167,52 +174,55 @@ void SYSCALLHandler()
             /*Copy the state then insert onto the blocked and increment the softblock count and call scheduler*/
             CtrlPlusC(prevState, &(currentProcess->p_s));
             insertBlocked(sema, currentProcess);
-        /*    softBlockCount = softBlockCount + 1;*/
             scheduler();
         }
         /* nothing had control of the sem, return control to caller */
         LDST(prevState);
         break;
+
     /*Specify the Exception State Vector (5)*/
     case SYSCALL5:
         Syscall5(prevState);
         break;
+    
     /*Get CPU Time Process (6)*/
-/*Syscall6:  "Get_CPU_Time"
+    /*Syscall6:  "Get_CPU_Time"
     This service is in charge of making sure that the amount of time spent being processed is tracked by
     each Process Block that is running.
         Parameters: State_t * caller
         Return: Void*/
     case SYSCALL6:
-   /*No Function needed QUick and easy function that can be in the switch */
+    
     /*Copy the state of the caller*/
     CtrlPlusC(prevState, &(currentProcess->p_s));
+    
     /*Get the updated time then add the difference to the time spent processing*/
     STCK(TimeSpentComputing);
-    currentProcess->p_timeProc = currentProcess->p_timeProc + (TimeSpentComputing - Quantumstart);
+    
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
+    currentProcess->p_timeProc = currentProcess->p_timeProc + (TimeSpentComputing - Quantumstart);
+    
     /*Store the new updated time spent processing into the v0 register of the process state*/
     currentProcess->p_s.s_v0 = currentProcess->p_timeProc;
-    /*Updates start time*/
+    
     /*Load the Current Processes State*/
     LDST(&(currentProcess ->p_s));
     break;
+    
     /*Wait for clock Process (7)*/
     /*  Syscall 7 performs a syscall 4 on the Semaphore associated to clock timer
         Knowing that this clock also has a syscall 3 performing on it every 100 milliseconds
         Parameters: State_t* Caller
         Return: Void*/
     case SYSCALL7:
-
-    /*No Function needed quick and dirty in the switch */
-        /*Ah shit here we go again with these fucking semaphores*/
         sem = (int *)&(semD[SEMNUM - ONE]);
         (*sem) = (*sem) - 1;
         if (*sem < ZERO)
-        {
-            /*Sem is less than 0 block the current process*/
+        {/*Sem is less than 0 block the current process*/
+            
             /*Copy the state increment it onto the blocked list and increment softblock count*/
             CtrlPlusC(prevState, &(currentProcess->p_s));
+            
             insertBlocked(sem, currentProcess);
             /*Increment that we have another process soft block so that it does not starve*/
             softBlockCount = softBlockCount + ONE;
@@ -220,6 +230,7 @@ void SYSCALLHandler()
         /*Process is soft blocked call to run another process*/
         scheduler();
         break;
+
     /*Wait for IO Device Process (8)*/
     case SYSCALL8:
 
@@ -255,7 +266,7 @@ void SYSCALLHandler()
         CtrlPlusC((state_t *)caller->s_a1, &(birthedProc->p_s));
         /*WE were able to allocate thus we put 0 in the v0 register SUCCESS!*/
         caller->s_v0 = ZERO;
-         /*Increment process count */
+        /*Increment process count */
         processCount = processCount + ONE;
     }
     else
@@ -283,7 +294,6 @@ void SYSCALLHandler()
     /*Send the Current Process to the helper function*/
     TimeToDie(currentProcess);
     /*call scheduler*/
-    /*Debug Guy we never get here :(*/
     scheduler();
 }
 
@@ -350,26 +360,25 @@ void SYSCALLHandler()
         /*No Current Process then we panic*/
         PANIC();
     }
-    int lineNo; /*  line number*/
-    int dnum;   /*  device number*/
-    int termRead;
+    int lineNo;     /*  line number*/
+    int dnum;       /*  device number*/
+    int termRead;   /*  Read/Write Terminal*/
     int index;
     int *sem;
+    
+    /* what device is going to be computed*/
     lineNo = (int)caller->s_a1;
     dnum = (int)caller->s_a2;
-    termRead = (int)caller->s_a3; /* terminal read  or write */
-/*testb(lineNo);
-testb(dnum);
-testb(termRead);*/
-    /* what device is going to be computed*/
+    termRead = (int)caller->s_a3; 
+
     /*Find the index of the proper semaphore */
     index = lineNo -DEVWOSEM + termRead;
     index = index * DEVPERINT;
     index = index + dnum;
 
     sem = &(semD[index]);
-   /* test(*sem);*/
-/*Decrement the semaphore*/
+   
+    /*Decrement the semaphore*/
    (*sem) = *sem -ONE;
     if (*sem < ZERO)
     {
@@ -377,10 +386,6 @@ testb(termRead);*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
         softBlockCount = softBlockCount + ONE;
-        /*DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
-        Keeps the overall flow of the program and since there is no starvation, eventually that process
-        will get its turn to play with the processor*/
-        /*LDST(caller);*/
         scheduler();
     }
 }
@@ -398,7 +403,6 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     case TLBTRAP: /*0 is TLB EXCEPTIONS!*/
         if ((currentProcess->p_newTLB) == NULL)
         {
-            /*Just fucking murder it */
             Syscall2();
         }
         else
@@ -411,16 +415,14 @@ void PassUpOrDie(state_t *caller, int triggerReason)
 
     case PROGTRAP: /*1 is Program Trap Exceptions*/
 
-        /**/
         if ((currentProcess->p_newProgramTrap) == NULL)
         {
-            /*Just fucking take its life from it */
             Syscall2();
         }
         else
         {
-           CtrlPlusC(caller,currentProcess ->p_oldProgramTrap);
-           /*Copy the caller to the old and load the new*/
+            /*Copy the caller to the old and load the new*/
+            CtrlPlusC(caller,currentProcess ->p_oldProgramTrap);
             LDST((currentProcess ->p_newProgramTrap));
         }
         break;
@@ -428,9 +430,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     case SYSTRAP: /*2 is SYS Exception!*/
         if ((currentProcess->p_newSys) == NULL)
         {
-            /*I want this fucking annhilated*/
             Syscall2();
-
         }
         else
         {
@@ -456,46 +456,46 @@ HIDDEN void TimeToDie(pcb_t * harambe)
 {
     /*Look through until we no longer have a child*/
     while(!emptyChild(harambe)){
-
         /*Recursive call with the first child*/
         TimeToDie(removeChild(harambe));
-
     }
-/*If the semaphore is NULL it is not blocked*/
-if(harambe ->p_semAdd == NULL){
-    /*Remove it from the Ready Queue */
 
-    outProcQ(&readyQue, harambe);
-}
+    /*If the semaphore is NULL it is not blocked*/
+    if(harambe ->p_semAdd == NULL){
+        /*Remove it from the Ready Queue */
+        outProcQ(&readyQue, harambe);
+    }
+
     /*If the current Process is equal to the parameter Process*/
-if(harambe == currentProcess){
-    /*Remove the child from the parents child list*/
-    pcb_t * test;
-    /**/
-   outChild(harambe);
-}
-else{
-    /*We know the process is blocked*/
-    int * tracksem = harambe ->p_semAdd;
-    /*Remove it from the blocked list*/
-    outBlocked(harambe);
-    if (tracksem >= &(semD[ZERO]) && tracksem <= &(semD[SEMNUM]))
-        {
-                        /*Decrement the softblock */
-                        softBlockCount = softBlockCount - ONE;
-                }
-                else
-                {
-            /*Increment the Semaphore*/
-                        *tracksem = *tracksem + ONE;
-        }
+    if(harambe == currentProcess){
+        /*Remove the child from the parents child list*/
+        pcb_t * test;
+        outChild(harambe);
+    }
+
+    else
+    {
+        /*We know the process is blocked*/
+        int * tracksem = harambe ->p_semAdd;
+        /*Remove it from the blocked list*/
+        outBlocked(harambe);
+        if (tracksem >= &(semD[ZERO]) && tracksem <= &(semD[SEMNUM]))
+            {
+                /*Decrement the softblock */
+                softBlockCount = softBlockCount - ONE;
+            }
+            else
+            {
+                /*Increment the Semaphore*/
+                *tracksem = *tracksem + ONE;
+            }
     }
 
     /*Free the process block then decrement the process count */
     freePcb(harambe);
     processCount = processCount - ONE;
-
 }
+
 /*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is
     triggered when a PgmTrap exception is raised, execution continues with the nucleus’s PgmTrap exception
     handler. The cause of the PgmTrap exception will be set in Cause.ExcCode in the PgmTrap Old Area.
