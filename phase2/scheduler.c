@@ -46,6 +46,8 @@ void scheduler()
         /*Kernel Panic when these are active but We might need these */
         /*insertProcQ(&readyQue,currentProcess);*/
         /*currentProcess = NULL;*/
+
+
     }
     /*Set a new process block pointer*/
     pcb_t * NotCurr;
@@ -93,5 +95,4 @@ void scheduler()
 
 
 }
-
 
