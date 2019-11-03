@@ -56,7 +56,7 @@ int main()
 
     /*Allocate a process to be set as the current Process and increment process count*/
     currentProcess = allocPcb();
-    processCount = processCount + 1;
+    processCount = processCount + NEXT;
     /*Define the Device bus and set the value of the RAMTOP*/
     devregarea_t* deviceBus;
     deviceBus = (devregarea_t*) RAMBASEADDR;

@@ -166,6 +166,10 @@
 #define TEBITON 0x08000000
 
 
+
+#define NEXT 1
+
+
 /*Acknowledge a interrupt*/
 #define ACK 1 
 
