@@ -166,13 +166,13 @@ void IOTrapHandler()
     (*semad)= (*semad) +1;
     if ((*semad) <= 0)
     {   /*Remove one from the blocked list and if that is not null*/
-        t = removeBlocked(semad);
-        t-> p_s.s_v0 = deviceStatus;
-        if (t != NULL)
+        newprocess = removeBlocked(semad);
+        newprocess-> p_s.s_v0 = deviceStatus;
+        if (newprocess != NULL)
         {
             /*Set the status in the v0 register decrement the softblock count and insert it onto the ready queue*/
             softBlockCount = softBlockCount - 1;
-            insertProcQ(&readyQue, t);
+            insertProcQ(&readyQue, newprocess);
         }
     }
     CallScheduler();
