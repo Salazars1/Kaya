@@ -27,11 +27,17 @@ extern int softBlockCount;
 extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
 extern int semD[SEMNUM];
+
+/* Variables for maintaining CPU time from scheduler.e*/
+extern cpu_t Quantumstart;
+
 /*We want to use the copy state fucntion from exceptions*/
 extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
 /*2 additional functions to help compute the device number and call the scheduler*/
 int finddevice(int linenumber);
 void CallScheduler();
+
+
 void IOTrapHandler()
 {
     /*Line number bit map that is in the cause register of the state stored in interrupt old area*/
@@ -47,7 +53,7 @@ void IOTrapHandler()
     /*Store the device status to place in v0*/
     int deviceStatus;
     /*Another timing variable*/
-    pcb_t * newprocess;
+    pcb_t * t;
     state_PTR caller;
     /*Get the state of the offending interrupt*/
     caller = (state_t *)INTERRUPTOLDAREA;
@@ -72,12 +78,12 @@ void IOTrapHandler()
         while(headBlocked(semaphoreAddress) != NULL)
         {
             /*Remove from the blocked list*/
-            newprocess = removeBlocked(semaphoreAddress);
+            t = removeBlocked(semaphoreAddress);
             /*if not null then we put that bitch back onto the ready queue*/
-            if(newprocess != NULL){
-                insertProcQ(&readyQue, newprocess);
+            if(t != NULL){
+                insertProcQ(&readyQue, t);
                 /*One less softblock process */
-                softBlockCount = softBlockCount - 1;
+                softBlockCount--;
             }
         }
          /*Set the semaphore back to 0*/
@@ -128,7 +134,7 @@ void IOTrapHandler()
     devsemnum = templinenum * DEVPERINT;
     /*We know which device it is */
     devsemnum = devsemnum + devicenumber;
-    device_t * OffendingDeviceRegister; 
+    device_t * OffendingDeviceRegister;
     OffendingDeviceRegister = (device_t *)(0x10000050 + (templinenum * 0x80) + (devicenumber * 0x10));
     /*If the line number is a terminal which is why we dont decrement line number by 3 and assign a new variable!*/
     if (lineNumber == TERMINT)
@@ -136,32 +142,29 @@ void IOTrapHandler()
         /*Terminal*/
         if ((OffendingDeviceRegister->t_transm_status & 0xF) != READY)
         {
-             /*Acknowledge*/
-                OffendingDeviceRegister->t_transm_command = ACK;
                 /*Set the device status*/
                 deviceStatus = OffendingDeviceRegister->t_transm_status;
-               
+                /*Acknowledge*/
+                OffendingDeviceRegister->t_transm_command = ACK;
         }
         else
         {
-             /*Acknowledge*/
-            OffendingDeviceRegister->t_recv_command = ACK;
             /*Semaphore number + 8 */
             devsemnum = devsemnum + DEVPERINT;
             /*Save the status*/
             deviceStatus = OffendingDeviceRegister->t_recv_status;
-           
+            /*Acknowledge*/
+            OffendingDeviceRegister->t_recv_command = ACK;
             /*fix the semaphore number for terminal readers sub device */
         }
     }
     /*Not a terminal pretty straight forward*/
     else
     {
-        /*Acknowledge the interrupt*/
-        OffendingDeviceRegister->d_command = ACK;
         /*Non terminal Interrupt*/
         deviceStatus = OffendingDeviceRegister->d_status;
-        
+        /*Acknowledge the interrupt*/
+        OffendingDeviceRegister->d_command = ACK;
     }
     /*Get the semaphore for the device causing the interrupt*/
     semad =&(semD[devsemnum]);
@@ -169,13 +172,13 @@ void IOTrapHandler()
     (*semad)= (*semad) +1;
     if ((*semad) <= 0)
     {   /*Remove one from the blocked list and if that is not null*/
-        newprocess = removeBlocked(semad);
-        newprocess-> p_s.s_v0 = deviceStatus;
-        if (newprocess != NULL)
+        t = removeBlocked(semad);
+        if (t != NULL)
         {
             /*Set the status in the v0 register decrement the softblock count and insert it onto the ready queue*/
-            softBlockCount = softBlockCount - 1;
-            insertProcQ(&readyQue, newprocess);
+            t-> p_s.s_v0 = deviceStatus;
+             softBlockCount = softBlockCount - 1;
+            insertProcQ(&readyQue, t);
         }
     }
     CallScheduler();
@@ -222,7 +225,7 @@ int finddevice(int linenumber)
             break;
         }
         /* shift the map to the right 1 to check the next device */
-        LineBitmap = LineBitmap >> 1;   
+        LineBitmap = LineBitmap >> 1;
     }
     /*Return the device number*/
     return offendingdevicenumber;
@@ -255,4 +258,3 @@ void CallScheduler()
       scheduler();
     }
 }
-
