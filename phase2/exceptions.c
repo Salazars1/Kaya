@@ -301,7 +301,10 @@ void SYSCALLHandler()
     */
  void Syscall5(state_t *caller)
 {
-
+     if(currentProcess == NULL){
+        /*No Current Process then we panic*/
+        PANIC();
+    }
     int trapCause;
     trapCause = (int) caller->s_a1;
 
@@ -348,6 +351,10 @@ void SYSCALLHandler()
                 interrupt)*/
  void Syscall8(state_t *caller)
 {
+     if(currentProcess == NULL){
+        /*No Current Process then we panic*/
+        PANIC();
+    }
     int lineNo; /*  line number*/
     int dnum;   /*  device number*/
     int termRead;
@@ -459,9 +466,6 @@ HIDDEN void TimeToDie(pcb_t * harambe)
         TimeToDie(removeChild(harambe));
 
     }
-
-
-
 /*If the semaphore is NULL it is not blocked*/
 if(harambe ->p_semAdd == NULL){
     /*Remove it from the Ready Queue */
@@ -483,8 +487,6 @@ else{
     /*We know the process is blocked*/
     int * tracksem = harambe ->p_semAdd;
     /*Remove it from the blocked list*/
-
-
     outBlocked(harambe);
     if (tracksem >= &(semD[0]) && tracksem <= &(semD[49]))
         {
