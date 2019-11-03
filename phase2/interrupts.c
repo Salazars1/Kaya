@@ -136,29 +136,32 @@ void IOTrapHandler()
         /*Terminal*/
         if ((OffendingDeviceRegister->t_transm_status & 0xF) != READY)
         {
+             /*Acknowledge*/
+                OffendingDeviceRegister->t_transm_command = ACK;
                 /*Set the device status*/
                 deviceStatus = OffendingDeviceRegister->t_transm_status;
-                /*Acknowledge*/
-                OffendingDeviceRegister->t_transm_command = ACK;
+               
         }
         else
         {
+             /*Acknowledge*/
+            OffendingDeviceRegister->t_recv_command = ACK;
             /*Semaphore number + 8 */
             devsemnum = devsemnum + DEVPERINT;
             /*Save the status*/
             deviceStatus = OffendingDeviceRegister->t_recv_status;
-            /*Acknowledge*/
-            OffendingDeviceRegister->t_recv_command = ACK;
+           
             /*fix the semaphore number for terminal readers sub device */
         }
     }
     /*Not a terminal pretty straight forward*/
     else
     {
-        /*Non terminal Interrupt*/
-        deviceStatus = OffendingDeviceRegister->d_status;
         /*Acknowledge the interrupt*/
         OffendingDeviceRegister->d_command = ACK;
+        /*Non terminal Interrupt*/
+        deviceStatus = OffendingDeviceRegister->d_status;
+        
     }
     /*Get the semaphore for the device causing the interrupt*/
     semad =&(semD[devsemnum]);
@@ -177,6 +180,7 @@ void IOTrapHandler()
     }
     CallScheduler();
     /*Interrupt has been Handled!*/
+    PANIC();
 }
 
 /*HELPER FUNCTIONS*/
