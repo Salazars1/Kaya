@@ -47,7 +47,7 @@ void IOTrapHandler()
     /*Store the device status to place in v0*/
     int deviceStatus;
     /*Another timing variable*/
-    pcb_t * t;
+    pcb_t * newprocess;
     state_PTR caller;
     /*Get the state of the offending interrupt*/
     caller = (state_t *)INTERRUPTOLDAREA;
@@ -72,12 +72,12 @@ void IOTrapHandler()
         while(headBlocked(semaphoreAddress) != NULL)
         {
             /*Remove from the blocked list*/
-            t = removeBlocked(semaphoreAddress);
+            newprocess = removeBlocked(semaphoreAddress);
             /*if not null then we put that bitch back onto the ready queue*/
-            if(t != NULL){
-                insertProcQ(&readyQue, t);
+            if(newprocess != NULL){
+                insertProcQ(&readyQue, newprocess);
                 /*One less softblock process */
-                softBlockCount--;
+                softBlockCount = softBlockCount - 1;
             }
         }
          /*Set the semaphore back to 0*/
@@ -167,11 +167,11 @@ void IOTrapHandler()
     if ((*semad) <= 0)
     {   /*Remove one from the blocked list and if that is not null*/
         t = removeBlocked(semad);
+        t-> p_s.s_v0 = deviceStatus;
         if (t != NULL)
         {
             /*Set the status in the v0 register decrement the softblock count and insert it onto the ready queue*/
-            t-> p_s.s_v0 = deviceStatus;
-             softBlockCount = softBlockCount - 1;
+            softBlockCount = softBlockCount - 1;
             insertProcQ(&readyQue, t);
         }
     }
