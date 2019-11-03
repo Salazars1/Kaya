@@ -52,14 +52,6 @@ void TLBTrapHandler();
 void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void TimeToDie(pcb_t *harambe);
 /*These are test functions that are break points for different Sys calls*/
-
-
-void debugC(){}
-void debugD(){}
-void debugE(){}
-void debugF(){}
-void debugk(){}
-
 /*Test functions designed to view parameters of varying sys calls*/
 
 /*  There are 8 System calls (Syscall 1 through Syscall 8) that our Handler must look out
@@ -139,7 +131,6 @@ void SYSCALLHandler()
     */
     case SYSCALL3:
 
-    debugC();
     /*Create a new process block and set it to NULL*/
         newprocess = NULL;
         /*Cast the semaphore value in a1 to an int start and set it to a variable*/
@@ -168,7 +159,6 @@ void SYSCALLHandler()
     */
     case SYSCALL4:
 
-    debugD();
         /*Same process cast the semahore value from a1 and set it to a variable*/
         sema = (int *)prevState->s_a1; /* decrement semaphore */
         /*Decrement that bitch */
@@ -186,7 +176,6 @@ void SYSCALLHandler()
         break;
     /*Specify the Exception State Vector (5)*/
     case SYSCALL5:
-        debugk();
         Syscall5(prevState);
         break;
     /*Get CPU Time Process (6)*/
@@ -197,8 +186,7 @@ void SYSCALLHandler()
         Return: Void*/
     case SYSCALL6:
 
-    debugE();
-    /*No Function needed QUick and easy function that can be in the switch */
+=    /*No Function needed QUick and easy function that can be in the switch */
     /*Copy the state of the caller*/
     CtrlPlusC(prevState, &(currentProcess->p_s));
     /*Get the updated time then add the difference to the time spent processing*/
@@ -220,7 +208,6 @@ void SYSCALLHandler()
         Return: Void*/
     case SYSCALL7:
 
-    debugF();
     /*No Function needed quick and dirty in the switch */
         /*Ah shit here we go again with these fucking semaphores*/
         sem = (int *)&(semD[SEMNUM - 1]);
