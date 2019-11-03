@@ -3,7 +3,7 @@
 #ifndef SCHEDULER
 #define SCHEDULER
 
-extern cpu_t quantumrun;
+extern cpu_t TimeSpentComputing;
 extern cpu_t Quantumstart;
 
 extern void scheduler();

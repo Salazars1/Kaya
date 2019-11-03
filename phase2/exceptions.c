@@ -32,7 +32,7 @@ extern pcb_t *readyQue;
 extern int semD[SEMNUM];
 
 /* Variables for maintaining CPU time in scheduler.e*/
-extern cpu_t quantumrun;
+extern cpu_t TimeSpentComputing;
 extern cpu_t Quantumstart;
 
 /*  Declaration of exceptions and helper fucntions. Further documentation will be provided
@@ -188,8 +188,8 @@ void SYSCALLHandler()
     /*Copy the state of the caller*/
     CtrlPlusC(prevState, &(currentProcess->p_s));
     /*Get the updated time then add the difference to the time spent processing*/
-    STCK(quantumrun);
-    currentProcess->p_timeProc = currentProcess->p_timeProc + (quantumrun - Quantumstart);
+    STCK(TimeSpentComputing);
+    currentProcess->p_timeProc = currentProcess->p_timeProc + (TimeSpentComputing - Quantumstart);
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
     /*Store the new updated time spent processing into the v0 register of the process state*/
     currentProcess->p_s.s_v0 = currentProcess->p_timeProc;
