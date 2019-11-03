@@ -54,7 +54,7 @@ void IOTrapHandler()
     /*Get the state of the offending interrupt*/
     caller = (state_t *)INTERRUPTOLDAREA;
     /*Shift 8 since we only care about bits 8-15*/
-    offendingLine = caller ->s_cause >> 8;
+    offendingLine = caller ->s_cause >> EIGHT;
     if ((offendingLine & MULTICORE) != ZERO)
     { /*Mutli Core is on */
         PANIC();
@@ -69,7 +69,7 @@ void IOTrapHandler()
     else if ((offendingLine & CLOCK2) != ZERO)
     {
         /*Access the Last clock which is the psuedo clock*/
-        semaphoreAddress = (int *) &(semD[SEMNUM-1]);
+        semaphoreAddress = (int *) &(semD[SEMNUM-ONE]);
        /*Free all of the processes that are currently blocked and put them onto the ready queue*/
         while(headBlocked(semaphoreAddress) != NULL)
         {
@@ -83,7 +83,7 @@ void IOTrapHandler()
             }
         }
          /*Set the semaphore back to 0*/
-        *semaphoreAddress = 0;
+        *semaphoreAddress = ZERO;
         /*Load the clock with 100 Milliseconds*/
         LDIT(PSUEDOCLOCKTIME);
         CallScheduler();
@@ -165,15 +165,15 @@ void IOTrapHandler()
     /*Get the semaphore for the device causing the interrupt*/
     semad =&(semD[devsemnum]);
     /*Increment by 1 */
-    (*semad)= (*semad) +1;
-    if ((*semad) <= 0)
+    (*semad)= (*semad) +ONE;
+    if ((*semad) <= ZERO)
     {   /*Remove one from the blocked list and if that is not null*/
         t = removeBlocked(semad);
         if (t != NULL)
         {
             /*Set the status in the v0 register decrement the softblock count and insert it onto the ready queue*/
             t-> p_s.s_v0 = deviceStatus;
-             softBlockCount = softBlockCount - 1;
+             softBlockCount = softBlockCount - ONE;
             insertProcQ(&readyQue, t);
         }
     }
@@ -203,7 +203,7 @@ int finddevice(int linenumber)
     /*Device number*/
     int offendingdevicenumber;
     /*WE know that the line number - 3 DEVNOSEM*/
-    ProperLineNumber = linenumber -3;
+    ProperLineNumber = linenumber -DEVWOSEM;
    /*SEt this to be the RAMBASEADDR*/
     tOffendingDevice = (devregarea_t *) RAMBASEADDR;
     /*make a copy of the bit map */
@@ -221,7 +221,7 @@ int finddevice(int linenumber)
             break;
         }
         /* shift the map to the right 1 to check the next device */
-        LineBitmap = LineBitmap >> 1;
+        LineBitmap = LineBitmap >> ONE;
     }
     /*Return the device number*/
     return offendingdevicenumber;
