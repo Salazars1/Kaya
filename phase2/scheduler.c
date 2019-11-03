@@ -28,7 +28,7 @@ extern int softBlockCount;
 extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
 /* Set global variables in scheduler in order to track timing that each process is running*/
-cpu_t quantumrun;
+cpu_t TimeSpentComputing;
 cpu_t Quantumstart;
 /*  Round Robin algorithm that schedules each process that it is going to be executed by the system.
     Under certain conditions, it PANICS or performs the appropiate function call.
@@ -40,9 +40,9 @@ void scheduler()
     /*If the current Process is not null Meaning that the Quantum is up*/
     if(currentProcess !=NULL){
         /*Get the time that the clock is right now (how long the process has been running)*/
-        STCK(quantumrun);
+        STCK(TimeSpentComputing);
         /*Set the current Process time to be the old time added to the difference the quantum started and how long the store clock value was */
-        currentProcess -> p_timeProc = (currentProcess -> p_timeProc) + (quantumrun - Quantumstart);
+        currentProcess -> p_timeProc = (currentProcess -> p_timeProc) + (TimeSpentComputing - Quantumstart);
         /*Kernel Panic when these are active but We might need these */
         /*insertProcQ(&readyQue,currentProcess);*/
         /*currentProcess = NULL;*/
