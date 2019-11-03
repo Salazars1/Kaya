@@ -22,26 +22,14 @@
 
 #include "/usr/local/include/umps2/umps/libumps.e"
 
-
-
-
 /* Variables that the scheduler uses from initial.c These are Initial global variables and extern in initial.e*/
 extern int processCount;
 extern int softBlockCount;
 extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
-
-
 /* Set global variables in scheduler in order to track timing that each process is running*/
 cpu_t quantumrun;
 cpu_t Quantumstart;
-
-
-
-
-
-
-
 /*  Round Robin algorithm that schedules each process that it is going to be executed by the system.
     Under certain conditions, it PANICS or performs the appropiate function call.
     Parameters: None

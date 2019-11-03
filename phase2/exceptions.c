@@ -52,7 +52,7 @@ void TLBTrapHandler();
 void CtrlPlusC(state_t *oldState, state_t *newState);
 HIDDEN void TimeToDie(pcb_t *harambe);
 /*These are test functions that are break points for different Sys calls*/
-void debugA(){}
+
 void debugB(){}
 void debugC(){}
 void debugD(){}
@@ -187,7 +187,6 @@ void SYSCALLHandler()
         break;
     /*Specify the Exception State Vector (5)*/
     case SYSCALL5:
-        debugA();
         debugk();
         Syscall5(prevState);
         break;
@@ -282,7 +281,6 @@ void SYSCALLHandler()
     {
         /*We did not have any more processses able to be made so we send back a -1*/
         /*FAILURE*/
-        debugA();
         caller->s_v0 = -1;
     }
     /*Load the state of the state that called the sys 1*/
@@ -541,7 +539,6 @@ void debugH(){}
      */
 void PrgTrapHandler()
 {
-    debugA();
     /*Set a State to be the program trap old area specify a program trap then call pass up or die */
     PassUpOrDie((state_t *)PRGMTRAPOLDAREA, PROGTRAP);
 }

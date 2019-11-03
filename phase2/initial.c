@@ -22,10 +22,6 @@
 #include "../e/scheduler.e"
 #include "/usr/local/include/umps2/umps/libumps.e"
 
-
-
-
-
 /* Global Variables*/
 /*The number of processes on the ready QUeue*/
 int processCount;
