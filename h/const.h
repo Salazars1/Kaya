@@ -167,7 +167,7 @@
 
 
 
-
+#define ONE 1
 
 
 /*Acknowledge a interrupt*/
