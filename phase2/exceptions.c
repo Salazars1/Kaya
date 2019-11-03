@@ -82,7 +82,7 @@ void SYSCALLHandler()
     /*Sys call less than 1 or greater than 9 pass up or die they are not built to be handled */
 
 
-    if ((castle < 1) || (castle > 8))
+    if ((castle < SYSCALL1) || (castle > SYSCALL8))
     {
 
         /*Passup or die the previous state and specify a sys trap*/
@@ -96,8 +96,11 @@ void SYSCALLHandler()
         /*Copy the old state to the program trap old area to call program trap handler*/
         CtrlPlusC(prevState, program);
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
-        temp = (program->s_cause)& ~(0xFF);
-        program->s_cause = (temp |(10 << 2));
+       /* temp = (program->s_cause)& ~(0xFF);
+        program->s_cause = (temp |(10 << 2));*/
+        temp = program ->s_cause; 
+        temp = temp << 10; 
+        program -> s_cause = temp; 
         /*Program Trap Handler */
         PrgTrapHandler();
 
