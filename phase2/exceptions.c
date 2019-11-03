@@ -135,7 +135,7 @@ void SYSCALLHandler()
         /*Cast the semaphore value in a1 to an int start and set it to a variable*/
         int * sema = (int *) prevState ->s_a1;
         /*Increment that bitch */
-        (*sema) = (*sema) + 1;
+        (*sema) = (*sema) + ONE;
         /* increment semaphore  */
     /* testb(caller -> s_a1);*/
         if (*sema <= 0)
@@ -161,8 +161,8 @@ void SYSCALLHandler()
         /*Same process cast the semahore value from a1 and set it to a variable*/
         sema = (int *)prevState->s_a1; /* decrement semaphore */
         /*Decrement that bitch */
-        (*sema) = (*sema) - 1;
-        if (*sema < 0)
+        (*sema) = (*sema) - ONE;
+        if (*sema < ZERO)
         { /* there is something controlling the semaphore */
             /*Copy the state then insert onto the blocked and increment the softblock count and call scheduler*/
             CtrlPlusC(prevState, &(currentProcess->p_s));
@@ -206,7 +206,7 @@ void SYSCALLHandler()
 
     /*No Function needed quick and dirty in the switch */
         /*Ah shit here we go again with these fucking semaphores*/
-        sem = (int *)&(semD[SEMNUM - 1]);
+        sem = (int *)&(semD[SEMNUM - ONE]);
         --(*sem);
         if (*sem < 0)
         {
@@ -215,7 +215,7 @@ void SYSCALLHandler()
             CtrlPlusC(prevState, &(currentProcess->p_s));
             insertBlocked(sem, currentProcess);
             /*Increment that we have another process soft block so that it does not starve*/
-            softBlockCount = softBlockCount + 1;
+            softBlockCount = softBlockCount + ONE;
         }
         /*Process is soft blocked call to run another process*/
         scheduler();
