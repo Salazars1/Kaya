@@ -166,14 +166,17 @@ void IOTrapHandler()
     devsemnum = lineNumber -DEVWOSEM;
     devsemnum = devsemnum * DEVPERINT;
     devsemnum = devsemnum + devicenumber;
+
+    device_t * bookway; 
+    bookway = (device_t *)(0x10000050 + (templinenum * 0x80) + (devicenumber * 0x10));
     /*If the line number is a terminal which is why we dont decrement line number by 3 and assign a new variable!*/
     if (lineNumber == TERMINT)
     {
         /*Terminal*/
-        if ((testing->t_transm_status & 0xF) != READY)
+        if ((bookway->t_transm_status & 0xF) != READY)
         {
                 /*Set the device status*/
-                deviceStatus = testing->t_transm_status;
+                deviceStatus = bookway->t_transm_status;
                 /*Acknowledge*/
                 testing->t_transm_command = ACK;
         }
@@ -182,9 +185,9 @@ void IOTrapHandler()
             /*Semaphore number + 8 */
             devsemnum = devsemnum + DEVPERINT;
             /*Save the status*/
-            deviceStatus = testing->t_recv_status;
+            deviceStatus = bookway->t_recv_status;
             /*Acknowledge*/
-            testing->t_recv_command = ACK;
+            bookway->t_recv_command = ACK;
             /*fix the semaphore number for terminal readers sub device */
         }
     }
@@ -192,9 +195,9 @@ void IOTrapHandler()
     else
     {
         /*Non terminal Interrupt*/
-        deviceStatus = testing->d_status;
+        deviceStatus = bookway->d_status;
         /*Acknowledge the interrupt*/
-        testing->d_command = ACK;
+        bookway->d_command = ACK;
     }
     /*Get the semaphore for the device causing the interrupt*/
     semad =&(semD[devsemnum]);
