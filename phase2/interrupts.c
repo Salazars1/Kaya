@@ -1,22 +1,28 @@
 /*  PHASE 2
     Written by NICK STONE AND SANTIAGO SALAZAR
     Base code and Comments from PROFESSOR MIKEY G
-    Finished on
+    Finished on 10/30/19
 */
 
 /*********************************************************************************************
                             Module Comment Section
+This module processes all types of device interrupts, inculding Interval Timer interrupts,
+and converting device interrupts into V operations on the appropriate semaphores.
+    
+DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
+Keeps the overall flow of the program and since there is no starvation, eventually the
+process will get its turn to play with the processor.
 **********************************************************************************************/
 #include "../h/const.h"
 #include "../h/types.h"
+
 #include "../e/asl.e"
 #include "../e/pcb.e"
+
 #include "../e/initial.e"
 #include "../e/interrupts.e"
 #include "../e/exceptions.e"
 #include "../e/scheduler.e"
-
-
 
 #include "/usr/local/include/umps2/umps/libumps.e"
 
@@ -27,34 +33,46 @@ extern int softBlockCount;
 extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
 extern int semD[SEMNUM];
+
 /*We want to use the copy state fucntion from exceptions*/
 extern void CtrlPlusC(state_PTR oldstate, state_PTR NewState);
+
 /*2 additional functions to help compute the device number and call the scheduler*/
 int finddevice(int linenumber);
 void CallScheduler();
 
 
+/*Function that willacknowledge the highest priority interrupt and then give control
+    over to the scheduler. This should not be called as an independent function, if
+    so, it will cause a PANIC().*/
 void IOTrapHandler()
 {
     /*Line number bit map that is in the cause register of the state stored in interrupt old area*/
     unsigned int offendingLine;
+
     /*Need to Determine Device Address and the Device semaphore number*/
     int templinenum;
     int lineNumber;
     int devsemnum;
     int devicenumber;
+    
     /*V operation sempahore variables */
     int * semad;
     int* semaphoreAddress;
+    
     /*Store the device status to place in v0*/
     int deviceStatus;
+    
     /*Another timing variable*/
-    pcb_t * t;
+    pcb_t *blockProc;
     state_PTR caller;
+    
     /*Get the state of the offending interrupt*/
     caller = (state_t *)INTERRUPTOLDAREA;
+    
     /*Shift 8 since we only care about bits 8-15*/
     offendingLine = caller ->s_cause >> EIGHT;
+    
     if ((offendingLine & MULTICORE) != ZERO)
     { /*Mutli Core is on */
         PANIC();
@@ -70,14 +88,15 @@ void IOTrapHandler()
     {
         /*Access the Last clock which is the psuedo clock*/
         semaphoreAddress = (int *) &(semD[SEMNUM-ONE]);
+
        /*Free all of the processes that are currently blocked and put them onto the ready queue*/
         while(headBlocked(semaphoreAddress) != NULL)
         {
             /*Remove from the blocked list*/
-            t = removeBlocked(semaphoreAddress);
+           blockProc = removeBlocked(semaphoreAddress);
             /*if not null then we put that bitch back onto the ready queue*/
-            if(t != NULL){
-                insertProcQ(&readyQue, t);
+            if(blockProc != NULL){
+                insertProcQ(&readyQue,blockProc);
                 /*One less softblock process */
                 softBlockCount--;
             }
@@ -168,20 +187,21 @@ void IOTrapHandler()
     (*semad)= (*semad) +ONE;
     if ((*semad) <= ZERO)
     {   /*Remove one from the blocked list and if that is not null*/
-        t = removeBlocked(semad);
-        if (t != NULL)
+       blockProc = removeBlocked(semad);
+        if (blockProc != NULL)
         {
             /*Set the status in the v0 register decrement the softblock count and insert it onto the ready queue*/
-            t-> p_s.s_v0 = deviceStatus;
+           blockProc-> p_s.s_v0 = deviceStatus;
              softBlockCount = softBlockCount - ONE;
-            insertProcQ(&readyQue, t);
+            insertProcQ(&readyQue,blockProc);
         }
     }
     CallScheduler();
     /*Interrupt has been Handled!*/
 }
 
-/*HELPER FUNCTIONS*/
+/*----------------------------------------HELPER FUNCTIONS---------------------------------------------*/
+
 /**
  * Take in the line number of the interrupt that is offending. We will then bit shift until we find the first device causing
  * The interrupt
