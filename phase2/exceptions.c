@@ -197,7 +197,7 @@ void SYSCALLHandler()
     currentProcess->p_s.s_v0 = currentProcess->p_timeProc;
     /*caller->s_v0 = currentProcess -> p_timeProc; */
     /*Updates start time*/
-    STCK(Quantumstart);
+    /*STCK(Quantumstart);*/
     /*Load the Current Processes State*/
     LDST(&(currentProcess ->p_s));
     break;
@@ -212,7 +212,6 @@ void SYSCALLHandler()
         /*Ah shit here we go again with these fucking semaphores*/
         sem = (int *)&(semD[SEMNUM - 1]);
         --(*sem);
-    /*  testb(*sem);*/
         if (*sem < 0)
         {
             /*Sem is less than 0 block the current process*/
