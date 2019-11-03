@@ -180,7 +180,6 @@ void IOTrapHandler()
     }
     CallScheduler();
     /*Interrupt has been Handled!*/
-    PANIC();
 }
 
 /*HELPER FUNCTIONS*/
