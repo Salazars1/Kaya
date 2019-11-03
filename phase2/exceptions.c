@@ -185,7 +185,6 @@ void SYSCALLHandler()
         Parameters: State_t * caller
         Return: Void*/
     case SYSCALL6:
-
    /*No Function needed QUick and easy function that can be in the switch */
     /*Copy the state of the caller*/
     CtrlPlusC(prevState, &(currentProcess->p_s));
@@ -195,9 +194,7 @@ void SYSCALLHandler()
     /*Track the amout of time spent processing and add this to the previous amount of process time*/
     /*Store the new updated time spent processing into the v0 register of the process state*/
     currentProcess->p_s.s_v0 = currentProcess->p_timeProc;
-    /*caller->s_v0 = currentProcess -> p_timeProc; */
     /*Updates start time*/
-    /*STCK(Quantumstart);*/
     /*Load the Current Processes State*/
     LDST(&(currentProcess ->p_s));
     break;
