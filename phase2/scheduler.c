@@ -66,18 +66,18 @@ void scheduler()
         /*Set current process to NULL (No processes ready to be run) */
         currentProcess = NULL;
         /*Check to see if we have any processes remainning */
-        if (processCount == 0)
+        if (processCount == ZERO)
         { /* Everything finished running correctly */
 
             HALT();
         }
         /*Still processes that need to be run */
-        if (processCount > 0)
+        if (processCount > ZERO)
         {
             /*WE have processes but we have no processes on the ready queue or the blocked queue
             * This is an Oh fuck moment and a deadlock case PANIC
             */
-            if (softBlockCount == 0)
+            if (softBlockCount == ZERO)
             { /* DEADLOCK CASE */
                 PANIC();
             }
