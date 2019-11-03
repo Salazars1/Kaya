@@ -97,9 +97,8 @@ void SYSCALLHandler()
         /*Copy the old state to the program trap old area to call program trap handler*/
         CtrlPlusC(prevState, program);
         /*setting Cause.ExcCode in the Program Trap Old Area to Reserved Instruction */
-       /* temp = (program->s_cause)& ~(0xFF);
-        program->s_cause = (temp |(10 << 2));*/
-        program-> s_cause = program -> s_cause << 10; 
+        temp = (program->s_cause)& ~(0xFF);
+        program->s_cause = (temp |(10 << 2));
         /*Program Trap Handler */
         PrgTrapHandler();
 
@@ -441,9 +440,7 @@ void PassUpOrDie(state_t *caller, int triggerReason)
             LDST((currentProcess ->p_newSys));
         }
         break;
-
     }
-
 }
 
 
@@ -456,54 +453,54 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     Return: Void
     */
 
-    HIDDEN void TimeToDie(pcb_t * harambe)
-    {
-        /*Look through until we no longer have a child*/
-        while(!emptyChild(harambe)){
+HIDDEN void TimeToDie(pcb_t * harambe)
+{
+    /*Look through until we no longer have a child*/
+    while(!emptyChild(harambe)){
 
-            /*Recursive call with the first child*/
-            TimeToDie(removeChild(harambe));
+        /*Recursive call with the first child*/
+        TimeToDie(removeChild(harambe));
 
+    }
+/*If the semaphore is NULL it is not blocked*/
+if(harambe ->p_semAdd == NULL){
+    /*Remove it from the Ready Queue */
+
+    outProcQ(&readyQue, harambe);
+}
+    /*If the current Process is equal to the parameter Process*/
+if(harambe == currentProcess){
+    /*Remove the child from the parents child list*/
+
+    pcb_t * test;
+
+    /**/
+
+   outChild(harambe);
+
+}
+else{
+    /*We know the process is blocked*/
+    int * tracksem = harambe ->p_semAdd;
+    /*Remove it from the blocked list*/
+    outBlocked(harambe);
+    if (tracksem >= &(semD[0]) && tracksem <= &(semD[49]))
+        {
+                        /*Decrement the softblock */
+                        softBlockCount = softBlockCount -1 ;
+                }
+                else
+                {
+            /*Increment the Semaphore*/
+                        *tracksem = *tracksem + 1;
         }
-    /*If the semaphore is NULL it is not blocked*/
-    if(harambe ->p_semAdd == NULL){
-        /*Remove it from the Ready Queue */
-
-        outProcQ(&readyQue, harambe);
     }
-        /*If the current Process is equal to the parameter Process*/
-    if(harambe == currentProcess){
-        /*Remove the child from the parents child list*/
 
-        pcb_t * test;
+    /*Free the process block then decrement the process count */
+    freePcb(harambe);
+    processCount--;
 
-        /**/
-
-    outChild(harambe);
-
-    }
-    else{
-        /*We know the process is blocked*/
-        int * tracksem = harambe ->p_semAdd;
-        /*Remove it from the blocked list*/
-        outBlocked(harambe);
-        if (tracksem >= &(semD[0]) && tracksem <= &(semD[49]))
-            {
-                            /*Decrement the softblock */
-                            softBlockCount = softBlockCount -1 ;
-                    }
-                    else
-                    {
-                /*Increment the Semaphore*/
-                            *tracksem = *tracksem + 1;
-            }
-        }
-
-        /*Free the process block then decrement the process count */
-        freePcb(harambe);
-        processCount--;
-
-    }
+}
 
 
 
@@ -579,4 +576,3 @@ pcb_PTR clean(pcb_PTR temp){
 
     return temp;
 }
-
