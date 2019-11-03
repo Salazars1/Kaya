@@ -147,8 +147,10 @@ void IOTrapHandler()
     /*We know which device it is */
     devsemnum = devsemnum + devicenumber;
     device_t * OffendingDeviceRegister;
+    
+    /*Numbers got from Umps2 Principles of Operation book. Chapter 5, page 32 (NO MAGIC Numbers)*/
     OffendingDeviceRegister = (device_t *)(0x10000050 + (templinenum * 0x80) + (devicenumber * 0x10));
-    /*If the line number is a terminal which is why we dont decrement line number by 3 and assign a new variable!*/
+    
     if (lineNumber == TERMINT)
     {
         /*Terminal*/
@@ -267,12 +269,8 @@ void CallScheduler()
          /*if the process is still around need to copy its contents over*/
         CtrlPlusC(temp, &(currentProcess->p_s));
         insertProcQ(&readyQue, currentProcess);
-        scheduler();
     }
     /*No Current Process go ahead and call the scheduler for the next process*/
-    else
-    {
-        /*No extra work need to be done just go ahead and call scheduler since there is no currentProcess*/
       scheduler();
-    }
+    
 }
