@@ -120,14 +120,11 @@ void IOTrapHandler()
     else if ((offendingLine & NETWORKDEVICE) != ZERO)
     {
         /*Network Device is on */
-
         lineNumber = NETWORKI;
     }
     else if ((offendingLine & PRINTERDEVICE) != ZERO)
     {
-
         /*Printer Device is on */
-
         lineNumber = PRINTERI;
     }
     else if ((offendingLine & TERMINALDEVICE) != ZERO)
@@ -191,8 +188,8 @@ void IOTrapHandler()
         if (blockProc != NULL)
         {
             /*Set the status in the v0 register decrement the softblock count and insert it onto the ready queue*/
-           blockProc-> p_s.s_v0 = deviceStatus;
-             softBlockCount = softBlockCount - ONE;
+            blockProc-> p_s.s_v0 = deviceStatus;
+            softBlockCount = softBlockCount - ONE;
             insertProcQ(&readyQue,blockProc);
         }
     }
@@ -211,25 +208,31 @@ void IOTrapHandler()
 int finddevice(int linenumber)
 {
     /*Set some local variables*/
-    /*For loop counter*/
     int i;
     /*area that is causing the interrupt that has the map of the device*/
     devregarea_t * tOffendingDevice;
-    /*tt is to track the line number - 3 */
+    
+    /*ProperLineNumber is to track the line number - 3 */
     int ProperLineNumber;
+    
     /*The bit map of the device bit map and a bit map only containning the first bit*/
     unsigned int LineBitmap;
     unsigned int  BitMapActive;
+    
     /*Device number*/
     int offendingdevicenumber;
-    /*WE know that the line number - 3 DEVNOSEM*/
+    
+    /*We know that the line number - 3 DEVNOSEM*/
     ProperLineNumber = linenumber -DEVWOSEM;
-   /*SEt this to be the RAMBASEADDR*/
+    /*Set this to be the RAMBASEADDR*/
     tOffendingDevice = (devregarea_t *) RAMBASEADDR;
+    
     /*make a copy of the bit map */
     LineBitmap = tOffendingDevice->interrupt_dev[ProperLineNumber];
+    
     /*Only care about the first bit */
     BitMapActive = FIRSTBIT;
+    
     /*8 Total devices to look through */
     for (i = 0; i < TOTALDEVICES; i++)
     {
@@ -257,14 +260,13 @@ void CallScheduler()
     /*set a temp state to point to the interrupt old area*/
     state_t *temp;
     temp =  (state_t *)INTERRUPTOLDAREA;
+
     /*If the current process is null we need to put it back onto the ready queue*/
     if (currentProcess != NULL)
     {
          /*if the process is still around need to copy its contents over*/
         CtrlPlusC(temp, &(currentProcess->p_s));
         insertProcQ(&readyQue, currentProcess);
-        /*Load the state back */
-        /**LDST(temp);*/
         scheduler();
     }
     /*No Current Process go ahead and call the scheduler for the next process*/
