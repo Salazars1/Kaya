@@ -452,17 +452,11 @@ int gg(int f){return f;}
     Return: Void
     */
 
-
-   void debugS(){}
-   void debugSS(){}
-   void debugSSS(){}
-   void debugSSSS(){}
 HIDDEN void TimeToDie(pcb_t * harambe)
 {
     /*Look through until we no longer have a child*/
     while(!emptyChild(harambe)){
 
-        debugS();
         /*Recursive call with the first child*/
         TimeToDie(removeChild(harambe));
 
@@ -474,7 +468,6 @@ HIDDEN void TimeToDie(pcb_t * harambe)
 if(harambe ->p_semAdd == NULL){
     /*Remove it from the Ready Queue */
 
-    debugSS();
     outProcQ(&readyQue, harambe);
 }
     /*If the current Process is equal to the parameter Process*/
@@ -490,7 +483,6 @@ if(harambe == currentProcess){
 }
 else{
     /*We know the process is blocked*/
-    debugSSSS();
     int * tracksem = harambe ->p_semAdd;
     /*Remove it from the blocked list*/
 
@@ -514,8 +506,7 @@ else{
 
 }
 
-/*Test function that will be removed before turn in but used for break point without touching any a- register*/
-void debugH(){}
+
 
 /*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is
     triggered when a PgmTrap exception is raised, execution continues with the nucleus’s PgmTrap exception
