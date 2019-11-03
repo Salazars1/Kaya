@@ -186,7 +186,7 @@ void SYSCALLHandler()
         Return: Void*/
     case SYSCALL6:
 
-=    /*No Function needed QUick and easy function that can be in the switch */
+   /*No Function needed QUick and easy function that can be in the switch */
     /*Copy the state of the caller*/
     CtrlPlusC(prevState, &(currentProcess->p_s));
     /*Get the updated time then add the difference to the time spent processing*/
