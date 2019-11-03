@@ -230,35 +230,35 @@ int finddevice(int linenumber)
     /*area that is causing the interrupt that has the map of the device*/
     devregarea_t * tOffendingDevice;
     /*tt is to track the line number - 3 */
-    int tt;
+    int ProperLineNumber;
     /*The bit map of the device bit map and a bit map only containning the first bit*/
-    unsigned int map;
-    unsigned int  t;
+    unsigned int LineBitmap;
+    unsigned int  BitMapActive;
     /*Device number*/
-    int devn;
+    int offendingdevicenumber;
     /*WE know that the line number - 3 DEVNOSEM*/
-   tt = linenumber -3;
+    ProperLineNumber = linenumber -3;
    /*SEt this to be the RAMBASEADDR*/
     tOffendingDevice = (devregarea_t *) RAMBASEADDR;
     /*make a copy of the bit map */
-    map = tOffendingDevice->interrupt_dev[tt];
+    LineBitmap = tOffendingDevice->interrupt_dev[ProperLineNumber];
     /*Only care about the first bit */
-    t = FIRSTBIT;
+    BitMapActive = FIRSTBIT;
     /*8 Total devices to look through */
     for (i = 0; i < TOTALDEVICES; i++)
     {
         /*Bit wise and if the value is not 0 Device is interrupting */
-        if ((map & t) == t)
+        if ((LineBitmap & BitMapActive) == BitMapActive)
         {
             /*Device number is equal to the index and we are done looping */
-            devn = i;
+            offendingdevicenumber = i;
             break;
         }
         /* shift the map to the right 1 to check the next device */
-        map = map >> 1;   
+        LineBitmap = LineBitmap >> 1;   
     }
     /*Return the device number*/
-    return devn;
+    return offendingdevicenumber;
 }
 
 /*Function in charge of either putting the current process back on the ready queue and calling the scheduler
