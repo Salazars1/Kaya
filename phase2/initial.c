@@ -43,15 +43,15 @@ int main()
     initPcbs();
     initASL();
     /*Set the global variables to the starting values... 0,0,NULL, NULL*/
-    processCount = 0;
-    softBlockCount = 0;
+    processCount = ZERO;
+    softBlockCount = ZERO;
     currentProcess = NULL;
     readyQue = mkEmptyProcQ();
   /* iniltialize semaphores to 0*/
     int i;
     for (i = 0; i < SEMNUM; i++)
     {
-        semD[i] = 0;
+        semD[i] = ZERO;
     }
 
     /*Allocate a process to be set as the current Process and increment process count*/
