@@ -168,6 +168,8 @@
 
 
 #define ONE 1
+#define TWO 2
+#define FOUR 4
 
 
 /*Acknowledge a interrupt*/

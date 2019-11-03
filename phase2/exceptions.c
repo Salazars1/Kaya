@@ -103,7 +103,7 @@ void SYSCALLHandler()
 
     }
     /* increment prevState's PC to next instruction */
-    prevState->s_pc = prevState->s_pc + 4;
+    prevState->s_pc = prevState->s_pc + FOUR;
     /*Switch statement to determine which Syscall we are about to do. If there is no case, we
     execute the default case */
 
@@ -138,7 +138,7 @@ void SYSCALLHandler()
         (*sema) = (*sema) + ONE;
         /* increment semaphore  */
     /* testb(caller -> s_a1);*/
-        if (*sema <= 0)
+        if (*sema <= ZERO)
         { /* waiting in the semaphore */
             /*Set the new process to a blocked process to the corresponding semaphore*/
             newprocess = removeBlocked(sema);
@@ -207,8 +207,8 @@ void SYSCALLHandler()
     /*No Function needed quick and dirty in the switch */
         /*Ah shit here we go again with these fucking semaphores*/
         sem = (int *)&(semD[SEMNUM - ONE]);
-        --(*sem);
-        if (*sem < 0)
+        (*sem) = (*sem) - 1;
+        if (*sem < ZERO)
         {
             /*Sem is less than 0 block the current process*/
             /*Copy the state increment it onto the blocked list and increment softblock count*/
@@ -254,15 +254,15 @@ void SYSCALLHandler()
         /*Copy the state into the prorcess state of the new process that we have allocated*/
         CtrlPlusC((state_t *)caller->s_a1, &(birthedProc->p_s));
         /*WE were able to allocate thus we put 0 in the v0 register SUCCESS!*/
-        caller->s_v0 = 0;
+        caller->s_v0 = ZERO;
          /*Increment process count */
-        processCount = processCount + 1;
+        processCount = processCount + ONE;
     }
     else
     {
         /*We did not have any more processses able to be made so we send back a -1*/
         /*FAILURE*/
-        caller->s_v0 = -1;
+        caller->s_v0 = -ONE;
     }
     /*Load the state of the state that called the sys 1*/
     LDST(caller);
@@ -303,7 +303,7 @@ void SYSCALLHandler()
     int trapCause;
     trapCause = (int) caller->s_a1;
 
-    if (trapCause == 0)
+    if (trapCause == ZERO)
     { /*TLB TRAP*/
         if (currentProcess->p_newTLB != NULL)
         { /* already called sys5 */
@@ -313,7 +313,7 @@ void SYSCALLHandler()
         currentProcess->p_oldTLB = (state_t *)caller->s_a2;
         currentProcess->p_newTLB = (state_t *)caller->s_a3;
     }
-    else if (trapCause == 1)
+    else if (trapCause == ONE)
     { /*Program Trap*/
         if ((currentProcess->p_newProgramTrap) != NULL)
         { /* already called sys5 */
@@ -323,7 +323,7 @@ void SYSCALLHandler()
         currentProcess->p_oldProgramTrap = (state_t *)caller->s_a2;
         currentProcess->p_newProgramTrap = (state_t *)caller->s_a3;
     }
-    else if (trapCause == 2)
+    else if (trapCause == TWO)
     {
 
         if ((currentProcess->p_newSys) != NULL)
@@ -363,20 +363,20 @@ testb(dnum);
 testb(termRead);*/
     /* what device is going to be computed*/
     /*Find the index of the proper semaphore */
-    index = lineNo -3 + termRead;
-    index = index * 8;
+    index = lineNo -DEVWOSEM + termRead;
+    index = index * DEVPERINT;
     index = index + dnum;
 
     sem = &(semD[index]);
    /* test(*sem);*/
 /*Decrement the semaphore*/
-   (*sem) = *sem -1;
-    if (*sem < 0)
+   (*sem) = *sem -ONE;
+    if (*sem < ZERO)
     {
         /*Copy state put it on the blcok queue increment softblock and call scheduler*/
         CtrlPlusC(caller, &(currentProcess->p_s));
         insertBlocked(sem, currentProcess);
-        softBlockCount = softBlockCount + 1;
+        softBlockCount = softBlockCount + ONE;
         /*DECIDED TO CALL SCHEDULER instead of giving back time to the process that was interrupted
         Keeps the overall flow of the program and since there is no starvation, eventually that process
         will get its turn to play with the processor*/
@@ -470,39 +470,32 @@ if(harambe ->p_semAdd == NULL){
     /*If the current Process is equal to the parameter Process*/
 if(harambe == currentProcess){
     /*Remove the child from the parents child list*/
-
     pcb_t * test;
-
     /**/
-
    outChild(harambe);
-
 }
 else{
     /*We know the process is blocked*/
     int * tracksem = harambe ->p_semAdd;
     /*Remove it from the blocked list*/
     outBlocked(harambe);
-    if (tracksem >= &(semD[0]) && tracksem <= &(semD[49]))
+    if (tracksem >= &(semD[ZERO]) && tracksem <= &(semD[SEMNUM]))
         {
                         /*Decrement the softblock */
-                        softBlockCount = softBlockCount -1 ;
+                        softBlockCount = softBlockCount - ONE;
                 }
                 else
                 {
             /*Increment the Semaphore*/
-                        *tracksem = *tracksem + 1;
+                        *tracksem = *tracksem + ONE;
         }
     }
 
     /*Free the process block then decrement the process count */
     freePcb(harambe);
-    processCount--;
+    processCount = processCount - ONE;
 
 }
-
-
-
 /*Gets triggered when the executing process performs an illegal operation. Therefore, since  this is
     triggered when a PgmTrap exception is raised, execution continues with the nucleus’s PgmTrap exception
     handler. The cause of the PgmTrap exception will be set in Cause.ExcCode in the PgmTrap Old Area.
@@ -554,17 +547,17 @@ pcb_PTR clean(pcb_PTR temp){
     temp->p_prnt = NULL;
     temp->p_next = NULL;
     temp->p_prev = NULL;
-    temp ->p_semAdd = 0;
-    temp ->p_timeProc = 0;
-    temp ->p_s.s_asid =0;
-    temp -> p_s.s_cause = 0;
-    temp ->p_s.s_pc = 0;
+    temp ->p_semAdd = ZERO;
+    temp ->p_timeProc = ZERO;
+    temp ->p_s.s_asid =ZERO;
+    temp -> p_s.s_cause = ZERO;
+    temp ->p_s.s_pc = ZERO;
      int i;
     for (i = 0; i < STATEREGNUM; i++)
     {
-       temp->p_s.s_reg[i] = 0;
+       temp->p_s.s_reg[i] = ZERO;
     }
-    temp ->p_s.s_status = 0;
+    temp ->p_s.s_status = ZERO;
     temp->p_oldSys = NULL;
     temp->p_newSys = NULL;
     temp->p_oldTLB = NULL;
