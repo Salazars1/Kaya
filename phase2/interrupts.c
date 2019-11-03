@@ -27,7 +27,6 @@ extern int softBlockCount;
 extern pcb_t *currentProcess;
 extern pcb_t *readyQue;
 extern int semD[SEMNUM];
-cpu_t interruptstart;
 
 /* Variables for maintaining CPU time from scheduler.e*/
 extern cpu_t Quantumstart;
@@ -54,11 +53,8 @@ void IOTrapHandler()
     /*Store the device status to place in v0*/
     int deviceStatus;
     /*Another timing variable*/
-    cpu_t finish;
     pcb_t * t;
     state_PTR caller;
-    /*Get the time the interrupt stated*/
-    STCK(interruptstart);
     /*Get the state of the offending interrupt*/
     caller = (state_t *)INTERRUPTOLDAREA;
     /*Shift 8 since we only care about bits 8-15*/
@@ -85,7 +81,6 @@ void IOTrapHandler()
             t = removeBlocked(semaphoreAddress);
             /*if not null then we put that bitch back onto the ready queue*/
             if(t != NULL){
-                STCK(finish);
                 insertProcQ(&readyQue, t);
                 /*One less softblock process */
                 softBlockCount--;
