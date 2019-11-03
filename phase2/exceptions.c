@@ -250,7 +250,7 @@ void SYSCALLHandler()
     /*Clean the new process block just in case*/
     birthedProc = clean(birthedProc);
     /*If the new process is null then We know there is no way to allocate a process*/
-    if (!emptyProcQ(birthedProc))
+    if (birthedProc != NULL)
     {
         /*Makes the new process a child of the currently running process calling the sys call */
         insertChild(currentProcess, birthedProc);
