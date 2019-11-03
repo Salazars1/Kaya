@@ -48,9 +48,6 @@ void IOTrapHandler()
     int lineNumber;
     int devsemnum;
     int devicenumber;
-    device_t * testing;
-    int mathishard;
-    int mathishard2;
     /*V operation sempahore variables */
     int * semad;
     int* semaphoreAddress;
@@ -64,15 +61,11 @@ void IOTrapHandler()
     STCK(interruptstart);
     /*Get the state of the offending interrupt*/
     caller = (state_t *)INTERRUPTOLDAREA;
-
-
     /*Shift 8 since we only care about bits 8-15*/
     offendingLine = caller ->s_cause >> 8;
     if ((offendingLine & MULTICORE) != ZERO)
     { /*Mutli Core is on */
-
         PANIC();
-
     }
     else if ((offendingLine & CLOCK1) != ZERO)
     {
@@ -140,54 +133,33 @@ void IOTrapHandler()
 
     /*Call the helper function since we have the line number and need to find the device number*/
     devicenumber = finddevice(lineNumber);
-
     /*Offest the Line number*/
     templinenum = lineNumber - DEVWOSEM;
-
     /* 8 devices per line number*/
     devsemnum = templinenum * DEVPERINT;
     /*We know which device it is */
     devsemnum = devsemnum + devicenumber;
-    /*Reset these values back to 0 */
-    mathishard = 0;
-    mathishard2 = 0;
-    /*Offset the line number*/
-    mathishard2 = templinenum;
-    /*Multiply by the size of the registers (16 bytes)*/
-    mathishard = mathishard2 * DEVREGSIZE;
-    /*Mutliply by the number of devices*/
-    mathishard = mathishard * DEVPERINT;
-    /*Multiply the size of the regsiters*/
-    mathishard2 = devicenumber * DEVREGSIZE;
-    /*Add the two values together*/
-    mathishard = mathishard + mathishard2;
-    /*Dev phys + the value of the computation above to find the device location*/
-    testing = (device_t *) (0x10000050  + mathishard);
-    devsemnum = lineNumber -DEVWOSEM;
-    devsemnum = devsemnum * DEVPERINT;
-    devsemnum = devsemnum + devicenumber;
-
-    device_t * bookway; 
-    bookway = (device_t *)(0x10000050 + (templinenum * 0x80) + (devicenumber * 0x10));
+    device_t * OffendingDeviceRegister; 
+    OffendingDeviceRegister = (device_t *)(0x10000050 + (templinenum * 0x80) + (devicenumber * 0x10));
     /*If the line number is a terminal which is why we dont decrement line number by 3 and assign a new variable!*/
     if (lineNumber == TERMINT)
     {
         /*Terminal*/
-        if ((bookway->t_transm_status & 0xF) != READY)
+        if ((OffendingDeviceRegister->t_transm_status & 0xF) != READY)
         {
                 /*Set the device status*/
-                deviceStatus = bookway->t_transm_status;
+                deviceStatus = OffendingDeviceRegister->t_transm_status;
                 /*Acknowledge*/
-                testing->t_transm_command = ACK;
+                OffendingDeviceRegister->t_transm_command = ACK;
         }
         else
         {
             /*Semaphore number + 8 */
             devsemnum = devsemnum + DEVPERINT;
             /*Save the status*/
-            deviceStatus = bookway->t_recv_status;
+            deviceStatus = OffendingDeviceRegister->t_recv_status;
             /*Acknowledge*/
-            bookway->t_recv_command = ACK;
+            OffendingDeviceRegister->t_recv_command = ACK;
             /*fix the semaphore number for terminal readers sub device */
         }
     }
@@ -195,9 +167,9 @@ void IOTrapHandler()
     else
     {
         /*Non terminal Interrupt*/
-        deviceStatus = bookway->d_status;
+        deviceStatus = OffendingDeviceRegister->d_status;
         /*Acknowledge the interrupt*/
-        bookway->d_command = ACK;
+        OffendingDeviceRegister->d_command = ACK;
     }
     /*Get the semaphore for the device causing the interrupt*/
     semad =&(semD[devsemnum]);
