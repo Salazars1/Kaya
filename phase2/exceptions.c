@@ -440,8 +440,6 @@ void PassUpOrDie(state_t *caller, int triggerReason)
     }
 }
 
-/*Test function that will be removed before turn in but used for testing a0,a1,a2,a3 values*/
-int gg(int f){return f;}
 
 /**************************  HELPER FUNCTIONS    ******************************/
 
