@@ -177,4 +177,9 @@
 #define ACK 1 
 
 
+/*____________PHASE 3___________________*/
+#define KUSEGSIZE 32
+#define KSEGSIZE 64
+
+
 #endif

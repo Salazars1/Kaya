@@ -117,5 +117,28 @@ typedef struct semd_t {
 #define s_HI	s_reg[29]
 #define s_LO	s_reg[30]
 
+typedef struct pteEntry_t {
+	unsigned int	entryHI;
+	unsigned int	entryLO;
+} pteEntry_t;
+
+
+typedef struct pte_t{
+	int				header;
+	pteEntry_t		pteTable[KUSEGSIZE];
+} pte_t;
+
+
+typedef struct pteOS_t{
+	int 			header;
+	pteEntry_t		pteTable[KSEGSIZE];
+} pteOS_t;
+
+
+typedef struct segTable_t{
+	pteOS_t			*ksegOS;
+	pte_t			*kuseg2;
+	pte_t			*kuseg3;
+} segTable_t;
 
 #endif

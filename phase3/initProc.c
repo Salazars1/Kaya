@@ -4,3 +4,10 @@
     Finished on 
 */
 
+#include "../h/const.h"
+#include "../h/types.h"
+
+void test()
+{
+        
+}
