@@ -180,6 +180,7 @@
 /*____________PHASE 3___________________*/
 #define KUSEGSIZE 32
 #define KSEGSIZE 64
-
+#define SHIFT_VPN 12
+#define SWAPPOOLSIZE 16
 
 #endif

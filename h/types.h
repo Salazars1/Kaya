@@ -141,4 +141,13 @@ typedef struct segTable_t{
 	pte_t			*kuseg3;
 } segTable_t;
 
+
+typedef struct swap_t
+{
+	int				sw_asid;
+	int				sw_pgNum;
+	int				sw_segNum;
+	pteEntry_t*		sw_pte;
+}swap_t;
+
 #endif
