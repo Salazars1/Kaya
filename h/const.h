@@ -182,5 +182,12 @@
 #define KSEGSIZE 64
 #define SHIFT_VPN 12
 #define SWAPPOOLSIZE 16
+#define MAXUPROC 1  /*  PHASE 3 Num of processes*/
+
+#define DIRTY   0x00000400
+#define VALID	0x00000200
+#define GLOBAL	0x00000100
+
+#define UPROCSETUP 0x800000B0;
 
 #endif

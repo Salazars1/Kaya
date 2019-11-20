@@ -42,6 +42,7 @@ typedef struct state_t {
 	unsigned int	s_cause;
 	unsigned int	s_status;
 	unsigned int 	s_pc;
+	
 	int	 			s_reg[STATEREGNUM];
 
 } state_t, *state_PTR;
@@ -150,4 +151,12 @@ typedef struct swap_t
 	pteEntry_t*		sw_pte;
 }swap_t;
 
+
+typedef struct uProc_t {
+	int			UProc_semAdd;
+	pte_t		UProc_pte;
+	int			UProc_backStoreAdder;
+	state_t		UProc_NewTrap[TRAPTYPES];
+	state_t		UProc_OldTrap[TRAPTYPES];
+} uProc_t;
 #endif

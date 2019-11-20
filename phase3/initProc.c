@@ -15,10 +15,14 @@ int swapSem;
 int mutexArr[SEMNUM];
 int masterSem;
 
+uProc_t uProcs[MAXUPROC];
 
 void test()
 {
     int i;
+    int j;
+    state_t procState;
+    segTable_t* segTable;
 
     /*KSegOS page table
         64 entries
@@ -73,19 +77,64 @@ void test()
     */
     masterSem = 0;
 
-   /*Process initialization loop (for (i=1; i<MAXUPROC;i++)){
+   /*Process initialization loop (for (i=1; i<MAXUPROC+1;i++)){
        --initialize stuff
        --SYS 1
+    }   
+    */
+    for(i =1; i<MAXUPROC;i++){
+        /* i becomes the ASID (processID)*/
+
+        /*KUseg2 page table
+            -32 entries:
+                entryHI=0x80000+i w/asid
+                entryLO = Dirty
+        */
+        for(j = 0; j < KUSEGSIZE; j++)
+        {
+            uProcs[i-1].UProc_pte.pteTable[j].entryHI = 0x80000 + j;
+            uProcs[i-1].UProc_pte.pteTable[j].entryLO = ALLOFF | DIRTY;
+        }
+
+        /*fix the last entry's entryHi = 0xBFFFF w/asid*/
+        uProcs[i-1].uProc_pte.pteTable[KUSEGSIZE-1].entryHI = TODO:
+
+        /*Set up the appropiate three entries in the global segment table
+            set KSegOS pointer
+            set KUseg2 pointer
+            set KUseg3 pointer*/
+        
+        segTable = (segTbl_t *) (0x20000500 + (i * 0x20000500));
+        segTable->ksegOS= &KSegOS;
+        segTable->kuseg2= FIXME:
+        segTable->kuseg3= &kuSeg3;
+
+        /*Set up an initial state for a user process
+            -asid =i
+            -stack page = tp be filled in later
+            -PC = uProcInit
+            -status: all interrupts enabled, local timer enabled, VM off, kernel mode on
+        */
+
+        procState.s_asid=i FIXME: need to do some bit shift?;
+        procState.s_SP = FIXME:
+        procState.s_pc = (memaddr) UPROCSETUP;
+        procState.s_t9 = (memaddr) UPROCSETUP;
+        procState.s_status = ALLOFF | IEON | IMON | TEBITON;
+        
+        /*SYS 1 (vvv)*/
+        SYSCALL(SYSCALL1, (int)&procState, 0, 0);
     }
 
-    for (i=0; i<MAXUPROC; i++){
+    /*for (i=0; i<MAXUPROC; i++){
         P(MasterSema4);
     }
-    
-    
     */
-
-
-
-
+   for (i = 0; i < MAXUPROC; i++)
+   {
+       SYSCALL(SYSCALL4, (int) &masterSem, 0, 0);
+   }
+   
+    /*SYS2*/
+    SYSCALL(SYSCALL2, 0, 0, 0);
 }
