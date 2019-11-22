@@ -29,10 +29,10 @@ void test()
             entryHI= 0x20000+i
             entryLO= 0x20000+i w/Dirty, Global, Valid
     */
-   KSegOS.header = TODO:;
+   KSegOS.header = (0x2A<<24)|KSEGSIZE;
    for(i=0;i<KSEGSIZE;i++){
-       KSegOS.pteTable[i].entryHI = ((0x20000 + i) << SHIFT_VPN);
-       KSegOS.pteTable[i].entryLO = ((0x20000 + i) << SHIFT_VPN) | DIRTY | GLOBAL | VALID;
+       KSegOS.pteTable[i].entryHI = ((0x20000 + i) << 12);
+       KSegOS.pteTable[i].entryLO = ((0x20000 + i) << 12) | DIRTY | GLOBAL | VALID;
     }
 
    /*kuSeg3 page table
@@ -40,9 +40,9 @@ void test()
             entryHI= 0xC0000+i
             entryLO= Dirty, Global
     */
-   kuSeg3.header = TODO:;
+   kuSeg3.header = (0x2A<<24)|KUSEGSIZE;
    for(i=0;i<KUSEGSIZE;i++){
-       KSegOS.pteTable[i].entryHI = ((0xC0000 + i) << TODO:);
+       KSegOS.pteTable[i].entryHI = ((0xC0000 + i)<< 12)|(ZERO <<6);
        KSegOS.pteTable[i].entryLO = ALLOFF | DIRTY | GLOBAL;
     }
 
@@ -84,6 +84,7 @@ void test()
     */
     for(i =1; i<MAXUPROC;i++){
         /* i becomes the ASID (processID)*/
+        uProcs[i-1].UProc_pte.header = (0x2A<<24)|KUSEGSIZE;
 
         /*KUseg2 page table
             -32 entries:
@@ -92,12 +93,12 @@ void test()
         */
         for(j = 0; j < KUSEGSIZE; j++)
         {
-            uProcs[i-1].UProc_pte.pteTable[j].entryHI = 0x80000 + j;
+            uProcs[i-1].UProc_pte.pteTable[j].entryHI = 0x80000 + j FIXME:;
             uProcs[i-1].UProc_pte.pteTable[j].entryLO = ALLOFF | DIRTY;
         }
 
         /*fix the last entry's entryHi = 0xBFFFF w/asid*/
-        uProcs[i-1].uProc_pte.pteTable[KUSEGSIZE-1].entryHI = TODO:
+        uProcs[i-1].uProc_pte.pteTable[KUSEGSIZE-1].entryHI = (0xBFFFF << 12) | (i << 6);
 
         /*Set up the appropiate three entries in the global segment table
             set KSegOS pointer
@@ -106,7 +107,7 @@ void test()
         
         segTable = (segTbl_t *) (0x20000500 + (i * 0x20000500));
         segTable->ksegOS= &KSegOS;
-        segTable->kuseg2= FIXME:
+        segTable->kuseg2= &(uProcs[i-1].UProc_pte);
         segTable->kuseg3= &kuSeg3;
 
         /*Set up an initial state for a user process
@@ -116,13 +117,13 @@ void test()
             -status: all interrupts enabled, local timer enabled, VM off, kernel mode on
         */
 
-        procState.s_asid=i FIXME: need to do some bit shift?;
-        procState.s_SP = FIXME:
-        procState.s_pc = (memaddr) UPROCSETUP;
-        procState.s_t9 = (memaddr) UPROCSETUP;
+        procState.s_asid= i<<6;
+        procState.s_sp = FIXME:; we need three stack pages per proceass (TLB, SYS, )//////////////////
+        procState.s_pc = (memaddr) uProcInit;
+        procState.s_t9 = (memaddr) uProcInit;
         procState.s_status = ALLOFF | IEON | IMON | TEBITON;
         
-        /*SYS 1 (vvv)*/
+        /*SYS 1 (v)*/
         SYSCALL(SYSCALL1, (int)&procState, 0, 0);
     }
 
@@ -137,4 +138,10 @@ void test()
    
     /*SYS2*/
     SYSCALL(SYSCALL2, 0, 0, 0);
+}
+
+
+void uProcInit()
+{
+
 }
