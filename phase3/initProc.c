@@ -93,7 +93,7 @@ void test()
         */
         for(j = 0; j < KUSEGSIZE; j++)
         {
-            uProcs[i-1].UProc_pte.pteTable[j].entryHI = 0x80000 + j FIXME:;
+            uProcs[i-1].UProc_pte.pteTable[j].entryHI =((0x80000 + j) << 12) | (i << 6);;
             uProcs[i-1].UProc_pte.pteTable[j].entryLO = ALLOFF | DIRTY;
         }
 
@@ -117,7 +117,7 @@ void test()
             -status: all interrupts enabled, local timer enabled, VM off, kernel mode on
         */
 
-        procState.s_asid= i<<6;
+        procState.s_asid= (i<<6);
         procState.s_sp = FIXME:; we need three stack pages per proceass (TLB, SYS, )//////////////////
         procState.s_pc = (memaddr) uProcInit;
         procState.s_t9 = (memaddr) uProcInit;
@@ -143,5 +143,73 @@ void test()
 
 void uProcInit()
 {
+    int asid;
+    state_t* newStateTLB;
+    state_t* newStatePRG;
+    state_t* newStateSYS;
 
+    state_t stateProc;
+
+    /*Figure out who you are? ASID?*/
+    asid = getASID();
+
+    /*Set up three new areas for Pass Up or Die
+        -stack page: to be filled in later
+        -PC = address of your Phase 3 handler
+        -ASID = your asid value
+        -status: all interrupts enabled, local timer enabled, VM ON, Kernel Mode ON
+    */
+    newStateTLB = &(uProcs[asid-1].UProc_NewTrap[TLBTRAP]);
+    newStateTLB->s_sp = FIXME:;
+    newStateTLB->s_pc = (memaddr) pager;
+    newStateTLB->s_t9 = (memaddr) pager;
+    newStateTLB->s_asid = (asid << 6);
+    newStateTLB->s_status = ALLOFF | IEON | TEON |  VMON | UMOFF;
+
+    newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP]);
+    newStatePRG->s_sp = FIXME:;
+    newStatePRG->s_pc = (memaddr) uPgmTrpHandler;
+    newStatePRG->s_t9 = (memaddr) uPgmTrpHandler;
+    newStatePRG->s_asid = (asid << 6);
+    newStatePRG->s_status = ALLOFF | IEON | TEON |  VMON | UMOFF FIXME:;
+
+    newStateSYS = &(uProcs[asid-1].UProc_NewTrap[SYSTRAP]);
+    newStateSYS->s_sp = FIXME:;
+    newStateSYS->s_pc = (memaddr) uSysHandler;
+    newStateSYS->s_t9 = (memaddr) uSysHandler;
+    newStateSYS->s_asid = (asid << 6);
+    newStateSYS->s_status = ALLOFF | IEON | TEON |  VMON | UMOFF FIXME:;
+
+   /*Call SYS 5, three times*/
+    SYSCALL(SYSCALL5,TLBTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[TLBTRAP]),(int) newStateTLB);
+    SYSCALL(SYSCALL5,PROGTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[PROGTRAP]),(int) newStatePRG);
+    SYSCALL(SYSCALL5,SYSTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[SYSTRAP]),(int) newStateSYS);
+
+   /*Read the content of the tape devices(asid-1) on the the backing store device (disk0)
+       keep reading until the tape block marker (data1) is no longer ENDOFBLOCK
+       read block from tape and ten write it out to disk0
+   */
+
+    device_t* tape;
+    device_t* disk;
+
+
+
+
+
+    /*Set up a new state for the user process
+        -asid = your asid
+        -stack page = last page of KUseg2(0C00.0000)
+        -status: all interrupts enabled, local timer enabled, VM ON, User mode ON
+        -PC = well known address from the start of KUseg2
+    */
+
+    stateProc.s_asid = (asid << 6);
+    stateProc.s_sp = FIXME:;
+    stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | TEON | VMON;
+    stateProc.s_pc = (memaddr) WELLKNOWNSTARTPROCESS; 
+    stateProc.s_t9 = (memaddr) WELLKNOWNSTARTPROCESS;
+
+   /*LDST to tihs new state*/
+   LDST(&stateProc);
 }
