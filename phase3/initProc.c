@@ -196,7 +196,10 @@ void uProcInit()
     int pageNumber;
     int tapeStatus;
 
+
     pageNumber=0;
+    tape = TODO:;
+    disk = TODO:;
     buffer = (ROMPAGESTART + (30 * PAGESIZE))+ ((asid - 1) * PAGESIZE);
 
     /* loop until whole file has been read */
