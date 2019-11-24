@@ -180,7 +180,6 @@
 /*____________PHASE 3___________________*/
 #define KUSEGSIZE 32
 #define KSEGSIZE 64
-#define SHIFT_VPN 12
 #define SWAPPOOLSIZE 16
 #define MAXUPROC 1  /*  PHASE 3 Num of processes*/
 
@@ -189,5 +188,11 @@
 #define GLOBAL	0x00000100
 
 #define UPROCSETUP 0x800000B0;
+#define WELLKNOWNSTARTPROCESS 0x800000B0;
+
+#define INTDEVREG 0x10000050
+#define DISKREADBLK 3
+#define EOT			0
+#define EOF			1
 
 #endif

@@ -164,21 +164,21 @@ void uProcInit()
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
     newStateTLB->s_asid = (asid << 6);
-    newStateTLB->s_status = ALLOFF | IEON | TEON |  VMON | UMOFF;
+    newStateTLB->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
 
     newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP]);
     newStatePRG->s_sp = FIXME:;
     newStatePRG->s_pc = (memaddr) uPgmTrpHandler;
     newStatePRG->s_t9 = (memaddr) uPgmTrpHandler;
     newStatePRG->s_asid = (asid << 6);
-    newStatePRG->s_status = ALLOFF | IEON | TEON |  VMON | UMOFF FIXME:;
+    newStatePRG->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
 
     newStateSYS = &(uProcs[asid-1].UProc_NewTrap[SYSTRAP]);
     newStateSYS->s_sp = FIXME:;
     newStateSYS->s_pc = (memaddr) uSysHandler;
     newStateSYS->s_t9 = (memaddr) uSysHandler;
     newStateSYS->s_asid = (asid << 6);
-    newStateSYS->s_status = ALLOFF | IEON | TEON |  VMON | UMOFF FIXME:;
+    newStateSYS->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
 
    /*Call SYS 5, three times*/
     SYSCALL(SYSCALL5,TLBTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[TLBTRAP]),(int) newStateTLB);
@@ -187,14 +187,36 @@ void uProcInit()
 
    /*Read the content of the tape devices(asid-1) on the the backing store device (disk0)
        keep reading until the tape block marker (data1) is no longer ENDOFBLOCK
-       read block from tape and ten write it out to disk0
+       read block from tape and then write it out to disk0
    */
 
     device_t* tape;
     device_t* disk;
+    int buffer;
+    int pageNumber;
+    int tapeStatus;
 
+    pageNumber=0;
+    buffer = (ROMPAGESTART + (30 * PAGESIZE))+ ((asid - 1) * PAGESIZE);
 
+    /* loop until whole file has been read */
+	while((tape -> d_data1 != EOF) && (tape -> d_data1 != EOT)) {
 
+        //TODO: do WE NEED MUTUAL EXCLUSION ON THE DISK??????????????????????????????????????;
+
+		tape -> d_data0 = buffer;
+		tape -> d_command = DISKREADBLK;
+
+        tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
+        if(tapeStatus == READY)
+        {
+            diskWrite((asid-1), pageNumber, 0, 1, 0, buffer, 4);
+            pageNumber++;
+        }else{
+            SYSCALL(SYSCALL2,0,0,0);
+        }
+	}
+    
 
 
     /*Set up a new state for the user process
