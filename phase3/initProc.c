@@ -7,6 +7,9 @@
 #include "../h/const.h"
 #include "../h/types.h"
 
+#include "../e/initProc.e"
+#include "../e/vmIOsupport.e"
+
 pteOS_t KSegOS; /*OS page table*/
 pte_t kuSeg3;   /*Seg3 page table*/
 swap_t swapPool[SWAPPOOLSIZE];
