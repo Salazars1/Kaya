@@ -195,6 +195,7 @@ void uProcInit()
     int buffer;
     int pageNumber;
     int tapeStatus;
+    int diskStatus;
 
 
     pageNumber=0;
@@ -205,23 +206,41 @@ void uProcInit()
     /* loop until whole file has been read */
 	while((tape -> d_data1 != EOF) && (tape -> d_data1 != EOT)) {
 
-        //TODO: do WE NEED MUTUAL EXCLUSION ON THE DISK??????????????????????????????????????
+        /*Atomic operation*/
+        InterruptsOnOff(FALSE);
+		    tape -> d_data0 = buffer;
+		    tape -> d_command = DISKREADBLK;
+            tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
+        InterruptsOnOff(TRUE);
 
-		tape -> d_data0 = buffer;
-		tape -> d_command = DISKREADBLK;
+        /*MUTUAL EXCLUSION ON DISK*/
+        SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
 
-        tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
-        if(tapeStatus == READY)
+        /*Atomic operation*/
+        InterruptsOnOff(FALSE);
+            disk ->d_command = (pageNumber << 8 | 2);
+            diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
+        InterruptsOnOff(TRUE);
+
+        if(diskStatus == READY)
         {
-            diskWrite((asid-1), pageNumber, 0, 1, 0, buffer, 4);
-            pageNumber++;
+            /*Atomic operation*/
+            InterruptsOnOff(FALSE);
+                disk->d_data0 = TODO:;
+                disk->d_command =TODO:;
+
+                diskStatus = SYSCALL(SYSCALL8,DISKINT,0,0);
+            InterruptsOnOff(TRUE);
         }else{
             SYSCALL(SYSCALL2,0,0,0);
         }
+
+        /*MUTUAL EXCLUSION ON DISK*/
+        SYSCALL(SYSCALL3, (int) &mutexArr[0], 0, 0);
+
+        pageNumber++;
 	}
     
-
-
     /*Set up a new state for the user process
         -asid = your asid
         -stack page = last page of KUseg2(0C00.0000)
@@ -239,4 +258,18 @@ void uProcInit()
    LDST(&stateProc);
 }
 
- 
+
+ void InterruptsOnOff(int IOturned)
+{
+    int status = getSTATUS();
+
+    if(!IOturned)
+    {
+        status = (status & 0xFFFFFFFE);
+    }
+    else
+    {
+        status = (status | 0x1);
+    }
+    setSTATUS(status);
+}
