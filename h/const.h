@@ -196,5 +196,9 @@
 #define EOF			1
 
 #define GETASID 0x00000FC0
+#define INTCAUSEMASK 0x7C
+#define TLBLOAD 2
+#define TLBSTORE 3
+
 
 #endif

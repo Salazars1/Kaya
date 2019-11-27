@@ -17,23 +17,28 @@ void pager()
     /*TLB Handler Outline:*/
     int currentProcessID;
     state_t* oldState;
+    int causeReg;
 
     /*Who am I?
         The current processID is in the ASID regsiter
         This is needed as the index into the phase 3 global structure*/
     currentProcessID = (int)((getENTRYHI() & GETASID) >> 6);
-    oldState = (state_t*) (uProcs[currentProcessID-1].UProc_OldTrap);
+    oldState = (state_t*) &(uProcs[currentProcessID-1].UProc_OldTrap[TLBTRAP]);
 
     /*Why are we here?
-        Examine the oldMem Cause register
-    */
+        Examine the oldMem Cause register*/
+    causeReg = (oldState->s_cause);
 
     /*If TLB invalid (load or store) continue; o.w. nuke them*/
-    
+    if((currentProcessID!=TLBLOAD) || (currentProcessID!=TLBSTORE)){
+        SYSCALL(SYSCALL2,0,0,0);
+    }
     /*Which page is missing?
         oldMem ASID register has segment no and page no*/
 
+
     /*Acquire mutex on the swapPool data structure*/
+    SYSCALL(SYSCALL4, (int)&swapSem, 0, 0);
 
     /*    If missing page was from KUseg3, check if the page is still missing
             -check the KUseg3 page table entry's valid bit*/
@@ -56,7 +61,7 @@ void pager()
         Deal with TLB cache consistency*/
 
     /*Release mutex and return control to process */        
-
+    SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
 }
 
 void uPgmTrpHandler(){
