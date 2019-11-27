@@ -195,4 +195,6 @@
 #define EOT			0
 #define EOF			1
 
+#define GETASID 0x00000FC0
+
 #endif
