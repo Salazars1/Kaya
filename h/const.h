@@ -205,7 +205,12 @@
 #define GET_VPN 0x3FFFF000
 
 #define ROMSTADDY 0x20000000	
-
+/*Just give the OS 50 pages? Not sure how much memory the OS needs tbh*/
+#define OSEND ROMSTADDY +  (PAGESIZE * 50)
+/**/
+#define TAPESTARTADDY
+/**/
+#define DISKSTARTADDY
 
 /*Disk Device Constants*/
 
@@ -217,6 +222,9 @@
 
 
 /*Tape Device Constants*/
-
+#define TAPEEOT 0 /*End of Tape*/
+#define TAPEEOF 1 /*End of File*/
+#define TAPEEOB 2 /*ENd of Block*/
+#define TAPETS 3 /*Tape Start*/
 
 #endif
