@@ -207,5 +207,16 @@
 #define ROMSTADDY 0x20000000	
 
 
+/*Disk Device Constants*/
+
+#define DISKRESET 0 /*Reset the device and move the boom to cylinder 0*/
+#define DISKACK 1   /*ACknowlege a pending INterrupt*/
+#define DISKSEEKCYL 2   /*Seek to the specified CYLNUM*/
+#define DISKREADBLK 3   /*Read the block located at (HEADNUM,SECTNM) in the current Cylinder and copy it into RAM start at the address in DATA0*/
+#define DISKWRITEBLK 4  /*Copy the 4kb of RAM starting at address in Data0 into the block located at (HEADNUM, SECTNUM) in the current cylinder*/
+
+
+/*Tape Device Constants*/
+
 
 #endif
