@@ -200,5 +200,9 @@
 #define TLBLOAD 2
 #define TLBSTORE 3
 
+#define GET_SEG 0xC0000000
+#define SHIFT_SEG 30
+#define GET_VPN 0x3FFFF000
+
 
 #endif
