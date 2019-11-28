@@ -156,8 +156,10 @@ void uSysHandler(){
     int casel; 
     int ASID; 
     int * sema; 
+    ASID = getENTRYHI();
+    cpu_t times; 
 /*Grab the old state Uh oh*/
-    FIXME: oldState = 
+    oldState = &(Uprocs[ASID-1].uprocOldTrap[2]);
     casel = oldState -> s_a0; 
 
     switch(casel){
@@ -172,6 +174,7 @@ void uSysHandler(){
             break;  
         /*Virtual V*/
         /*Not Implementing*/
+        /*FINISHED*/
         case 11:
             /*  
                 NO-OP
@@ -179,6 +182,7 @@ void uSysHandler(){
             break;  
         /*Virtual P*/
         /*Not Implementing*/
+        /*FINISHED*/
         case 12:
             /*
                 NO-OP
@@ -204,8 +208,11 @@ void uSysHandler(){
             break;  
         
         /*Get Time of Day*/
+        /*FINISHED*/
         case 17:
-        
+            /*Load the time of day and place in v0*/
+            STCK(times);
+            oldState->s_v0 = times; 
             break;  
 
         /*Terminate*/
@@ -231,7 +238,29 @@ void tableLookUp(){
 
 /*HELPER FUNCTIONS*/
 
-void DISKIO(){ 
+/*Ah so you want to play with a disk? You must make it thy bitch first!
+Parameters: 
+Give me the block
+Give me the disk 
+give me the sector
+give me is it read or write
+give me the PASID:
+
+*/
+void MakeTheDiskMyBitch(int * Block, int disk,int sector, int type, int pasid){ 
+    /*3 is READ 
+      4 is Write!
+    */
+    if(type == 3 || type == 4){
+
+
+    }
+    /*Trying to do something other than read or write Just panic*/
+    else{
+
+        PANIC();
+    }
+
 
 
 }
