@@ -251,7 +251,16 @@ void MakeTheDiskMyBitch(int * Block, int disk,int sector, int type, int pasid){
     /*3 is READ 
       4 is Write!
     */
+   /*Tries to touch the backing store OR is trying to touch a non existent Disk kill it */
+   if(disk <= 0){
+       /*Kill the process*/
+       EndProcess(pasid);
+
+   }
     if(type == 3 || type == 4){
+        /*Build me here!*/
+
+
 
 
     }
