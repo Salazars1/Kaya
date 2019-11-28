@@ -128,8 +128,8 @@ void test()
         */
 
         procState.s_asid= (i<<6);
-        /*Find the address of either the top or the bottom of the stack or OS then offset 3 * Page size*/
-        procState.s_sp = 0x20000000	+ (30 * PAGESIZE)
+        /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
+        procState.s_sp = ALLOCATEHERE + ((i-1) * BASESTACKALLOC);
         /*
         procState.s_sp = FIXME:; we need three stack pages per proceass (TLB, SYS, )//////////////////
         */

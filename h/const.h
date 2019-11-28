@@ -211,8 +211,13 @@
 #define TAPESTARTADDY OSEND + (8 * PAGESIZE)
 /*Tape buff + 8 devs x Page*/
 #define DISKSTARTADDY TAPESTARTADDY + (8 * PAGESIZE)
+/*Everyone gets 2 pages of memory to play with */
+#define BASESTACKALLOC 2 * PAGESIZE
 
+/*Begin to allocate some memory starting at this location */
+#define ALLOCATEHERE DISKSTARTADDY + BASESTACKALLOC
 /*Disk Device Constants*/
+
 
 #define DISKRESET 0 /*Reset the device and move the boom to cylinder 0*/
 #define DISKACK 1   /*ACknowlege a pending INterrupt*/
