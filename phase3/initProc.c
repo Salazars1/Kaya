@@ -71,6 +71,7 @@ void test()
     /*swap pool sema4
         init to 1
     */
+   /*Mutual Exclusion Semaphore thus resulting in the Value of 1*/
     swapSem = 1;
 
     /*an array of sempahores: one for each interrupting device
@@ -83,6 +84,7 @@ void test()
     /*MasterSema4
         -init to 0
     */
+   /*This semaphore is a mutual exclusion semaphore and is thus set to 0 */
     masterSem = 0;
 
    /*Process initialization loop (for (i=1; i<MAXUPROC+1;i++)){
@@ -113,7 +115,7 @@ void test()
             set KUseg2 pointer
             set KUseg3 pointer*/
         
-        segTable = (segTbl_t *) (0x20000500 + (i * 0x20000500));
+        segTable = (segTable_t *) (0x20000500 + (i * 0x20000500));
         segTable->ksegOS= &KSegOS;
         segTable->kuseg2= &(uProcs[i-1].UProc_pte);
         segTable->kuseg3= &kuSeg3;
