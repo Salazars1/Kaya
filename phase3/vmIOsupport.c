@@ -149,6 +149,8 @@ void EndProcess(int pasid)
 
 }
 
+
+/*Sys Handler! Switch Statements*/
 void uSysHandler(){
     state_t * oldState;
     int casel; 
@@ -160,8 +162,50 @@ void uSysHandler(){
 
     switch(casel){
 
+        /*Read From Terminal */
+        case 9:
 
-
+        break;  
+        /*Write to Terminal */
+        case 10:
+        
+        break;  
+        /*Virtual V*/
+        /*Not Implementing*/
+        case 11:
+        
+        break;  
+        /*Virtual P*/
+        /*Not Implementing*/
+        case 12:
+        
+        break; 
+        /*Delay*/
+        /*Delay a Process for N seconds*/
+        case 13:
+        
+        break;  
+        /*Disk Put*/
+        case 14:
+        
+        break;  
+        /*DISK Get*/
+        case 15:
+        
+        break;  
+        /*Write to Printer*/
+        case 16:
+        
+        break;  
+        /*Get Time of Day*/
+        case 17:
+        
+        break;  
+        /*Terminate*/
+        case 18: 
+        /*Call the End process function*/
+        EndProcess();
+        break; 
 
     }
 
@@ -177,4 +221,14 @@ void tableLookUp(){
     nextVal = (nextVal + 1) % SWAPPOOLSIZE;
     return (nextVal);
 }
+
+/*HELPER FUNCTIONS*/
+
+void DISKIO(){ 
+
+
+}
+
+
+
 
