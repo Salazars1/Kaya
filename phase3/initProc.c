@@ -217,8 +217,9 @@ void uProcInit()
     disk = &(Activedev -> devreg[0]);
 
     /*The tape is a dynamic number???? */
+    FIXME: 
     tape = &(Activedev ->devreg[]);
-    
+
     buffer = (ROMPAGESTART + (30 * PAGESIZE))+ ((asid - 1) * PAGESIZE);
 
     /* loop until whole file has been read */
