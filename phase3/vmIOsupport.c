@@ -128,28 +128,44 @@ void uPgmTrpHandler(){
 void EndProcess(int pasid)
 {
 
-/*P ops*/
-SYSCALL(SYSCALL4,&swapSem,0,0);
-/*I do not want to be interrupted*/
+    /*P ops*/
+    SYSCALL(SYSCALL4,&swapSem,0,0);
+    /*I do not want to be interrupted*/
 
-InterruptsOnOff(FALSE);
+    InterruptsOnOff(FALSE);
 
 
 
-/*NUke the TLB*/
-TLBCLR();
+    /*NUke the TLB*/
+    TLBCLR();
 
-InterruptsOnOff(TRUE);
+    InterruptsOnOff(TRUE);
 
-/*V ops*/
-SYSCALL(SYSCALL3,&swapSem,0,0);
-SYSCALL(SYSCALL3,&masterSem,0,0);
+    /*V ops*/
+    SYSCALL(SYSCALL3,&swapSem,0,0);
+    SYSCALL(SYSCALL3,&masterSem,0,0);
 
-SYSCALL(SYSCALL2,0,0,0);
+    SYSCALL(SYSCALL2,0,0,0);
 
 }
 
 void uSysHandler(){
+    state_t * oldState;
+    int casel; 
+    int ASID; 
+    int * sema; 
+/*Grab the old state Uh oh*/
+    FIXME: oldState = 
+    casel = oldState -> s_a0; 
+
+    switch(casel){
+
+
+
+
+    }
+
+    LDST(oldState);
 
 }
 
