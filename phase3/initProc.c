@@ -3,6 +3,11 @@
     Base comments and some assitance from PROFESSOR MIKEY G 
     Finished on 
 */
+/*********************************************************************************************
+                            Module Comment Section
+
+
+*********************************************************************************************/
 
 #include "../h/const.h"
 #include "../h/types.h"
