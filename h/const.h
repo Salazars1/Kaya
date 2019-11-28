@@ -207,10 +207,10 @@
 #define ROMSTADDY 0x20000000	
 /*Just give the OS 50 pages? Not sure how much memory the OS needs tbh*/
 #define OSEND ROMSTADDY +  (PAGESIZE * 50)
-/**/
-#define TAPESTARTADDY
-/**/
-#define DISKSTARTADDY
+/*OS end + 8 devs x Page */
+#define TAPESTARTADDY OSEND + (8 * PAGESIZE)
+/*Tape buff + 8 devs x Page*/
+#define DISKSTARTADDY TAPESTARTADDY + (8 * PAGESIZE)
 
 /*Disk Device Constants*/
 
