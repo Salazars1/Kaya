@@ -166,11 +166,11 @@ void uSysHandler(){
 
         /*Read From Terminal */
         case 9:
-
+            readTerminal();
             break;  
         /*Write to Terminal */
         case 10:
-        
+            writeTerminal();
             break;  
         /*Virtual V*/
         /*Not Implementing*/
@@ -191,7 +191,7 @@ void uSysHandler(){
         /*Delay*/
         /*Delay a Process for N seconds*/
         case 13:
-        
+            Delay();
             break;  
         /*Disk Put*/
         case 14:
@@ -274,6 +274,20 @@ void MakeTheDiskMyBitch(int * Block, int disk,int sector, int type, int pasid){
 
 }
 
+
+
+void writeTerminal(){
+
+}
+
+
+void readTerminal(){
+
+}
+
+void Delay(){
+
+}
 
 
 
