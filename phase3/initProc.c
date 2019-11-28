@@ -211,10 +211,14 @@ void uProcInit()
     int tapeStatus;
     int diskStatus;
 
-
+    devregarea_t * Activedev = RAMBASEADDR; 
     pageNumber=0;
-    tape = TODO:;
-    disk = TODO:;
+    /*Backing Store is at Number 0 !*/
+    disk = &(Activedev -> devreg[0]);
+
+    /*The tape is a dynamic number???? */
+    tape = &(Activedev ->devreg[]);
+    
     buffer = (ROMPAGESTART + (30 * PAGESIZE))+ ((asid - 1) * PAGESIZE);
 
     /* loop until whole file has been read */

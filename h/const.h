@@ -206,7 +206,7 @@
 
 #define ROMSTADDY 0x20000000	
 /*Just give the OS 50 pages? Not sure how much memory the OS needs tbh*/
-#define OSEND ROMSTADDY +  (PAGESIZE * FIXME: /*I think the number of pages goes here!*/)
+#define OSEND ROMSTADDY +  (PAGESIZE * 30 /*I think the number of pages goes here!*/)
 /*OS end + 8 devs x Page */
 #define TAPESTARTADDY OSEND + (8 * PAGESIZE)
 /*Tape buff + 8 devs x Page*/
