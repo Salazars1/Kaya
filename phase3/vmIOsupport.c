@@ -114,7 +114,39 @@ void pager()
 }
 
 void uPgmTrpHandler(){
-    
+    /*Grab the ASID*/
+    int tempasid = getENTRYHI();
+
+    /*Function to kill the process*/
+
+    EndProcess(tempasid);
+
+}
+
+
+/*Function to kill the process and clean the frames out of memory*/
+void EndProcess(int pasid)
+{
+
+/*P ops*/
+SYSCALL(SYSCALL4,&swapSem,0,0);
+/*I do not want to be interrupted*/
+
+InterruptsOnOff(FALSE);
+
+
+
+/*NUke the TLB*/
+TLBCLR();
+
+InterruptsOnOff(TRUE);
+
+/*V ops*/
+SYSCALL(SYSCALL3,&swapSem,0,0);
+SYSCALL(SYSCALL3,&masterSem,0,0);
+
+SYSCALL(SYSCALL2,0,0,0);
+
 }
 
 void uSysHandler(){

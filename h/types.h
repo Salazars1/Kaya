@@ -154,7 +154,7 @@ typedef struct swap_t
 
 typedef struct uProc_t {
 	int			UProc_semAdd;
-	pte_t		UProc_pte;
+	pte_t 		UProc_pte;
 	int			UProc_backStoreAdder;
 	state_t		UProc_NewTrap[TRAPTYPES];
 	state_t		UProc_OldTrap[TRAPTYPES];
