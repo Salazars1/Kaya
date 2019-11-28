@@ -204,5 +204,8 @@
 #define SHIFT_SEG 30
 #define GET_VPN 0x3FFFF000
 
+#define ROMSTADDY 0x20000000	
+
+
 
 #endif
