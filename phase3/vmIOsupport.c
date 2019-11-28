@@ -165,47 +165,54 @@ void uSysHandler(){
         /*Read From Terminal */
         case 9:
 
-        break;  
+            break;  
         /*Write to Terminal */
         case 10:
         
-        break;  
+            break;  
         /*Virtual V*/
         /*Not Implementing*/
         case 11:
-        
-        break;  
+            /*  
+                NO-OP
+            */
+            break;  
         /*Virtual P*/
         /*Not Implementing*/
         case 12:
-        
-        break; 
+            /*
+                NO-OP
+            */
+            break; 
         /*Delay*/
         /*Delay a Process for N seconds*/
         case 13:
         
-        break;  
+            break;  
         /*Disk Put*/
         case 14:
         
-        break;  
+            break;  
         /*DISK Get*/
         case 15:
         
-        break;  
+            break;  
+        
         /*Write to Printer*/
         case 16:
         
-        break;  
+            break;  
+        
         /*Get Time of Day*/
         case 17:
         
-        break;  
+            break;  
+
         /*Terminate*/
         case 18: 
-        /*Call the End process function*/
-        EndProcess();
-        break; 
+            /*Call the End process function*/
+            EndProcess();
+            break; 
 
     }
 
