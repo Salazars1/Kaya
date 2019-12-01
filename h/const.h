@@ -232,6 +232,7 @@
 #define TAPEEOB 2 /*ENd of Block*/
 #define TAPETS 3 /*Tape Start*/
 
+#define SEG3 0xC0000000
 
 
 /*Sys Handler*/

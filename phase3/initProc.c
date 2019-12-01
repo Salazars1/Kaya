@@ -108,7 +108,7 @@ void test()
         }
 
         /*fix the last entry's entryHi = 0xBFFFF w/asid*/
-        uProcs[i-1].uProc_pte.pteTable[KUSEGSIZE-1].entryHI = (0xBFFFF << 12) | (i << 6);
+        uProcs[i-1].UProc_pte.pteTable[KUSEGSIZE-1].entryHI = (0xBFFFF << 12) | (i << 6);
 
         /*Set up the appropiate three entries in the global segment table
             set KSegOS pointer
@@ -130,9 +130,6 @@ void test()
         procState.s_asid= (i<<6);
         /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
         procState.s_sp = ALLOCATEHERE + ((i-1) * BASESTACKALLOC);
-        /*
-        procState.s_sp = FIXME:; we need three stack pages per proceass (TLB, SYS, )//////////////////
-        */
         procState.s_pc = (memaddr) uProcInit;
         procState.s_t9 = (memaddr) uProcInit;
         procState.s_status = ALLOFF | IEON | IMON | TEBITON;
@@ -161,8 +158,10 @@ void uProcInit()
     state_t* newStateTLB;
     state_t* newStatePRG;
     state_t* newStateSYS;
-
     state_t stateProc;
+    memaddr TLBTOP;
+    memaddr PROGTOP;
+    memaddr SYSTOP;
 
     /*Figure out who you are? ASID?*/
     asid = getASID();
@@ -173,22 +172,27 @@ void uProcInit()
         -ASID = your asid value
         -status: all interrupts enabled, local timer enabled, VM ON, Kernel Mode ON
     */
+
+    PROGTOP = ALLOCATEHERE + ((asid-1) * BASESTACKALLOC);
+    SYSTOP = ALLOCATEHERE + ((asid-1) * BASESTACKALLOC);
+    TLBTOP = PROGTOP - PAGESIZE;
+
     newStateTLB = &(uProcs[asid-1].UProc_NewTrap[TLBTRAP]);
-    newStateTLB->s_sp = FIXME:;
+    newStateTLB->s_sp = TLBTOP;
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
     newStateTLB->s_asid = (asid << 6);
     newStateTLB->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
 
     newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP]);
-    newStatePRG->s_sp = FIXME:;
+    newStatePRG->s_sp = PROGTOP;
     newStatePRG->s_pc = (memaddr) uPgmTrpHandler;
     newStatePRG->s_t9 = (memaddr) uPgmTrpHandler;
     newStatePRG->s_asid = (asid << 6);
     newStatePRG->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
 
     newStateSYS = &(uProcs[asid-1].UProc_NewTrap[SYSTRAP]);
-    newStateSYS->s_sp = FIXME:;
+    newStateSYS->s_sp = SYSTOP;
     newStateSYS->s_pc = (memaddr) uSysHandler;
     newStateSYS->s_t9 = (memaddr) uSysHandler;
     newStateSYS->s_asid = (asid << 6);
@@ -206,19 +210,19 @@ void uProcInit()
 
     device_t* tape;
     device_t* disk;
+    devregarea_t * Activedev;
     int buffer;
     int pageNumber;
     int tapeStatus;
     int diskStatus;
 
-    devregarea_t * Activedev = RAMBASEADDR; 
+    Activedev= RAMBASEADDR; 
     pageNumber=0;
+
     /*Backing Store is at Number 0 !*/
     disk = &(Activedev -> devreg[0]);
-
-    /*The tape is a dynamic number???? */
-    FIXME: 
-    tape = &(Activedev ->devreg[]);
+    /*The tape is a dynamic number */
+    tape = &(Activedev ->devreg[8+(asid-1)]);
 
     buffer = (ROMPAGESTART + (30 * PAGESIZE))+ ((asid - 1) * PAGESIZE);
 
@@ -245,9 +249,8 @@ void uProcInit()
         {
             /*Atomic operation*/
             InterruptsOnOff(FALSE);
-                disk->d_data0 = TODO:;
-                disk->d_command =TODO:;
-
+                disk->d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - 1) * PAGESIZE);
+                disk->d_command = ((asid - 1) << 8) | 4;
                 diskStatus = SYSCALL(SYSCALL8,DISKINT,0,0);
             InterruptsOnOff(TRUE);
         }else{
@@ -268,7 +271,7 @@ void uProcInit()
     */
 
     stateProc.s_asid = (asid << 6);
-    stateProc.s_sp = FIXME:;
+    stateProc.s_sp = SEG3;
     stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | TEON | VMON;
     stateProc.s_pc = (memaddr) WELLKNOWNSTARTPROCESS; 
     stateProc.s_t9 = (memaddr) WELLKNOWNSTARTPROCESS;
