@@ -92,7 +92,7 @@ void test()
        --SYS 1
     }   
     */
-    for(i =1; i<MAXUPROC;i++){
+    for(i =1; i<=MAXUPROC;i++){
         /* i becomes the ASID (processID)*/
         uProcs[i-1].UProc_pte.header = (0x2A<<24)|KUSEGSIZE;
 
@@ -164,8 +164,9 @@ void uProcInit()
     memaddr SYSTOP;
 
     /*Figure out who you are? ASID?*/
-    asid = getASID();
-
+    asid = getENTRYHI();
+    asid = (asid & 0x00000FC0) >> 6;
+    
     /*Set up three new areas for Pass Up or Die
         -stack page: to be filled in later
         -PC = address of your Phase 3 handler
@@ -177,21 +178,21 @@ void uProcInit()
     SYSTOP = ALLOCATEHERE + ((asid-1) * BASESTACKALLOC);
     TLBTOP = PROGTOP - PAGESIZE;
 
-    newStateTLB = &(uProcs[asid-1].UProc_NewTrap[TLBTRAP]);
+    newStateTLB = &(uProcs[asid-1].UProc_NewTrap[TLBTRAP].s_asid);
     newStateTLB->s_sp = TLBTOP;
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
     newStateTLB->s_asid = (asid << 6);
     newStateTLB->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
 
-    newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP]);
+    newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP].s_asid);
     newStatePRG->s_sp = PROGTOP;
     newStatePRG->s_pc = (memaddr) uPgmTrpHandler;
     newStatePRG->s_t9 = (memaddr) uPgmTrpHandler;
     newStatePRG->s_asid = (asid << 6);
     newStatePRG->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
 
-    newStateSYS = &(uProcs[asid-1].UProc_NewTrap[SYSTRAP]);
+    newStateSYS = &(uProcs[asid-1].UProc_NewTrap[SYSTRAP].s_asid);
     newStateSYS->s_sp = SYSTOP;
     newStateSYS->s_pc = (memaddr) uSysHandler;
     newStateSYS->s_t9 = (memaddr) uSysHandler;
@@ -207,6 +208,8 @@ void uProcInit()
        keep reading until the tape block marker (data1) is no longer ENDOFBLOCK
        read block from tape and then write it out to disk0
    */
+
+    SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
 
     device_t* tape;
     device_t* disk;
@@ -225,6 +228,13 @@ void uProcInit()
     tape = &(Activedev ->devreg[8+(asid-1)]);
 
     buffer = (ROMPAGESTART + (30 * PAGESIZE))+ ((asid - 1) * PAGESIZE);
+
+    /*Atomic operation*/
+        InterruptsOnOff(FALSE);
+		    tape -> d_data0 = buffer;
+		    tape -> d_command = DISKREADBLK;
+            tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
+        InterruptsOnOff(TRUE);
 
     /* loop until whole file has been read */
 	while((tape -> d_data1 != EOF) && (tape -> d_data1 != EOT)) {
@@ -275,6 +285,8 @@ void uProcInit()
     stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | TEON | VMON;
     stateProc.s_pc = (memaddr) WELLKNOWNSTARTPROCESS; 
     stateProc.s_t9 = (memaddr) WELLKNOWNSTARTPROCESS;
+
+    SYSCALL(SYSCALL3, (int) &mutexArr[0], 0, 0);
 
    /*LDST to tihs new state*/
    LDST(&stateProc);

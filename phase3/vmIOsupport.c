@@ -73,15 +73,15 @@ void pager()
             -deal with TLB cache consistency
             -write current frame's contents on nthe backing store*/
     if(swapPool[newFrame].sw_asid != -1){
-        swapPool[newFrame].sw_pte -> entryLO = ((swapPool[newFrame].sw_pte -> entryLO) & (0 << 9));
-
-        TLBCLR();
-        
-        currentASID = swapPool[newFrame].sw_asid;
-        currentPage = swapPool[newFrame].sw_pgNum;
+        Interrupts(FALSE);
+            swapPool[newFrame].sw_pte -> entryLO = ((swapPool[newFrame].sw_pte -> entryLO) & (0 << 9));
+            TLBCLR();
+        Interrupts(TRUE);
 
         MakeTheDiskMyBitch(currentPage, currentASID, 0, 4, swapAddr);
-    
+
+        currentASID = swapPool[newFrame].sw_asid;
+        currentPage = swapPool[newFrame].sw_pgNum;
     }
 
 
@@ -92,21 +92,26 @@ void pager()
 
         device = (devregarea_t*) RAMBASEADDR;
         RAMTOP = (device->rambase) + (device->ramsize);
-        swapAddr = (RAMTOP - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);;
+        //swapAddr = (RAMTOP - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);;
+
+        MakeTheDiskMyBitch(currentPage, currentASID, 0, 3, swapAddr);
 
         swapPool[newFrame].sw_asid = currentProcessID;
         swapPool[newFrame].sw_segNum = missSeg;
         swapPool[newFrame].sw_pgNum = missPage;
         swapPool[newFrame].sw_pte = &(uProcs[currentProcessID - 1].uProc_pte.pteTable[missPage]);
-        swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY;
-
+        
+        Interrupts(FALSE);
+            swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY;
+            TLBCLR();
+        Interrupts(TRUE);
 
         if(missSeg == 3){
             swapPool[newFrame].sw_pte = &(kuSeg3.pteTable[missPage]);
             swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY | GLOBAL;
         }
 
-        TLBCLR();
+        
 
     /*Release mutex and return control to process */        
     SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
@@ -128,22 +133,7 @@ void uPgmTrpHandler(){
 /*Function to kill the process and clean the frames out of memory*/
 void EndProcess(int pasid)
 {
-
-    /*P ops*/
-    SYSCALL(SYSCALL4,&swapSem,0,0);
-    /*I do not want to be interrupted*/
-    InterruptsOnOff(FALSE);
-
-    /*NUke the TLB*/
-    TLBCLR();
-    InterruptsOnOff(TRUE);
-
-    /*V ops*/
-    SYSCALL(SYSCALL3,&swapSem,0,0);
-    SYSCALL(SYSCALL3,&masterSem,0,0);
-
     SYSCALL(SYSCALL2,0,0,0);
-
 }
 
 
