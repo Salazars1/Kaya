@@ -34,6 +34,8 @@ void pager()
     int missSeg;
     int missPage;
     int newFrame;
+    int currentPage;
+    int currentASID;
 
     /*Who am I?
         The current processID is in the ASID regsiter
@@ -63,15 +65,7 @@ void pager()
         missPage = KUSEGSIZE - 1;
     }
 
-
-    /*    If no longer missing:
-            -release mutex and retur ncontrol to process
-                (ie. LDST oldMem)FIXME:*/
-        
-    
-
     /*    Pick a frame to use*/
-
     newFrame = tableLookUp();
 
     /*    If frame is currently occupied
@@ -80,8 +74,14 @@ void pager()
             -write current frame's contents on nthe backing store*/
     if(swapPool[newFrame].sw_asid != -1){
         swapPool[newFrame].sw_pte -> entryLO = ((swapPool[newFrame].sw_pte -> entryLO) & (0 << 9));
+
         TLBCLR();
-        TODO: write current frame contents onto backing storage
+        
+        currentASID = swapPool[newFrame].sw_asid;
+        currentPage = swapPool[newFrame].sw_pgNum;
+
+        MakeTheDiskMyBitch(currentPage, currentASID, 0, 4, swapAddr);
+    
     }
 
 
@@ -106,6 +106,7 @@ void pager()
             swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY | GLOBAL;
         }
 
+        TLBCLR();
 
     /*Release mutex and return control to process */        
     SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
@@ -115,10 +116,10 @@ void pager()
 
 void uPgmTrpHandler(){
     /*Grab the ASID*/
-    int tempasid = getENTRYHI();
+    int tempasid; 
+    tempasid = getENTRYHI();
 
     /*Function to kill the process*/
-
     EndProcess(tempasid);
 
 }
@@ -131,14 +132,10 @@ void EndProcess(int pasid)
     /*P ops*/
     SYSCALL(SYSCALL4,&swapSem,0,0);
     /*I do not want to be interrupted*/
-
     InterruptsOnOff(FALSE);
-
-
 
     /*NUke the TLB*/
     TLBCLR();
-
     InterruptsOnOff(TRUE);
 
     /*V ops*/
@@ -241,36 +238,43 @@ void tableLookUp(){
 /*Ah so you want to play with a disk? You must make it thy bitch first!
 Parameters: 
 Give me the block
-Give me the disk 
 give me the sector
+Give me the disk 
 give me is it read or write
 give me the PASID:
 
 */
-void MakeTheDiskMyBitch(int * Block, int disk,int sector, int type, int pasid){ 
-    /*3 is READ 
-      4 is Write!
-    */
-   /*Tries to touch the backing store OR is trying to touch a non existent Disk kill it */
-   if(disk <= 0){
-       /*Kill the process*/
-       EndProcess(pasid);
+void MakeTheDiskMyBitch(int block, int sector, int disk, int readWrite, memaddr addr){ 
 
-   }
-    if(type == 3 || type == 4){
-        /*Build me here!*/
+    int diskStatus;
+    devregarea_t* devReg;
+	device_t* diskDevice; 
 
+    devReg = (devregarea_t *) RAMBASEADDR;
+    diskDevice = &(devReg->devreg[0]);
+	
+	/*Atomic operation*/
+	Interrupts(FALSE);
+    	diskDevice->d_command = (block << 8) | 2;
+	    diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
+	Interrupts(TRUE);
+			
+	/*If device is done seaking*/
+	if(diskStatus == READY){
+		
+		Interrupts(FALSE);
+		    /*where to read from*/
+		    diskDevice->d_data0 = addr;
+            /* Command to write*/
+            diskDevice->d_command = (disk << 16) | ((sector-1) << 8) | readWrite;
+		Interrupts(TRUE);										   
+		
+        /*Wait for disk write I/O*/
+		diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
 
-
-
-    }
-    /*Trying to do something other than read or write Just panic*/
-    else{
-
+	}else{
         PANIC();
     }
-
-
 
 }
 
