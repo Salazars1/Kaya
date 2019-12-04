@@ -20,6 +20,13 @@
 
 #include "/usr/local/include/umps2/umps/libumps.e"
 
+
+HIDDEN void Endproc(int asid);
+HIDDEN void writeTerminal(char* vAddr, int len, int asid);
+HIDDEN void readTerminal(char* addr, int procID);
+HIDDEN void writePrinter(char* vAddr, int len, int asid);
+HIDDEN void MakeTheDiskMyBitch(int block, int sector, int disk, int readWrite, memaddr addr);
+
 void pager()
 {
     /*TLB Handler Outline:*/
@@ -124,7 +131,7 @@ void pager()
 void uPgmTrpHandler(){
     /*Grab the ASID*/
     int tempasid; 
-    tempasid = (getENTRYHI() & 0x00000FC0) >> 6);
+    tempasid = ((getENTRYHI() & 0x00000FC0) >> 6);
 
     /*Kill the process*/
     SYSCALL(SYSCALL2,0,0,0);
@@ -137,14 +144,13 @@ void uSysHandler(){
     state_t * oldState;
     int casel; 
     int asid; 
-    int *sema; 
     cpu_t times;
 
     asid = getENTRYHI();
     asid = (asid & 0x00000FC0) >> 6;
 
     /*Grab the old state Uh oh*/
-    oldState = &(Uprocs[asid-1].uprocOldTrap[2]);
+    oldState = &(uProcs[asid-1].uprocOldTrap[2]);
     casel = oldState -> s_a0; 
 
     switch(casel){
@@ -201,7 +207,6 @@ void uSysHandler(){
 
         /*Terminate*/
         case 18: 
-            Endproc(asid); 
             SYSCALL(SYSCALL2,0,0,0);
             break; 
 
@@ -213,11 +218,6 @@ void uSysHandler(){
 
 
 /*----------------------------------------------*/
-void writeprinter(){
-
-
-}
-
 
 void tableLookUp(){
     HIDDEN int nextVal = 0;
@@ -270,36 +270,41 @@ void MakeTheDiskMyBitch(int block, int sector, int disk, int readWrite, memaddr 
 
 }
 
-
-TODO:
 void writeTerminal(char* vAddr, int len, int asid)
 {
-    unsigned int devstatus; 
-    int i = 0; 
-    TODO: 
-    int devnum = ; 
-    devregarea_t* device = (devregarea_t *) RAMBASEADDR;
-    device_t* term;
-    term = &(device -> devreg[devNum]);
-    TODO:
-    state_t * OldState =; 
+    unsigned int status;
+    int i;
+    int devNum;
+    devregarea_t* devReg;
+    device_t* terminal;
+    state_t* oldstate;
+    
+    i = 0;
+    devNum = 32 + (asid - 1);
+    devReg = (devregarea_t *) RAMBASEADDR;
+    terminal = &(devReg -> devreg[devNum]);
+    oldstate = (state_t*) &uProcs[asid-1].UProc_OldTrap[2];
 
+    SYSCALL(SYSCALL4, (int)&mutexArr[40 + (asid -1)], 0, 0);
 
-
-    SYSCALL(SYSCALL4,&mutexArr[], ,0);
-    for(i < EOT; i++){
+    while(i < len)
+    {
         Interrupts(FALSE);
-
-
-
+        terminal -> t_transm_command = 2 | (((unsigned int) *vAddr) << 8);
+        status = SYSCALL(SYSCALL8, TERMINT, (asid -1), 0);
         Interrupts(TRUE);
 
-
-
-
+        if((status & 0XFF) != 5)
+        {
+            PANIC();
+        }
+        vAddr++;
+        i++;
     }
 
+    oldstate -> s_v0 = i;
 
+    SYSCALL(SYSCALL3, (int)&mutexArr[40 + (asid -1)], 0, 0);
 }
 
 void Endproc(int asid){
@@ -314,7 +319,6 @@ void Endproc(int asid){
 }
 
 
-TODO:
 void readTerminal(char* vAddr, int asid)
 {
     /*
@@ -339,10 +343,7 @@ void readTerminal(char* vAddr, int asid)
 
 }
 
-TODO:
-void Delay(){
 
-}
 
 
 
