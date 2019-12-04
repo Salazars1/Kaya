@@ -168,7 +168,7 @@ void uSysHandler(){
         case 12:
             /*NO-OP*/
             break; 
-            
+
         /*Delay a Process for N seconds*/
         case 13:
             Delay();
@@ -263,12 +263,12 @@ void MakeTheDiskMyBitch(int block, int sector, int disk, int readWrite, memaddr 
 
 
 TODO:
-void writeTerminal(){
+void writeTerminal(char* vAddr, int len, int asid){
 
 }
 
 TODO:
-void readTerminal(){
+void readTerminal(char* vAddr, int asid){
 
 }
 
