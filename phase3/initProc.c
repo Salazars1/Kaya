@@ -12,6 +12,9 @@
 #include "../h/const.h"
 #include "../h/types.h"
 
+#include "../e/initial.e"
+#include "../e/exceptions.e"
+
 #include "../e/initProc.e"
 #include "../e/vmIOsupport.e"
 
