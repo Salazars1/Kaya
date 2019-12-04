@@ -150,7 +150,7 @@ void uSysHandler(){
     asid = (asid & 0x00000FC0) >> 6;
 
     /*Grab the old state Uh oh*/
-    oldState = &(uProcs[asid-1].uprocOldTrap[2]);
+    oldState = &(uProcs[asid-1].UProc_OldTrap[2]);
     casel = oldState -> s_a0; 
 
     switch(casel){
