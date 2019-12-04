@@ -161,17 +161,30 @@ void uSysHandler(){
               
         /*Virtual V (Not Implementing)*/
         case 11:
+            /*Kill the Process*/
+            Endproc(asid);
             /*NO-OP*/
             break;
 
         /*Virtual P (Not Implementing)*/
         case 12:
+        /*Kill The Process*/
+            Endproc(asid); 
             /*NO-OP*/
             break; 
 
         /*Delay a Process for N seconds*/
         case 13:
-            Delay();
+            int TLTR = oldState ->s_a1; 
+            if(TLTR <=0){
+                PANIC(); 
+            }
+
+            TLTR = TLTR + QUANTUM; 
+
+            oldState ->s_a1 = TLTR; 
+
+            SYSCALL(SYSCALL4,,0);
             break;  
         
         /*Disk Put*/
@@ -186,7 +199,7 @@ void uSysHandler(){
         
         /*Write to Printer*/
         case 16:
-        
+            writeprinter();
             break;  
         
         /*Get Time of Day*/
@@ -198,6 +211,7 @@ void uSysHandler(){
 
         /*Terminate*/
         case 18: 
+            Endproc(asid); 
             SYSCALL(SYSCALL2,0,0,0);
             break; 
 
@@ -209,9 +223,14 @@ void uSysHandler(){
 
 
 /*----------------------------------------------*/
+void writeprinter(){
+
+
+}
+
 
 void tableLookUp(){
-    static int nextVal = 0;
+    HIDDEN int nextVal = 0;
     nextVal = (nextVal + 1) % SWAPPOOLSIZE;
     return (nextVal);
 }
@@ -263,12 +282,69 @@ void MakeTheDiskMyBitch(int block, int sector, int disk, int readWrite, memaddr 
 
 
 TODO:
-void writeTerminal(char* vAddr, int len, int asid){
+void writeTerminal(char* vAddr, int len, int asid)
+{
+    unsigned int devstatus; 
+    int i = 0; 
+    TODO: 
+    int devnum = ; 
+    devregarea_t* device = (devregarea_t *) RAMBASEADDR;
+    device_t* term;
+    term = &(device -> devreg[devNum]);
+    TODO:
+    state_t * OldState =; 
+
+
+
+    SYSCALL(SYSCALL4,&mutexArr[], ,0);
+    for(i < EOT; i++){
+        Interrupts(FALSE);
+
+
+
+        Interrupts(TRUE);
+
+
+
+
+    }
+
 
 }
 
+void Endproc(int asid){
+
+    Interrupts(FALSE);
+
+    Interrupts(TRUE);
+
+    TLBCLR(); 
+
+    SYSCALL(SYSCALL2,0,0,0);
+}
+
+
 TODO:
-void readTerminal(char* vAddr, int asid){
+void readTerminal(char* vAddr, int asid)
+{
+    unsigned int status; 
+    int i = 0; 
+    int devnum = ; 
+    devregarea_t* device = (devregarea_t *) RAMBASEADDR;
+    device_t* term;
+    term = &(device -> devreg[devNum]);
+      TODO:
+    state_t * OldState =; 
+
+    SYSCALL(SYSCALL4,&mutexArr[], ,0);
+
+
+    Interrupts(FALSE); 
+
+    Interrupts(TRUE);
+
+
+
 
 }
 
