@@ -175,16 +175,6 @@ void uSysHandler(){
 
         /*Delay a Process for N seconds*/
         case 13:
-            int TLTR = oldState ->s_a1; 
-            if(TLTR <=0){
-                PANIC(); 
-            }
-
-            TLTR = TLTR + QUANTUM; 
-
-            oldState ->s_a1 = TLTR; 
-
-            SYSCALL(SYSCALL4,,0);
             break;  
         
         /*Disk Put*/
