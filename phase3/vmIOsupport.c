@@ -108,7 +108,7 @@ void pager()
         swapPool[newFrame].sw_asid = currentProcessID;
         swapPool[newFrame].sw_segNum = missSeg;
         swapPool[newFrame].sw_pgNum = missPage;
-        swapPool[newFrame].sw_pte = &(uProcs[currentProcessID - 1].uProc_pte.pteTable[missPage]);
+        swapPool[newFrame].sw_pte = &(uProcs[currentProcessID - 1].UProc_pte.pteTable[missPage]);
         
         Interrupts(FALSE);
             swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY;
