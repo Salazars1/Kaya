@@ -37,6 +37,12 @@ void pager()
     int currentPage;
     int currentASID;
 
+
+        device = (devregarea_t*) RAMBASEADDR;
+        RAMTOP = (device->rambase) + (device->ramsize);
+        swapAddr = (RAMTOP - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);;
+
+
     /*Who am I?
         The current processID is in the ASID regsiter
         This is needed as the index into the phase 3 global structure*/
@@ -90,10 +96,6 @@ void pager()
         Update missing pag's page table entry: frame number and valid bit
         Deal with TLB cache consistency*/
 
-        device = (devregarea_t*) RAMBASEADDR;
-        RAMTOP = (device->rambase) + (device->ramsize);
-        //swapAddr = (RAMTOP - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);;
-
         MakeTheDiskMyBitch(currentPage, currentASID, 0, 3, swapAddr);
 
         swapPool[newFrame].sw_asid = currentProcessID;
@@ -122,18 +124,11 @@ void pager()
 void uPgmTrpHandler(){
     /*Grab the ASID*/
     int tempasid; 
-    tempasid = getENTRYHI();
+    tempasid = (getENTRYHI() & 0x00000FC0) >> 6);
 
-    /*Function to kill the process*/
-    EndProcess(tempasid);
-
-}
-
-
-/*Function to kill the process and clean the frames out of memory*/
-void EndProcess(int pasid)
-{
+    /*Kill the process*/
     SYSCALL(SYSCALL2,0,0,0);
+
 }
 
 
@@ -141,49 +136,49 @@ void EndProcess(int pasid)
 void uSysHandler(){
     state_t * oldState;
     int casel; 
-    int ASID; 
-    int * sema; 
-    ASID = getENTRYHI();
-    cpu_t times; 
-/*Grab the old state Uh oh*/
-    oldState = &(Uprocs[ASID-1].uprocOldTrap[2]);
+    int asid; 
+    int *sema; 
+    cpu_t times;
+
+    asid = getENTRYHI();
+    asid = (asid & 0x00000FC0) >> 6;
+
+    /*Grab the old state Uh oh*/
+    oldState = &(Uprocs[asid-1].uprocOldTrap[2]);
     casel = oldState -> s_a0; 
 
     switch(casel){
 
         /*Read From Terminal */
         case 9:
-            readTerminal();
+            readTerminal((char *) oldState->s_a1, asid);
             break;  
+
         /*Write to Terminal */
         case 10:
-            writeTerminal();
-            break;  
-        /*Virtual V*/
-        /*Not Implementing*/
-        /*FINISHED*/
+            writeTerminal((char *) oldState->s_a1, oldState->s_a2 ,asid);
+            break;
+              
+        /*Virtual V (Not Implementing)*/
         case 11:
-            /*  
-                NO-OP
-            */
-            break;  
-        /*Virtual P*/
-        /*Not Implementing*/
-        /*FINISHED*/
+            /*NO-OP*/
+            break;
+
+        /*Virtual P (Not Implementing)*/
         case 12:
-            /*
-                NO-OP
-            */
+            /*NO-OP*/
             break; 
-        /*Delay*/
+            
         /*Delay a Process for N seconds*/
         case 13:
             Delay();
             break;  
+        
         /*Disk Put*/
         case 14:
         
             break;  
+        
         /*DISK Get*/
         case 15:
         
@@ -195,7 +190,6 @@ void uSysHandler(){
             break;  
         
         /*Get Time of Day*/
-        /*FINISHED*/
         case 17:
             /*Load the time of day and place in v0*/
             STCK(times);
@@ -204,8 +198,7 @@ void uSysHandler(){
 
         /*Terminate*/
         case 18: 
-            /*Call the End process function*/
-            EndProcess();
+            SYSCALL(SYSCALL2,0,0,0);
             break; 
 
     }
@@ -269,16 +262,17 @@ void MakeTheDiskMyBitch(int block, int sector, int disk, int readWrite, memaddr 
 }
 
 
-
+TODO:
 void writeTerminal(){
 
 }
 
-
+TODO:
 void readTerminal(){
 
 }
 
+TODO:
 void Delay(){
 
 }

@@ -178,25 +178,25 @@ void uProcInit()
     SYSTOP = ALLOCATEHERE + ((asid-1) * BASESTACKALLOC);
     TLBTOP = PROGTOP - PAGESIZE;
 
-    newStateTLB = &(uProcs[asid-1].UProc_NewTrap[TLBTRAP].s_asid);
+    newStateTLB = &(uProcs[asid-1].UProc_NewTrap[TLBTRAP]);
     newStateTLB->s_sp = TLBTOP;
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
-    newStateTLB->s_asid = (asid << 6);
+    newStateTLB->s_asid = (asid);
     newStateTLB->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
 
-    newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP].s_asid);
+    newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP]);
     newStatePRG->s_sp = PROGTOP;
     newStatePRG->s_pc = (memaddr) uPgmTrpHandler;
     newStatePRG->s_t9 = (memaddr) uPgmTrpHandler;
-    newStatePRG->s_asid = (asid << 6);
+    newStatePRG->s_asid = (asid);
     newStatePRG->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
 
-    newStateSYS = &(uProcs[asid-1].UProc_NewTrap[SYSTRAP].s_asid);
+    newStateSYS = &(uProcs[asid-1].UProc_NewTrap[SYSTRAP]);
     newStateSYS->s_sp = SYSTOP;
     newStateSYS->s_pc = (memaddr) uSysHandler;
     newStateSYS->s_t9 = (memaddr) uSysHandler;
-    newStateSYS->s_asid = (asid << 6);
+    newStateSYS->s_asid = (asid);
     newStateSYS->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
 
    /*Call SYS 5, three times*/
