@@ -317,6 +317,7 @@ void Endproc(int asid){
 TODO:
 void readTerminal(char* vAddr, int asid)
 {
+    /*
     unsigned int status; 
     int i = 0; 
     int devnum = ; 
@@ -333,7 +334,7 @@ void readTerminal(char* vAddr, int asid)
 
     Interrupts(TRUE);
 
-
+    */
 
 
 }
