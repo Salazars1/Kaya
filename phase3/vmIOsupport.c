@@ -86,10 +86,10 @@ void pager()
             -deal with TLB cache consistency
             -write current frame's contents on nthe backing store*/
     if(swapPool[newFrame].sw_asid != -1){
-        Interrupts(FALSE);
+        InterruptsOnOff(FALSE);
             swapPool[newFrame].sw_pte -> entryLO = ((swapPool[newFrame].sw_pte -> entryLO) & (0 << 9));
             TLBCLR();
-        Interrupts(TRUE);
+        InterruptsOnOff(TRUE);
 
         MakeTheDiskMyBitch(currentPage, currentASID, 0, 4, swapAddr);
 
@@ -110,10 +110,10 @@ void pager()
         swapPool[newFrame].sw_pgNum = missPage;
         swapPool[newFrame].sw_pte = &(uProcs[currentProcessID - 1].UProc_pte.pteTable[missPage]);
         
-        Interrupts(FALSE);
+        InterruptsOnOff(FALSE);
             swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY;
             TLBCLR();
-        Interrupts(TRUE);
+        InterruptsOnOff(TRUE);
 
         if(missSeg == 3){
             swapPool[newFrame].sw_pte = &(kuSeg3.pteTable[missPage]);
@@ -246,20 +246,20 @@ void MakeTheDiskMyBitch(int block, int sector, int disk, int readWrite, memaddr 
     diskDevice = &(devReg->devreg[0]);
 	
 	/*Atomic operation*/
-	Interrupts(FALSE);
+	InterruptsOnOff(FALSE);
     	diskDevice->d_command = (block << 8) | 2;
 	    diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
-	Interrupts(TRUE);
+	InterruptsOnOff(TRUE);
 			
 	/*If device is done seaking*/
 	if(diskStatus == READY){
 		
-		Interrupts(FALSE);
+		InterruptsOnOff(FALSE);
 		    /*where to read from*/
 		    diskDevice->d_data0 = addr;
             /* Command to write*/
             diskDevice->d_command = (disk << 16) | ((sector-1) << 8) | readWrite;
-		Interrupts(TRUE);										   
+		InterruptsOnOff(TRUE);										   
 		
         /*Wait for disk write I/O*/
 		diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
@@ -289,10 +289,10 @@ void writeTerminal(char* vAddr, int len, int asid)
 
     while(i < len)
     {
-        Interrupts(FALSE);
+        InterruptsOnOff(FALSE);
         terminal -> t_transm_command = 2 | (((unsigned int) *vAddr) << 8);
         status = SYSCALL(SYSCALL8, TERMINT, (asid -1), 0);
-        Interrupts(TRUE);
+        InterruptsOnOff(TRUE);
 
         if((status & 0XFF) != 5)
         {
@@ -308,11 +308,6 @@ void writeTerminal(char* vAddr, int len, int asid)
 }
 
 void Endproc(int asid){
-
-    Interrupts(FALSE);
-
-    Interrupts(TRUE);
-
     TLBCLR(); 
 
     SYSCALL(SYSCALL2,0,0,0);
@@ -334,9 +329,9 @@ void readTerminal(char* vAddr, int asid)
     SYSCALL(SYSCALL4,&mutexArr[], ,0);
 
 
-    Interrupts(FALSE); 
+    InterruptsOnOff(FALSE); 
 
-    Interrupts(TRUE);
+    InterruptsOnOff(TRUE);
 
     */
 
