@@ -194,7 +194,6 @@ void uSysHandler(){
         
         /*Write to Printer*/
         case 16:
-            writeprinter();
             break;  
         
         /*Get Time of Day*/
