@@ -2,7 +2,7 @@
 
 #include "../../h/const.h"
 #include "../../h/types.h"
-
+#include "h/tconst.h"
 #include "/usr/local/include/umps2/umps/libumps.e"
 
 
