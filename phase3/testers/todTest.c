@@ -31,7 +31,7 @@ void main() {
 	print(WRITETERMINAL, "todTest completed\n");
 		
 	/* Try to execute nucleys system call. Should cause termination */
-	now1 = SYSCALL(GETTIME, 0, 0, 0);
+	now1 = SYSCALL(GET_TOD, 0, 0, 0);
 	
 	print(WRITETERMINAL, "todTest error: SYS6 did not terminate\n");
 	SYSCALL(TERMINATE, 0, 0, 0);
