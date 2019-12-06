@@ -181,7 +181,7 @@
 #define KUSEGSIZE 32
 #define KSEGSIZE 64
 #define SWAPPOOLSIZE 16
-#define MAXUPROC 8  /*  PHASE 3 Num of processes*/
+#define MAXUPROC 1  /*  PHASE 3 Num of processes*/
 
 #define DIRTY   0x00000400
 #define VALID	0x00000200
