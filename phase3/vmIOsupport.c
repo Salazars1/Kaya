@@ -145,8 +145,7 @@ void uSysHandler(){
     int asid; 
     cpu_t times;
 
-    asid = getENTRYHI();
-    asid = (asid & 0x00000FC0) >> 6;
+    asid = ((getENTRYHI() & 0x00000FC0) >> 6);
 
     /*Grab the old state Uh oh*/
     oldState = &(uProcs[asid-1].UProc_OldTrap[2]);
@@ -285,7 +284,7 @@ void writeTerminal(char* vAddr, int len, int asid)
 
     SYSCALL(SYSCALL4, (int)&mutexArr[40 + (asid -1)], 0, 0);
 
-    while(i < len)
+    for(i = 0; i < len; i++)
     {
         InterruptsOnOff(FALSE);
         terminal -> t_transm_command = 2 | (((unsigned int) *vAddr) << 8);
@@ -297,7 +296,6 @@ void writeTerminal(char* vAddr, int len, int asid)
             PANIC();
         }
         vAddr++;
-        i++;
     }
 
     oldstate -> s_v0 = i;
@@ -335,6 +333,9 @@ void readTerminal(char* vAddr, int asid)
 
 
 }
+
+
+
 
 
 
