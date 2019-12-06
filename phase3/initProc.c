@@ -28,6 +28,10 @@ int masterSem;
 
 uProc_t uProcs[MAXUPROC];
 
+extern void pager();
+extern void uPgmTrpHandler();
+extern void uSysHandler();
+
 void test()
 {
     int i;
