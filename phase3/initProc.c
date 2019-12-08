@@ -34,7 +34,7 @@ extern void uSysHandler();
 
 HIDDEN void uProcInit();
 
-void debug(){
+void debug(int a){
     return -1;
 }
 
@@ -107,7 +107,8 @@ void test()
     */
     
 
-    for(i =1; i<=MAXUPROC;i++){
+    for(i =1; i< MAXUPROC+1;i++){
+        debug(1);
         /* i becomes the ASID (processID)*/
         uProcs[i-1].UProc_pte.header = (0x2A<<24)|KUSEGSIZE;
 
@@ -121,6 +122,8 @@ void test()
             uProcs[i-1].UProc_pte.pteTable[j].entryHI =((0x80000 + j) << 12) | (i << 6);;
             uProcs[i-1].UProc_pte.pteTable[j].entryLO = ALLOFF | DIRTY;
         }
+
+        debug(2);
 
         /*fix the last entry's entryHi = 0xBFFFF w/asid*/
         uProcs[i-1].UProc_pte.pteTable[KUSEGSIZE-1].entryHI = (0xBFFFF << 12) | (i << 6);
@@ -142,6 +145,8 @@ void test()
             -status: all interrupts enabled, local timer enabled, VM off, kernel mode on
         */
 
+       debug(3);
+
         procState.s_asid= (i<<6);
         /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
         procState.s_sp = ALLOCATEHERE + ((i-1) * BASESTACKALLOC);
@@ -149,10 +154,12 @@ void test()
         procState.s_t9 = (memaddr) uProcInit;
         procState.s_status = ALLOFF | IEON | IMON | TEBITON;
         
-        debug();
+        debug(4);
 
         /*SYS 1 (v)*/
         SYSCALL(SYSCALL1, (int)&procState, 0, 0);
+
+        debug(5);
     }
 
     /*for (i=0; i<MAXUPROC; i++){
