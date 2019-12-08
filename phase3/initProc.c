@@ -32,6 +32,10 @@ extern void pager();
 extern void uPgmTrpHandler();
 extern void uSysHandler();
 
+void debug(){
+    return -1;
+}
+
 void test()
 {
     int i;
@@ -99,6 +103,8 @@ void test()
        --SYS 1
     }   
     */
+    debug();
+
     for(i =1; i<=MAXUPROC;i++){
         /* i becomes the ASID (processID)*/
         uProcs[i-1].UProc_pte.header = (0x2A<<24)|KUSEGSIZE;
