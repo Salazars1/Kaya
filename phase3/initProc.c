@@ -35,6 +35,7 @@ extern void uSysHandler();
 HIDDEN void uProcInit();
 
 void debug(int a){}
+void testingbi(int b){}
 
 void test()
 {
@@ -174,11 +175,13 @@ void test()
    
     /*SYS2*/
     SYSCALL(SYSCALL2, 0, 0, 0);
+
 }
 
 
 void uProcInit()
 {
+    testingbi(3);
     int asid;
     state_t* newStateTLB;
     state_t* newStatePRG;
@@ -291,7 +294,7 @@ void uProcInit()
         }else{
             SYSCALL(SYSCALL2,0,0,0);
         }
-
+        testingbi(4);
         /*MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL3, (int) &mutexArr[0], 0, 0);
 
