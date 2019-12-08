@@ -128,6 +128,8 @@ void test()
         /*fix the last entry's entryHi = 0xBFFFF w/asid*/
         uProcs[i-1].UProc_pte.pteTable[KUSEGSIZE-1].entryHI = (0xBFFFF << 12) | (i << 6);
 
+        debug(3);
+
         /*Set up the appropiate three entries in the global segment table
             set KSegOS pointer
             set KUseg2 pointer
@@ -145,7 +147,7 @@ void test()
             -status: all interrupts enabled, local timer enabled, VM off, kernel mode on
         */
 
-       debug(3);
+       debug(4);
 
         procState.s_asid= (i<<6);
         /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
@@ -154,12 +156,12 @@ void test()
         procState.s_t9 = (memaddr) uProcInit;
         procState.s_status = ALLOFF | IEON | IMON | TEBITON;
         
-        debug(4);
+        debug(5);
 
         /*SYS 1 (v)*/
         SYSCALL(SYSCALL1, (int)&procState, 0, 0);
 
-        debug(5);
+        debug(6);
     }
 
     /*for (i=0; i<MAXUPROC; i++){
