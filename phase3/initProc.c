@@ -138,7 +138,7 @@ void test()
         segTable = (segTable_t *) (0x20000500 + (i * 0x20000500));
         segTable->ksegOS= &KSegOS;
         segTable->kuseg2= &(uProcs[i-1].UProc_pte);
-        segTable->kuseg3= &kuSeg3;
+        /*segTable->kuseg3= &kuSeg3;*/
 
         /*Set up an initial state for a user process
             -asid =i
