@@ -32,6 +32,8 @@ extern void pager();
 extern void uPgmTrpHandler();
 extern void uSysHandler();
 
+HIDDEN void uProcInit();
+
 void debug(){
     return -1;
 }
