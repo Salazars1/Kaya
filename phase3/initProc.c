@@ -53,7 +53,8 @@ void test()
    KSegOS.header = (0x2A<<24)|KSEGSIZE;
    for(i=0;i<KSEGSIZE;i++){
        KSegOS.pteTable[i].entryHI = ((0x20000 + i) << 12);
-       KSegOS.pteTable[i].entryLO = ((0x20000 + i) << 12) | DIRTY | GLOBAL | VALID;
+       KSegOS.pteTable[i].entryLO = ((0x20000 + i) << 12);
+        /*| DIRTY | GLOBAL | VALID;*/
     }
 
    /*kuSeg3 page table
