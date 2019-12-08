@@ -154,56 +154,58 @@ void uSysHandler(){
     switch(casel){
 
         /*Read From Terminal */
-        case 9:
+        case SYSCALL9:
             readTerminal((char *) oldState->s_a1, asid);
             break;  
 
         /*Write to Terminal */
-        case 10:
+        case SYSCALL10:
             writeTerminal((char *) oldState->s_a1, oldState->s_a2 ,asid);
             break;
               
         /*Virtual V (Not Implementing)*/
-        case 11:
+        case SYSCALL11:
             /*Kill the Process*/
             Endproc(asid);
             /*NO-OP*/
             break;
 
         /*Virtual P (Not Implementing)*/
-        case 12:
+        case SYSCALL12:
         /*Kill The Process*/
             Endproc(asid); 
             /*NO-OP*/
             break; 
 
         /*Delay a Process for N seconds*/
-        case 13:
+        case SYSCALL13:
+            Endproc(asid);
             break;  
         
         /*Disk Put*/
-        case 14:
-        
+        case SYSCALL14:
+            Endproc(asid);
             break;  
         
         /*DISK Get*/
-        case 15:
-        
+        case SYSCALL15:
+            Endproc(asid);
             break;  
         
         /*Write to Printer*/
-        case 16:
+        case SYSCALL16:
+            Endproc(asid);
             break;  
         
         /*Get Time of Day*/
-        case 17:
+        case SYSCALL17:
             /*Load the time of day and place in v0*/
             STCK(times);
             oldState->s_v0 = times; 
             break;  
 
         /*Terminate*/
-        case 18: 
+        case SYSCALL18: 
             SYSCALL(SYSCALL2,0,0,0);
             break; 
 

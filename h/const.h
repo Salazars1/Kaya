@@ -232,6 +232,19 @@
 #define TAPEEOB 2 /*ENd of Block*/
 #define TAPETS 3 /*Tape Start*/
 
+#define SYSCALL9 9 
+#define SYSCALL10 10 
+#define SYSCALL11 11 
+#define SYSCALL12 12 
+#define SYSCALL13 13 
+#define SYSCALL14 14 
+#define SYSCALL15 15 
+#define SYSCALL16 16 
+#define SYSCALL17 17 
+#define SYSCALL18 18 
+
+
+
 #define SEG3 0xC0000000
 
 
