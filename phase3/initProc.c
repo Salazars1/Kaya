@@ -34,9 +34,7 @@ extern void uSysHandler();
 
 HIDDEN void uProcInit();
 
-void debug(int a){
-    return -1;
-}
+void debug(int a){}
 
 void test()
 {
