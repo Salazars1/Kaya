@@ -155,7 +155,7 @@ void test()
         procState.s_pc = (memaddr) uProcInit;
         procState.s_t9 = (memaddr) uProcInit;
         procState.s_status = ALLOFF | IEON | IMON | TEBITON;
-        
+        testingbi(4);
         debug(5);
 
         /*SYS 1 (v)*/
