@@ -92,6 +92,7 @@ int main()
     newLocation->s_sp = RAMTOP;
     newLocation->s_status = ALLOFF;
 
+    print("Test");
     /* TLB MANAGEMENT */
     newLocation = (state_t*) TLBMGMTNEWAREA;
     newLocation->s_pc = (memaddr) TLBTrapHandler;
