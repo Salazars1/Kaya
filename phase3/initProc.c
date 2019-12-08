@@ -105,7 +105,7 @@ void test()
        --SYS 1
     }   
     */
-    debug();
+    
 
     for(i =1; i<=MAXUPROC;i++){
         /* i becomes the ASID (processID)*/
@@ -149,6 +149,8 @@ void test()
         procState.s_t9 = (memaddr) uProcInit;
         procState.s_status = ALLOFF | IEON | IMON | TEBITON;
         
+        debug();
+
         /*SYS 1 (v)*/
         SYSCALL(SYSCALL1, (int)&procState, 0, 0);
     }
