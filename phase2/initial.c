@@ -22,6 +22,10 @@
 #include "../e/exceptions.e"
 #include "../e/scheduler.e"
 
+/*Phase 3 includes since this is the main*/
+#include "../e/initProc.e"
+#include "../e/vmIOsupport.e"
+
 #include "/usr/local/include/umps2/umps/libumps.e"
 
 
