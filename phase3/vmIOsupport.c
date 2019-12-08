@@ -279,18 +279,18 @@ void writeTerminal(char* vAddr, int len, int asid)
     state_t* oldstate;
     
     i = 0;
-    devNum = 32 + (asid - 1);
+    devNum = 0 + (asid - 1);
     devReg = (devregarea_t *) RAMBASEADDR;
     terminal = &(devReg -> devreg[devNum]);
     oldstate = (state_t*) &uProcs[asid-1].UProc_OldTrap[2];
 
-    SYSCALL(SYSCALL4, (int)&mutexArr[40 + (asid -1)], 0, 0);
+    SYSCALL(SYSCALL4, (int)&mutexArr[40 + (asid -1)], 10, 0);
 
     for(i = 0; i < len; i++)
     {
         InterruptsOnOff(FALSE);
         terminal -> t_transm_command = 2 | (((unsigned int) *vAddr) << 8);
-        status = SYSCALL(SYSCALL8, TERMINT, (asid -1), 0);
+        status = SYSCALL(SYSCALL8, TERMINT, (asid -1), 10);
         InterruptsOnOff(TRUE);
 
         if((status & 0XFF) != 5)

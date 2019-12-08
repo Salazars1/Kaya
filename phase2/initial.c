@@ -122,6 +122,7 @@ int main()
 
     /* Lets the scheduler take over.*/
     scheduler();
+    
 
     return 0;
 }
