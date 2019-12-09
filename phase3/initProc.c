@@ -18,25 +18,32 @@
 #include "../e/initProc.e"
 #include "../e/vmIOsupport.e"
 
+/*Lets set some global values*/
 pteOS_t KSegOS; /*OS page table*/
 pte_t kuSeg3;   /*Seg3 page table*/
 swap_t swapPool[SWAPPOOLSIZE];
-
 int swapSem;
 int mutexArr[SEMNUM];
 int masterSem;
-
 uProc_t uProcs[MAXUPROC];
 
+
+/*Lets Extern some functions*/
 extern void pager();
 extern void uPgmTrpHandler();
 extern void uSysHandler();
-
+/*Make this function an extern */
 HIDDEN void uProcInit();
 
+/*Test Functions*/
 void debug(int a){}
 void testingbi(int b){}
+void testa(int b){}
+void te(int c){}
+void re(int d){}
 
+
+/*Called in the Initial.c File from phase2 (Our Main)*/
 void test()
 {
     int i;
@@ -152,6 +159,8 @@ void test()
         procState.s_asid= (i<<6);
         /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
         procState.s_sp = ALLOCATEHERE + ((i-1) * BASESTACKALLOC);
+        re(1);
+
         procState.s_pc = (memaddr) uProcInit;
         procState.s_t9 = (memaddr) uProcInit;
         procState.s_status = ALLOFF | IEON | IMON | TEBITON;
@@ -181,6 +190,7 @@ void test()
 
 void uProcInit()
 {
+    testa(3);
     testingbi(3);
     int asid;
     state_t* newStateTLB;
