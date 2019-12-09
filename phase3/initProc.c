@@ -140,8 +140,12 @@ void test()
         /*Set up the appropiate three entries in the global segment table
             set KSegOS pointer
             set KUseg2 pointer
-            set KUseg3 pointer*/
+            set KUseg3 pointer
+            
+        */
 
+
+        /*TESTING FILE MAKES IT TO THIS BREAK POINT*/
         te(3);
         
         segTable = (segTable_t *) (0x20000500 + (i * 0x20000500));
@@ -156,8 +160,7 @@ void test()
             -status: all interrupts enabled, local timer enabled, VM off, kernel mode on
         */
 
-       debug(4);
-
+        re(2);
         procState.s_asid= (i<<6);
         /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
         procState.s_sp = ALLOCATEHERE + ((i-1) * BASESTACKALLOC);
