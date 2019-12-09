@@ -327,6 +327,7 @@ a(5);
     
     ab(10);
     /* loop until whole file has been read */
+    /*While Loop is a fucking YIKES */
 	while((tape -> d_data1 != EOF) && (tape -> d_data1 != EOT)) {
 
         /*Atomic operation*/
