@@ -208,7 +208,9 @@ void test()
 
 void uProcInit()
 {
+    /*Alive and Well followed by an infinite wait state!*/
     testa(3);
+
     testingbi(3);
     int asid;
     state_t* newStateTLB;
