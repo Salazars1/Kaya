@@ -310,21 +310,21 @@ abc(1);
 
 /***********************************************PROBLEM CODE**************************************************/
     /*Atomic operation*/
-    
+   /* 
         InterruptsOnOff(FALSE);
         ab(6);
 		    tape -> d_data0 = buffer;
         ab(7);
 		    tape -> d_command = DISKREADBLK;
         ab(7);
-        /*Problem */
+        
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, asid-1, 0);
         abc(8);
         ab(8);
         
         InterruptsOnOff(TRUE);
 a(5);
-    
+    */
     ab(10);
     /* loop until whole file has been read */
 	while((tape -> d_data1 != EOF) && (tape -> d_data1 != EOT)) {
