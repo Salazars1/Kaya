@@ -306,7 +306,8 @@ abc(1);
 
 /***********************************************PROBLEM CODE**************************************************/
 
-    buffer = (ROMPAGESTART + (30 * PAGESIZE))+ ((asid - 1) * PAGESIZE);
+    buffer = (ROMPAGESTART + (30 * PAGESIZE));
+    buffer = buffer + ((asid - 1) * PAGESIZE);
 
     /*Atomic operation*/
         InterruptsOnOff(FALSE);
