@@ -296,6 +296,7 @@ ab(1);
     disk = &(Activedev -> devreg[0]);
     /*The tape is a dynamic number */
     tape = &(Activedev ->devreg[8+(asid-1)]);
+/*Line 299 The problem startes OOF*/ 
 abc(1);
     buffer = (ROMPAGESTART + (30 * PAGESIZE))+ ((asid - 1) * PAGESIZE);
 
@@ -365,17 +366,26 @@ a(6);
 }
 
 
+/*Test Functions that are deisgned to Test InterruptsOnOff*/
+void c(int g){}
+void ca(int gg){}
+
+
  void InterruptsOnOff(int IOturned)
 {
+    c(1);
     int status = getSTATUS();
 
     if(!IOturned)
     {
+        c(1);
         status = (status & 0xFFFFFFFE);
     }
     else
     {
+        ca(5);
         status = (status | 0x1);
     }
+    ca(4);
     setSTATUS(status);
 }
