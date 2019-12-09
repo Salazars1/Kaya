@@ -148,11 +148,11 @@ void test()
         /*TESTING FILE MAKES IT TO THIS BREAK POINT*/
         te(3);
         /*This line has been tested*/
+        /*The width of the seg table instead of the Seg table start!*/
         segTable = (segTable_t *) (0x20000500 + (i * 0x0000000C));
         te(2);
 
-        /*Problem line of code!*/
-        FIXME: 
+      
         /*This is being tested*/
         segTable->ksegOS= &KSegOS;
         
