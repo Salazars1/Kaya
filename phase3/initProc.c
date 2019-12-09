@@ -310,19 +310,19 @@ abc(1);
     buffer = buffer + ((asid - 1) * PAGESIZE);
 
     /*Atomic operation*/
-    /*
+    
         InterruptsOnOff(FALSE);
         ab(6);
 		    tape -> d_data0 = buffer;
         ab(7);
 		    tape -> d_command = DISKREADBLK;
-        ab(7);*/
+        ab(7);
         /*Problem */
-    /*        tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
+            tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
         abc(8);
         ab(8);
         InterruptsOnOff(TRUE);
-a(5);*/
+a(5);
     
     ab(10);
     /* loop until whole file has been read */
