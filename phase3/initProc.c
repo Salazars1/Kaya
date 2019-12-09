@@ -149,6 +149,7 @@ void test()
         te(3);
         
         segTable = (segTable_t *) (0x20000500 + (i * 0x20000500));
+        te(2);
         segTable->ksegOS= &KSegOS;
         segTable->kuseg2= &(uProcs[i-1].UProc_pte);
         /*segTable->kuseg3= &kuSeg3;*/
@@ -160,6 +161,7 @@ void test()
             -status: all interrupts enabled, local timer enabled, VM off, kernel mode on
         */
 
+        /*Never make it to this break point*/
         re(2);
         procState.s_asid= (i<<6);
         /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
