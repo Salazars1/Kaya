@@ -332,9 +332,12 @@ a(5);
         /*Atomic operation*/
         ab(11);
         InterruptsOnOff(FALSE);
+        ab(12);
 		    tape -> d_data0 = buffer;
 		    tape -> d_command = DISKREADBLK;
+            ab(13);
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
+            ab(14);
         InterruptsOnOff(TRUE);
         ab(12);
         /*MUTUAL EXCLUSION ON DISK*/
