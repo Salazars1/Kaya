@@ -315,8 +315,10 @@ abc(1);
         ab(7);
 		    tape -> d_command = DISKREADBLK;
         ab(7);
+        /*Problem */
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
         abc(8);
+        ab(8);
         InterruptsOnOff(TRUE);
 a(5);
     /* loop until whole file has been read */
