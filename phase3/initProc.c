@@ -150,8 +150,15 @@ void test()
         /*This line has been tested*/
         segTable = (segTable_t *) (0x20000500 + (i * 0x20000500));
         te(2);
+
+        /*Problem line of code!*/
+        FIXME: 
         /*This is being tested*/
         segTable->ksegOS= &KSegOS;
+        
+        
+        
+        /*Not Tested*/
         te(4);
         segTable->kuseg2= &(uProcs[i-1].UProc_pte);
         te(5);
