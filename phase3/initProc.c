@@ -298,13 +298,23 @@ ab(1);
     tape = &(Activedev ->devreg[8+(asid-1)-3]);
 /*Line 299 The problem startes OOF*/ 
 abc(1);
+
+
+
+
+
+
+/***********************************************PROBLEM CODE**************************************************/
+
     buffer = (ROMPAGESTART + (30 * PAGESIZE))+ ((asid - 1) * PAGESIZE);
 
     /*Atomic operation*/
         InterruptsOnOff(FALSE);
         ab(6);
 		    tape -> d_data0 = buffer;
+        ab(7);
 		    tape -> d_command = DISKREADBLK;
+        ab(7);
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
         abc(8);
         InterruptsOnOff(TRUE);
