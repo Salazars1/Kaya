@@ -278,7 +278,7 @@ a(1);
        keep reading until the tape block marker (data1) is no longer ENDOFBLOCK
        read block from tape and then write it out to disk0
    */
-
+ab(1);
     SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
 
     device_t* tape;
@@ -296,7 +296,7 @@ a(1);
     disk = &(Activedev -> devreg[0]);
     /*The tape is a dynamic number */
     tape = &(Activedev ->devreg[8+(asid-1)]);
-
+abc(1);
     buffer = (ROMPAGESTART + (30 * PAGESIZE))+ ((asid - 1) * PAGESIZE);
 
     /*Atomic operation*/
@@ -305,7 +305,7 @@ a(1);
 		    tape -> d_command = DISKREADBLK;
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
         InterruptsOnOff(TRUE);
-
+a(5);
     /* loop until whole file has been read */
 	while((tape -> d_data1 != EOF) && (tape -> d_data1 != EOT)) {
 
@@ -349,7 +349,7 @@ a(1);
         -status: all interrupts enabled, local timer enabled, VM ON, User mode ON
         -PC = well known address from the start of KUseg2
     */
-
+abc(5);
     stateProc.s_asid = (asid << 6);
     stateProc.s_sp = SEG3;
     stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | TEON | VMON;
@@ -357,9 +357,11 @@ a(1);
     stateProc.s_t9 = (memaddr) WELLKNOWNSTARTPROCESS;
 
     SYSCALL(SYSCALL3, (int) &mutexArr[0], 0, 0);
+a(6);
 
    /*LDST to tihs new state*/
    LDST(&stateProc);
+
 }
 
 
