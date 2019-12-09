@@ -35,12 +35,19 @@ extern void uSysHandler();
 /*Make this function an extern */
 HIDDEN void uProcInit();
 
-/*Test Functions*/
+/*Test Functions for test()*/
 void debug(int a){}
 void testingbi(int b){}
 void testa(int b){}
 void te(int c){}
 void re(int d){}
+
+/*Test Functions for Uprocint()*/
+void a(int f){}
+void ab(int f){}
+void abc(int f){}
+
+
 
 
 /*Called in the Initial.c File from phase2 (Our Main)*/
@@ -210,6 +217,7 @@ void uProcInit()
 {
     /*Alive and Well followed by an infinite wait state!*/
     testa(3);
+    a(2);
 
     testingbi(3);
     int asid;
@@ -222,6 +230,7 @@ void uProcInit()
     memaddr SYSTOP;
 
     /*Figure out who you are? ASID?*/
+    
     asid = getENTRYHI();
     asid = (asid & 0x00000FC0) >> 6;
     
@@ -231,36 +240,39 @@ void uProcInit()
         -ASID = your asid value
         -status: all interrupts enabled, local timer enabled, VM ON, Kernel Mode ON
     */
-
+   ab(2);
     PROGTOP = ALLOCATEHERE + ((asid-1) * BASESTACKALLOC);
     SYSTOP = ALLOCATEHERE + ((asid-1) * BASESTACKALLOC);
     TLBTOP = PROGTOP - PAGESIZE;
-
+abc(2);
     newStateTLB = &(uProcs[asid-1].UProc_NewTrap[TLBTRAP]);
     newStateTLB->s_sp = TLBTOP;
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
     newStateTLB->s_asid = (asid);
     newStateTLB->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
-
+a(3);
     newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP]);
     newStatePRG->s_sp = PROGTOP;
     newStatePRG->s_pc = (memaddr) uPgmTrpHandler;
     newStatePRG->s_t9 = (memaddr) uPgmTrpHandler;
     newStatePRG->s_asid = (asid);
     newStatePRG->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
-
+ab(3);
     newStateSYS = &(uProcs[asid-1].UProc_NewTrap[SYSTRAP]);
     newStateSYS->s_sp = SYSTOP;
     newStateSYS->s_pc = (memaddr) uSysHandler;
     newStateSYS->s_t9 = (memaddr) uSysHandler;
     newStateSYS->s_asid = (asid);
     newStateSYS->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
-
+abc(3);
    /*Call SYS 5, three times*/
     SYSCALL(SYSCALL5,TLBTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[TLBTRAP]),(int) newStateTLB);
     SYSCALL(SYSCALL5,PROGTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[PROGTRAP]),(int) newStatePRG);
     SYSCALL(SYSCALL5,SYSTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[SYSTRAP]),(int) newStateSYS);
+a(1);
+/*Line 274 Testing*/
+
 
    /*Read the content of the tape devices(asid-1) on the the backing store device (disk0)
        keep reading until the tape block marker (data1) is no longer ENDOFBLOCK
