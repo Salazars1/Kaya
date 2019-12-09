@@ -286,7 +286,7 @@ ab(1);
     devregarea_t * Activedev;
     int buffer;
     int pageNumber;
-    int tapeStatus;
+    unsigned int tapeStatus;
     int diskStatus;
 
     Activedev= RAMBASEADDR; 
@@ -304,11 +304,11 @@ abc(1);
 
 
 
-/***********************************************PROBLEM CODE**************************************************/
-
     buffer = (ROMPAGESTART + (30 * PAGESIZE));
     buffer = buffer + ((asid - 1) * PAGESIZE);
 
+
+/***********************************************PROBLEM CODE**************************************************/
     /*Atomic operation*/
     
         InterruptsOnOff(FALSE);
