@@ -176,6 +176,7 @@ void test()
         procState.s_asid= (i<<6);
         /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
         procState.s_sp = ALLOCATEHERE + ((i-1) * BASESTACKALLOC);
+        /*Allive and Well at this point*/
         re(1);
 
         procState.s_pc = (memaddr) uProcInit;
