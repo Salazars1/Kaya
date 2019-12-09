@@ -330,12 +330,13 @@ a(5);
 	while((tape -> d_data1 != EOF) && (tape -> d_data1 != EOT)) {
 
         /*Atomic operation*/
+        ab(11);
         InterruptsOnOff(FALSE);
 		    tape -> d_data0 = buffer;
 		    tape -> d_command = DISKREADBLK;
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
         InterruptsOnOff(TRUE);
-
+        ab(12);
         /*MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
 
