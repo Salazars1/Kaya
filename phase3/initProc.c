@@ -295,16 +295,18 @@ ab(1);
     /*Backing Store is at Number 0 !*/
     disk = &(Activedev -> devreg[0]);
     /*The tape is a dynamic number */
-    tape = &(Activedev ->devreg[8+(asid-1)]);
+    tape = &(Activedev ->devreg[8+(asid-1)-3]);
 /*Line 299 The problem startes OOF*/ 
 abc(1);
     buffer = (ROMPAGESTART + (30 * PAGESIZE))+ ((asid - 1) * PAGESIZE);
 
     /*Atomic operation*/
         InterruptsOnOff(FALSE);
+        ab(6);
 		    tape -> d_data0 = buffer;
 		    tape -> d_command = DISKREADBLK;
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
+        abc(8);
         InterruptsOnOff(TRUE);
 a(5);
     /* loop until whole file has been read */
