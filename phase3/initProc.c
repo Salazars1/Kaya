@@ -310,8 +310,8 @@ abc(1);
 
 /***********************************************PROBLEM CODE**************************************************/
     /*Atomic operation*/
-    /*
-        InterruptsOnOff(FALSE);*/
+    
+        InterruptsOnOff(FALSE);
         ab(6);
 		    tape -> d_data0 = buffer;
         ab(7);
@@ -321,9 +321,9 @@ abc(1);
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, asid-1, 0);
         abc(8);
         ab(8);
-        /*
+        
         InterruptsOnOff(TRUE);
-a(5);*/
+a(5);
     
     ab(10);
     /* loop until whole file has been read */
