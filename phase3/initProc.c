@@ -141,6 +141,8 @@ void test()
             set KSegOS pointer
             set KUseg2 pointer
             set KUseg3 pointer*/
+
+        te(3);
         
         segTable = (segTable_t *) (0x20000500 + (i * 0x20000500));
         segTable->ksegOS= &KSegOS;
