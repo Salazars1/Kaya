@@ -147,11 +147,14 @@ void test()
 
         /*TESTING FILE MAKES IT TO THIS BREAK POINT*/
         te(3);
-        
+        /*This line has been tested*/
         segTable = (segTable_t *) (0x20000500 + (i * 0x20000500));
         te(2);
+        /*This is being tested*/
         segTable->ksegOS= &KSegOS;
+        te(4);
         segTable->kuseg2= &(uProcs[i-1].UProc_pte);
+        te(5);
         /*segTable->kuseg3= &kuSeg3;*/
 
         /*Set up an initial state for a user process
