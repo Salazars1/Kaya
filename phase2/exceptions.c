@@ -356,10 +356,11 @@ void SYSCALLHandler()
                 interrupt)*/
  void Syscall8(state_t *caller)
 {
-     if(currentProcess == NULL){
+    /*
+     if(currentProcess == NULL){*/
         /*No Current Process then we panic*/
-        PANIC();
-    }
+        /*PANIC();
+    }*/
     int lineNo;     /*  line number*/
     int dnum;       /*  device number*/
     int termRead;   /*  Read/Write Terminal*/
