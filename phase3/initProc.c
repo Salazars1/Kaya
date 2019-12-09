@@ -295,7 +295,7 @@ ab(1);
     /*Backing Store is at Number 0 !*/
     disk = &(Activedev -> devreg[0]);
     /*The tape is a dynamic number */
-    tape = &(Activedev ->devreg[8+(asid-1)-3]);
+    tape = &(Activedev ->devreg[8+(asid-1)]);
 /*Line 299 The problem startes OOF*/ 
 abc(1);
 
@@ -310,18 +310,21 @@ abc(1);
     buffer = buffer + ((asid - 1) * PAGESIZE);
 
     /*Atomic operation*/
+    /*
         InterruptsOnOff(FALSE);
         ab(6);
 		    tape -> d_data0 = buffer;
         ab(7);
 		    tape -> d_command = DISKREADBLK;
-        ab(7);
+        ab(7);*/
         /*Problem */
-            tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
+    /*        tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
         abc(8);
         ab(8);
         InterruptsOnOff(TRUE);
-a(5);
+a(5);*/
+    
+    ab(10);
     /* loop until whole file has been read */
 	while((tape -> d_data1 != EOF) && (tape -> d_data1 != EOT)) {
 
