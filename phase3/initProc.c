@@ -310,7 +310,7 @@ abc(1);
 
 /***********************************************PROBLEM CODE**************************************************/
     /*Atomic operation*/
-   /* 
+    
         InterruptsOnOff(FALSE);
         ab(6);
 		    tape -> d_data0 = buffer;
@@ -324,7 +324,7 @@ abc(1);
         
         InterruptsOnOff(TRUE);
 a(5);
-    */
+    
     ab(10);
     /* loop until whole file has been read */
 	while((tape -> d_data1 != EOF) && (tape -> d_data1 != EOT)) {
