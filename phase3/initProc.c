@@ -318,6 +318,7 @@ void uProcInit()
     tapeStatus= READY;
     int finished;
     finished=FALSE;
+    /*UM?*/
 
     /* loop until whole file has been read */
     /*While Loop is a fucking YIKES */
