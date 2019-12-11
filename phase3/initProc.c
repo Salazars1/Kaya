@@ -49,6 +49,12 @@ void abc(int f){}
 
 
 
+/*Functions for testing the while loop in Uprocint*/
+void whi(int b){}
+void wh(int cc){}
+void h(char a){}
+
+
 
 /*Called in the Initial.c File from phase2 (Our Main)*/
 void test()
@@ -305,7 +311,7 @@ void uProcInit()
     /* loop until whole file has been read */
     /*While Loop is a fucking YIKES */
 	while((tape -> d_data1 != EOF) && (tape -> d_data1 != EOT)) {
-
+        whi(1);
         /*Atomic operation*/
         InterruptsOnOff(FALSE);
 		    tape -> d_data0 = buffer;
@@ -337,7 +343,7 @@ void uProcInit()
 
         pageNumber++;
 	}
-    
+    wh(16);
     /*Set up a new state for the user process
         -asid = your asid
         -stack page = last page of KUseg2(0C00.0000)
