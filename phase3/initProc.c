@@ -286,7 +286,7 @@ void uProcInit()
     int buffer;
     int pageNumber;
     unsigned int tapeStatus;
-    int diskStatus;
+    unsigned int diskStatus;
 
     Activedev= RAMBASEADDR; 
     pageNumber=0;
