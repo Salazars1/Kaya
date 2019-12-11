@@ -321,16 +321,17 @@ void uProcInit()
         InterruptsOnOff(TRUE);
         /*MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
-
+        whi(2);
         /*Atomic operation*/
         InterruptsOnOff(FALSE);
             disk ->d_command = (pageNumber << 8 | 2);
             diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
         InterruptsOnOff(TRUE);
-
+        whi(4);
         if(diskStatus == READY)
         {
             /*Atomic operation*/
+            whi(5);
             InterruptsOnOff(FALSE);
                 disk->d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - 1) * PAGESIZE);
                 disk->d_command = ((asid - 1) << 8) | 4;
@@ -339,6 +340,7 @@ void uProcInit()
         }else{
             SYSCALL(SYSCALL2,0,0,0);
         }
+        whi(6);
         /*MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL3, (int) &mutexArr[0], 0, 0);
 
