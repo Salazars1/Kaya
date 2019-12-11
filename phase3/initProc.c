@@ -18,45 +18,32 @@
 #include "../e/initProc.e"
 #include "../e/vmIOsupport.e"
 
+#include "/usr/local/include/umps2/umps/libumps.e"
+
+
 /*Lets set some global values*/
 pteOS_t KSegOS; /*OS page table*/
 pte_t kuSeg3;   /*Seg3 page table*/
 swap_t swapPool[SWAPPOOLSIZE];
+
 /*Semaphore globals*/
 int swapSem;
 int mutexArr[SEMNUM];
 int masterSem;
+
 /*Array of processes (8)*/
 uProc_t uProcs[MAXUPROC];
-
 
 /*Lets Extern some functions*/
 extern void pager();
 extern void uPgmTrpHandler();
 extern void uSysHandler();
-/*Make this function an extern */
+
+/*Declare this function */
 HIDDEN void uProcInit();
 
 /*Test Functions for test()*/
 void debug(int a){}
-void testingbi(int b){}
-void testa(int b){}
-void te(int c){}
-void re(int d){}
-
-/*Test Functions for Uprocint()*/
-void a(int f){}
-void ab(int f){}
-void abc(int f){}
-
-
-
-/*Functions for testing the while loop in Uprocint*/
-void whi(int b){}
-void wh(int cc){}
-void h(char a){}
-
-
 
 /*Called in the Initial.c File from phase2 (Our Main)*/
 void test()
@@ -64,10 +51,9 @@ void test()
     /*Looping variables*/
     int i;
     int j;
-    /*Process state*/
-    state_t procState;
-    /*Seg table*/
-    segTable_t* segTable;
+   
+    state_t procState;      /*Process state*/
+    segTable_t* segTable;   /*Seg table*/
 
     /*KSegOS page table
         64 entries
@@ -78,8 +64,7 @@ void test()
    for(i=0;i<KSEGSIZE;i++){
        /*Set the Page tables */
        KSegOS.pteTable[i].entryHI = ((0x20000 + i) << 12);
-       KSegOS.pteTable[i].entryLO = ((0x20000 + i) << 12);
-        /*| DIRTY | GLOBAL | VALID;*/
+       KSegOS.pteTable[i].entryLO = ((0x20000 + i) << 12)| DIRTY | GLOBAL | VALID;
     }
 
    /*kuSeg3 page table
@@ -111,15 +96,13 @@ void test()
     /*swap pool sema4
         init to 1
     */
-   /*Mutual Exclusion Semaphore thus resulting in the Value of 1*/
-    swapSem = 1;
+    swapSem = 1;        /*Mutual Exclusion Semaphore thus resulting in the Value of 1*/
 
     /*an array of sempahores: one for each interrupting device
         -init to 1
     */
     for(i=0; i< SEMNUM; i++){
-        /*Array of mutual exclusion semaphores */
-        mutexArr[i] = 1;
+        mutexArr[i] = 1;    /*Array of mutual exclusion semaphores */
     }
    
     /*MasterSema4
@@ -133,10 +116,7 @@ void test()
        --SYS 1
     }   
     */
-    
-
     for(i =1; i< MAXUPROC+1;i++){
-      
         /* i becomes the ASID (processID)*/
         uProcs[i-1].UProc_pte.header = (0x2A<<24)|KUSEGSIZE;
 
@@ -152,34 +132,22 @@ void test()
             uProcs[i-1].UProc_pte.pteTable[j].entryLO = ALLOFF | DIRTY;
         }
 
-       
-
         /*fix the last entry's entryHi = 0xBFFFF w/asid*/
-        uProcs[i-1].UProc_pte.pteTable[KUSEGSIZE-1].entryHI = (0xBFFFF << 12) | (i << 6);
-
-   
+        uProcs[i-1].UProc_pte.pteTable[KUSEGSIZE-1].entryHI = (0xBFFFF << 12) | (i << 6); 
 
         /*Set up the appropiate three entries in the global segment table
             set KSegOS pointer
             set KUseg2 pointer
             set KUseg3 pointer
-            
         */
 
-
-        /*TESTING FILE MAKES IT TO THIS BREAK POINT*/
-     
-        /*This line has been tested*/
         /*The width of the seg table instead of the Seg table start!*/
         segTable = (segTable_t *) (0x20000500 + (i * 0x0000000C));
-       
 
-      
         /*Set the Seg tables*/
         segTable->ksegOS= &KSegOS;
         segTable->kuseg2= &(uProcs[i-1].UProc_pte);
-      
-        /*segTable->kuseg3= &kuSeg3;*/
+        segTable->kuseg3= &kuSeg3;
 
         /*Set up an initial state for a user process
             -asid =i
@@ -187,23 +155,16 @@ void test()
             -PC = uProcInit
             -status: all interrupts enabled, local timer enabled, VM off, kernel mode on
         */
-       /*Set the asid*/
-        procState.s_asid= (i<<6);
-        /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
-        procState.s_sp = ALLOCATEHERE + ((i-1) * BASESTACKALLOC);
-        /*Allive and Well at this point*/
-       
-        /*Set the process state to be uproc init */
+        procState.s_asid= (i<<6);              /*Set the asid*/
+        procState.s_sp = ALLOCATEHERE + ((i-1) * BASESTACKALLOC);            /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
         procState.s_pc = (memaddr) uProcInit;
         procState.s_t9 = (memaddr) uProcInit;
         procState.s_status = ALLOFF | IEON | IMON | TEBITON;
       
-
         /*Create Process*/
         SYSCALL(SYSCALL1, (int)&procState, 0, 0);
-
-        
     }
+
     /*for (i=0; i<MAXUPROC; i++){
         P(MasterSema4);
     }
@@ -277,15 +238,12 @@ void uProcInit()
     SYSCALL(SYSCALL5,PROGTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[PROGTRAP]),(int) newStatePRG);
     SYSCALL(SYSCALL5,SYSTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[SYSTRAP]),(int) newStateSYS);
 
-    deviceNo = TAPEINT - DEVWOSEM;
-    deviceNo= deviceNo*8;
-    deviceNo = deviceNo + (asid-1);
+    deviceNo = ((TAPEINT - 3) * DEVPERINT) + (asid - 1);
 
    /*Read the content of the tape devices(asid-1) on the the backing store device (disk0)
        keep reading until the tape block marker (data1) is no longer ENDOFBLOCK
        read block from tape and then write it out to disk0
    */
-
     SYSCALL(SYSCALL4, (int) &mutexArr[deviceNo], 0, 0);
 
     device_t* tape;
@@ -299,15 +257,13 @@ void uProcInit()
     Activedev= RAMBASEADDR; 
     pageNumber=0;
 
-    /*Backing Store is at Number 0 !*/
-    disk = &(Activedev -> devreg[0]);
-    /*The tape is a dynamic number */
-    tape = &(Activedev ->devreg[deviceNo]);
+    disk = &(Activedev -> devreg[0]);           /*Backing Store is at Number 0 !*/
+    tape = &(Activedev ->devreg[deviceNo]);     /*The tape is a dynamic number */
+
     /*Section off some memory for the buffer*/
     buffer = (ROMPAGESTART + (30 * PAGESIZE));
     buffer = buffer + ((asid - 1) * PAGESIZE);
 
-/***********************************************PROBLEM CODE**************************************************/
     /*Atomic operation*/
     /*
         InterruptsOnOff(FALSE);
@@ -321,64 +277,44 @@ void uProcInit()
     tapeStatus= READY;
     int finished;
     finished=FALSE;
-    /*UM?*/
 
     /* loop until whole file has been read */
-    /*While Loop is a fucking YIKES */
 	while((tapeStatus==READY) && !finished) {
-        /*Debug to check the number of times in the while loop*/
-        whi(1);
         /*Atomic operation*/
         InterruptsOnOff(FALSE);
-        whi(10);
-		    tape -> d_data0 = buffer;
+		    tape -> d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - 1) * PAGESIZE);
 		    tape -> d_command = DISKREADBLK;
-        whi(15);
-        /*PROBLEM CODE*/   
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
-        whi(16);
         InterruptsOnOff(TRUE);
-        whi(20);
+        
         /*MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
-        whi(2);
+
         /*Atomic operation*/
         InterruptsOnOff(FALSE);
-        whi(22);
             disk ->d_command = (pageNumber << 8 | 2);
-        whi(26);    
             diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
-        whi(28);
         InterruptsOnOff(TRUE);
-        whi(4);
+        
         if(diskStatus == READY)
         {
             /*Atomic operation*/
-            whi(5);
             InterruptsOnOff(FALSE);
                 disk->d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - 1) * PAGESIZE);
                 disk->d_command = ((asid - 1) << 8) | 4;
                 diskStatus = SYSCALL(SYSCALL8,DISKINT,0,0);
             InterruptsOnOff(TRUE);
         }
-        /*
-        else{
-            SYSCALL(SYSCALL2,0,0,0);
-        }*/
-        whi(6);
         /*MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL3, (int) &mutexArr[0], 0, 0);
-        whi(80);
-          /*Dont look at me */
-        if(tape->d_data1 == 2){
+
+        if(tape->d_data1 != 2){
             finished = TRUE;
         }
         pageNumber++;
-        whi(88);
       
 	}
-    /*Debug to check if we ever leave the while loop */
-    wh(16);
+    
     /*Set up a new state for the user process
         -asid = your asid
         -stack page = last page of KUseg2(0C00.0000)
@@ -398,11 +334,6 @@ void uProcInit()
    LDST(&stateProc);
 
 }
-
-
-/*Test Functions that are deisgned to Test InterruptsOnOff*/
-void c(int g){}
-void ca(int gg){}
 
 /*Function to toggle interrupts on and off*/
  void InterruptsOnOff(int IOturned)
