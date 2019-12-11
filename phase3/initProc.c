@@ -216,21 +216,21 @@ void uProcInit()
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
     newStateTLB->s_asid = (asid << 6);
-    newStateTLB->s_status = ALLOFF | IMON | IEON | TEON | VMON;
+    newStateTLB->s_status = ALLOFF | IMON | IEON | TEON | VMON2;
 
     newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP]);
     newStatePRG->s_sp = PROGTOP;
     newStatePRG->s_pc = (memaddr) uPgmTrpHandler;
     newStatePRG->s_t9 = (memaddr) uPgmTrpHandler;
     newStatePRG->s_asid = (asid << 6);
-    newStatePRG->s_status = ALLOFF | IMON | IEON | TEON | VMON;
+    newStatePRG->s_status = ALLOFF | IMON | IEON | TEON | VMON2;
 
     newStateSYS = &(uProcs[asid-1].UProc_NewTrap[SYSTRAP]);
     newStateSYS->s_sp = SYSTOP;
     newStateSYS->s_pc = (memaddr) uSysHandler;
     newStateSYS->s_t9 = (memaddr) uSysHandler;
     newStateSYS->s_asid = (asid << 6);
-    newStateSYS->s_status = ALLOFF | IMON | IEON | TEON | VMON;
+    newStateSYS->s_status = ALLOFF | IMON | IEON | TEON | VMON2;
 
    /*Call SYS 5, three times*/
     SYSCALL(SYSCALL5,TLBTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[TLBTRAP]),(int) newStateTLB);
@@ -325,7 +325,7 @@ void uProcInit()
 
     stateProc.s_asid = (asid << 6);
     stateProc.s_sp = SEG3;
-    stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON;
+    stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON1;
     stateProc.s_pc = WELLKNOWNSTARTPROCESS; 
     stateProc.s_t9 = WELLKNOWNSTARTPROCESS;
     
