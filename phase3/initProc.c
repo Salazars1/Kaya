@@ -304,7 +304,6 @@ void uProcInit()
     buffer = (ROMPAGESTART + (30 * PAGESIZE));
     buffer = buffer + ((asid - 1) * PAGESIZE);
 
-
 /***********************************************PROBLEM CODE**************************************************/
     /*Atomic operation*/
     
@@ -315,7 +314,7 @@ void uProcInit()
         InterruptsOnOff(TRUE);
     /* loop until whole file has been read */
     /*While Loop is a fucking YIKES */
-	while((tapeStatus == READY) &&  (tape -> d_data1 != 2)) {
+	while((tape->d_data1 != EOT) && (tape->d_data1 != EOF)) {
         /*Debug to check the number of times in the while loop*/
         whi(1);
         /*Atomic operation*/
@@ -337,7 +336,7 @@ void uProcInit()
         whi(22);
             disk ->d_command = (pageNumber << 8 | 2);
         whi(26);    
-            diskStatus = SYSCALL(SYSCALL8, DISKINT, (int) &mutexArr[0], 0);
+            diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
         whi(28);
         InterruptsOnOff(TRUE);
         whi(4);
