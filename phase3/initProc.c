@@ -312,8 +312,6 @@ void uProcInit()
             finished = TRUE;
         }
         pageNumber++;
-        debug(1);
-      
 	}
     
     /*Set up a new state for the user process
@@ -322,7 +320,6 @@ void uProcInit()
         -status: all interrupts enabled, local timer enabled, VM ON, User mode ON
         -PC = well known address from the start of KUseg2
     */
-    debug(2);
    SYSCALL(SYSCALL3, (int) &mutexArr[deviceNo], 0, 0);
     
     STST(&stateProc);
@@ -334,6 +331,7 @@ void uProcInit()
     stateProc.s_t9 = WELLKNOWNSTARTPROCESS;
     
    /*LDST to tihs new state*/
+   debug(1);
    LDST(&stateProc);
 
 }
