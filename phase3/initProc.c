@@ -296,14 +296,7 @@ ab(1);
     disk = &(Activedev -> devreg[0]);
     /*The tape is a dynamic number */
     tape = &(Activedev ->devreg[8+(asid-1)]);
-/*Line 299 The problem startes OOF*/ 
-abc(1);
-
-
-
-
-
-
+    /*Section off some memory for the buffer*/
     buffer = (ROMPAGESTART + (30 * PAGESIZE));
     buffer = buffer + ((asid - 1) * PAGESIZE);
 
