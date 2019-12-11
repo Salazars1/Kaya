@@ -322,7 +322,7 @@ void uProcInit()
         -status: all interrupts enabled, local timer enabled, VM ON, User mode ON
         -PC = well known address from the start of KUseg2
     */
-
+    debug(2);
    SYSCALL(SYSCALL3, (int) &mutexArr[deviceNo], 0, 0);
     
     stateProc.s_asid = (asid << 6);
