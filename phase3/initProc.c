@@ -321,7 +321,7 @@ void uProcInit()
 
     /* loop until whole file has been read */
     /*While Loop is a fucking YIKES */
-	while(tapeStatus==READY && !finished) {
+	while((tapeStatus==READY) && !finished) {
         /*Debug to check the number of times in the while loop*/
         whi(1);
         /*Atomic operation*/
