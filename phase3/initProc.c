@@ -332,7 +332,6 @@ void uProcInit()
         }else{
             SYSCALL(SYSCALL2,0,0,0);
         }
-        testingbi(4);
         /*MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL3, (int) &mutexArr[0], 0, 0);
 
