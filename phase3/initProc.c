@@ -323,6 +323,7 @@ void uProcInit()
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
         whi(16);
         InterruptsOnOff(TRUE);
+        whi(20);
         /*MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
         whi(2);
