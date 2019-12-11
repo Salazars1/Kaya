@@ -355,8 +355,9 @@ void uProcInit()
         whi(6);
         /*MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL3, (int) &mutexArr[0], 0, 0);
-
+        whi(80);
         pageNumber++;
+        whi(88);
 	}
     /*Debug to check if we ever leave the while loop */
     wh(16);
