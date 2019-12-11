@@ -223,17 +223,19 @@ void test()
 void uProcInit()
 {
 
+    /*Set a series of local variables*/
     int asid;
+    /*Set states for the TLB PROGRAM TRAP AND SYS HANDLER*/
     state_t* newStateTLB;
     state_t* newStatePRG;
     state_t* newStateSYS;
     state_t stateProc;
+    /*Set the memory addresses of the TLB PROGRAM TRAP AND SYS HANDLER*/
     memaddr TLBTOP;
     memaddr PROGTOP;
     memaddr SYSTOP;
 
     /*Figure out who you are? ASID?*/
-    
     asid = getENTRYHI();
     asid = (asid & 0x00000FC0) >> 6;
     
@@ -383,22 +385,23 @@ void uProcInit()
 void c(int g){}
 void ca(int gg){}
 
-
+/*Function to toggle interrupts on and off*/
  void InterruptsOnOff(int IOturned)
 {
-    c(1);
+    /*Get the current status of the process*/
     int status = getSTATUS();
-
+    /*If false*/
     if(!IOturned)
     {
-        c(1);
+        /*Set the status to interrupts off*/
         status = (status & 0xFFFFFFFE);
     }
+    /*If true*/
     else
     {
-        ca(5);
+        /*Set the status to turn interrupts on */
         status = (status | 0x1);
     }
-    ca(4);
+    /*Update the new status to include or exlude interrupts*/
     setSTATUS(status);
 }
