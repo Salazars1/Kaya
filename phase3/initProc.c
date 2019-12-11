@@ -318,8 +318,10 @@ void uProcInit()
         whi(10);
 		    tape -> d_data0 = buffer;
 		    tape -> d_command = DISKREADBLK;
-        whi(15);   
+        whi(15);
+        /*PROBLEM CODE*/   
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
+        whi(16);
         InterruptsOnOff(TRUE);
         /*MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
