@@ -361,12 +361,13 @@ void uProcInit()
         /*MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL3, (int) &mutexArr[0], 0, 0);
         whi(80);
-        pageNumber++;
-        whi(88);
-        /*Dont look at me */
+          /*Dont look at me */
         if(tape->d_data1 == 2){
             finished = TRUE;
         }
+        pageNumber++;
+        whi(88);
+      
 	}
     /*Debug to check if we ever leave the while loop */
     wh(16);
