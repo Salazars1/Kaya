@@ -225,6 +225,7 @@ void uProcInit()
 
     /*Set a series of local variables*/
     int asid;
+    int deviceNo;
     /*Set states for the TLB PROGRAM TRAP AND SYS HANDLER*/
     state_t* newStateTLB;
     state_t* newStatePRG;
@@ -276,14 +277,16 @@ void uProcInit()
     SYSCALL(SYSCALL5,PROGTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[PROGTRAP]),(int) newStatePRG);
     SYSCALL(SYSCALL5,SYSTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[SYSTRAP]),(int) newStateSYS);
 
-
+    deviceNo = TAPEINT - DEVWOSEM;
+    deviceNo= deviceNo*8;
+    deviceNo = deviceNo + (asid-1);
 
    /*Read the content of the tape devices(asid-1) on the the backing store device (disk0)
        keep reading until the tape block marker (data1) is no longer ENDOFBLOCK
        read block from tape and then write it out to disk0
    */
 
-    /*SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);*/
+    SYSCALL(SYSCALL4, (int) &mutexArr[deviceNo], 0, 0);
 
     device_t* tape;
     device_t* disk;
@@ -299,7 +302,7 @@ void uProcInit()
     /*Backing Store is at Number 0 !*/
     disk = &(Activedev -> devreg[0]);
     /*The tape is a dynamic number */
-    tape = &(Activedev ->devreg[8+(asid-1)]);
+    tape = &(Activedev ->devreg[deviceNo]);
     /*Section off some memory for the buffer*/
     buffer = (ROMPAGESTART + (30 * PAGESIZE));
     buffer = buffer + ((asid - 1) * PAGESIZE);
@@ -382,13 +385,14 @@ void uProcInit()
         -PC = well known address from the start of KUseg2
     */
 
-    SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
+   SYSCALL(SYSCALL3, (int) &mutexArr[deviceNo], 0, 0);
+    
     stateProc.s_asid = (asid << 6);
     stateProc.s_sp = SEG3;
     stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | TEON | VMON;
     stateProc.s_pc = (memaddr) WELLKNOWNSTARTPROCESS; 
     stateProc.s_t9 = (memaddr) WELLKNOWNSTARTPROCESS;
-    SYSCALL(SYSCALL3, (int) &mutexArr[0], 0, 0);
+    
    /*LDST to tihs new state*/
    LDST(&stateProc);
 
