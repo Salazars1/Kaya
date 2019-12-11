@@ -329,8 +329,11 @@ void uProcInit()
         whi(2);
         /*Atomic operation*/
         InterruptsOnOff(FALSE);
+        whi(22);
             disk ->d_command = (pageNumber << 8 | 2);
+        whi(26);    
             diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
+        whi(28);
         InterruptsOnOff(TRUE);
         whi(4);
         if(diskStatus == READY)
