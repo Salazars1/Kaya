@@ -333,7 +333,6 @@ void uProcInit()
             disk ->d_command = (pageNumber << 8 | 2);
         whi(26);    
             diskStatus = SYSCALL(SYSCALL8, DISKINT, (int) &mutexArr[0], 0);
-            TLBCLR(); 
         whi(28);
         InterruptsOnOff(TRUE);
         whi(4);
