@@ -22,9 +22,11 @@
 pteOS_t KSegOS; /*OS page table*/
 pte_t kuSeg3;   /*Seg3 page table*/
 swap_t swapPool[SWAPPOOLSIZE];
+/*Semaphore globals*/
 int swapSem;
 int mutexArr[SEMNUM];
 int masterSem;
+/*Array of processes (8)*/
 uProc_t uProcs[MAXUPROC];
 
 
@@ -59,9 +61,12 @@ void h(char a){}
 /*Called in the Initial.c File from phase2 (Our Main)*/
 void test()
 {
+    /*Looping variables*/
     int i;
     int j;
+    /*Process state*/
     state_t procState;
+    /*Seg table*/
     segTable_t* segTable;
 
     /*KSegOS page table
@@ -71,6 +76,7 @@ void test()
     */
    KSegOS.header = (0x2A<<24)|KSEGSIZE;
    for(i=0;i<KSEGSIZE;i++){
+       /*Set the Page tables */
        KSegOS.pteTable[i].entryHI = ((0x20000 + i) << 12);
        KSegOS.pteTable[i].entryLO = ((0x20000 + i) << 12);
         /*| DIRTY | GLOBAL | VALID;*/
@@ -95,6 +101,7 @@ void test()
             -(optional) pointer to a pte_t
     */
    for(i = 0; i < SWAPPOOLSIZE; i++){
+       /*Set each of the entries in the frame pool */
        swapPool[i].sw_asid = -1;
        swapPool[i].sw_segNum = 0;
        swapPool[i].sw_pgNum = 0;
@@ -111,6 +118,7 @@ void test()
         -init to 1
     */
     for(i=0; i< SEMNUM; i++){
+        /*Array of mutual exclusion semaphores */
         mutexArr[i] = 1;
     }
    
@@ -139,6 +147,7 @@ void test()
         */
         for(j = 0; j < KUSEGSIZE; j++)
         {
+            /*set the page table associated with each process*/
             uProcs[i-1].UProc_pte.pteTable[j].entryHI =((0x80000 + j) << 12) | (i << 6);;
             uProcs[i-1].UProc_pte.pteTable[j].entryLO = ALLOFF | DIRTY;
         }
@@ -166,12 +175,8 @@ void test()
        
 
       
-        /*This is being tested*/
+        /*Set the Seg tables*/
         segTable->ksegOS= &KSegOS;
-        
-        
-        
-      
         segTable->kuseg2= &(uProcs[i-1].UProc_pte);
       
         /*segTable->kuseg3= &kuSeg3;*/
@@ -182,36 +187,34 @@ void test()
             -PC = uProcInit
             -status: all interrupts enabled, local timer enabled, VM off, kernel mode on
         */
-
-        /*Never make it to this break point*/
-        re(2);
+       /*Set the asid*/
         procState.s_asid= (i<<6);
         /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
         procState.s_sp = ALLOCATEHERE + ((i-1) * BASESTACKALLOC);
         /*Allive and Well at this point*/
        
-
+        /*Set the process state to be uproc init */
         procState.s_pc = (memaddr) uProcInit;
         procState.s_t9 = (memaddr) uProcInit;
         procState.s_status = ALLOFF | IEON | IMON | TEBITON;
       
 
-        /*SYS 1 (v)*/
+        /*Create Process*/
         SYSCALL(SYSCALL1, (int)&procState, 0, 0);
 
         
     }
-
     /*for (i=0; i<MAXUPROC; i++){
         P(MasterSema4);
     }
     */
    for (i = 0; i < MAXUPROC; i++)
    {
+       /*Gain access of the master semaphore for the 8 processes */
        SYSCALL(SYSCALL4, (int) &masterSem, 0, 0);
    }
    
-    /*SYS2*/
+    /*TERMINATE*/
     SYSCALL(SYSCALL2, 0, 0, 0);
 
 }
