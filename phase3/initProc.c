@@ -312,6 +312,7 @@ void uProcInit()
             finished = TRUE;
         }
         pageNumber++;
+        debug();
       
 	}
     
