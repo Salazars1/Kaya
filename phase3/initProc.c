@@ -315,8 +315,10 @@ void uProcInit()
         whi(1);
         /*Atomic operation*/
         InterruptsOnOff(FALSE);
+        whi(10);
 		    tape -> d_data0 = buffer;
 		    tape -> d_command = DISKREADBLK;
+        whi(15);   
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
         InterruptsOnOff(TRUE);
         /*MUTUAL EXCLUSION ON DISK*/
