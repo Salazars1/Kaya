@@ -122,7 +122,7 @@ void test()
     
 
     for(i =1; i< MAXUPROC+1;i++){
-        debug(1);
+      
         /* i becomes the ASID (processID)*/
         uProcs[i-1].UProc_pte.header = (0x2A<<24)|KUSEGSIZE;
 
@@ -137,12 +137,12 @@ void test()
             uProcs[i-1].UProc_pte.pteTable[j].entryLO = ALLOFF | DIRTY;
         }
 
-        debug(2);
+       
 
         /*fix the last entry's entryHi = 0xBFFFF w/asid*/
         uProcs[i-1].UProc_pte.pteTable[KUSEGSIZE-1].entryHI = (0xBFFFF << 12) | (i << 6);
 
-        debug(3);
+   
 
         /*Set up the appropiate three entries in the global segment table
             set KSegOS pointer
@@ -153,11 +153,11 @@ void test()
 
 
         /*TESTING FILE MAKES IT TO THIS BREAK POINT*/
-        te(3);
+     
         /*This line has been tested*/
         /*The width of the seg table instead of the Seg table start!*/
         segTable = (segTable_t *) (0x20000500 + (i * 0x0000000C));
-        te(2);
+       
 
       
         /*This is being tested*/
@@ -165,10 +165,9 @@ void test()
         
         
         
-        /*Not Tested*/
-        te(4);
+      
         segTable->kuseg2= &(uProcs[i-1].UProc_pte);
-        te(5);
+      
         /*segTable->kuseg3= &kuSeg3;*/
 
         /*Set up an initial state for a user process
@@ -184,18 +183,17 @@ void test()
         /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
         procState.s_sp = ALLOCATEHERE + ((i-1) * BASESTACKALLOC);
         /*Allive and Well at this point*/
-        re(1);
+       
 
         procState.s_pc = (memaddr) uProcInit;
         procState.s_t9 = (memaddr) uProcInit;
         procState.s_status = ALLOFF | IEON | IMON | TEBITON;
-        testingbi(4);
-        debug(5);
+      
 
         /*SYS 1 (v)*/
         SYSCALL(SYSCALL1, (int)&procState, 0, 0);
 
-        debug(6);
+        
     }
 
     /*for (i=0; i<MAXUPROC; i++){
@@ -215,11 +213,7 @@ void test()
 
 void uProcInit()
 {
-    /*Alive and Well followed by an infinite wait state!*/
-    testa(3);
-    a(2);
 
-    testingbi(3);
     int asid;
     state_t* newStateTLB;
     state_t* newStatePRG;
@@ -240,45 +234,44 @@ void uProcInit()
         -ASID = your asid value
         -status: all interrupts enabled, local timer enabled, VM ON, Kernel Mode ON
     */
-   ab(2);
+ 
     PROGTOP = ALLOCATEHERE + ((asid-1) * BASESTACKALLOC);
     SYSTOP = ALLOCATEHERE + ((asid-1) * BASESTACKALLOC);
     TLBTOP = PROGTOP - PAGESIZE;
-abc(2);
+
     newStateTLB = &(uProcs[asid-1].UProc_NewTrap[TLBTRAP]);
     newStateTLB->s_sp = TLBTOP;
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
     newStateTLB->s_asid = (asid);
     newStateTLB->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
-a(3);
+
     newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP]);
     newStatePRG->s_sp = PROGTOP;
     newStatePRG->s_pc = (memaddr) uPgmTrpHandler;
     newStatePRG->s_t9 = (memaddr) uPgmTrpHandler;
     newStatePRG->s_asid = (asid);
     newStatePRG->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
-ab(3);
+
     newStateSYS = &(uProcs[asid-1].UProc_NewTrap[SYSTRAP]);
     newStateSYS->s_sp = SYSTOP;
     newStateSYS->s_pc = (memaddr) uSysHandler;
     newStateSYS->s_t9 = (memaddr) uSysHandler;
     newStateSYS->s_asid = (asid);
     newStateSYS->s_status = ALLOFF | IEON | TEON | VMON | UMOFF;
-abc(3);
+
    /*Call SYS 5, three times*/
     SYSCALL(SYSCALL5,TLBTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[TLBTRAP]),(int) newStateTLB);
     SYSCALL(SYSCALL5,PROGTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[PROGTRAP]),(int) newStatePRG);
     SYSCALL(SYSCALL5,SYSTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[SYSTRAP]),(int) newStateSYS);
-a(1);
-/*Line 274 Testing*/
+
 
 
    /*Read the content of the tape devices(asid-1) on the the backing store device (disk0)
        keep reading until the tape block marker (data1) is no longer ENDOFBLOCK
        read block from tape and then write it out to disk0
    */
-ab(1);
+
     SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
 
     device_t* tape;
