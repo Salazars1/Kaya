@@ -215,21 +215,21 @@ void uProcInit()
     newStateTLB->s_sp = TLBTOP;
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
-    newStateTLB->s_asid = (asid);
+    newStateTLB->s_asid = (asid << 6);
     newStateTLB->s_status = ALLOFF | IMON | IEON | TEON | VMON;
 
     newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP]);
     newStatePRG->s_sp = PROGTOP;
     newStatePRG->s_pc = (memaddr) uPgmTrpHandler;
     newStatePRG->s_t9 = (memaddr) uPgmTrpHandler;
-    newStatePRG->s_asid = (asid);
+    newStatePRG->s_asid = (asid << 6);
     newStatePRG->s_status = ALLOFF | IMON | IEON | TEON | VMON;
 
     newStateSYS = &(uProcs[asid-1].UProc_NewTrap[SYSTRAP]);
     newStateSYS->s_sp = SYSTOP;
     newStateSYS->s_pc = (memaddr) uSysHandler;
     newStateSYS->s_t9 = (memaddr) uSysHandler;
-    newStateSYS->s_asid = (asid);
+    newStateSYS->s_asid = (asid << 6);
     newStateSYS->s_status = ALLOFF | IMON | IEON | TEON | VMON;
 
    /*Call SYS 5, three times*/
