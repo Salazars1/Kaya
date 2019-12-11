@@ -354,9 +354,11 @@ void uProcInit()
                 disk->d_command = ((asid - 1) << 8) | 4;
                 diskStatus = SYSCALL(SYSCALL8,DISKINT,0,0);
             InterruptsOnOff(TRUE);
-        }else{
-            SYSCALL(SYSCALL2,0,0,0);
         }
+        /*
+        else{
+            SYSCALL(SYSCALL2,0,0,0);
+        }*/
         whi(6);
         /*MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL3, (int) &mutexArr[0], 0, 0);
