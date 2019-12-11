@@ -312,9 +312,11 @@ void uProcInit()
 		    tape -> d_command = DISKREADBLK;
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, asid-1, 0);
         InterruptsOnOff(TRUE);
+    int bool = 0; 
+
     /* loop until whole file has been read */
     /*While Loop is a fucking YIKES */
-	while((tape->d_data1 != EOT) && (tape->d_data1 != EOF)) {
+	while((tape->d_data1 != EOT) && (tape->d_data1 != EOF) && bool == FALSE) {
         /*Debug to check the number of times in the while loop*/
         whi(1);
         /*Atomic operation*/
@@ -358,6 +360,11 @@ void uProcInit()
         whi(80);
         pageNumber++;
         whi(88);
+        if(1 == TRUE){
+            bool = TRUE; 
+
+
+        }
 	}
     /*Debug to check if we ever leave the while loop */
     wh(16);
