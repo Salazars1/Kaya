@@ -278,7 +278,7 @@ void uProcInit()
        read block from tape and then write it out to disk0
    */
 
-    SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
+    /*SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);*/
 
     device_t* tape;
     device_t* disk;
@@ -360,6 +360,7 @@ void uProcInit()
         -PC = well known address from the start of KUseg2
     */
 
+    SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
     stateProc.s_asid = (asid << 6);
     stateProc.s_sp = SEG3;
     stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | TEON | VMON;
