@@ -298,35 +298,20 @@ void uProcInit()
     /*Atomic operation*/
     
         InterruptsOnOff(FALSE);
-        ab(6);
 		    tape -> d_data0 = buffer;
-        ab(7);
 		    tape -> d_command = DISKREADBLK;
-        ab(7);
-        
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, asid-1, 0);
-        abc(8);
-        ab(8);
-        
         InterruptsOnOff(TRUE);
-a(5);
-    
-    ab(10);
     /* loop until whole file has been read */
     /*While Loop is a fucking YIKES */
 	while((tape -> d_data1 != EOF) && (tape -> d_data1 != EOT)) {
 
         /*Atomic operation*/
-        ab(11);
         InterruptsOnOff(FALSE);
-        ab(12);
 		    tape -> d_data0 = buffer;
 		    tape -> d_command = DISKREADBLK;
-            ab(13);
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
-            ab(14);
         InterruptsOnOff(TRUE);
-        ab(12);
         /*MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
 
@@ -360,16 +345,13 @@ a(5);
         -status: all interrupts enabled, local timer enabled, VM ON, User mode ON
         -PC = well known address from the start of KUseg2
     */
-abc(5);
+
     stateProc.s_asid = (asid << 6);
     stateProc.s_sp = SEG3;
     stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | TEON | VMON;
     stateProc.s_pc = (memaddr) WELLKNOWNSTARTPROCESS; 
     stateProc.s_t9 = (memaddr) WELLKNOWNSTARTPROCESS;
-
     SYSCALL(SYSCALL3, (int) &mutexArr[0], 0, 0);
-a(6);
-
    /*LDST to tihs new state*/
    LDST(&stateProc);
 
