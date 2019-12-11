@@ -313,8 +313,9 @@ void uProcInit()
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, asid-1, 0);
         InterruptsOnOff(TRUE);
     int bool = 0;
-    tapeStatus= READY
-    int finished =FALSE;
+    tapeStatus= READY;
+    int finished;
+    finished=FALSE;
 
     /* loop until whole file has been read */
     /*While Loop is a fucking YIKES */
