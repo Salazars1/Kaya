@@ -311,6 +311,7 @@ void uProcInit()
     /* loop until whole file has been read */
     /*While Loop is a fucking YIKES */
 	while((tape -> d_data1 != EOF) && (tape -> d_data1 != EOT)) {
+        /*Debug to check the number of times in the while loop*/
         whi(1);
         /*Atomic operation*/
         InterruptsOnOff(FALSE);
@@ -343,6 +344,7 @@ void uProcInit()
 
         pageNumber++;
 	}
+    /*Debug to check if we ever leave the while loop */
     wh(16);
     /*Set up a new state for the user process
         -asid = your asid
