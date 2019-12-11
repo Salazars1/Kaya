@@ -306,12 +306,14 @@ void uProcInit()
 
 /***********************************************PROBLEM CODE**************************************************/
     /*Atomic operation*/
-    
+    /*
         InterruptsOnOff(FALSE);
 		    tape -> d_data0 = buffer;
 		    tape -> d_command = DISKREADBLK;
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, asid-1, 0);
         InterruptsOnOff(TRUE);
+    
+    */
     int bool = 0;
     tapeStatus= READY;
     int finished;
