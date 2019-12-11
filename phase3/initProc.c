@@ -315,7 +315,7 @@ void uProcInit()
         InterruptsOnOff(TRUE);
     /* loop until whole file has been read */
     /*While Loop is a fucking YIKES */
-	while((tape -> d_data1 != EOF) && (tape -> d_data1 != EOT)) {
+	while((tapeStatus == READY) &&  (tape -> d_data1 != 2)) {
         /*Debug to check the number of times in the while loop*/
         whi(1);
         /*Atomic operation*/
