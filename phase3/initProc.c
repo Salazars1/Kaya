@@ -316,7 +316,7 @@ void uProcInit()
 
     /* loop until whole file has been read */
     /*While Loop is a fucking YIKES */
-	while((tape->d_data1 != EOT) && (tape->d_data1 != EOF) && bool == FALSE) {
+	while((bool == FALSE) && (tape->d_data1 != EOT) && (tape->d_data1 != EOF) ) {
         /*Debug to check the number of times in the while loop*/
         whi(1);
         /*Atomic operation*/
