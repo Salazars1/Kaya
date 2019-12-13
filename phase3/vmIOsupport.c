@@ -75,6 +75,7 @@ void pager()
         
 
     debugPager2(11);
+    setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);
     /*Who am I?
         The current processID is in the ASID regsiter
         This is needed as the index into the phase 3 global structure*/
@@ -142,7 +143,7 @@ void pager()
             swapPool[newFrame].sw_pte -> entryLO = ((swapPool[newFrame].sw_pte -> entryLO) & (0 << 9));
             TLBCLR();
         InterruptsOnOff(TRUE);
-        setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);
+        
 
         MakeTheDiskMyBitch(currentPage, currentASID, 0, 4, swapAddr);
 
@@ -155,7 +156,7 @@ void pager()
         Update the swapPool data structure
         Update missing pag's page table entry: frame number and valid bit
         Deal with TLB cache consistency*/
-        setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);
+    
         MakeTheDiskMyBitch(currentPage, currentASID, 0, 3, swapAddr);
 
         swapPool[newFrame].sw_asid = currentProcessID;
@@ -177,7 +178,7 @@ void pager()
 
     /*Release mutex and return control to process */        
     SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
-    setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);
+    
     debugPager2(23);
     debugPager(123); 
     LDST(oldState);
