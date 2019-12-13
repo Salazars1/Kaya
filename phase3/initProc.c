@@ -229,7 +229,7 @@ void uProcInit()
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
     newStateTLB->s_asid = (asid << 6);
-    newStateTLB->s_status = ALLOFF | IMON | IEON | TEON | VMON2;
+    newStateTLB->s_status = ALLOFF | IMON | IEON | TEON | VMOFF;
 
 
     /*Create a Program Trap handler state*/
@@ -334,7 +334,7 @@ void uProcInit()
     debug(4);
     stateProc.s_sp = (memaddr) SEG3;
     debug(5);
-    stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMOFF;
+    stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2;
     debug(6);
     stateProc.s_pc = (memaddr) WELLKNOWNSTARTPROCESS; 
     stateProc.s_t9 = (memaddr) WELLKNOWNSTARTPROCESS;
