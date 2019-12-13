@@ -62,16 +62,16 @@ void pager()
     debugPager2(10);
         newFrame = tableLookUp(); 
         device = RAMBASEADDR;
-        finegrain(1);
+        
         
         base = device ->rambase; 
         size = device -> ramsize; 
         thisramtop = base + size; 
-        finegrain(3);
-        thisramtop = (memaddr) ((device->rambase) + (device->ramsize));
-        finegrain(4);
+    
+        /*thisramtop = (memaddr) ((device->rambase) + (device->ramsize));*/
+       
         swapAddr = (memaddr)(thisramtop - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
-        finegrain(2);
+        
 
     debugPager2(11);
     /*Who am I?
@@ -79,15 +79,17 @@ void pager()
         This is needed as the index into the phase 3 global structure*/
     currentProcessID = (int)((getENTRYHI() & GETASID) >> 6);
     oldState = (state_t*) &(uProcs[currentProcessID-1].UProc_OldTrap[TLBTRAP]);
+    int checkthisid = currentProcessID << 1; 
 
     /*Why are we here?
         Examine the oldMem Cause register*/
+    
     causeReg = (oldState->s_cause);
     debugPager2(12);
-    finegrain(currentProcessID<<1);
+  
     /*If TLB invalid (load or store) continue; o.w. nuke them*/
-    if((currentProcessID!=TLBLOAD) || (currentProcessID!=TLBSTORE)){
-        finegrain(2);
+    if((checkthisid!=TLBLOAD) || (checkthisid!=TLBSTORE)){
+       
         SYSCALL(SYSCALL2,0,0,0);
     
     }
