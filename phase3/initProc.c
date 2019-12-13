@@ -324,7 +324,7 @@ void uProcInit()
     */
    SYSCALL(SYSCALL3, (int) &mutexArr[deviceNo], 0, 0);
     
- 
+    STST(&stateProc);
     debug(asid);
     stateProc.s_asid = asid << 6;
     debug(4);
