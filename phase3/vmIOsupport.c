@@ -283,17 +283,15 @@ void DiskIO(int block, int sector, int disk, int readWrite, memaddr addr){
     debugPager(34);
     devReg = (devregarea_t *) RAMBASEADDR;
     diskDevice = &(devReg->devreg[0]);
-	debugPager(15);
 	/*Atomic operation*/
 	InterruptsOnOff(FALSE);
     	diskDevice->d_command = (block << 8) | 2;
-        debugPager(18);
         diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
-        debugPager(19);
+        
     InterruptsOnOff(TRUE);
 			
 
-    debugPager(320);    
+    debugPager(diskStatus);    
 	/*If device is done seaking*/
 	if(diskStatus == READY){
 
