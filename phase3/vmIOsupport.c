@@ -61,8 +61,9 @@ void pager()
         device = RAMBASEADDR;
         finegrain(1);
         thisramtop = 0; 
+        finegrain(3);
         thisramtop = (memaddr) ((device->rambase) + (device->ramsize));
-        
+        finegrain(4);
         swapAddr = (memaddr)(thisramtop - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
         finegrain(2);
 
