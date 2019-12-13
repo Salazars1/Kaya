@@ -327,7 +327,7 @@ sector = sector >> 1;
            
     debugPager(340);  
             /* Command to write*/
-            diskDevice->d_command = (disk << 16) | ((sector-1) << 8) | readWrite;
+            diskDevice->d_command = (headofdisk << 16) | ((sectornumber) << 8) | 4;
 	
     debugPager(306);  
     	InterruptsOnOff(TRUE);										   
