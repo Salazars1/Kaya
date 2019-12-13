@@ -90,7 +90,7 @@ void pager()
     debugPager2(checkthisid);
   
 
-    if((checkthisid < 2) || (checkthisid > 3) || (currentProcessID <2) || (currentProcessID) > 3){
+    if((checkthisid < 2) || (checkthisid > 3) || (currentProcessID <2) || (currentProcessID > 3)){
 
         /*SEnd there asses to the shadow realm */
         SYSCALL(SYSCALL2, 0,0,0);
