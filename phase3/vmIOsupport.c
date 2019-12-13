@@ -291,7 +291,7 @@ void DiskIO(int block, int sector, int disk, int readWrite, memaddr addr){
     	debugPager(12);
         diskDevice->d_command = (sector << 8) | 2;
         debugPager(10);
-        diskStatus = SYSCALL(SYSCALL8, 2, 0, 0);
+        diskStatus = SYSCALL(SYSCALL8, 3, 0, 0);
         debugPager(2);
     InterruptsOnOff(TRUE);
 
