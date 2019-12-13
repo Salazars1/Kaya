@@ -327,7 +327,7 @@ void uProcInit()
  
 
     stateProc.s_asid = getENTRYHI();
-    stateProc.s_sp = SEG3;
+    stateProc.s_sp = (memaddr) SEG3;
     stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2;
     stateProc.s_pc = (memaddr) WELLKNOWNSTARTPROCESS; 
     stateProc.s_t9 = (memaddr) WELLKNOWNSTARTPROCESS;
