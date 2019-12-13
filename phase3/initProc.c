@@ -7,6 +7,7 @@
                             Module Comment Section
 
 
+
 *********************************************************************************************/
 
 #include "../h/const.h"
@@ -221,15 +222,17 @@ void uProcInit()
     state_t* oldStatePRG; 
     state_t * oldStateSYS; 
     
-    
+    /*Create a Pager Handler*/
     newStateTLB = &(uProcs[asid-1].UProc_NewTrap[TLBTRAP]);
     oldStateTLB = &(uProcs[asid-1].UProc_OldTrap[TLBTRAP]);
     newStateTLB->s_sp = TLBTOP;
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
     newStateTLB->s_asid = (asid << 6);
-    newStateTLB->s_status = ALLOFF | IMON | IEON | TEON | VMON2;
+    newStateTLB->s_status = ALLOFF | IMON | IEON | TEON | VMOFF;
 
+
+    /*Create a Program Trap handler state*/
     newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP]);
     oldStatePRG = &(uProcs[asid-1].UProc_OldTrap[PROGTRAP]);
     newStatePRG->s_sp = PROGTOP;
@@ -238,6 +241,8 @@ void uProcInit()
     newStatePRG->s_asid = (asid << 6);
     newStatePRG->s_status = ALLOFF | IMON | IEON | TEON | VMON2 ;
 
+
+    /*Create a Syshandler State*/
     newStateSYS = &(uProcs[asid-1].UProc_NewTrap[SYSTRAP]);
     oldStateSYS = &(uProcs[asid-1].UProc_OldTrap[SYSTRAP]);
     newStateSYS->s_sp = SYSTOP;
@@ -246,7 +251,7 @@ void uProcInit()
     newStateSYS->s_asid = (asid << 6);
     newStateSYS->s_status = ALLOFF | IMON | IEON | TEON | VMON2;
 
-   /*Call SYS 5, three times*/
+    /*Call SYS 5, three times on these new regions*/
     SYSCALL(SYSCALL5,TLBTRAP,(int)oldStateTLB,(int) newStateTLB);
     SYSCALL(SYSCALL5,PROGTRAP,(int) oldStatePRG,(int) newStatePRG);
     SYSCALL(SYSCALL5,SYSTRAP,(int) oldStateSYS,(int) newStateSYS);
@@ -323,21 +328,20 @@ void uProcInit()
         -PC = well known address from the start of KUseg2
     */
    SYSCALL(SYSCALL3, (int) &mutexArr[deviceNo], 0, 0);
-    
-    STST(&stateProc);
+   /*Establish a new state that points the "Pager" Such that we can handle virtual memory*/
     debug(asid);
     stateProc.s_asid = asid << 6;
     debug(4);
     stateProc.s_sp = (memaddr) SEG3;
     debug(5);
-    stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2;
+    stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMOFF;
     debug(6);
     stateProc.s_pc = (memaddr) WELLKNOWNSTARTPROCESS; 
     stateProc.s_t9 = (memaddr) WELLKNOWNSTARTPROCESS;
     debug(7);
-   /*LDST to tihs new state*/
    debug(1);
     
+   /*Loadstate to the new state that we have just created*/
    LDST(&stateProc);
    
 
