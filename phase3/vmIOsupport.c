@@ -85,7 +85,7 @@ void pager()
         Examine the oldMem Cause register*/
     
     causeReg = (oldState->s_cause);
-    debugPager2(12);
+    debugPager2(checkthisid);
   
     /*If TLB invalid (load or store) continue; o.w. nuke them*/
     if((checkthisid!=TLBLOAD) || (checkthisid!=TLBSTORE)){
