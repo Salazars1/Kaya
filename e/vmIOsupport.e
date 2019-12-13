@@ -4,7 +4,7 @@
 #include "../h/types.h"
 #include "../h/const.h"
 
-extern void pager();
+extern HIDDEN void pager();
 extern void uPgmTrpHandler();
 extern void uSysHandler();
 
