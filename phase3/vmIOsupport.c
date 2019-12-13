@@ -58,7 +58,7 @@ void pager()
     int currentASID;
     debugPager2(10);
 
-        device = (devregarea_t) RAMBASEADDR;
+        device = (devregarea_t *) RAMBASEADDR;
         finegrain(1);
         thisramtop = 0; 
         thisramtop = (memaddr) (device.rambase) + (device.ramsize);
