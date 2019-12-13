@@ -60,7 +60,7 @@ void pager()
 
         device = (devregarea_t*) RAMBASEADDR;
         RAMTOP = (device->rambase) + (device->ramsize);
-        swapAddr = (RAMTOP - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);;
+        swapAddr = (RAMTOP - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
 
     debugPager2(11);
     /*Who am I?
