@@ -176,7 +176,7 @@ void pager()
 
     /*Release mutex and return control to process */        
     SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
-    setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF | UMOFF);
+    setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);
     debugPager2(23);
     debugPager(123); 
     LDST(oldState);
