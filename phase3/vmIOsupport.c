@@ -24,7 +24,7 @@
 /*Function declararion...*/
 HIDDEN void Endproc(int asid);
 HIDDEN void writeTerminal(char* vAddr, int len, int asid);
-HIDDEN void DiskIO(int block, int sector, int disk, int readWrite, memaddr addr);
+HIDDEN void DiskIO(int block, int sector, int disk, memaddr addr);
 
 
 /*THe following functions are testing functions for the function pager*/
@@ -62,7 +62,7 @@ void pager()
     setSTATUS( ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2);
     
         newFrame = tableLookUp(); 
-        device = 0x10000050;
+        device = 0x10000000;
         
         debugPager(device);
 
@@ -133,7 +133,7 @@ void pager()
         InterruptsOnOff(TRUE);
         
         /*Write on disk*/
-        DiskIO(currentPage, currentASID-1, 0, 4, swapAddr);
+        DiskIO(currentPage, currentASID-1, 0, swapAddr);
         currentASID = swapPool[newFrame].sw_asid;
         currentPage = swapPool[newFrame].sw_pgNum;
     }
@@ -145,7 +145,7 @@ debugPager(3);
         Deal with TLB cache consistency*/
 
         /*Read from Disk*/
-        DiskIO(currentPage, currentASID-1, 0, 3, swapAddr);
+        DiskIO(currentPage, currentASID-1, 0, swapAddr);
 debugPager(4);
         swapPool[newFrame].sw_asid = currentProcessID;
         swapPool[newFrame].sw_segNum = missSeg;
@@ -276,7 +276,7 @@ give me is it read or write
 give me the PASID:
 
 TODO:*/
-void DiskIO(int block, int sector, int disk, int readWrite, memaddr addr){ 
+void DiskIO(int block, int sector, int disk, memaddr addr){ 
     debugPager(3345);
     int diskStatus;
     devregarea_t* devReg;
@@ -284,14 +284,11 @@ void DiskIO(int block, int sector, int disk, int readWrite, memaddr addr){
     debugPager(34);
     devReg = (devregarea_t *) RAMBASEADDR;
     diskDevice = &(devReg->devreg[0]);
-    debugPager(10);
+    debugPager(10); 
 
 int headofdisk = sector % 2; 
 int sectornumber = sector % 8; 
-
 sector = sector >> 1;
-
-
 /*Seek the Cylinder */
     InterruptsOnOff(FALSE);
     	debugPager(12);
@@ -346,6 +343,14 @@ sector = sector >> 1;
 
 
 }
+
+
+
+
+
+
+
+
 
 /*TODO:*/
 void writeTerminal(char* vAddr, int len, int asid)
