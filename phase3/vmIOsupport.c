@@ -49,7 +49,7 @@ void pager()
     devregarea_t* device;
     memaddr thisramtop;
     memaddr swapAddr;
-    setSTATUS( ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2);
+    /*setSTATUS( ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2);*/
     int causeReg;
     int missSeg;
     int missPage;
@@ -166,6 +166,7 @@ void pager()
     /*Release mutex and return control to process */        
     SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
     debugPager2(23);
+    debugPager(); 
     LDST(oldState);
 }
 
