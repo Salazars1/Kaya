@@ -226,7 +226,7 @@ void uProcInit()
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
     newStateTLB->s_asid = (asid << 6);
-    newStateTLB->s_status = ALLOFF | IMON | IEON | TEON | VMOFF;
+    newStateTLB->s_status = ALLOFF | IMON | IEON | TEON | VMOFF | UMOFF;
 
     /*Create a Program Trap handler state*/
     newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP]);
