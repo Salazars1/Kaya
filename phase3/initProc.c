@@ -287,7 +287,7 @@ void uProcInit()
         /*Atomic operation (READ FROM TAPE)*/
         InterruptsOnOff(FALSE);
 		    tape -> d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - 1) * PAGESIZE);
-		    tape -> d_command = DISKREADBLK;
+		    tape -> d_command = 3;
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
         InterruptsOnOff(TRUE);
         
@@ -295,6 +295,7 @@ void uProcInit()
         SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
 
         /*Atomic operation (IS THE DISK READY?)*/
+        /*Seek to the disk that we are going to read and check that the disk is ready */
         InterruptsOnOff(FALSE);
             disk ->d_command = (pageNumber << 8 | 2);
             diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
@@ -305,7 +306,7 @@ void uProcInit()
             /*Atomic operation (WRITE IT ONTO THE DISK)*/
             InterruptsOnOff(FALSE);
                 disk->d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - 1) * PAGESIZE);
-                disk->d_command = ((asid - 1) << 8) | 4;
+                disk->d_command = (((asid -1) % 2) << 16) | (((asid - 1 )% 8 ) << 8) | 4;
                 diskStatus = SYSCALL(SYSCALL8,DISKINT,0,0);
             InterruptsOnOff(TRUE);
         }
