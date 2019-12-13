@@ -280,32 +280,50 @@ void DiskIO(int block, int sector, int disk, int readWrite, memaddr addr){
     int diskStatus;
     devregarea_t* devReg;
 	device_t* diskDevice; 
-
+    debugPager(34);
     devReg = (devregarea_t *) RAMBASEADDR;
     diskDevice = &(devReg->devreg[0]);
-	
+	debugPager(15);
 	/*Atomic operation*/
 	InterruptsOnOff(FALSE);
     	diskDevice->d_command = (block << 8) | 2;
-	    diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
-	InterruptsOnOff(TRUE);
+        debugPager(18);
+        diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
+        debugPager(19);
+    InterruptsOnOff(TRUE);
 			
+
+    debugPager(320);    
 	/*If device is done seaking*/
 	if(diskStatus == READY){
 
+    debugPager(3330);  
 		InterruptsOnOff(FALSE);
+        
+    debugPager(330);  
 		    /*where to read from*/
 		    diskDevice->d_data0 = addr;
+           
+    debugPager(340);  
             /* Command to write*/
             diskDevice->d_command = (disk << 16) | ((sector-1) << 8) | readWrite;
-		InterruptsOnOff(TRUE);										   
+	
+    debugPager(306);  
+    	InterruptsOnOff(TRUE);										   
 		
+    debugPager(3077);  
         /*Wait for disk write I/O*/
 		diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
 
+    debugPager(37);  
 	}else{
+        
+    debugPager(35);  
+        /*PANIC*/
         PANIC();
     }
+
+
 }
 
 /*TODO:*/
