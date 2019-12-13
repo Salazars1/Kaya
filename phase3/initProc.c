@@ -334,8 +334,8 @@ void uProcInit()
     
    /*LDST to tihs new state*/
    debug(1);
-   state_PTR fucker = stateProc; 
-   LDST(fucker);
+   state_PTR fucker = &stateProc; 
+   LDST(&fucker);
    
 
 }
