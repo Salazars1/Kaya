@@ -81,7 +81,7 @@ void pager()
     finegrain(currentProcessID<<1);
     /*If TLB invalid (load or store) continue; o.w. nuke them*/
     finegrain(30);
-    if((currentProcessID << 1!=TLBLOAD) || (currentProcessID << 1!=TLBSTORE)){
+    if((currentProcessID!=TLBLOAD) || (currentProcessID!=TLBSTORE)){
         finegrain(2);
         SYSCALL(SYSCALL2,0,0,0);
     
