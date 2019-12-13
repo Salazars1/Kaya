@@ -89,14 +89,24 @@ void pager()
     causeReg = (oldState->s_cause);
     debugPager2(checkthisid);
   
-
+/*
     if((checkthisid < 2) || (checkthisid > 3) || (currentProcessID <2) || (currentProcessID > 3)){
-
+*/
         /*SEnd there asses to the shadow realm */
-        SYSCALL(SYSCALL2, 0,0,0);
+  /*      SYSCALL(SYSCALL2, 0,0,0);
+    }*/
+    if(checkthisid < 2 || checkthisid > 3){
+        if(currentProcessID < 2 || currentProcessID > 3){
+                SYSCALL(SYSCALL2,0,0,0);
+        }
+        else{
+            
+        }
+
     }
+  
     
-    
+
     /*If TLB invalid (load or store) continue; o.w. nuke them
     if((checkthisid != 2) || (checkthisid!= 3)){
         debugPager2(4);
