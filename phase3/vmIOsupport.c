@@ -137,7 +137,7 @@ void pager()
         currentPage = swapPool[newFrame].sw_pgNum;
     }
 
-    debugPager(3);
+debugPager(3);
     /*Read missing page into selected frame
         Update the swapPool data structure
         Update missing pag's page table entry: frame number and valid bit
@@ -145,18 +145,18 @@ void pager()
 
         /*Read from Disk*/
         DiskIO(currentPage, currentASID, 0, 3, swapAddr);
-
+debugPager(4);
         swapPool[newFrame].sw_asid = currentProcessID;
         swapPool[newFrame].sw_segNum = missSeg;
         swapPool[newFrame].sw_pgNum = missPage;
         swapPool[newFrame].sw_pte = &(uProcs[currentProcessID - 1].UProc_pte.pteTable[missPage]);
-        
+debugPager(5);        
         /*Atomic Operation*/
         InterruptsOnOff(FALSE);
             swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY;
             TLBCLR();
         InterruptsOnOff(TRUE);
-
+debugPager(6);
         if(missSeg == 3){
             swapPool[newFrame].sw_pte = &(kuSeg3.pteTable[missPage]);
             swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY | GLOBAL;
