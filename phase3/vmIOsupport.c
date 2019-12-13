@@ -88,8 +88,8 @@ void pager()
     debugPager2(checkthisid);
   
     /*If TLB invalid (load or store) continue; o.w. nuke them*/
-    if((checkthisid!=TLBLOAD) || (checkthisid!=TLBSTORE)){
-       
+    if((checkthisid !=TLBLOAD) || (checkthisid!=TLBSTORE)){
+        debugPager2(4);
         SYSCALL(SYSCALL2,0,0,0);
     
     }
