@@ -46,7 +46,7 @@ void pager()
     int currentProcessID;
     
     state_t* oldState;
-    devregarea_t device;
+    devregarea_t* device;
     memaddr thisramtop;
     memaddr swapAddr;
 
@@ -57,11 +57,11 @@ void pager()
     int currentPage;
     int currentASID;
     debugPager2(10);
-
+        newFrame = tableLookUo(); 
         device = (devregarea_t *) RAMBASEADDR;
         finegrain(1);
         thisramtop = 0; 
-        thisramtop = (memaddr) (device.rambase) + (device.ramsize);
+        thisramtop = (memaddr) ((device->rambase) + (device->ramsize));
         
         swapAddr = (memaddr)(thisramtop - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
         finegrain(2);
