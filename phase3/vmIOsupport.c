@@ -49,7 +49,7 @@ void pager()
     devregarea_t* device;
     memaddr thisramtop;
     memaddr swapAddr;
-    setSTATUS( ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2);
+    /*setSTATUS( ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2);*/
     int causeReg;
     int missSeg;
     int missPage;
@@ -80,7 +80,6 @@ void pager()
     debugPager2(12);
     finegrain(currentProcessID<<1);
     /*If TLB invalid (load or store) continue; o.w. nuke them*/
-    finegrain(30);
     if((currentProcessID!=TLBLOAD) || (currentProcessID!=TLBSTORE)){
         finegrain(2);
         SYSCALL(SYSCALL2,0,0,0);
