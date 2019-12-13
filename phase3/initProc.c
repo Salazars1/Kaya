@@ -306,7 +306,7 @@ void uProcInit()
             /*Atomic operation (WRITE IT ONTO THE DISK)*/
             InterruptsOnOff(FALSE);
                 disk->d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - 1) * PAGESIZE);
-                disk->d_command = (((asid -1)  << 1) << 16) | (((asid - 1 ) << 3 ) << 8) | 4;
+                disk->d_command = 0 | (((asid - 1 ) << 3 ) << 8) | 4;
                 diskStatus = SYSCALL(SYSCALL8,DISKINT,0,0);
             InterruptsOnOff(TRUE);
         }
