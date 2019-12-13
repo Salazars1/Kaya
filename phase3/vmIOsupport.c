@@ -78,7 +78,7 @@ void pager()
         swapAddr = (memaddr)(thisramtop - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
 
     /*Turns VM back off*/    
-    /*setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);*/
+    setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);
     
 
     /*Who am I?
@@ -103,8 +103,6 @@ void pager()
     }
     */
     
-
-    debugPager(1);
     /*Which page is missing?
         -oldMem ASID register has segment no and page no*/
     missSeg = ((oldState->s_asid & GET_SEG) >> SHIFT_SEG);
@@ -113,7 +111,6 @@ void pager()
     /*GET MUTUAL EXCLUSION on Swap Semaphore*/
     SYSCALL(SYSCALL4, (int)&swapSem, 0, 0);
 
-    debugPager(2);
     /*If missing page was from KUseg3, check if the page is still missing
         -check the KUseg3 page table entry's valid bit*/
     if (missPage >= KUSEGSIZE) {
