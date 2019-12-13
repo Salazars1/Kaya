@@ -188,7 +188,7 @@ void uProcInit()
 {
 
     /*Set a series of local variables*/
-    int asid;
+    unsigned int asid;
     int deviceNo;
     /*Set states for the TLB PROGRAM TRAP AND SYS HANDLER*/
     state_t* newStateTLB;
