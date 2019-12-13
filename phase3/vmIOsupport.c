@@ -61,7 +61,7 @@ void pager()
     int currentASID;
     debugPager2(10);
         newFrame = tableLookUp(); 
-        device = RAMBASEADDR + 0x00000050;
+        device = 0x10000050;
         
         debugPager(device);
         
