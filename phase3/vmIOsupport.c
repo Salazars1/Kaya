@@ -119,6 +119,7 @@ void pager()
 
     /*Pick a frame to use*/
     newFrame = tableLookUp();
+    currentASID = (int)((getENTRYHI() & GETASID) >> 6);
     
     /*    If frame is currently occupied
             -turn the valid bit off in the page table of current frame's occupant
@@ -132,7 +133,7 @@ void pager()
         InterruptsOnOff(TRUE);
         
         /*Write on disk*/
-        DiskIO(currentPage, currentASID, 0, 4, swapAddr);
+        DiskIO(currentPage, currentASID-1, 0, 4, swapAddr);
         currentASID = swapPool[newFrame].sw_asid;
         currentPage = swapPool[newFrame].sw_pgNum;
     }
@@ -144,7 +145,7 @@ debugPager(3);
         Deal with TLB cache consistency*/
 
         /*Read from Disk*/
-        DiskIO(currentPage, currentASID, 0, 3, swapAddr);
+        DiskIO(currentPage, currentASID-1, 0, 3, swapAddr);
 debugPager(4);
         swapPool[newFrame].sw_asid = currentProcessID;
         swapPool[newFrame].sw_segNum = missSeg;
@@ -283,6 +284,16 @@ void DiskIO(int block, int sector, int disk, int readWrite, memaddr addr){
     debugPager(34);
     devReg = (devregarea_t *) RAMBASEADDR;
     diskDevice = &(devReg->devreg[0]);
+
+
+/*Seek the Cylinder */
+    InterruptsOnOff(FALSE);
+    	diskDevice->d_command = (sector << 8) | 2;
+        diskStatus = SYSCALL(SYSCALL8, 2, 0, 0);
+    InterruptsOnOff(TRUE);
+
+
+
 	/*Atomic operation*/
 	InterruptsOnOff(FALSE);
     	diskDevice->d_command = (block << 8) | 2;
