@@ -79,7 +79,8 @@ void pager()
         This is needed as the index into the phase 3 global structure*/
     currentProcessID = (int)((getENTRYHI() & GETASID) >> 6);
     oldState = (state_t*) &(uProcs[currentProcessID-1].UProc_OldTrap[TLBTRAP]);
-    int checkthisid = currentProcessID << 1; 
+    int checkthisid;
+    checkthisid = currentProcessID << 1; 
 
     /*Why are we here?
         Examine the oldMem Cause register*/
@@ -87,12 +88,21 @@ void pager()
     causeReg = (oldState->s_cause);
     debugPager2(checkthisid);
   
-    /*If TLB invalid (load or store) continue; o.w. nuke them*/
-    if((checkthisid !=TLBLOAD) || (checkthisid!=TLBSTORE)){
+
+    if(checkthisid > 2 || checkthisid < 3)}{
+
+        /*SEnd there asses to the shadow realm */
+        SYSCALL(SYSCALL2, 0,0,0);
+    }
+    
+    
+    /*If TLB invalid (load or store) continue; o.w. nuke them
+    if((checkthisid != 2) || (checkthisid!= 3)){
         debugPager2(4);
         SYSCALL(SYSCALL2,0,0,0);
     
     }
+    */
     finegrain(40);
     /*Which page is missing?
         oldMem ASID register has segment no and page no*/
