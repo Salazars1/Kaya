@@ -57,7 +57,7 @@ void pager()
     int currentPage;
     int currentASID;
     debugPager2(10);
-        newFrame = tableLookUo(); 
+        newFrame = tableLookUp(); 
         device = RAMBASEADDR;
         finegrain(1);
         thisramtop = 0; 
