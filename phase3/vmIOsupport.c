@@ -166,7 +166,7 @@ void pager()
     /*Release mutex and return control to process */        
     SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
     debugPager2(23);
-    debugPager(); 
+    debugPager(123); 
     LDST(oldState);
 }
 
