@@ -49,7 +49,7 @@ void pager()
     devregarea_t* device;
     memaddr thisramtop;
     memaddr swapAddr;
-    /*setSTATUS( ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2);*/
+    setSTATUS( ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2);
     int causeReg;
     int missSeg;
     int missPage;
