@@ -49,7 +49,7 @@ void pager()
     devregarea_t* device;
     memaddr thisramtop;
     memaddr swapAddr;
-   /* setSTATUS( ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2);*/
+    setSTATUS( ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2);
     int causeReg;
     int missSeg;
     int missPage;
@@ -90,7 +90,7 @@ void pager()
     debugPager2(checkthisid);
   
 
-    if((checkthisid < 2) || (checkthisid > 3)){
+    if((checkthisid < 2) || (checkthisid > 3) || (currentProcessID <2) || (currentProcessID) > 3){
 
         /*SEnd there asses to the shadow realm */
         SYSCALL(SYSCALL2, 0,0,0);
