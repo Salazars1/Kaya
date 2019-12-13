@@ -80,8 +80,11 @@ void pager()
 
 
     /*Turns VM back off*/    
-    setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);
+    /*setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);*/
+
+    debugPager(12);
     
+
     /*Who am I?
         The current processID is in the ASID regsiter
         This is needed as the index into the phase 3 global structure*/
@@ -91,6 +94,9 @@ void pager()
     /*Why are we here? (Examine the oldMem Cause register)*/
     causeReg = (oldState->s_cause);
   
+    debugPager(13);
+
+
     /*If TLB invalid (load or store) continue; o.w. nuke them*/    
     if(currentProcessID < 2 || currentProcessID > 3){
         /*Screwed Up. Nuke the process*/
