@@ -128,11 +128,12 @@ void test()
         for(j = 0; j < KUSEGSIZE; j++)
         {
             /*set the page table associated with each process*/
-            uProcs[i-1].UProc_pte.pteTable[j].entryHI =((0x80000 + j) << 12) | (i << 6);;
+            uProcs[i-1].UProc_pte.pteTable[j].entryHI =((0x80000 + j) << 12) | (i << 6);
             uProcs[i-1].UProc_pte.pteTable[j].entryLO = ALLOFF | DIRTY;
         }
 
         /*fix the last entry's entryHi = 0xBFFFF w/asid*/
+        /*Can set to 31 AFTER code works*/
         uProcs[i-1].UProc_pte.pteTable[KUSEGSIZE-1].entryHI = (0xBFFFF << 12) | (i << 6); 
 
         /*Set up the appropiate three entries in the global segment table
@@ -156,11 +157,14 @@ void test()
             -status: all interrupts enabled, local timer enabled, VM off, kernel mode on
         */
         procState.s_asid= (i<<6);              /*Set the asid*/
+        /*Math will have to change, Just 2 * 4096 No need for Max processes*/
         procState.s_sp = ALLOCATEHERE + ((i-1) * BASESTACKALLOC);            /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
         procState.s_pc = (memaddr) uProcInit;
         procState.s_t9 = (memaddr) uProcInit;
         procState.s_status = ALLOFF | IEON | IMON | TEBITON;
-      
+        uProcs[i-1].UProc_semAdd = 0; 
+
+
         /*Create Process*/
         SYSCALL(SYSCALL1, (int)&procState, 0, 0);
     }

@@ -213,7 +213,7 @@
 /*Tape buff + 8 devs x Page*/
 #define DISKSTARTADDY TAPESTARTADDY + (8 * PAGESIZE)
 /*Everyone gets 2 pages of memory to play with */
-#define BASESTACKALLOC 2 * PAGESIZE
+#define BASESTACKALLOC ((2 * MAXUPROC ) *  PAGESIZE)
 
 /*Begin to allocate some memory starting at this location */
 #define ALLOCATEHERE DISKSTARTADDY + BASESTACKALLOC
