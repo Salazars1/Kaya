@@ -194,7 +194,7 @@ void uProcInit()
     state_t* newStateTLB;
     state_t* newStatePRG;
     state_t* newStateSYS;
-    state_t stateProc;
+    state_t * stateProc;
     /*Set the memory addresses of the TLB PROGRAM TRAP AND SYS HANDLER*/
     memaddr TLBTOP;
     memaddr PROGTOP;
