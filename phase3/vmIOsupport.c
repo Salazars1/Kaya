@@ -47,7 +47,7 @@ void pager()
     
     state_t* oldState;
     devregarea_t *device;
-    memaddr RAMTOP;
+    memaddr thisramtop;
     memaddr swapAddr;
 
     int causeReg;
@@ -60,9 +60,11 @@ void pager()
 
         device = (devregarea_t*) RAMBASEADDR;
         finegrain(1);
-        RAMTOP = (memaddr) (device->rambase) + (device->ramsize);
+        thisramtop = 0; 
+        /*RAMTOP = (memaddr) (device->rambase) + (device->ramsize);*/
+        
+        swapAddr = (memaddr)(thisramtop - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
         finegrain(2);
-        swapAddr = (memaddr)(RAMTOP - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
 
     debugPager2(11);
     /*Who am I?
