@@ -33,10 +33,15 @@ void debugSys(int a){}
 void debugProg(int a){}
 
 
+/*Debugging Pager!*/
+
+void debugPager2(int a){}
+
+
 
 void pager()
 {
-    debugPager(1);
+    debugPager2(1);
     /*TLB Handler Outline:*/
     int currentProcessID;
     
@@ -51,13 +56,13 @@ void pager()
     int newFrame;
     int currentPage;
     int currentASID;
-    debugPager(10);
+    debugPager2(10);
 
         device = (devregarea_t*) RAMBASEADDR;
         RAMTOP = (device->rambase) + (device->ramsize);
         swapAddr = (RAMTOP - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);;
 
-
+    debugPager2(11);
     /*Who am I?
         The current processID is in the ASID regsiter
         This is needed as the index into the phase 3 global structure*/
@@ -67,7 +72,7 @@ void pager()
     /*Why are we here?
         Examine the oldMem Cause register*/
     causeReg = (oldState->s_cause);
-
+    debugPager2(12);
     /*If TLB invalid (load or store) continue; o.w. nuke them*/
     if((currentProcessID!=TLBLOAD) || (currentProcessID!=TLBSTORE)){
         SYSCALL(SYSCALL2,0,0,0);
@@ -76,7 +81,7 @@ void pager()
         oldMem ASID register has segment no and page no*/
     missSeg = ((oldState->s_asid & GET_SEG) >> SHIFT_SEG);
     missPage = ((oldState->s_asid & GET_VPN) >> 12);
-
+    debugPager2(13);
     /*Acquire mutex on the swapPool data structure*/
     SYSCALL(SYSCALL4, (int)&swapSem, 0, 0);
 
@@ -88,7 +93,7 @@ void pager()
 
     /*    Pick a frame to use*/
     newFrame = tableLookUp();
-
+    debugPager2(14);
     /*    If frame is currently occupied
             -turn the valid bit off in the page table of current frame's occupant
             -deal with TLB cache consistency
@@ -105,7 +110,7 @@ void pager()
         currentPage = swapPool[newFrame].sw_pgNum;
     }
 
-
+    debugPager2(16);
     /*  Read missing page into selected frame
         Update the swapPool data structure
         Update missing pag's page table entry: frame number and valid bit
@@ -117,7 +122,7 @@ void pager()
         swapPool[newFrame].sw_segNum = missSeg;
         swapPool[newFrame].sw_pgNum = missPage;
         swapPool[newFrame].sw_pte = &(uProcs[currentProcessID - 1].UProc_pte.pteTable[missPage]);
-        
+        debugPager2(20);
         InterruptsOnOff(FALSE);
             swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY;
             TLBCLR();
@@ -132,7 +137,7 @@ void pager()
 
     /*Release mutex and return control to process */        
     SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
-
+    debugPager2(23);
     LDST(oldState);
 }
 
