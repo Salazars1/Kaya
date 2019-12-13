@@ -99,6 +99,8 @@ void pager()
     }
     */
     
+
+    debugPager(1);
     /*Which page is missing?
         -oldMem ASID register has segment no and page no*/
     missSeg = ((oldState->s_asid & GET_SEG) >> SHIFT_SEG);
@@ -107,6 +109,7 @@ void pager()
     /*GET MUTUAL EXCLUSION on Swap Semaphore*/
     SYSCALL(SYSCALL4, (int)&swapSem, 0, 0);
 
+    debugPager(2);
     /*If missing page was from KUseg3, check if the page is still missing
         -check the KUseg3 page table entry's valid bit*/
     if (missPage >= KUSEGSIZE) {
@@ -133,7 +136,7 @@ void pager()
         currentPage = swapPool[newFrame].sw_pgNum;
     }
 
-
+    debugPager(3);
     /*Read missing page into selected frame
         Update the swapPool data structure
         Update missing pag's page table entry: frame number and valid bit
@@ -162,7 +165,7 @@ void pager()
 
     /*Release mutex and return control to process */        
     SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
-    
+    debugPager(4);
     LDST(oldState);
 }
 
