@@ -78,13 +78,14 @@ void pager()
         Examine the oldMem Cause register*/
     causeReg = (oldState->s_cause);
     debugPager2(12);
+    finegrain(currentProcessID);
     /*If TLB invalid (load or store) continue; o.w. nuke them*/
-    finegrain(300);
+    finegrain(30);
     if((currentProcessID!=TLBLOAD) || (currentProcessID!=TLBSTORE)){
         SYSCALL(SYSCALL2,0,0,0);
     
     }
-    finegrain(400);
+    finegrain(40);
     /*Which page is missing?
         oldMem ASID register has segment no and page no*/
     missSeg = ((oldState->s_asid & GET_SEG) >> SHIFT_SEG);
