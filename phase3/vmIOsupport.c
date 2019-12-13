@@ -71,7 +71,7 @@ void pager()
     /*Who am I?
         The current processID is in the ASID regsiter
         This is needed as the index into the phase 3 global structure*/
-    currentProcessID = (int)((getENTRYHI() & GETASID) >> 5);
+    currentProcessID = (int)((getENTRYHI() & GETASID) >> 6);
     oldState = (state_t*) &(uProcs[currentProcessID-1].UProc_OldTrap[TLBTRAP]);
 
     /*Why are we here?
@@ -81,7 +81,7 @@ void pager()
     finegrain(currentProcessID<<1);
     /*If TLB invalid (load or store) continue; o.w. nuke them*/
     finegrain(30);
-    if((currentProcessID!=TLBLOAD) || (currentProcessID!=TLBSTORE)){
+    if((currentProcessID << 1!=TLBLOAD) || (currentProcessID << 1!=TLBSTORE)){
         finegrain(2);
         SYSCALL(SYSCALL2,0,0,0);
     
