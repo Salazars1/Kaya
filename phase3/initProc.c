@@ -325,7 +325,7 @@ void uProcInit()
    SYSCALL(SYSCALL3, (int) &mutexArr[deviceNo], 0, 0);
     
  
-    debug(3);
+    debug(asid);
     stateProc->s_asid = asid << 6;
     debug(4);
     stateProc->s_sp = (memaddr) SEG3;
