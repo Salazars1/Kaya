@@ -66,6 +66,8 @@ void pager()
         
         debugPager(device);
 
+        debugPager(0);
+
         /*Calculating RAMTOP*/    
         base = device ->rambase; 
         size = device -> ramsize; 
@@ -74,6 +76,8 @@ void pager()
 
         /*Swap Addresss calculation*/   
         swapAddr = (memaddr)(thisramtop - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
+        debugPager(11);
+
 
     /*Turns VM back off*/    
     setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);
