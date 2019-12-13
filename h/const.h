@@ -246,7 +246,7 @@
 
 
 
-#define SEG3 0xC0000000
+#define SEG3 0x0C000000
 
 
 /*Sys Handler*/
