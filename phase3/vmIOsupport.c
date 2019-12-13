@@ -36,7 +36,7 @@ void debugProg(int a){}
 /*Debugging Pager!*/
 
 void debugPager2(int a){}
-
+void finegrain(int v){}
 
 
 void pager()
@@ -59,7 +59,9 @@ void pager()
     debugPager2(10);
 
         device = (devregarea_t*) RAMBASEADDR;
+        finegrain(1);
         RAMTOP = (device->rambase) + (device->ramsize);
+        finegrain(2);
         swapAddr = (RAMTOP - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
 
     debugPager2(11);
