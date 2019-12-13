@@ -334,7 +334,7 @@ void uProcInit()
     debug(4);
     stateProc.s_sp = (memaddr) SEG3;
     debug(5);
-    stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2;
+    stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMOFF;
     debug(6);
     stateProc.s_pc = (memaddr) WELLKNOWNSTARTPROCESS; 
     stateProc.s_t9 = (memaddr) WELLKNOWNSTARTPROCESS;
