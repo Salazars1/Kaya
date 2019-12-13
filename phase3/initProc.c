@@ -326,7 +326,7 @@ void uProcInit()
     
  
     debug(3);
-    stateProc->s_asid = asid;
+    stateProc->s_asid = asid << 6;
     debug(4);
     stateProc->s_sp = (memaddr) SEG3;
     debug(5);
