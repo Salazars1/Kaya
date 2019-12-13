@@ -25,6 +25,7 @@ HIDDEN void Endproc(int asid);
 HIDDEN void writeTerminal(char* vAddr, int len, int asid);
 HIDDEN void readTerminal(char* addr, int procID);
 HIDDEN void MakeTheDiskMyBitch(int block, int sector, int disk, int readWrite, memaddr addr);
+HIDDEN void pager();
 
 /*THe following functions are testing functions for the function pager*/
 void debugPager(int a){}
