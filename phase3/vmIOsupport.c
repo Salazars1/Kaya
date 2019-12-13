@@ -28,7 +28,8 @@ HIDDEN void MakeTheDiskMyBitch(int block, int sector, int disk, int readWrite, m
 
 /*THe following functions are testing functions for the function pager*/
 void debugPager(int a){}
-
+void debugSys(int a){}
+void debugProg(int a){}
 
 
 
@@ -135,6 +136,7 @@ void pager()
 }
 
 void uPgmTrpHandler(){
+    debugProg(1);
     /*Grab the ASID*/
     int tempasid; 
     tempasid = ((getENTRYHI() & 0x00000FC0) >> 6);
@@ -147,6 +149,7 @@ void uPgmTrpHandler(){
 
 /*Sys Handler! Switch Statements*/
 void uSysHandler(){
+    debugSys(1);
     state_t * oldState;
     int casel; 
     int asid; 
