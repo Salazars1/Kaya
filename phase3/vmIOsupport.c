@@ -46,7 +46,7 @@ void pager()
     int currentProcessID;
     
     state_t* oldState;
-    devregarea_t *device;
+    devregarea_t device;
     memaddr thisramtop;
     memaddr swapAddr;
 
@@ -58,10 +58,10 @@ void pager()
     int currentASID;
     debugPager2(10);
 
-        device = (devregarea_t*) RAMBASEADDR;
+        device = (devregarea_t) RAMBASEADDR;
         finegrain(1);
         thisramtop = 0; 
-        /*RAMTOP = (memaddr) (device->rambase) + (device->ramsize);*/
+        thisramtop = (memaddr) (device.rambase) + (device.ramsize);
         
         swapAddr = (memaddr)(thisramtop - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
         finegrain(2);
@@ -78,12 +78,16 @@ void pager()
     causeReg = (oldState->s_cause);
     debugPager2(12);
     /*If TLB invalid (load or store) continue; o.w. nuke them*/
+    finegrain(3);
     if((currentProcessID!=TLBLOAD) || (currentProcessID!=TLBSTORE)){
         SYSCALL(SYSCALL2,0,0,0);
+    
     }
+    finegrain(4);
     /*Which page is missing?
         oldMem ASID register has segment no and page no*/
     missSeg = ((oldState->s_asid & GET_SEG) >> SHIFT_SEG);
+    finegrain(5);
     missPage = ((oldState->s_asid & GET_VPN) >> 12);
     debugPager2(13);
     /*Acquire mutex on the swapPool data structure*/
