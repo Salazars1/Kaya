@@ -273,19 +273,8 @@ void uProcInit()
     disk = &(Activedev -> devreg[0]);           /*Backing Store is at Number 0 !*/
     tape = &(Activedev ->devreg[deviceNo]);     /*The tape is a dynamic number */
 
-    /*Section off some memory for the buffer*/
-    buffer = (ROMPAGESTART + (30 * PAGESIZE));
-    buffer = buffer + ((asid - 1) * PAGESIZE);
 
-    /*Atomic operation*/
-    /*
-        InterruptsOnOff(FALSE);
-		    tape -> d_data0 = buffer;
-		    tape -> d_command = DISKREADBLK;
-            tapeStatus = SYSCALL(SYSCALL8, TAPEINT, asid-1, 0);
-        InterruptsOnOff(TRUE);
-    
-    */
+    /*Setting variables to be used in reading into tape and placing on backing store (Disk 0) */
     int bool = 0;
     tapeStatus= READY;
     int finished;
@@ -335,11 +324,11 @@ void uProcInit()
     */
    SYSCALL(SYSCALL3, (int) &mutexArr[deviceNo], 0, 0);
     
-    STST(&stateProc);
+ 
 
     stateProc.s_asid = (asid << 6);
     stateProc.s_sp = SEG3;
-    stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON1;
+    stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2;
     stateProc.s_pc = WELLKNOWNSTARTPROCESS; 
     stateProc.s_t9 = WELLKNOWNSTARTPROCESS;
     
