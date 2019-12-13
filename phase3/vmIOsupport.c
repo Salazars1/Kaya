@@ -49,18 +49,24 @@ void pager()
     devregarea_t* device;
     memaddr thisramtop;
     memaddr swapAddr;
-    /*setSTATUS( ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2);*/
+    setSTATUS( ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2);
     int causeReg;
     int missSeg;
     int missPage;
     int newFrame;
     int currentPage;
+    unsigned int base; 
+    unsigned int size; 
+
     int currentASID;
     debugPager2(10);
         newFrame = tableLookUp(); 
         device = RAMBASEADDR;
         finegrain(1);
-        thisramtop = 0; 
+        
+        base = device ->rambase; 
+        size = device -> ramsize; 
+        thisramtop = base + size; 
         finegrain(3);
         thisramtop = (memaddr) ((device->rambase) + (device->ramsize));
         finegrain(4);
