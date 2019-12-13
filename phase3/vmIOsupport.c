@@ -33,7 +33,7 @@ void debugProg(int a){}
 
 
 
-void pager()
+HIDDEN void pager()
 {
     debugPager(1);
     /*TLB Handler Outline:*/
