@@ -286,6 +286,8 @@ void DiskIO(int block, int sector, int disk, int readWrite, memaddr addr){
     diskDevice = &(devReg->devreg[0]);
     debugPager(10);
 
+int headofdisk = sector % 2; 
+int sectornumber = sector % 8; 
 
 sector = sector >> 1;
 
@@ -301,11 +303,12 @@ sector = sector >> 1;
 
     debugPager(20);
 
+    
 
 
 	/*Atomic operation*/
 	InterruptsOnOff(FALSE);
-    	diskDevice->d_command = (block << 8) | 3;
+    	diskDevice->d_command = (headofdisk << 16) | (sectornumber << 8) |  3;
         diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
         
     InterruptsOnOff(TRUE);
