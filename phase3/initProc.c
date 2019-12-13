@@ -247,9 +247,9 @@ void uProcInit()
     newStateSYS->s_status = ALLOFF | IMON | IEON | TEON | VMON2;
 
    /*Call SYS 5, three times*/
-    SYSCALL(SYSCALL5,TLBTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[TLBTRAP]),(int) newStateTLB);
-    SYSCALL(SYSCALL5,PROGTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[PROGTRAP]),(int) newStatePRG);
-    SYSCALL(SYSCALL5,SYSTRAP,(int) &(uProcs[asid-1].UProc_OldTrap[SYSTRAP]),(int) newStateSYS);
+    SYSCALL(SYSCALL5,TLBTRAP,(int)oldStateTLB,(int) newStateTLB);
+    SYSCALL(SYSCALL5,PROGTRAP,(int) oldStatePRG,(int) newStatePRG);
+    SYSCALL(SYSCALL5,SYSTRAP,(int) oldStateSYS,(int) newStateSYS);
 
     deviceNo = ((TAPEINT - 3) * DEVPERINT) + (asid - 1);
 
