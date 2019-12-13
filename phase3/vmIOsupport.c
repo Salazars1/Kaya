@@ -142,6 +142,7 @@ void pager()
             swapPool[newFrame].sw_pte -> entryLO = ((swapPool[newFrame].sw_pte -> entryLO) & (0 << 9));
             TLBCLR();
         InterruptsOnOff(TRUE);
+        setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);
 
         MakeTheDiskMyBitch(currentPage, currentASID, 0, 4, swapAddr);
 
@@ -154,7 +155,7 @@ void pager()
         Update the swapPool data structure
         Update missing pag's page table entry: frame number and valid bit
         Deal with TLB cache consistency*/
-
+        setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);
         MakeTheDiskMyBitch(currentPage, currentASID, 0, 3, swapAddr);
 
         swapPool[newFrame].sw_asid = currentProcessID;
