@@ -327,11 +327,14 @@ void uProcInit()
  
     debug(3);
     stateProc->s_asid = asid;
+    debug(4);
     stateProc->s_sp = (memaddr) SEG3;
+    debug(5);
     stateProc->s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2;
+    debug(6);
     stateProc->s_pc = (memaddr) WELLKNOWNSTARTPROCESS; 
     stateProc->s_t9 = (memaddr) WELLKNOWNSTARTPROCESS;
-    
+    debug(7);
    /*LDST to tihs new state*/
    debug(1);
     
