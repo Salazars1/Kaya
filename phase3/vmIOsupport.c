@@ -26,8 +26,15 @@ HIDDEN void writeTerminal(char* vAddr, int len, int asid);
 HIDDEN void readTerminal(char* addr, int procID);
 HIDDEN void MakeTheDiskMyBitch(int block, int sector, int disk, int readWrite, memaddr addr);
 
+/*THe following functions are testing functions for the function pager*/
+void debugPager(int a){}
+
+
+
+
 void pager()
 {
+    debugPager(1);
     /*TLB Handler Outline:*/
     int currentProcessID;
     
@@ -42,7 +49,7 @@ void pager()
     int newFrame;
     int currentPage;
     int currentASID;
-
+    debugPager(10);
 
         device = (devregarea_t*) RAMBASEADDR;
         RAMTOP = (device->rambase) + (device->ramsize);
