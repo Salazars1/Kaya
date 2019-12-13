@@ -276,7 +276,7 @@ give me the PASID:
 
 TODO:*/
 void DiskIO(int block, int sector, int disk, int readWrite, memaddr addr){ 
-
+    debugPager(3345);
     int diskStatus;
     devregarea_t* devReg;
 	device_t* diskDevice; 
