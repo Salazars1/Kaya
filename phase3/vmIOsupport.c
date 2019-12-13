@@ -284,17 +284,18 @@ void DiskIO(int block, int sector, int disk, int readWrite, memaddr addr){
     debugPager(34);
     devReg = (devregarea_t *) RAMBASEADDR;
     diskDevice = &(devReg->devreg[0]);
-
-
+    debugPager(10);
+    
 /*Seek the Cylinder */
     InterruptsOnOff(FALSE);
-    	diskDevice->d_command = (sector << 8) | 2;
-        debugPager2(10);
+    	debugPager(12);
+        diskDevice->d_command = (sector << 8) | 2;
+        debugPager(10);
         diskStatus = SYSCALL(SYSCALL8, 2, 0, 0);
-        debugPager2(2);
+        debugPager(2);
     InterruptsOnOff(TRUE);
 
-    debugPager2(20);
+    debugPager(20);
 
 	/*Atomic operation*/
 	InterruptsOnOff(FALSE);
