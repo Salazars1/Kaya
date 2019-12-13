@@ -78,7 +78,7 @@ void pager()
         Examine the oldMem Cause register*/
     causeReg = (oldState->s_cause);
     debugPager2(12);
-    finegrain(currentProcessID);
+    finegrain(currentProcessID<<6);
     /*If TLB invalid (load or store) continue; o.w. nuke them*/
     finegrain(30);
     if((currentProcessID!=TLBLOAD) || (currentProcessID!=TLBSTORE)){
