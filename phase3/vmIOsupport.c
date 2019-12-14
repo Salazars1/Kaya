@@ -335,10 +335,12 @@ void DiskIO(int block, int sector, memaddr addr){
 	/*Atomic operation*/
 	InterruptsOnOff(FALSE);
     	diskDevice->d_command = (headofdisk) | (sectornumber << 8) |  3;
+        diskDevice->d_data0 = addr;
         diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
-        
     InterruptsOnOff(TRUE);
 			
+    writeTerminal((char *) diskDevice, 1);
+    
 
     debugPager(diskStatus);    
 	/*If device is done seaking*/
@@ -350,7 +352,6 @@ void DiskIO(int block, int sector, memaddr addr){
     debugPager(330);  
 		    /*where to read from*/
 		    diskDevice->d_data0 = addr;
-            writeTerminal(diskDevice->d_data0,1);
            
     debugPager(340);  
             /* Command to write*/
