@@ -176,7 +176,7 @@ debugPager(6);
     /*Release mutex and return control to process */        
     SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
     debugPager(4);
-    SYSCALL(SYSCALL10, (int)&swapSem, 0,0);
+
     debugSyss(30);
     /*Turns VM back off*/    
     /*setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);*/
@@ -350,6 +350,7 @@ void DiskIO(int block, int sector, memaddr addr){
     debugPager(330);  
 		    /*where to read from*/
 		    diskDevice->d_data0 = addr;
+            writeTerminal(diskDevice->d_data0,1);
            
     debugPager(340);  
             /* Command to write*/
