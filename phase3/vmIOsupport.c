@@ -94,7 +94,7 @@ void pager()
     oldState = (state_t*) &(uProcs[currentProcessID-1].UProc_OldTrap[TLBTRAP]);
 
     debugProg(42);
-    debugProg(uProcs[currentProcessID-1].UProc_OldTrap[TLBTRAP].s_cause);
+    debugProg(uProcs[currentProcessID-1].UProc_NewTrap[TLBTRAP].s_cause);
 
 
     /*Why are we here? (Examine the oldMem Cause register)*/
@@ -183,7 +183,7 @@ debugPager(6);
     debugPager(4);
 
     /*Turns VM back off*/    
-    setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);
+    /*setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);*/
 
     LDST(oldState);
 }
