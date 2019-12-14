@@ -335,12 +335,13 @@ void DiskIO(int block, int sector, memaddr addr){
 	/*Atomic operation*/
 	InterruptsOnOff(FALSE);
     	diskDevice->d_command = (headofdisk) | (sectornumber << 8) |  3;
-        diskDevice->d_data0 = (unsigned int) WELLKNOWNSTARTPROCESS;
         diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
     InterruptsOnOff(TRUE);
-			
-    writeTerminal((char *) diskDevice->d_data0, 1);
-    
+	
+    int t;
+    for(t=1;t<10;t++){
+        writeTerminal((char *) (ROMPAGESTART + (30 * PAGESIZE)) + ((t - 1) * PAGESIZE), 1);
+    }
 
     debugPager(diskStatus);    
 	/*If device is done seaking*/
