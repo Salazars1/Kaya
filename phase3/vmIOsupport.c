@@ -96,7 +96,11 @@ void pager()
         This is needed as the index into the phase 3 global structure*/
     currentProcessID =(int)((getENTRYHI() & GETASID) >> 6);
     oldState = (state_t*) &(uProcs[currentProcessID-1].UProc_OldTrap[TLBTRAP]);
-    
+
+    debugProg(42);
+    debugProg(uProcs[currentProcessID-1].UProc_OldTrap[TLBTRAP].s_cause);
+
+
     /*Why are we here? (Examine the oldMem Cause register)*/
     causeReg = (oldState->s_cause);
   
@@ -208,7 +212,7 @@ void uSysHandler(){
     asid = ((getENTRYHI() & 0x00000FC0) >> 6);
 
     /*Get the old state*/
-    oldState = &(uProcs[asid-1].UProc_OldTrap[2]);
+    oldState = &(uProcs[asid-1].UProc_OldTrap[SYSTRAP]);
     casel = oldState -> s_a0; 
 
     /*Switch case scenario (what SYS are we executing)*/
@@ -370,7 +374,7 @@ void writeTerminal(char* vAddr, int len, int asid)
     devNum = 0 + (asid - 1);
     devReg = (devregarea_t *) RAMBASEADDR;
     terminal = &(devReg -> devreg[devNum]);
-    oldstate = (state_t*) &uProcs[asid-1].UProc_OldTrap[2];
+    oldstate = (state_t*) &uProcs[asid-1].UProc_OldTrap[SYSTRAP];
 
     /*GETS MUTUAL EXCUSION ON DEVICE NUMBER*/
     SYSCALL(SYSCALL4, (int)&mutexArr[40 + (asid -1)], 10, 0);
