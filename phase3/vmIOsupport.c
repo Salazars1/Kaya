@@ -41,7 +41,7 @@ void debugSys(int a){}
 void debugProg(int a){}
 void debugPager2(int a){}
 void finegrain(int v){}
-void debugSys(int g){]}
+void debugSys(int g){}
 
 /*  This module implements the VM-I/O support level TLB exception handler; the Pager. Given 
     that this function is very complex, further details are provided in line comments (here
