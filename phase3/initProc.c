@@ -105,13 +105,13 @@ void test()
     /*swap pool sema4
         init to 1
     */
-    swapSem = 1;        /*Mutual Exclusion Semaphore thus resulting in the Value of 1*/
+    swapSem = ONE;        /*Mutual Exclusion Semaphore thus resulting in the Value of 1*/
 
     /*an array of sempahores: one for each interrupting device
         -init to 1
     */
     for(i=ZERO; i< SEMNUM; i++){
-        mutexArr[i] = 1;    /*Array of mutual exclusion semaphores */
+        mutexArr[i] = ONE;    /*Array of mutual exclusion semaphores */
     }
    
     /*MasterSema4
@@ -123,9 +123,9 @@ void test()
        --initialize stuff
        --SYS 1
     }*/
-    for(i =1; i< MAXUPROC+1;i++){
+    for(i =ONE; i< MAXUPROC+1;i++){
         /* i becomes the ASID (processID)*/
-        uProcs[i-1].UProc_pte.header = (0x2A<<24)|KUSEGSIZE;
+        uProcs[i-ONE].UProc_pte.header = (0x2A<<24)|KUSEGSIZE;
 
         /*KUseg2 page table
             -32 entries:
@@ -135,7 +135,7 @@ void test()
         for(j = ZERO; j < KUSEGSIZE; j++)
         {
             /*set the page table associated with each process*/
-            uProcs[i-1].UProc_pte.pteTable[j].entryHI =((0x80000 + j) << 12) | (i << 6);
+            uProcs[i-ONE].UProc_pte.pteTable[j].entryHI =((0x80000 + j) << 12) | (i << 6);
             uProcs[i-1].UProc_pte.pteTable[j].entryLO = ALLOFF | DIRTY;
         }
 
