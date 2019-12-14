@@ -176,7 +176,7 @@ debugPager(6);
     /*Release mutex and return control to process */        
     SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
     debugPager(4);
-
+    SYSCALL(SYSCALL10, (int)&swapSem, 0,0);
     debugSyss(30);
     /*Turns VM back off*/    
     /*setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);*/
