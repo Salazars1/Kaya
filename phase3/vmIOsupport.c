@@ -87,10 +87,6 @@ void pager()
         /*Swap Addresss calculation*/   
         swapAddr = (memaddr)(thisramtop - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
 
-    /*Turns VM back off*/    
-    /*setSTATUS(ALLOFF | IMON | IEON | TEON | VMON2 | UMOFF);*/
-    
-
     /*Who am I?
         The current processID is in the ASID regsiter
         This is needed as the index into the phase 3 global structure*/
@@ -102,7 +98,7 @@ void pager()
 
 
     /*Why are we here? (Examine the oldMem Cause register)*/
-    causeReg = (oldState->s_cause);
+    causeReg = (oldState->s_cause)-6;
   
   debugProg(666);
     /*If TLB invalid (load or store) continue; o.w. nuke them*/    
@@ -185,6 +181,10 @@ debugPager(6);
     /*Release mutex and return control to process */        
     SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
     debugPager(4);
+
+    /*Turns VM back off*/    
+    setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);
+
     LDST(oldState);
 }
 
