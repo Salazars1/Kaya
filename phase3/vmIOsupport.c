@@ -94,7 +94,7 @@ void pager()
     /*Who am I?
         The current processID is in the ASID regsiter
         This is needed as the index into the phase 3 global structure*/
-    currentProcessID = (int)((getENTRYHI() & GETASID) >> 6) + 1;
+    currentProcessID = (int)((getENTRYHI() & GETASID) >> 6);
     oldState = (state_t*) &(uProcs[currentProcessID-1].UProc_OldTrap[TLBTRAP]);
     
     /*Why are we here? (Examine the oldMem Cause register)*/
@@ -102,7 +102,7 @@ void pager()
   
     /*If TLB invalid (load or store) continue; o.w. nuke them*/    
     debugProg(currentProcessID);
-    if(currentProcessID < 2 || currentProcessID > 3){
+    if((currentProcessID+1) < 2 || (currentProcessID+1) > 3){
         /*Screwed Up. Nuke the process*/
         SYSCALL(SYSCALL2,0,0,0);
     }
