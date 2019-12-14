@@ -41,6 +41,7 @@ void debugSys(int a){}
 void debugProg(int a){}
 void debugPager2(int a){}
 void finegrain(int v){}
+void debugSys(int g){]}
 
 /*  This module implements the VM-I/O support level TLB exception handler; the Pager. Given 
     that this function is very complex, further details are provided in line comments (here
@@ -67,13 +68,10 @@ void pager()
     /*RAMTOP componets*/
     unsigned int base; 
     unsigned int size; 
-
-    /*Turns VM on*/
-    setSTATUS( ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2);
-    
+        debugSys(3);
         newFrame = tableLookUp(); 
         device = 0x10000000;
-        
+    
         debugPager(device);
 
         debugPager(0);
@@ -83,7 +81,7 @@ void pager()
         size = device -> ramsize; 
         thisramtop = base + size; 
         /*thisramtop = (memaddr) ((device->rambase) + (device->ramsize));*/
-
+        debugSys(4)
         /*Swap Addresss calculation*/   
         swapAddr = (memaddr)(thisramtop - (4*PAGESIZE)) - (newFrame * PAGESIZE);
 
@@ -97,7 +95,7 @@ void pager()
     causeReg = (oldState->s_cause);
     causeReg = causeReg << 25;
     causeReg = causeReg >> 27;
-  
+    debugSys(10);
   debugProg(666);
     /*If TLB invalid (load or store) continue; o.w. nuke them*/    
     debugProg(causeReg);
@@ -155,6 +153,7 @@ debugPager(3);
 
         /*Read from Disk*/
         DiskIO(currentPage, currentASID-1, swapAddr);
+        debugSys(12);
 debugPager(4);
         swapPool[newFrame].sw_asid = currentProcessID;
         swapPool[newFrame].sw_segNum = missSeg;
@@ -178,6 +177,7 @@ debugPager(6);
     SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
     debugPager(4);
 
+    debugSys(30);
     /*Turns VM back off*/    
     /*setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);*/
 
