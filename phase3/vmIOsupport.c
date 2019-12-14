@@ -8,7 +8,12 @@
                             Module Comment Section
 
     IO module to support IO for virtual memory. This Module consists of Syscalls 9-18 as well as
-    responsible for the virtual memory Program trap handler. 
+    responsible for the virtual memory Program trap handler. This support is for accessing the various
+    IO Devices. U-proc's will be loaded from tape devices and one of the disk devices will be used
+    as the backing store for the VM implementation. U-Proc's will have read/write access to other 
+    disk devices, write access to the printers and terminals and optionally read access to the terminals
+    as well. The Syscalls implemented are all implemented to be run on processes implemented with Virtual
+    Memory On. 
 
 *********************************************************************************************/
 
