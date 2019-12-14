@@ -154,7 +154,7 @@ void test()
         /*Set the Seg tables*/
         segTable->ksegOS= &KSegOS;
         segTable->kuseg2= &(uProcs[i-1].UProc_pte);
-        /*segTable->kuseg3= &kuSeg3;*/
+        segTable->kuseg3= &kuSeg3;
 
         /*Set up an initial state for a user process
             -asid =i
@@ -235,7 +235,7 @@ void uProcInit()
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
     newStateTLB->s_asid = (asid << 6);
-    newStateTLB->s_status = ALLOFF | IMON | IEON | TEON | VMOFF | UMOFF;
+    newStateTLB->s_status = ALLOFF | IMON | IEON | TEON | VMON2 | UMOFF;
 
     /*Create a Program Trap handler state*/
     newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP]);
