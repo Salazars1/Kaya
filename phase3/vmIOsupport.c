@@ -29,7 +29,7 @@
 
 /*Function declararion... Further details will be given in the actual funciton. */
 HIDDEN void Endproc(int asid);
-HIDDEN void writeTerminal(char* vAddr, int len, int asid);
+HIDDEN void writeTerminal(char* vAddr);
 HIDDEN void DiskIO(int block, int sector, memaddr addr);
 HIDDEN int nextVal = 0;
 
@@ -220,7 +220,7 @@ void uSysHandler(){
 
         /*Write to Terminal */
         case SYSCALL10:
-            writeTerminal((char *) oldState->s_a1, oldState->s_a2 ,asid);
+            writeTerminal((char *) oldState->s_a1);
             break;
               
         /*Virtual V (Not Implementing)*/
@@ -281,7 +281,7 @@ void uSysHandler(){
             InterruptsOnOff(TRUE);
             SYSCALL(SYSCALL3,&swapSem,0,0);
             SYSCALL(SYSCALL3,&masterSem,0,0);
-            writeTerminal("reeeee",6,tasid-1);
+            writeTerminal("reeeee");
 
             SYSCALL(SYSCALL2,0,0,0);
             break; 
@@ -376,45 +376,21 @@ void DiskIO(int block, int sector, memaddr addr){
 
 /*  This syscall causes the requesting U-proc to be suspended until a line of output (string of
      characters) has been transmitted to the terminal device associated with the U-proc.*/
-void writeTerminal(char* vAddr, int len, int asid)
+void writeTerminal(char* msg)
 {
-    unsigned int status;
-    int i;
-    int devNum;
-    devregarea_t* devReg;
-    device_t* terminal;
-    state_t* oldstate;
-    
-    i = 0;
-    devNum = 0 + (asid - 1);
-    devReg = (devregarea_t *) RAMBASEADDR;
-    terminal = &(devReg -> devreg[devNum]);
-    oldstate = (state_t*) &uProcs[asid-1].UProc_OldTrap[SYSTRAP];
-
-    /*GETS MUTUAL EXCUSION ON DEVICE NUMBER*/
-    SYSCALL(SYSCALL4, (int)&mutexArr[40 + (asid -1)], 10, 0);
-
-    /*Prints to the terminal */
-    for(i = 0; i < len; i++)
-    {
-        /*Atomic Operation*/
-        InterruptsOnOff(FALSE);
-            terminal -> t_transm_command = 2 | (((unsigned int) *vAddr) << 8);
-            status = SYSCALL(SYSCALL8, TERMINT, (asid -1), 10);
-        InterruptsOnOff(TRUE);
-
-        if((status & 0XFF) != 5)
-        {
-            PANIC();
-        }
-        /*Updates pointer (next letter)*/
-        vAddr++;
-    }
-
-    oldstate -> s_v0 = i;
-    
-    /*RELEASE MUTUTAL EXCLUSION ON DEVICE NUMBER*/
-    SYSCALL(SYSCALL3, (int)&mutexArr[40 + (asid -1)], 0, 0);
+    char * s = msg;
+	unsigned int * base = (unsigned int *) (0x10000250);
+	unsigned int status;
+	
+	SYSCALL(SYSCALL4, (int)&mutexArr[0], 0, 0);				/* P(term_mut) */
+	while (*s != EOS) {
+		*(base + 3) = 2 | (((unsigned int) *s) << 8);
+		status = SYSCALL(SYSCALL8, TERMINT, 0, 0);	
+		if ((status & 0xFF) != 5)
+			PANIC();
+		s++;	
+	}
+	SYSCALL(SYSCALL3, (int)&mutexArr[0], 0, 0);				/* V(term_mut) */
 }
 
 /*  This services causes the executing U-proc to cease to exist. When all U-proc’s have terminated,
