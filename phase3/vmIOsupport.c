@@ -64,16 +64,18 @@ void pager()
     
     /*RAMTOP componets*/
     unsigned int base; 
-    unsigned int size; 
-        newFrame = tableLookUp(); 
-        device = RAMBASEADDR;
-        /*Calculating RAMTOP*/    
-        base = device ->rambase; 
-        size = device -> ramsize; 
-        thisramtop = base + size; 
-        /*thisramtop = (memaddr) ((device->rambase) + (device->ramsize));*/
-        /*Swap Addresss calculation*/   
-        swapAddr = (memaddr)(thisramtop - (4*PAGESIZE)) - (newFrame * PAGESIZE);
+    unsigned int size;
+
+    newFrame = tableLookUp(); 
+    device = RAMBASEADDR;
+    
+    /*Calculating RAMTOP*/    
+    base = device ->rambase; 
+    size = device -> ramsize; 
+    thisramtop = base + size; 
+    
+    /*Swap Addresss calculation*/   
+    swapAddr = (memaddr)(thisramtop - (4*PAGESIZE)) - (newFrame * PAGESIZE);
 
     /*Who am I?
         The current processID is in the ASID regsiter
@@ -84,18 +86,14 @@ void pager()
     /*Why are we here? (Examine the oldMem Cause register)*/
     causeReg = (oldState->s_cause);
     causeReg = causeReg << 25;
-    causeReg = causeReg >> 27;
+    causeReg = causeReg >> 27; /*Masking*/
+    
     /*If TLB invalid (load or store) continue; o.w. nuke them*/    
     if(causeReg < TLBLOAD || causeReg > TLBSTORE){
         /*Screwed Up. Nuke the process*/
         SYSCALL(SYSCALL2,ZERO,ZERO,ZERO);
     }
-    /*if((checkthisid != 2) || (checkthisid!= 3)){
-        debugPager2(4);
-        SYSCALL(SYSCALL2,0,0,0);    
-    }
-    */
-    
+       
     /*Which page is missing?
         -oldMem ASID register has segment no and page no*/
     missSeg = ((oldState->s_asid & GET_SEG) >> SHIFT_SEG);
@@ -116,6 +114,7 @@ void pager()
             -turn the valid bit off in the page table of current frame's occupant
             -deal with TLB cache consistency
             -write current frame's contents on nthe backing store*/
+    
     if(swapPool[newFrame].sw_asid != -ONE){
         /*Atomic Operation*/
         InterruptsOnOff(FALSE);
@@ -128,33 +127,33 @@ void pager()
         currentASID = swapPool[newFrame].sw_asid;
         currentPage = swapPool[newFrame].sw_pgNum;
     }
+
     /*Read missing page into selected frame
         Update the swapPool data structure
         Update missing pag's page table entry: frame number and valid bit
         Deal with TLB cache consistency*/
 
         /*Read from Disk*/
-        DiskIO(currentPage, currentASID-ONE, swapAddr,DISKREADBLK);
+    DiskIO(currentPage, currentASID-ONE, swapAddr,DISKREADBLK);
 
-        swapPool[newFrame].sw_asid = currentProcessID;
-        swapPool[newFrame].sw_segNum = missSeg;
-        swapPool[newFrame].sw_pgNum = missPage;
-        swapPool[newFrame].sw_pte = &(uProcs[currentProcessID - ONE].UProc_pte.pteTable[missPage]);
+    swapPool[newFrame].sw_asid = currentProcessID;
+    swapPool[newFrame].sw_segNum = missSeg;
+    swapPool[newFrame].sw_pgNum = missPage;
+    swapPool[newFrame].sw_pte = &(uProcs[currentProcessID - ONE].UProc_pte.pteTable[missPage]);
         
-       /*Atomic Operation*/
-        InterruptsOnOff(FALSE);
-            swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY;
-            TLBCLR();
-        InterruptsOnOff(TRUE);
-        if(missSeg == 3){
-            swapPool[newFrame].sw_pte = &(kuSeg3.pteTable[missPage]);
-            swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY | GLOBAL;
-        }
+    /*Atomic Operation*/
+    InterruptsOnOff(FALSE);
+        swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY;
+        TLBCLR();
+    InterruptsOnOff(TRUE);
+    if(missSeg == 3){
+        swapPool[newFrame].sw_pte = &(kuSeg3.pteTable[missPage]);
+        swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY | GLOBAL;
+    }
+    
     /*Release mutex and return control to process */        
     SYSCALL(SYSCALL3, (int)&swapSem, ZERO, ZERO);
-    /*Turns VM back off*/    
-    /*setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);*/
-
+    
     LDST(oldState);
 }
 
@@ -244,28 +243,27 @@ void uSysHandler(){
         case SYSCALL18: 
             SYSCALL(SYSCALL4,&swapSem,ZERO,ZERO);
             InterruptsOnOff(FALSE);
-            int i; 
-            int tasid = ((getENTRYHI() & 0x00000FC0) >> SIX);
-            for(i = ZERO; i < SWAPPOOLSIZE;i++){
-                if(swapPool[i].sw_asid == tasid ){
-                    swapPool[i].sw_asid = -ONE; 
-                    swapPool[i].sw_segNum = ZERO;
-                    swapPool[i].sw_pgNum = ZERO;
-                    swapPool[i].sw_pte = NULL;
-                }
+                int i; 
+                int tasid = ((getENTRYHI() & 0x00000FC0) >> SIX);
+                for(i = ZERO; i < SWAPPOOLSIZE;i++){
+                    if(swapPool[i].sw_asid == tasid ){
+                        swapPool[i].sw_asid = -ONE; 
+                        swapPool[i].sw_segNum = ZERO;
+                        swapPool[i].sw_pgNum = ZERO;
+                        swapPool[i].sw_pte = NULL;
+                    }
 
-            }
+                }
             InterruptsOnOff(TRUE);
+            
             SYSCALL(SYSCALL3,&swapSem,ZERO,ZERO);
             SYSCALL(SYSCALL3,&masterSem,ZERO,ZERO);
-            /*writeTerminal("Recursive Fibanaci Test starts\n13\nRecursion Concluded\nRecursion Concluded Successfully\n",asid);*/
-            TLBCLR(); 
+            
+            TLBCLR();   /*Swoosh*/
             SYSCALL(SYSCALL2,ZERO,ZERO,ZERO);
             break; 
     }
-
     LDST(oldState);
-
 }
 
 /*--------------------------------HELPER FUNCTIONS----------------------------*/
@@ -284,34 +282,36 @@ void tableLookUp(){
     U-proc being terminated (SYS18)*/
 void DiskIO(int block, int sector, memaddr addr, int rw){ 
     int diskStatus;
+
     devregarea_t* devReg;
 	device_t* diskDevice; 
+
     devReg = (devregarea_t *) RAMBASEADDR;
     diskDevice = &(devReg->devreg[ZERO]);
+    
     int headofdisk = ZERO;  
     int sectornumber = sector << 3;
+    
     sector = sector << ONE;
+    
     /*Seek the Cylinder */
     InterruptsOnOff(FALSE);
         diskDevice->d_command = (sector << 8) | 2;
         diskStatus = SYSCALL(SYSCALL8, 3, ZERO, ZERO);
     InterruptsOnOff(TRUE);
-	/*If device is done seaking*/
+	
+    /*If device is done seaking*/
 	if(diskStatus == READY){
-
     /*Atomic operation*/
 	InterruptsOnOff(FALSE);
         diskDevice ->d_data0 = addr; 
     	diskDevice->d_command = (headofdisk) | (sectornumber << 8) |  rw;
         diskStatus = SYSCALL(SYSCALL8, DISKINT, ZERO, ZERO);
     InterruptsOnOff(TRUE);
-
 	}else{
         /*PANIC*/
         PANIC();
     }
-
-
 }
 
 
@@ -323,7 +323,7 @@ void writeTerminal(char* msg, int asid)
 	unsigned int * base = (unsigned int *) (0x10000250);
 	unsigned int status;
 	
-	SYSCALL(SYSCALL4, (int)&mutexArr[ZERO], ZERO, ZERO);				/* P(term_mut) */
+	SYSCALL(SYSCALL4, (int)&mutexArr[ZERO], ZERO, ZERO);				/* P(mutexArray) */
 	while (*s != EOS) {
 		*(base + 3) = 2 | (((unsigned int) *s) << 8);
 		status = SYSCALL(SYSCALL8, TERMINT, asid-ONE, ZERO);	
@@ -331,7 +331,7 @@ void writeTerminal(char* msg, int asid)
 			PANIC();
 		s++;	
 	}
-	SYSCALL(SYSCALL3, (int)&mutexArr[ZERO], ZERO, ZERO);				/* V(term_mut) */
+	SYSCALL(SYSCALL3, (int)&mutexArr[ZERO], ZERO, ZERO);				/* V(mutexArray) */
 }
 
 
