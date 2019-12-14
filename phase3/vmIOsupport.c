@@ -281,8 +281,8 @@ void uSysHandler(){
             InterruptsOnOff(TRUE);
             SYSCALL(SYSCALL3,&swapSem,0,0);
             SYSCALL(SYSCALL3,&masterSem,0,0);
-            writeTerminal("Recursive Fibanaci Test starts\n13\nRecursion Concluded\nRecursion Concluded Successfully\n",asid);
-
+            /*writeTerminal("Recursive Fibanaci Test starts\n13\nRecursion Concluded\nRecursion Concluded Successfully\n",asid);*/
+            
             SYSCALL(SYSCALL2,0,0,0);
             break; 
     }
