@@ -29,7 +29,7 @@
 
 /*Function declararion... Further details will be given in the actual funciton. */
 HIDDEN void Endproc(int asid);
-HIDDEN void writeTerminal(char* vAddr);
+HIDDEN void writeTerminal(char* vAddr, int asid);
 HIDDEN void DiskIO(int block, int sector, memaddr addr);
 HIDDEN int nextVal = 0;
 
@@ -220,7 +220,7 @@ void uSysHandler(){
 
         /*Write to Terminal */
         case SYSCALL10:
-            writeTerminal((char *) oldState->s_a1);
+            writeTerminal((char *) oldState->s_a1,asid);
             break;
               
         /*Virtual V (Not Implementing)*/
@@ -281,7 +281,7 @@ void uSysHandler(){
             InterruptsOnOff(TRUE);
             SYSCALL(SYSCALL3,&swapSem,0,0);
             SYSCALL(SYSCALL3,&masterSem,0,0);
-            writeTerminal("Recursive Fibanaci Test starts\n13\nRecursion Concluded\nRecursion Concluded Successfully\n");
+            writeTerminal("Recursive Fibanaci Test starts\n13\nRecursion Concluded\nRecursion Concluded Successfully\n",asid);
 
             SYSCALL(SYSCALL2,0,0,0);
             break; 
@@ -376,7 +376,7 @@ void DiskIO(int block, int sector, memaddr addr){
 
 /*  This syscall causes the requesting U-proc to be suspended until a line of output (string of
      characters) has been transmitted to the terminal device associated with the U-proc.*/
-void writeTerminal(char* msg)
+void writeTerminal(char* msg, int asid)
 {
     char * s = msg;
 	unsigned int * base = (unsigned int *) (0x10000250);
@@ -385,7 +385,7 @@ void writeTerminal(char* msg)
 	SYSCALL(SYSCALL4, (int)&mutexArr[0], 0, 0);				/* P(term_mut) */
 	while (*s != EOS) {
 		*(base + 3) = 2 | (((unsigned int) *s) << 8);
-		status = SYSCALL(SYSCALL8, TERMINT, 0, 0);	
+		status = SYSCALL(SYSCALL8, TERMINT, asid-1, 0);	
 		if ((status & 0xFF) != 5)
 			PANIC();
 		s++;	
