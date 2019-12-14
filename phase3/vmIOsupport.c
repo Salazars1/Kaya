@@ -308,7 +308,6 @@ void tableLookUp(){
 void DiskIO(int block, int sector, memaddr addr, int rw){ 
     debugPager(3345);
     int diskStatus;
-    int * buffer; 
     devregarea_t* devReg;
 	device_t* diskDevice; 
     debugPager(34);
@@ -317,10 +316,9 @@ void DiskIO(int block, int sector, memaddr addr, int rw){
     debugPager(10); 
 
     int headofdisk = 0;  
-    int sectornumber = sector % 8; 
-    sector = sector / 2;
+    int sectornumber = sector << 3 ;
+    sector = sector << 1;
 
-    buffer = (ROMPAGESTART + (30 * PAGESIZE)) + (3 * PAGESIZE) ;
     /*Seek the Cylinder */
     InterruptsOnOff(FALSE);
     	debugPager(12);
