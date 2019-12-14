@@ -71,8 +71,8 @@ void test()
    KSegOS.header = (0x2A<<24)|KSEGSIZE;
    for(i=ZERO;i<KSEGSIZE;i++){
        /*Set the Page tables */
-       KSegOS.pteTable[i].entryHI = ((0x20000 + i) << 12);
-       KSegOS.pteTable[i].entryLO = ((0x20000 + i) << 12)| DIRTY | GLOBAL | VALID;
+       KSegOS.pteTable[i].entryHI = ((0x20000 + i) << TWELVE);
+       KSegOS.pteTable[i].entryLO = ((0x20000 + i) << TWELVE)| DIRTY | GLOBAL | VALID;
     }
 
    /*kuSeg3 page table
@@ -83,7 +83,7 @@ void test()
    kuSeg3.header = (0x2A<<24)|KUSEGSIZE;
    for(i=ZERO;i<KUSEGSIZE;i++){
        /*Set the Page tables */
-       kuSeg3.pteTable[i].entryHI = ((0xC0000 + i)<< 12)|(ZERO <<6);
+       kuSeg3.pteTable[i].entryHI = ((0xC0000 + i)<< TWELVE)|(ZERO <<SIX);
        kuSeg3.pteTable[i].entryLO = ALLOFF | DIRTY | GLOBAL;
     }
 
@@ -135,12 +135,12 @@ void test()
         for(j = ZERO; j < KUSEGSIZE; j++)
         {
             /*set the page table associated with each process*/
-            uProcs[i-ONE].UProc_pte.pteTable[j].entryHI =((0x80000 + j) << 12) | (i << 6);
+            uProcs[i-ONE].UProc_pte.pteTable[j].entryHI =((0x80000 + j) << TWELVE) | (i << SIX);
             uProcs[i-ONE].UProc_pte.pteTable[j].entryLO = ALLOFF | DIRTY;
         }
 
         /*fix the last entry's entryHi = 0xBFFFF w/asid*/
-        uProcs[i-ONE].UProc_pte.pteTable[KUSEGSIZE-ONE].entryHI = (0xBFFFF << 12) | (i << 6); 
+        uProcs[i-ONE].UProc_pte.pteTable[KUSEGSIZE-ONE].entryHI = (0xBFFFF << TWELVE) | (i << SIX); 
 
         /*Set up the appropiate three entries in the global segment table
             set KSegOS pointer
@@ -162,7 +162,7 @@ void test()
             -PC = uProcInit
             -status: all interrupts enabled, local timer enabled, VM off, kernel mode on
         */
-        procState.s_asid= (i<<6);              /*Set the asid*/
+        procState.s_asid= (i<<SIX);              /*Set the asid*/
         procState.s_sp = ALLOCATEHERE + ((i-ONE) * BASESTACKALLOC);            /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
         procState.s_pc = (memaddr) uProcInit;
         procState.s_t9 = (memaddr) uProcInit;
@@ -210,7 +210,7 @@ void uProcInit()
 
     /*Figure out who you are? ASID?*/
     asid = getENTRYHI();
-    asid = (asid & 0x00000FC0) >> 6;
+    asid = (asid & 0x00000FC0) >> SIX;
      
     /*Calculating program tops*/
     PROGTOP = ALLOCATEHERE + ((asid-ONE) * BASESTACKALLOC);
@@ -234,7 +234,7 @@ void uProcInit()
     newStateTLB->s_sp = TLBTOP;
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
-    newStateTLB->s_asid = (asid << 6);
+    newStateTLB->s_asid = (asid << SIX);
     newStateTLB->s_status = ALLOFF | IMON | IEON | TEON | VMON2;
 
     /*Create a Program Trap handler state*/
@@ -243,7 +243,7 @@ void uProcInit()
     newStatePRG->s_sp = PROGTOP;
     newStatePRG->s_pc = (memaddr) uPgmTrpHandler;
     newStatePRG->s_t9 = (memaddr) uPgmTrpHandler;
-    newStatePRG->s_asid = (asid << 6);
+    newStatePRG->s_asid = (asid << SIX);
     newStatePRG->s_status = ALLOFF | IMON | IEON | TEON | VMON2 ;
 
     /*Create a Syshandler State*/
@@ -252,7 +252,7 @@ void uProcInit()
     newStateSYS->s_sp = SYSTOP;
     newStateSYS->s_pc = (memaddr) uSysHandler;
     newStateSYS->s_t9 = (memaddr) uSysHandler;
-    newStateSYS->s_asid = (asid << 6);
+    newStateSYS->s_asid = (asid << SIX);
     newStateSYS->s_status = ALLOFF | IMON | IEON | TEON | VMON2;
 
     /*Call SYS 5, three times on these new regions*/
@@ -338,7 +338,7 @@ void uProcInit()
     */
 
    /*Establish a new state that points to a well known address for the starting process */
-    stateProc.s_asid = asid << 6;
+    stateProc.s_asid = asid << SIX;
     stateProc.s_sp = (memaddr) SEG3;
     stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2;
     stateProc.s_pc = (memaddr) WELLKNOWNSTARTPROCESS; 

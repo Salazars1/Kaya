@@ -248,6 +248,9 @@
 
 #define SEG3 0xC0000000
 
+#define SIX 6 
+#define TWELVE 12
+
 
 /*Sys Handler*/
 
