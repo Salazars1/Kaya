@@ -136,11 +136,11 @@ void test()
         {
             /*set the page table associated with each process*/
             uProcs[i-ONE].UProc_pte.pteTable[j].entryHI =((0x80000 + j) << 12) | (i << 6);
-            uProcs[i-1].UProc_pte.pteTable[j].entryLO = ALLOFF | DIRTY;
+            uProcs[i-ONE].UProc_pte.pteTable[j].entryLO = ALLOFF | DIRTY;
         }
 
         /*fix the last entry's entryHi = 0xBFFFF w/asid*/
-        uProcs[i-1].UProc_pte.pteTable[KUSEGSIZE-1].entryHI = (0xBFFFF << 12) | (i << 6); 
+        uProcs[i-ONE].UProc_pte.pteTable[KUSEGSIZE-ONE].entryHI = (0xBFFFF << 12) | (i << 6); 
 
         /*Set up the appropiate three entries in the global segment table
             set KSegOS pointer
@@ -153,7 +153,7 @@ void test()
 
         /*Set the Seg tables*/
         segTable->ksegOS= &KSegOS;
-        segTable->kuseg2= &(uProcs[i-1].UProc_pte);
+        segTable->kuseg2= &(uProcs[i-ONE].UProc_pte);
         segTable->kuseg3= &kuSeg3;
 
         /*Set up an initial state for a user process
@@ -163,11 +163,11 @@ void test()
             -status: all interrupts enabled, local timer enabled, VM off, kernel mode on
         */
         procState.s_asid= (i<<6);              /*Set the asid*/
-        procState.s_sp = ALLOCATEHERE + ((i-1) * BASESTACKALLOC);            /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
+        procState.s_sp = ALLOCATEHERE + ((i-ONE) * BASESTACKALLOC);            /*Take the address of the the base that we can allocate then allocate a unique address with 2 pages of memory */
         procState.s_pc = (memaddr) uProcInit;
         procState.s_t9 = (memaddr) uProcInit;
         procState.s_status = ALLOFF | IEON | IMON | TEBITON;
-        uProcs[i-1].UProc_semAdd = ZERO; 
+        uProcs[i-ONE].UProc_semAdd = ZERO; 
 
         /*Create Process*/
         SYSCALL(SYSCALL1, (int)&procState, ZERO, ZERO);
@@ -213,8 +213,8 @@ void uProcInit()
     asid = (asid & 0x00000FC0) >> 6;
      
     /*Calculating program tops*/
-    PROGTOP = ALLOCATEHERE + ((asid-1) * BASESTACKALLOC);
-    SYSTOP = ALLOCATEHERE + ((asid-1) * BASESTACKALLOC);
+    PROGTOP = ALLOCATEHERE + ((asid-ONE) * BASESTACKALLOC);
+    SYSTOP = ALLOCATEHERE + ((asid-ONE) * BASESTACKALLOC);
     TLBTOP = PROGTOP - PAGESIZE;
 
     state_t * oldStateTLB; 
@@ -229,8 +229,8 @@ void uProcInit()
     */
 
     /*Create a Pager Handler*/
-    newStateTLB = &(uProcs[asid-1].UProc_NewTrap[TLBTRAP]);
-    oldStateTLB = &(uProcs[asid-1].UProc_OldTrap[TLBTRAP]);
+    newStateTLB = &(uProcs[asid-ONE].UProc_NewTrap[TLBTRAP]);
+    oldStateTLB = &(uProcs[asid-ONE].UProc_OldTrap[TLBTRAP]);
     newStateTLB->s_sp = TLBTOP;
     newStateTLB->s_pc = (memaddr) pager;
     newStateTLB->s_t9 = (memaddr) pager;
@@ -238,8 +238,8 @@ void uProcInit()
     newStateTLB->s_status = ALLOFF | IMON | IEON | TEON | VMON2;
 
     /*Create a Program Trap handler state*/
-    newStatePRG = &(uProcs[asid-1].UProc_NewTrap[PROGTRAP]);
-    oldStatePRG = &(uProcs[asid-1].UProc_OldTrap[PROGTRAP]);
+    newStatePRG = &(uProcs[asid-ONE].UProc_NewTrap[PROGTRAP]);
+    oldStatePRG = &(uProcs[asid-ONE].UProc_OldTrap[PROGTRAP]);
     newStatePRG->s_sp = PROGTOP;
     newStatePRG->s_pc = (memaddr) uPgmTrpHandler;
     newStatePRG->s_t9 = (memaddr) uPgmTrpHandler;
@@ -247,8 +247,8 @@ void uProcInit()
     newStatePRG->s_status = ALLOFF | IMON | IEON | TEON | VMON2 ;
 
     /*Create a Syshandler State*/
-    newStateSYS = &(uProcs[asid-1].UProc_NewTrap[SYSTRAP]);
-    oldStateSYS = &(uProcs[asid-1].UProc_OldTrap[SYSTRAP]);
+    newStateSYS = &(uProcs[asid-ONE].UProc_NewTrap[SYSTRAP]);
+    oldStateSYS = &(uProcs[asid-ONE].UProc_OldTrap[SYSTRAP]);
     newStateSYS->s_sp = SYSTOP;
     newStateSYS->s_pc = (memaddr) uSysHandler;
     newStateSYS->s_t9 = (memaddr) uSysHandler;
@@ -260,7 +260,7 @@ void uProcInit()
     SYSCALL(SYSCALL5,PROGTRAP,(int) oldStatePRG,(int) newStatePRG);
     SYSCALL(SYSCALL5,SYSTRAP,(int) oldStateSYS,(int) newStateSYS);
 
-    deviceNo = ((TAPEINT - 3) * DEVPERINT) + (asid - 1);
+    deviceNo = ((TAPEINT - 3) * DEVPERINT) + (asid - ONE);
 
    /*Read the content of the tape devices(asid-1) on the the backing store device (disk0)
        keep reading until the tape block marker (data1) is no longer ENDOFBLOCK
@@ -295,9 +295,9 @@ void uProcInit()
 	while((tapeStatus==READY) && !finished) {
         /*Atomic operation (READ FROM TAPE)*/
         InterruptsOnOff(FALSE);
-		    tape -> d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - 1) * PAGESIZE);
+		    tape -> d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - ONE) * PAGESIZE);
 		    tape -> d_command = 3;
-            tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), ZERO);
+            tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-ONE), ZERO);
         InterruptsOnOff(TRUE);
         
         /*MUTUAL EXCLUSION ON DISK*/
@@ -314,8 +314,8 @@ void uProcInit()
         {
             /*Atomic operation (WRITE IT ONTO THE DISK)*/
             InterruptsOnOff(FALSE);
-                disk->d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - 1) * PAGESIZE);
-                disk->d_command = ZERO | (((asid - 1 ) << 3 ) << 8) | 4;
+                disk->d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - ONE) * PAGESIZE);
+                disk->d_command = ZERO | (((asid - ONE ) << 3 ) << 8) | 4;
                 diskStatus = SYSCALL(SYSCALL8,DISKINT,ZERO,ZERO);
             InterruptsOnOff(TRUE);
         }
