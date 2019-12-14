@@ -192,7 +192,7 @@ void uPgmTrpHandler(){
     tempasid = ((getENTRYHI() & 0x00000FC0) >> 6);
 
     /*Kill the process*/
-    SYSCALL(SYSCALL2,0,0,0);
+    SYSCALL(SYSCALL18,0,0,0);
 }
 
 /*  This module implements the VM-I/O support level SYS/Bp and PgmTrap exception handlers. For testing
