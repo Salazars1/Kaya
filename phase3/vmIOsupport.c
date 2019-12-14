@@ -281,7 +281,7 @@ void uSysHandler(){
             InterruptsOnOff(TRUE);
             SYSCALL(SYSCALL3,&swapSem,0,0);
             SYSCALL(SYSCALL3,&masterSem,0,0);
-            writeTerminal("REEEEE",10,tasid-1);
+            writeTerminal("reeeee",6,tasid-1);
 
             SYSCALL(SYSCALL2,0,0,0);
             break; 
