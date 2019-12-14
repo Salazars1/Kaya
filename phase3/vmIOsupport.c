@@ -80,7 +80,7 @@ void pager()
     /*Who am I?
         The current processID is in the ASID regsiter
         This is needed as the index into the phase 3 global structure*/
-    currentProcessID =(int)((getENTRYHI() & GETASID) >> 6);
+    currentProcessID =(int)((getENTRYHI() & GETASID) >> SIX);
     oldState = (state_t*) &(uProcs[currentProcessID-1].UProc_OldTrap[TLBTRAP]);
 
     /*Why are we here? (Examine the oldMem Cause register)*/
@@ -101,7 +101,7 @@ void pager()
     /*Which page is missing?
         -oldMem ASID register has segment no and page no*/
     missSeg = ((oldState->s_asid & GET_SEG) >> SHIFT_SEG);
-    missPage = ((oldState->s_asid & GET_VPN) >> 12);
+    missPage = ((oldState->s_asid & GET_VPN) >> TWELVE);
 
     /*GET MUTUAL EXCLUSION on Swap Semaphore*/
     SYSCALL(SYSCALL4, (int)&swapSem, ZERO, ZERO);
@@ -112,7 +112,7 @@ void pager()
         missPage = KUSEGSIZE - ONE;
     }
 
-    currentASID = (int)((getENTRYHI() & GETASID) >> 6);
+    currentASID = (int)((getENTRYHI() & GETASID) >> SIX);
     
     /*    If frame is currently occupied
             -turn the valid bit off in the page table of current frame's occupant
@@ -165,7 +165,7 @@ void pager()
     was correct in the state, execution continues with the PgmTrap exception handler*/
 void uPgmTrpHandler(){
     int tempasid;   /*Grab the ASID*/
-    tempasid = ((getENTRYHI() & 0x00000FC0) >> 6);
+    tempasid = ((getENTRYHI() & 0x00000FC0) >> SIX);
 
     /*Kill the process*/
     SYSCALL(SYSCALL18,ZERO,ZERO,ZERO);
@@ -181,7 +181,7 @@ void uSysHandler(){
     cpu_t times;
 
     /*Get asid*/
-    asid = ((getENTRYHI() & 0x00000FC0) >> 6);
+    asid = ((getENTRYHI() & 0x00000FC0) >> SIX);
 
     /*Get the old state*/
     oldState = &(uProcs[asid-1].UProc_OldTrap[SYSTRAP]);
@@ -247,7 +247,7 @@ void uSysHandler(){
             SYSCALL(SYSCALL4,&swapSem,ZERO,ZERO);
             InterruptsOnOff(FALSE);
             int i; 
-            int tasid = ((getENTRYHI() & 0x00000FC0) >> 6);
+            int tasid = ((getENTRYHI() & 0x00000FC0) >> SIX);
             for(i = 0; i < SWAPPOOLSIZE;i++){
                 if(swapPool[i].sw_asid == tasid ){
                     swapPool[i].sw_asid = -ONE; 
