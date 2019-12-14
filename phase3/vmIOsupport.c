@@ -339,7 +339,7 @@ void DiskIO(int block, int sector, memaddr addr){
         diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
     InterruptsOnOff(TRUE);
 			
-    writeTerminal((char *) (WELLKNOWNSTARTPROCESS), 1);
+    writeTerminal((char *) WELLKNOWNSTARTPROCESS, 1);
     
 
     debugPager(diskStatus);    
