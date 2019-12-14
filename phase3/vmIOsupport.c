@@ -88,7 +88,7 @@ void pager()
         swapAddr = (memaddr)(thisramtop - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
 
     /*Turns VM back off*/    
-    setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF| UMOFF);
+    setSTATUS(ALLOFF | IMON | IEON | TEON | VMON2 | UMOFF);
     
 
     /*Who am I?
