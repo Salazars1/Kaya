@@ -83,8 +83,8 @@ void test()
    kuSeg3.header = (0x2A<<24)|KUSEGSIZE;
    for(i=0;i<KUSEGSIZE;i++){
        /*Set the Page tables */
-       KSegOS.pteTable[i].entryHI = ((0xC0000 + i)<< 12)|(ZERO <<6);
-       KSegOS.pteTable[i].entryLO = ALLOFF | DIRTY | GLOBAL;
+       kuSeg3.pteTable[i].entryHI = ((0xC0000 + i)<< 12)|(ZERO <<6);
+       kuSeg3.pteTable[i].entryLO = ALLOFF | DIRTY | GLOBAL;
     }
 
    /*Swap Pool Data Structure
