@@ -28,7 +28,6 @@
 
 
 /*Function declararion... Further details will be given in the actual funciton. */
-HIDDEN void Endproc(int asid);
 HIDDEN void writeTerminal(char* vAddr, int asid);
 HIDDEN void DiskIO(int block, int sector, memaddr addr, int rw);
 HIDDEN int nextVal = 0;
@@ -68,20 +67,13 @@ void pager()
     /*RAMTOP componets*/
     unsigned int base; 
     unsigned int size; 
-        debugSyss(3);
         newFrame = tableLookUp(); 
-        device = 0x10000000;
-    
-        debugPager(device);
-
-        debugPager(0);
-
+        device = RAMBASEADDR;
         /*Calculating RAMTOP*/    
         base = device ->rambase; 
         size = device -> ramsize; 
         thisramtop = base + size; 
         /*thisramtop = (memaddr) ((device->rambase) + (device->ramsize));*/
-        debugSyss(4);
         /*Swap Addresss calculation*/   
         swapAddr = (memaddr)(thisramtop - (4*PAGESIZE)) - (newFrame * PAGESIZE);
 
@@ -95,17 +87,11 @@ void pager()
     causeReg = (oldState->s_cause);
     causeReg = causeReg << 25;
     causeReg = causeReg >> 27;
-    debugSyss(10);
-  debugProg(666);
     /*If TLB invalid (load or store) continue; o.w. nuke them*/    
-    debugProg(causeReg);
-    if(causeReg < 2 || causeReg > 3){
+    if(causeReg < TLBLOAD || causeReg > TLBSTORE){
         /*Screwed Up. Nuke the process*/
         SYSCALL(SYSCALL2,0,0,0);
     }
-
-    debugProg(2);
-
     /*if((checkthisid != 2) || (checkthisid!= 3)){
         debugPager2(4);
         SYSCALL(SYSCALL2,0,0,0);    
@@ -118,12 +104,12 @@ void pager()
     missPage = ((oldState->s_asid & GET_VPN) >> 12);
 
     /*GET MUTUAL EXCLUSION on Swap Semaphore*/
-    SYSCALL(SYSCALL4, (int)&swapSem, 0, 0);
+    SYSCALL(SYSCALL4, (int)&swapSem, ZERO, ZERO);
 
     /*If missing page was from KUseg3, check if the page is still missing
         -check the KUseg3 page table entry's valid bit*/
     if (missPage >= KUSEGSIZE) {
-        missPage = KUSEGSIZE - 1;
+        missPage = KUSEGSIZE - ONE;
     }
 
     currentASID = (int)((getENTRYHI() & GETASID) >> 6);
@@ -132,7 +118,7 @@ void pager()
             -turn the valid bit off in the page table of current frame's occupant
             -deal with TLB cache consistency
             -write current frame's contents on nthe backing store*/
-    if(swapPool[newFrame].sw_asid != -1){
+    if(swapPool[newFrame].sw_asid != -ONE){
         /*Atomic Operation*/
         InterruptsOnOff(FALSE);
             swapPool[newFrame].sw_pte -> entryLO = ((swapPool[newFrame].sw_pte -> entryLO) & (0xD << 8));
@@ -140,44 +126,34 @@ void pager()
         InterruptsOnOff(TRUE);
         
         /*Write on disk*/
-        DiskIO(currentPage, currentASID-1, swapAddr,4);
+        DiskIO(currentPage, currentASID-1, swapAddr,DISKWRITEBLK);
         currentASID = swapPool[newFrame].sw_asid;
         currentPage = swapPool[newFrame].sw_pgNum;
     }
-
-debugPager(3);
     /*Read missing page into selected frame
         Update the swapPool data structure
         Update missing pag's page table entry: frame number and valid bit
         Deal with TLB cache consistency*/
 
         /*Read from Disk*/
-        DiskIO(currentPage, currentASID-1, swapAddr,3);
-        debugSyss(12);
-debugPager(4);
+        DiskIO(currentPage, currentASID-1, swapAddr,DISKREADBLK);
+
         swapPool[newFrame].sw_asid = currentProcessID;
         swapPool[newFrame].sw_segNum = missSeg;
         swapPool[newFrame].sw_pgNum = missPage;
-        swapPool[newFrame].sw_pte = &(uProcs[currentProcessID - 1].UProc_pte.pteTable[missPage]);
-debugPager(5);        
-        /*Atomic Operation*/
+        swapPool[newFrame].sw_pte = &(uProcs[currentProcessID - ONE].UProc_pte.pteTable[missPage]);
+        
+       /*Atomic Operation*/
         InterruptsOnOff(FALSE);
             swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY;
             TLBCLR();
         InterruptsOnOff(TRUE);
-debugPager(6);
         if(missSeg == 3){
             swapPool[newFrame].sw_pte = &(kuSeg3.pteTable[missPage]);
             swapPool[newFrame].sw_pte -> entryLO = swapAddr | VALID | DIRTY | GLOBAL;
         }
-
-        
-
     /*Release mutex and return control to process */        
-    SYSCALL(SYSCALL3, (int)&swapSem, 0, 0);
-    debugPager(4);
-
-    debugSyss(30);
+    SYSCALL(SYSCALL3, (int)&swapSem, ZERO, ZERO);
     /*Turns VM back off*/    
     /*setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);*/
 
@@ -192,7 +168,7 @@ void uPgmTrpHandler(){
     tempasid = ((getENTRYHI() & 0x00000FC0) >> 6);
 
     /*Kill the process*/
-    SYSCALL(SYSCALL18,0,0,0);
+    SYSCALL(SYSCALL18,ZERO,ZERO,ZERO);
 }
 
 /*  This module implements the VM-I/O support level SYS/Bp and PgmTrap exception handlers. For testing
@@ -216,7 +192,7 @@ void uSysHandler(){
 
         /*Read From Terminal (Not Implementing) */
         case SYSCALL9:
-            SYSCALL(SYSCALL18,0,0,0);
+            SYSCALL(SYSCALL18,ZERO,ZERO,ZERO);
             break;  
 
         /*Write to Terminal */
@@ -227,33 +203,33 @@ void uSysHandler(){
         /*Virtual V (Not Implementing)*/
         case SYSCALL11:
             /*Kill the Process*/
-             SYSCALL(SYSCALL18,0,0,0);
+             SYSCALL(SYSCALL18,ZERO,ZERO,ZERO);
             break;
 
         /*Virtual P (Not Implementing)*/
         case SYSCALL12:
             /*Kill The Process*/
-             SYSCALL(SYSCALL18,0,0,0);
+             SYSCALL(SYSCALL18,ZERO,ZERO,ZERO);
             break; 
 
         /*Delay a Process for N seconds (Not Implementing)*/
         case SYSCALL13:
-             SYSCALL(SYSCALL18,0,0,0);
+             SYSCALL(SYSCALL18,ZERO,ZERO,ZERO);
             break;  
         
         /*Disk Put (Not Implementing)*/
         case SYSCALL14:
-            SYSCALL(SYSCALL18,0,0,0);
+            SYSCALL(SYSCALL18,ZERO,ZERO,ZERO);
             break;  
         
         /*DISK Get (Not Implementing)*/
         case SYSCALL15:
-           SYSCALL(SYSCALL18,0,0,0);
+           SYSCALL(SYSCALL18,ZERO,ZERO,ZERO);
             break;  
         
         /*Write to Printer (Not Implementing)*/
         case SYSCALL16:
-             SYSCALL(SYSCALL18,0,0,0);
+             SYSCALL(SYSCALL18,ZERO,ZERO,ZERO);
             break;  
         
         /*Get Time of Day*/
@@ -264,26 +240,29 @@ void uSysHandler(){
             break;  
 
         /*Terminate process*/
+        /*  This services causes the executing U-proc to cease to exist. When all U-proc’s have terminated,
+            Kaya should “shut down.” Thus, system processes created in the VM-I/O support level will be
+            terminated after all the U-proc’s have been killed*/
         case SYSCALL18: 
-            SYSCALL(SYSCALL4,&swapSem,0,0);
+            SYSCALL(SYSCALL4,&swapSem,ZERO,ZERO);
             InterruptsOnOff(FALSE);
             int i; 
             int tasid = ((getENTRYHI() & 0x00000FC0) >> 6);
             for(i = 0; i < SWAPPOOLSIZE;i++){
                 if(swapPool[i].sw_asid == tasid ){
-                    swapPool[i].sw_asid = -1; 
-                    swapPool[i].sw_segNum = 0;
-                    swapPool[i].sw_pgNum = 0;
+                    swapPool[i].sw_asid = -ONE; 
+                    swapPool[i].sw_segNum = ZERO;
+                    swapPool[i].sw_pgNum = ZERO;
                     swapPool[i].sw_pte = NULL;
                 }
 
             }
             InterruptsOnOff(TRUE);
-            SYSCALL(SYSCALL3,&swapSem,0,0);
-            SYSCALL(SYSCALL3,&masterSem,0,0);
+            SYSCALL(SYSCALL3,&swapSem,ZERO,ZERO);
+            SYSCALL(SYSCALL3,&masterSem,ZERO,ZERO);
             /*writeTerminal("Recursive Fibanaci Test starts\n13\nRecursion Concluded\nRecursion Concluded Successfully\n",asid);*/
             TLBCLR(); 
-            SYSCALL(SYSCALL2,0,0,0);
+            SYSCALL(SYSCALL2,ZERO,ZERO,ZERO);
             break; 
     }
 
@@ -297,7 +276,7 @@ void uSysHandler(){
     is very simple. It just looks looks for the inmmediate next entry unless it is at
     very end of the table, then it will go back to the top.*/
 void tableLookUp(){
-    nextVal = (nextVal + 1) % SWAPPOOLSIZE;
+    nextVal = (nextVal + ONE) % SWAPPOOLSIZE;
     return (nextVal);
 }
 
@@ -306,27 +285,19 @@ void tableLookUp(){
     operation). If an error occurs along the way, means that ksegOS is an error and result in the
     U-proc being terminated (SYS18)*/
 void DiskIO(int block, int sector, memaddr addr, int rw){ 
-    debugPager(3345);
     int diskStatus;
     devregarea_t* devReg;
 	device_t* diskDevice; 
-    debugPager(34);
     devReg = (devregarea_t *) RAMBASEADDR;
-    diskDevice = &(devReg->devreg[0]);
-    debugPager(10); 
-    int headofdisk = 0;  
-    int sectornumber = sector << 3 ;
-    sector = sector << 1;
+    diskDevice = &(devReg->devreg[ZERO]);
+    int headofdisk = ZERO;  
+    int sectornumber = sector << 3;
+    sector = sector << ONE;
     /*Seek the Cylinder */
     InterruptsOnOff(FALSE);
-    	debugPager(12);
         diskDevice->d_command = (sector << 8) | 2;
-        debugPager(10);
-        diskStatus = SYSCALL(SYSCALL8, 3, 0, 0);
-        debugPager(2);
+        diskStatus = SYSCALL(SYSCALL8, 3, ZERO, ZERO);
     InterruptsOnOff(TRUE);
-
-    debugPager(diskStatus);    
 	/*If device is done seaking*/
 	if(diskStatus == READY){
 
@@ -334,12 +305,10 @@ void DiskIO(int block, int sector, memaddr addr, int rw){
 	InterruptsOnOff(FALSE);
         diskDevice ->d_data0 = addr; 
     	diskDevice->d_command = (headofdisk) | (sectornumber << 8) |  rw;
-        diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
+        diskStatus = SYSCALL(SYSCALL8, DISKINT, ZERO, ZERO);
     InterruptsOnOff(TRUE);
 
 	}else{
-        
-    debugPager(35);  
         /*PANIC*/
         PANIC();
     }
@@ -356,24 +325,17 @@ void writeTerminal(char* msg, int asid)
 	unsigned int * base = (unsigned int *) (0x10000250);
 	unsigned int status;
 	
-	SYSCALL(SYSCALL4, (int)&mutexArr[0], 0, 0);				/* P(term_mut) */
+	SYSCALL(SYSCALL4, (int)&mutexArr[ZERO], ZERO, ZERO);				/* P(term_mut) */
 	while (*s != EOS) {
 		*(base + 3) = 2 | (((unsigned int) *s) << 8);
-		status = SYSCALL(SYSCALL8, TERMINT, asid-1, 0);	
+		status = SYSCALL(SYSCALL8, TERMINT, asid-ONE, ZERO);	
 		if ((status & 0xFF) != 5)
 			PANIC();
 		s++;	
 	}
-	SYSCALL(SYSCALL3, (int)&mutexArr[0], 0, 0);				/* V(term_mut) */
+	SYSCALL(SYSCALL3, (int)&mutexArr[ZERO], ZERO, ZERO);				/* V(term_mut) */
 }
 
-/*  This services causes the executing U-proc to cease to exist. When all U-proc’s have terminated,
-    Kaya should “shut down.” Thus, system processes created in the VM-I/O support level will be
-    terminated after all the U-proc’s have been killed*/
-void Endproc(int asid){
-    TLBCLR(); 
-    SYSCALL(SYSCALL2,0,0,0);
-}
 
 
 
