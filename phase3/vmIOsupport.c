@@ -101,7 +101,6 @@ void pager()
     causeReg = (oldState->s_cause);
   
     /*If TLB invalid (load or store) continue; o.w. nuke them*/    
-    /*if(TRUE==FALSE){*/
     debugProg(currentProcessID);
     if(currentProcessID < 2 || currentProcessID > 3){
         /*Screwed Up. Nuke the process*/
