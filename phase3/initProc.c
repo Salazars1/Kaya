@@ -6,7 +6,12 @@
 /*********************************************************************************************
                             Module Comment Section
 
-
+Initialization module to support for virtual memory (VM). Each U-proc will run with its own
+virtual memory being given a unique ASID. It will also support accessing disk and tape devices
+as well as all the segment and page tables (backing store) needed in VM. This will initialize
+where the VMIOsupport functions will be found. This module intializes the Page tables and 
+segment tables and semaphores (Both Mutual Exclusion and Synchronization).that will be used 
+by the other files in phase 3. 
 
 *********************************************************************************************/
 
@@ -46,8 +51,9 @@ HIDDEN void uProcInit();
 /*Test Functions for test()*/
 void debug(int a){}
 
-/*Called in the Initial.c File from phase2 (Our Main)*/
-/*TODO:*/
+/*  Starts the system by creating a single process: user-mode off, interrupts enabled, Status.VMc=0,
+    Status.TE=1, $SP set to the penultimate RAM frame, and PC=test. It gets called in the Initial.c
+    File from phase2 (Our Main), to get handle it by the OS. */
 void test()
 {
     /*Looping variables*/
@@ -181,7 +187,10 @@ void test()
 
 }
 
-/*TODO:*/
+/*  This module implements test() and all the U-proc initialization routines. It exports the VM-I/O
+    support level’s global variables. (swappool data structure, mutual exclusion semaphores etc.), as
+    well as launching a U-proc (three SYS5 requests) and reading in the U-proc’s .text and .data from
+    the tape.*/
 void uProcInit()
 {
     /*Set a series of local variables*/
@@ -328,7 +337,7 @@ void uProcInit()
         -PC = well known address from the start of KUseg2
     */
 
-   /*Establish a new state that points the "Pager" Such that we can handle virtual memory*/
+   /*Establish a new state that points to a well known address for the starting process */
     stateProc.s_asid = asid << 6;
     stateProc.s_sp = (memaddr) SEG3;
     stateProc.s_status = ALLOFF | IEON | IMON | TEBITON | UMOFF | VMON2;
@@ -339,7 +348,8 @@ void uProcInit()
    LDST(&stateProc);
 }
 
-/*Function to toggle interrupts on and off*/
+/*  Function to toggle interrupts on and off. This function is a helper function when performing atomic 
+    operations. This function turns Interrupts off and on depending on the flag given in the parameter.*/
  void InterruptsOnOff(int IOturned)
 {
     /*Get the current status of the process*/
