@@ -81,7 +81,7 @@ void pager()
         size = device -> ramsize; 
         thisramtop = base + size; 
         /*thisramtop = (memaddr) ((device->rambase) + (device->ramsize));*/
-        debugSyss(4)
+        debugSyss(4);
         /*Swap Addresss calculation*/   
         swapAddr = (memaddr)(thisramtop - (4*PAGESIZE)) - (newFrame * PAGESIZE);
 
