@@ -124,7 +124,7 @@ void pager()
         InterruptsOnOff(TRUE);
         
         /*Write on disk*/
-        DiskIO(currentPage, currentASID-1, swapAddr,DISKWRITEBLK);
+        DiskIO(currentPage, currentASID-ONE, swapAddr,DISKWRITEBLK);
         currentASID = swapPool[newFrame].sw_asid;
         currentPage = swapPool[newFrame].sw_pgNum;
     }
@@ -134,7 +134,7 @@ void pager()
         Deal with TLB cache consistency*/
 
         /*Read from Disk*/
-        DiskIO(currentPage, currentASID-1, swapAddr,DISKREADBLK);
+        DiskIO(currentPage, currentASID-ONE, swapAddr,DISKREADBLK);
 
         swapPool[newFrame].sw_asid = currentProcessID;
         swapPool[newFrame].sw_segNum = missSeg;
@@ -246,7 +246,7 @@ void uSysHandler(){
             InterruptsOnOff(FALSE);
             int i; 
             int tasid = ((getENTRYHI() & 0x00000FC0) >> SIX);
-            for(i = 0; i < SWAPPOOLSIZE;i++){
+            for(i = ZERO; i < SWAPPOOLSIZE;i++){
                 if(swapPool[i].sw_asid == tasid ){
                     swapPool[i].sw_asid = -ONE; 
                     swapPool[i].sw_segNum = ZERO;
