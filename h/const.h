@@ -180,7 +180,7 @@
 
 /*____________PHASE 3___________________*/
 #define KUSEGSIZE 32
-#define KSEGSIZE 128
+#define KSEGSIZE 64
 #define SWAPPOOLSIZE 16
 #define MAXUPROC 1  /*  PHASE 3 Num of processes*/
 
