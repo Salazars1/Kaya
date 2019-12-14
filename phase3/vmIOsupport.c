@@ -88,13 +88,13 @@ void pager()
         swapAddr = (memaddr)(thisramtop - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
 
     /*Turns VM back off*/    
-    /*setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF);*/
+    setSTATUS(ALLOFF | IMON | IEON | TEON | VMOFF| UMOFF);
     
 
     /*Who am I?
         The current processID is in the ASID regsiter
         This is needed as the index into the phase 3 global structure*/
-    currentProcessID = (int)((getENTRYHI() & GETASID) >> 6);
+    currentProcessID =(int)((getENTRYHI() & GETASID) >> 6);
     oldState = (state_t*) &(uProcs[currentProcessID-1].UProc_OldTrap[TLBTRAP]);
     
     /*Why are we here? (Examine the oldMem Cause register)*/
