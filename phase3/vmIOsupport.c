@@ -30,7 +30,7 @@
 /*Function declararion... Further details will be given in the actual funciton. */
 HIDDEN void Endproc(int asid);
 HIDDEN void writeTerminal(char* vAddr, int len, int asid);
-HIDDEN void DiskIO(int block, int sector, int disk, memaddr addr);
+HIDDEN void DiskIO(int block, int sector, memaddr addr);
 HIDDEN int nextVal = 0;
 
 
@@ -145,7 +145,7 @@ void pager()
         InterruptsOnOff(TRUE);
         
         /*Write on disk*/
-        DiskIO(currentPage, currentASID-1, 0, swapAddr);
+        DiskIO(currentPage, currentASID-1, swapAddr);
         currentASID = swapPool[newFrame].sw_asid;
         currentPage = swapPool[newFrame].sw_pgNum;
     }
@@ -157,7 +157,7 @@ debugPager(3);
         Deal with TLB cache consistency*/
 
         /*Read from Disk*/
-        DiskIO(currentPage, currentASID-1, 0, swapAddr);
+        DiskIO(currentPage, currentASID-1, swapAddr);
 debugPager(4);
         swapPool[newFrame].sw_asid = currentProcessID;
         swapPool[newFrame].sw_segNum = missSeg;
@@ -285,7 +285,7 @@ void tableLookUp(){
     produce a status(READY) and end the process (Every reading and writing are performed in an atomic
     operation). If an error occurs along the way, means that ksegOS is an error and result in the
     U-proc being terminated (SYS18)*/
-void DiskIO(int block, int sector, int disk, memaddr addr){ 
+void DiskIO(int block, int sector, memaddr addr){ 
     debugPager(3345);
     int diskStatus;
     devregarea_t* devReg;
