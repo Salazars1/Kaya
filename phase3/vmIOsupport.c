@@ -85,7 +85,7 @@ void pager()
         /*thisramtop = (memaddr) ((device->rambase) + (device->ramsize));*/
 
         /*Swap Addresss calculation*/   
-        swapAddr = (memaddr)(thisramtop - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
+        swapAddr = (memaddr)(thisramtop - (4*PAGESIZE)) - (newFrame * PAGESIZE);
 
     /*Who am I?
         The current processID is in the ASID regsiter
@@ -93,12 +93,10 @@ void pager()
     currentProcessID =(int)((getENTRYHI() & GETASID) >> 6);
     oldState = (state_t*) &(uProcs[currentProcessID-1].UProc_OldTrap[TLBTRAP]);
 
-    debugProg(42);
-    debugProg(uProcs[currentProcessID-1].UProc_NewTrap[TLBTRAP].s_cause);
-
-
     /*Why are we here? (Examine the oldMem Cause register)*/
-    causeReg = (oldState->s_cause)-6;
+    causeReg = (oldState->s_cause);
+    causeReg = causeReg << 25;
+    causeReg = causeReg >> 27;
   
   debugProg(666);
     /*If TLB invalid (load or store) continue; o.w. nuke them*/    
