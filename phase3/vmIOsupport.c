@@ -278,12 +278,11 @@ void uSysHandler(){
                 }
 
             }
-            TLBCLR(); 
             InterruptsOnOff(TRUE);
             SYSCALL(SYSCALL3,&swapSem,0,0);
             SYSCALL(SYSCALL3,&masterSem,0,0);
             /*writeTerminal("Recursive Fibanaci Test starts\n13\nRecursion Concluded\nRecursion Concluded Successfully\n",asid);*/
-            
+            TLBCLR(); 
             SYSCALL(SYSCALL2,0,0,0);
             break; 
     }
