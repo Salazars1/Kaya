@@ -30,9 +30,7 @@
 /*Function declararion... Further details will be given in the actual funciton. */
 HIDDEN void writeTerminal(char* vAddr, int asid);
 HIDDEN void DiskIO(int block, int sector, memaddr addr, int rw);
-HIDDEN int nextVal = 0;
-
-
+HIDDEN int nextVal = ZERO;
 
 /*The following functions are testing functions for the function pager*/
 void debugPager(int a){}
@@ -90,7 +88,7 @@ void pager()
     /*If TLB invalid (load or store) continue; o.w. nuke them*/    
     if(causeReg < TLBLOAD || causeReg > TLBSTORE){
         /*Screwed Up. Nuke the process*/
-        SYSCALL(SYSCALL2,0,0,0);
+        SYSCALL(SYSCALL2,ZERO,ZERO,ZERO);
     }
     /*if((checkthisid != 2) || (checkthisid!= 3)){
         debugPager2(4);
