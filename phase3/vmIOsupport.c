@@ -21,20 +21,24 @@
 #include "/usr/local/include/umps2/umps/libumps.e"
 
 
-/*Function declararion...*/
+/*Function declararion... Further details will be given in the actual funciton. */
 HIDDEN void Endproc(int asid);
 HIDDEN void writeTerminal(char* vAddr, int len, int asid);
 HIDDEN void DiskIO(int block, int sector, int disk, memaddr addr);
+HIDDEN int nextVal = 0;
 
 
-/*THe following functions are testing functions for the function pager*/
+
+/*The following functions are testing functions for the function pager*/
 void debugPager(int a){}
 void debugSys(int a){}
 void debugProg(int a){}
 void debugPager2(int a){}
 void finegrain(int v){}
 
-/*TODO:*/
+/*  This module implements the VM-I/O support level TLB exception handler; the Pager. Given 
+    that this function is very complex, further details are provided in line comments (here
+    it is explained what we do every step*/
 void pager()
 {
 
@@ -171,7 +175,9 @@ debugPager(6);
     LDST(oldState);
 }
 
-/*TODO:*/
+/*  The nucleus either treats a PgmTrap exception as a SYS2 or if the offending process issues a
+    SYS5 for PgmTrap exceptions it passes up the handling of the exception. Asumming everything
+    was correct in the state, execution continues with the PgmTrap exception handler*/
 void uPgmTrpHandler(){
     int tempasid;   /*Grab the ASID*/
     tempasid = ((getENTRYHI() & 0x00000FC0) >> 6);
@@ -180,7 +186,9 @@ void uPgmTrpHandler(){
     SYSCALL(SYSCALL2,0,0,0);
 }
 
-/*TODO:*/
+/*  This module implements the VM-I/O support level SYS/Bp and PgmTrap exception handlers. For testing
+    purposes only two SYSCALLS have been created (Write Terminal Syscall and Get Time of Day Syscall).
+    However, the main logical structure is provided (no code is executed in here)*/
 void uSysHandler(){
     state_t * oldState;
     int casel; 
@@ -255,27 +263,20 @@ void uSysHandler(){
 
 }
 
+/*--------------------------------HELPER FUNCTIONS----------------------------*/
 
-/*----------------------------------------------*/
-
-/*TODO:*/
+/*  Looks up the next available frame in the memory pool. The hashing of this function
+    is very simple. It just looks looks for the inmmediate next entry unless it is at
+    very end of the table, then it will go back to the top.*/
 void tableLookUp(){
-    HIDDEN int nextVal = 0;
     nextVal = (nextVal + 1) % SWAPPOOLSIZE;
     return (nextVal);
 }
 
-/*--------------------------------HELPER FUNCTIONS--------------------*/
-
-/*Ah so you want to play with a disk? You must make it thy bitch first!
-Parameters: 
-Give me the block
-give me the sector
-Give me the disk 
-give me is it read or write
-give me the PASID:
-
-TODO:*/
+/*  Writes or reads a disk device from a different tape device. If done succesfully, it should
+    produce a status(READY) and end the process (Every reading and writing are performed in an atomic
+    operation). If an error occurs along the way, means that ksegOS is an error and result in the
+    U-proc being terminated (SYS18)*/
 void DiskIO(int block, int sector, int disk, memaddr addr){ 
     debugPager(3345);
     int diskStatus;
@@ -286,10 +287,10 @@ void DiskIO(int block, int sector, int disk, memaddr addr){
     diskDevice = &(devReg->devreg[0]);
     debugPager(10); 
 
-int headofdisk = 0;  
-int sectornumber = sector << 3; 
-sector = sector >> 1;
-/*Seek the Cylinder */
+    int headofdisk = 0;  
+    int sectornumber = sector << 3; 
+    sector = sector >> 1;
+    /*Seek the Cylinder */
     InterruptsOnOff(FALSE);
     	debugPager(12);
         diskDevice->d_command = (sector << 8) | 2;
@@ -345,14 +346,8 @@ sector = sector >> 1;
 }
 
 
-
-
-
-
-
-
-
-/*TODO:*/
+/*  This syscall causes the requesting U-proc to be suspended until a line of output (string of
+     characters) has been transmitted to the terminal device associated with the U-proc.*/
 void writeTerminal(char* vAddr, int len, int asid)
 {
     unsigned int status;
@@ -394,7 +389,9 @@ void writeTerminal(char* vAddr, int len, int asid)
     SYSCALL(SYSCALL3, (int)&mutexArr[40 + (asid -1)], 0, 0);
 }
 
-/*TODO:*/
+/*  This services causes the executing U-proc to cease to exist. When all U-proc’s have terminated,
+    Kaya should “shut down.” Thus, system processes created in the VM-I/O support level will be
+    terminated after all the U-proc’s have been killed*/
 void Endproc(int asid){
     TLBCLR(); 
     SYSCALL(SYSCALL2,0,0,0);
