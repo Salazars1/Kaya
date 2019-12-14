@@ -314,11 +314,9 @@ void DiskIO(int block, int sector, memaddr addr, int rw){
     devReg = (devregarea_t *) RAMBASEADDR;
     diskDevice = &(devReg->devreg[0]);
     debugPager(10); 
-
     int headofdisk = 0;  
     int sectornumber = sector << 3 ;
     sector = sector << 1;
-
     /*Seek the Cylinder */
     InterruptsOnOff(FALSE);
     	debugPager(12);
@@ -327,15 +325,6 @@ void DiskIO(int block, int sector, memaddr addr, int rw){
         diskStatus = SYSCALL(SYSCALL8, 3, 0, 0);
         debugPager(2);
     InterruptsOnOff(TRUE);
-
-    debugPager(20);
-
-    
-
-
-	
-	
-    
 
     debugPager(diskStatus);    
 	/*If device is done seaking*/
