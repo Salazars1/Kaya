@@ -101,11 +101,14 @@ void pager()
     causeReg = (oldState->s_cause);
   
     /*If TLB invalid (load or store) continue; o.w. nuke them*/    
-    if(TRUE==FALSE){
-    /*if(currentProcessID < 2 || currentProcessID > 3){*/
+    /*if(TRUE==FALSE){*/
+    debugProg(1);
+    if(currentProcessID < 2 || currentProcessID > 3){
         /*Screwed Up. Nuke the process*/
         SYSCALL(SYSCALL2,0,0,0);
     }
+
+    debugProg(2);
 
     /*if((checkthisid != 2) || (checkthisid!= 3)){
         debugPager2(4);
