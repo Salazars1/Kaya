@@ -69,7 +69,7 @@ void test()
             entryLO= 0x20000+i w/Dirty, Global, Valid
     */
    KSegOS.header = (0x2A<<24)|KSEGSIZE;
-   for(i=0;i<KSEGSIZE;i++){
+   for(i=ZERO;i<KSEGSIZE;i++){
        /*Set the Page tables */
        KSegOS.pteTable[i].entryHI = ((0x20000 + i) << 12);
        KSegOS.pteTable[i].entryLO = ((0x20000 + i) << 12)| DIRTY | GLOBAL | VALID;
@@ -81,7 +81,7 @@ void test()
             entryLO= Dirty, Global
     */
    kuSeg3.header = (0x2A<<24)|KUSEGSIZE;
-   for(i=0;i<KUSEGSIZE;i++){
+   for(i=ZERO;i<KUSEGSIZE;i++){
        /*Set the Page tables */
        kuSeg3.pteTable[i].entryHI = ((0xC0000 + i)<< 12)|(ZERO <<6);
        kuSeg3.pteTable[i].entryLO = ALLOFF | DIRTY | GLOBAL;
@@ -94,11 +94,11 @@ void test()
             -Page Number
             -(optional) pointer to a pte_t
     */
-   for(i = 0; i < SWAPPOOLSIZE; i++){
+   for(i = ZERO; i < SWAPPOOLSIZE; i++){
        /*Set each of the entries in the frame pool */
        swapPool[i].sw_asid = -1;
-       swapPool[i].sw_segNum = 0;
-       swapPool[i].sw_pgNum = 0;
+       swapPool[i].sw_segNum = ZERO;
+       swapPool[i].sw_pgNum = ZERO;
        swapPool[i].sw_pte = NULL;
     }
 
@@ -110,14 +110,14 @@ void test()
     /*an array of sempahores: one for each interrupting device
         -init to 1
     */
-    for(i=0; i< SEMNUM; i++){
+    for(i=ZERO; i< SEMNUM; i++){
         mutexArr[i] = 1;    /*Array of mutual exclusion semaphores */
     }
    
     /*MasterSema4
         -init to 0
     */
-    masterSem = 0;      /*This semaphore is a mutual exclusion semaphore and is thus set to 0 */
+    masterSem = ZERO;      /*This semaphore is a mutual exclusion semaphore and is thus set to 0 */
 
    /*Process initialization loop (for (i=1; i<MAXUPROC+1;i++)){
        --initialize stuff
@@ -132,7 +132,7 @@ void test()
                 entryHI=0x80000+i w/asid
                 entryLO = Dirty
         */
-        for(j = 0; j < KUSEGSIZE; j++)
+        for(j = ZERO; j < KUSEGSIZE; j++)
         {
             /*set the page table associated with each process*/
             uProcs[i-1].UProc_pte.pteTable[j].entryHI =((0x80000 + j) << 12) | (i << 6);
@@ -167,23 +167,23 @@ void test()
         procState.s_pc = (memaddr) uProcInit;
         procState.s_t9 = (memaddr) uProcInit;
         procState.s_status = ALLOFF | IEON | IMON | TEBITON;
-        uProcs[i-1].UProc_semAdd = 0; 
+        uProcs[i-1].UProc_semAdd = ZERO; 
 
         /*Create Process*/
-        SYSCALL(SYSCALL1, (int)&procState, 0, 0);
+        SYSCALL(SYSCALL1, (int)&procState, ZERO, ZERO);
     }
 
     /*for (i=0; i<MAXUPROC; i++){
         P(MasterSema4);}
     */
-   for (i = 0; i < MAXUPROC; i++)
+   for (i = ZERO; i < MAXUPROC; i++)
    {
        /*Gain access of the master semaphore for the 8 processes */
-       SYSCALL(SYSCALL4, (int) &masterSem, 0, 0);
+       SYSCALL(SYSCALL4, (int) &masterSem, ZERO, ZERO);
    }
    
     /*TERMINATE*/
-    SYSCALL(SYSCALL2, 0, 0, 0);
+    SYSCALL(SYSCALL2, ZERO, ZERO, ZERO);
 
 }
 
@@ -267,7 +267,7 @@ void uProcInit()
        read block from tape and then write it out to disk0*/
 
     /*Mutual exclusion on the device*/
-    SYSCALL(SYSCALL4, (int) &mutexArr[deviceNo], 0, 0);
+    SYSCALL(SYSCALL4, (int) &mutexArr[deviceNo], ZERO, ZERO);
 
     /*Device declaration*/
     device_t* tape;
@@ -280,13 +280,13 @@ void uProcInit()
     unsigned int diskStatus;
 
     Activedev= RAMBASEADDR; 
-    pageNumber=0;
+    pageNumber=ZERO;
 
-    disk = &(Activedev -> devreg[0]);           /*Backing Store is at Number 0 !*/
+    disk = &(Activedev -> devreg[ZERO]);           /*Backing Store is at Number 0 !*/
     tape = &(Activedev ->devreg[deviceNo]);     /*The tape is a dynamic number */
 
     /*Setting variables to be used in reading into tape and placing on backing store (Disk 0) */
-    int bool = 0;
+    int bool = ZERO;
     tapeStatus= READY;
     int finished;
     finished=FALSE;
@@ -297,17 +297,17 @@ void uProcInit()
         InterruptsOnOff(FALSE);
 		    tape -> d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - 1) * PAGESIZE);
 		    tape -> d_command = 3;
-            tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), 0);
+            tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-1), ZERO);
         InterruptsOnOff(TRUE);
         
         /*MUTUAL EXCLUSION ON DISK*/
-        SYSCALL(SYSCALL4, (int) &mutexArr[0], 0, 0);
+        SYSCALL(SYSCALL4, (int) &mutexArr[ZERO], ZERO, ZERO);
 
         /*Atomic operation (IS THE DISK READY?)*/
         /*Seek to the disk that we are going to read and check that the disk is ready */
         InterruptsOnOff(FALSE);
             disk ->d_command = (pageNumber << 8 | 2);
-            diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
+            diskStatus = SYSCALL(SYSCALL8, DISKINT, ZERO, ZERO);
         InterruptsOnOff(TRUE);
         
         if(diskStatus == READY)
@@ -315,12 +315,12 @@ void uProcInit()
             /*Atomic operation (WRITE IT ONTO THE DISK)*/
             InterruptsOnOff(FALSE);
                 disk->d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - 1) * PAGESIZE);
-                disk->d_command = 0 | (((asid - 1 ) << 3 ) << 8) | 4;
-                diskStatus = SYSCALL(SYSCALL8,DISKINT,0,0);
+                disk->d_command = ZERO | (((asid - 1 ) << 3 ) << 8) | 4;
+                diskStatus = SYSCALL(SYSCALL8,DISKINT,ZERO,ZERO);
             InterruptsOnOff(TRUE);
         }
         /*RELEASE MUTUAL EXCLUSION ON DISK*/
-        SYSCALL(SYSCALL3, (int) &mutexArr[0], 0, 0);
+        SYSCALL(SYSCALL3, (int) &mutexArr[ZERO], ZERO, ZERO);
 
         if(tape->d_data1 != 2){
             finished = TRUE;
@@ -328,7 +328,7 @@ void uProcInit()
         pageNumber++;
 	}
 
-    SYSCALL(SYSCALL3, (int) &mutexArr[deviceNo], 0, 0);
+    SYSCALL(SYSCALL3, (int) &mutexArr[deviceNo], ZERO, ZERO);
 
     /*Set up a new state for the user process
         -asid = your asid
