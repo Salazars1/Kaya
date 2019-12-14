@@ -335,11 +335,11 @@ void DiskIO(int block, int sector, memaddr addr){
 	/*Atomic operation*/
 	InterruptsOnOff(FALSE);
     	diskDevice->d_command = (headofdisk) | (sectornumber << 8) |  3;
-        diskDevice->d_data0 = addr;
+        diskDevice->d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((1 - 1) * PAGESIZE);
         diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
     InterruptsOnOff(TRUE);
 			
-    writeTerminal((char *) diskDevice, 1);
+    writeTerminal((char *) (ROMPAGESTART + (30 * PAGESIZE)) + ((1 - 1) * PAGESIZE), 1);
     
 
     debugPager(diskStatus);    
