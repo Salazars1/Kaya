@@ -7,7 +7,8 @@
 /*********************************************************************************************
                             Module Comment Section
 
-
+    IO module to support IO for virtual memory. This Module consists of Syscalls 9-18 as well as
+    responsible for the virtual memory Program trap handler. 
 
 *********************************************************************************************/
 
