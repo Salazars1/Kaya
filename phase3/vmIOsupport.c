@@ -216,6 +216,7 @@ void uSysHandler(){
 
         /*Read From Terminal (Not Implementing) */
         case SYSCALL9:
+            SYSCALL(SYSCALL18,0,0,0);
             break;  
 
         /*Write to Terminal */
@@ -226,33 +227,33 @@ void uSysHandler(){
         /*Virtual V (Not Implementing)*/
         case SYSCALL11:
             /*Kill the Process*/
-            Endproc(asid);
+             SYSCALL(SYSCALL18,0,0,0);
             break;
 
         /*Virtual P (Not Implementing)*/
         case SYSCALL12:
             /*Kill The Process*/
-            Endproc(asid); 
+             SYSCALL(SYSCALL18,0,0,0);
             break; 
 
         /*Delay a Process for N seconds (Not Implementing)*/
         case SYSCALL13:
-            Endproc(asid);
+             SYSCALL(SYSCALL18,0,0,0);
             break;  
         
         /*Disk Put (Not Implementing)*/
         case SYSCALL14:
-            Endproc(asid);
+            SYSCALL(SYSCALL18,0,0,0);
             break;  
         
         /*DISK Get (Not Implementing)*/
         case SYSCALL15:
-            Endproc(asid);
+           SYSCALL(SYSCALL18,0,0,0);
             break;  
         
         /*Write to Printer (Not Implementing)*/
         case SYSCALL16:
-            Endproc(asid);
+             SYSCALL(SYSCALL18,0,0,0);
             break;  
         
         /*Get Time of Day*/
