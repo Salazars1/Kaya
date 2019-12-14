@@ -264,6 +264,23 @@ void uSysHandler(){
 
         /*Terminate process*/
         case SYSCALL18: 
+            SYSCALL(SYSCALL4,&swapSem,0,0);
+            interruptsOnOff(FALSE);
+            int i; 
+            int tasid = ((getENTRYHI() & 0x00000FC0) >> 6);
+            for(i = 0; i < SWAPPOOLSIZE;i++){
+                if(swapPool[i].sw_asid == tasid ){
+                    swapPool[i].sw_asid = -1; 
+                    swapPool[i].sw_segNum = 0;
+                    swapPool[i].sw_pgNum = 0;
+                    swapPool[i].sw_pte = NULL;
+                }
+
+            }
+            TLBCLR(); 
+            interruptsOnOff(TRUE);
+            SYSCALL(SYSCALL3,&swapSem,0,0);
+            SYSCALL(SYSCALL3,&masterSem,0,0);
             SYSCALL(SYSCALL2,0,0,0);
             break; 
     }
