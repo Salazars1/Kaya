@@ -250,9 +250,13 @@
 
 #define SIX 6 
 #define TWELVE 12
-
-
-/*Sys Handler*/
+#define ENTRYHIGH 0x20000
+#define HEADERMASK 0x2A
+#define HEADERSHIFT 24
+#define LASTENTRYSEG 0xBFFFF
+#define PAGETABLEPROCESS 0x80000
+#define ENTRYHIGHPGTABLE 0xC0000
+#define ASIDMASK 0x00000FC0
 
 
 

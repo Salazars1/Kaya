@@ -68,11 +68,11 @@ void test()
             entryHI= 0x20000+i
             entryLO= 0x20000+i w/Dirty, Global, Valid
     */
-   KSegOS.header = (0x2A<<24)|KSEGSIZE;
+   KSegOS.header = (HEADERMASK<<HEADERSHIFT)|KSEGSIZE;
    for(i=ZERO;i<KSEGSIZE;i++){
        /*Set the Page tables */
-       KSegOS.pteTable[i].entryHI = ((0x20000 + i) << TWELVE);
-       KSegOS.pteTable[i].entryLO = ((0x20000 + i) << TWELVE)| DIRTY | GLOBAL | VALID;
+       KSegOS.pteTable[i].entryHI = ((ENTRYHIGH + i) << TWELVE);
+       KSegOS.pteTable[i].entryLO = ((ENTRYHIGH + i) << TWELVE)| DIRTY | GLOBAL | VALID;
     }
 
    /*kuSeg3 page table
@@ -80,10 +80,10 @@ void test()
             entryHI= 0xC0000+i
             entryLO= Dirty, Global
     */
-   kuSeg3.header = (0x2A<<24)|KUSEGSIZE;
+   kuSeg3.header = (HEADERMASK<<HEADERSHIFT)|KUSEGSIZE;
    for(i=ZERO;i<KUSEGSIZE;i++){
        /*Set the Page tables */
-       kuSeg3.pteTable[i].entryHI = ((0xC0000 + i)<< TWELVE)|(ZERO <<SIX);
+       kuSeg3.pteTable[i].entryHI = ((ENTRYHIGHPGTABLE + i)<< TWELVE)|(ZERO <<SIX);
        kuSeg3.pteTable[i].entryLO = ALLOFF | DIRTY | GLOBAL;
     }
 
@@ -125,7 +125,7 @@ void test()
     }*/
     for(i =ONE; i< MAXUPROC+1;i++){
         /* i becomes the ASID (processID)*/
-        uProcs[i-ONE].UProc_pte.header = (0x2A<<24)|KUSEGSIZE;
+        uProcs[i-ONE].UProc_pte.header = (HEADERMASK<<HEADERSHIFT)|KUSEGSIZE;
 
         /*KUseg2 page table
             -32 entries:
@@ -135,12 +135,12 @@ void test()
         for(j = ZERO; j < KUSEGSIZE; j++)
         {
             /*set the page table associated with each process*/
-            uProcs[i-ONE].UProc_pte.pteTable[j].entryHI =((0x80000 + j) << TWELVE) | (i << SIX);
+            uProcs[i-ONE].UProc_pte.pteTable[j].entryHI =((PAGETABLEPROCESS + j) << TWELVE) | (i << SIX);
             uProcs[i-ONE].UProc_pte.pteTable[j].entryLO = ALLOFF | DIRTY;
         }
 
         /*fix the last entry's entryHi = 0xBFFFF w/asid*/
-        uProcs[i-ONE].UProc_pte.pteTable[KUSEGSIZE-ONE].entryHI = (0xBFFFF << TWELVE) | (i << SIX); 
+        uProcs[i-ONE].UProc_pte.pteTable[KUSEGSIZE-ONE].entryHI = (LASTENTRYSEG << TWELVE) | (i << SIX); 
 
         /*Set up the appropiate three entries in the global segment table
             set KSegOS pointer
@@ -210,7 +210,7 @@ void uProcInit()
 
     /*Figure out who you are? ASID?*/
     asid = getENTRYHI();
-    asid = (asid & 0x00000FC0) >> SIX;
+    asid = (asid & ASIDMASK) >> SIX;
      
     /*Calculating program tops*/
     PROGTOP = ALLOCATEHERE + ((asid-ONE) * BASESTACKALLOC);
@@ -260,7 +260,7 @@ void uProcInit()
     SYSCALL(SYSCALL5,PROGTRAP,(int) oldStatePRG,(int) newStatePRG);
     SYSCALL(SYSCALL5,SYSTRAP,(int) oldStateSYS,(int) newStateSYS);
 
-    deviceNo = ((TAPEINT - 3) * DEVPERINT) + (asid - ONE);
+    deviceNo = ((TAPEINT - DISKINT) * DEVPERINT) + (asid - ONE);
 
    /*Read the content of the tape devices(asid-1) on the the backing store device (disk0)
        keep reading until the tape block marker (data1) is no longer ENDOFBLOCK
@@ -296,7 +296,7 @@ void uProcInit()
         /*Atomic operation (READ FROM TAPE)*/
         InterruptsOnOff(FALSE);
 		    tape -> d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - ONE) * PAGESIZE);
-		    tape -> d_command = 3;
+		    tape -> d_command = DISKINT;
             tapeStatus = SYSCALL(SYSCALL8, TAPEINT, (asid-ONE), ZERO);
         InterruptsOnOff(TRUE);
         
@@ -306,7 +306,7 @@ void uProcInit()
         /*Atomic operation (IS THE DISK READY?)*/
         /*Seek to the disk that we are going to read and check that the disk is ready */
         InterruptsOnOff(FALSE);
-            disk ->d_command = (pageNumber << 8 | 2);
+            disk ->d_command = (pageNumber << EIGHT | TWO);
             diskStatus = SYSCALL(SYSCALL8, DISKINT, ZERO, ZERO);
         InterruptsOnOff(TRUE);
         
@@ -315,14 +315,14 @@ void uProcInit()
             /*Atomic operation (WRITE IT ONTO THE DISK)*/
             InterruptsOnOff(FALSE);
                 disk->d_data0 = (ROMPAGESTART + (30 * PAGESIZE)) + ((asid - ONE) * PAGESIZE);
-                disk->d_command = ZERO | (((asid - ONE ) << 3 ) << 8) | 4;
+                disk->d_command = ZERO | (((asid - ONE ) << DISKINT ) << EIGHT) | FOUR;
                 diskStatus = SYSCALL(SYSCALL8,DISKINT,ZERO,ZERO);
             InterruptsOnOff(TRUE);
         }
         /*RELEASE MUTUAL EXCLUSION ON DISK*/
         SYSCALL(SYSCALL3, (int) &mutexArr[ZERO], ZERO, ZERO);
 
-        if(tape->d_data1 != 2){
+        if(tape->d_data1 != TLBLOAD){
             finished = TRUE;
         }
         pageNumber++;

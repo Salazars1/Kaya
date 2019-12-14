@@ -162,7 +162,7 @@ void pager()
     was correct in the state, execution continues with the PgmTrap exception handler*/
 void uPgmTrpHandler(){
     int tempasid;   /*Grab the ASID*/
-    tempasid = ((getENTRYHI() & 0x00000FC0) >> SIX);
+    tempasid = ((getENTRYHI() & ASIDMASK) >> SIX);
 
     /*Kill the process*/
     SYSCALL(SYSCALL18,ZERO,ZERO,ZERO);
@@ -178,7 +178,7 @@ void uSysHandler(){
     cpu_t times;
 
     /*Get asid*/
-    asid = ((getENTRYHI() & 0x00000FC0) >> SIX);
+    asid = ((getENTRYHI() & ASIDMASK) >> SIX);
 
     /*Get the old state*/
     oldState = &(uProcs[asid-1].UProc_OldTrap[SYSTRAP]);
@@ -244,7 +244,7 @@ void uSysHandler(){
             SYSCALL(SYSCALL4,&swapSem,ZERO,ZERO);
             InterruptsOnOff(FALSE);
                 int i; 
-                int tasid = ((getENTRYHI() & 0x00000FC0) >> SIX);
+                int tasid = ((getENTRYHI() & ASIDMASK) >> SIX);
                 for(i = ZERO; i < SWAPPOOLSIZE;i++){
                     if(swapPool[i].sw_asid == tasid ){
                         swapPool[i].sw_asid = -ONE; 
@@ -290,14 +290,14 @@ void DiskIO(int block, int sector, memaddr addr, int rw){
     diskDevice = &(devReg->devreg[ZERO]);
     
     int headofdisk = ZERO;  
-    int sectornumber = sector << 3;
+    int sectornumber = sector << DISKINT;
     
     sector = sector << ONE;
     
     /*Seek the Cylinder */
     InterruptsOnOff(FALSE);
-        diskDevice->d_command = (sector << 8) | 2;
-        diskStatus = SYSCALL(SYSCALL8, 3, ZERO, ZERO);
+        diskDevice->d_command = (sector << EIGHT) | TWO;
+        diskStatus = SYSCALL(SYSCALL8, DISKINT, ZERO, ZERO);
     InterruptsOnOff(TRUE);
 	
     /*If device is done seaking*/
@@ -305,7 +305,7 @@ void DiskIO(int block, int sector, memaddr addr, int rw){
     /*Atomic operation*/
 	InterruptsOnOff(FALSE);
         diskDevice ->d_data0 = addr; 
-    	diskDevice->d_command = (headofdisk) | (sectornumber << 8) |  rw;
+    	diskDevice->d_command = (headofdisk) | (sectornumber << EIGHT) |  rw;
         diskStatus = SYSCALL(SYSCALL8, DISKINT, ZERO, ZERO);
     InterruptsOnOff(TRUE);
 	}else{
@@ -325,7 +325,7 @@ void writeTerminal(char* msg, int asid)
 	
 	SYSCALL(SYSCALL4, (int)&mutexArr[ZERO], ZERO, ZERO);				/* P(mutexArray) */
 	while (*s != EOS) {
-		*(base + 3) = 2 | (((unsigned int) *s) << 8);
+		*(base + DISKINT) = TWO | (((unsigned int) *s) << EIGHT);
 		status = SYSCALL(SYSCALL8, TERMINT, asid-ONE, ZERO);	
 		if ((status & 0xFF) != 5)
 			PANIC();
