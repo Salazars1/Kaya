@@ -30,7 +30,7 @@
 /*Function declararion... Further details will be given in the actual funciton. */
 HIDDEN void Endproc(int asid);
 HIDDEN void writeTerminal(char* vAddr, int asid);
-HIDDEN void DiskIO(int block, int sector, memaddr addr);
+HIDDEN void DiskIO(int block, int sector, memaddr addr, int rw);
 HIDDEN int nextVal = 0;
 
 
@@ -140,7 +140,7 @@ void pager()
         InterruptsOnOff(TRUE);
         
         /*Write on disk*/
-        DiskIO(currentPage, currentASID-1, swapAddr);
+        DiskIO(currentPage, currentASID-1, swapAddr,4);
         currentASID = swapPool[newFrame].sw_asid;
         currentPage = swapPool[newFrame].sw_pgNum;
     }
@@ -152,7 +152,7 @@ debugPager(3);
         Deal with TLB cache consistency*/
 
         /*Read from Disk*/
-        DiskIO(currentPage, currentASID-1, swapAddr);
+        DiskIO(currentPage, currentASID-1, swapAddr,3);
         debugSyss(12);
 debugPager(4);
         swapPool[newFrame].sw_asid = currentProcessID;
@@ -305,9 +305,10 @@ void tableLookUp(){
     produce a status(READY) and end the process (Every reading and writing are performed in an atomic
     operation). If an error occurs along the way, means that ksegOS is an error and result in the
     U-proc being terminated (SYS18)*/
-void DiskIO(int block, int sector, memaddr addr){ 
+void DiskIO(int block, int sector, memaddr addr, int rw){ 
     debugPager(3345);
     int diskStatus;
+    int * buffer; 
     devregarea_t* devReg;
 	device_t* diskDevice; 
     debugPager(34);
@@ -316,8 +317,10 @@ void DiskIO(int block, int sector, memaddr addr){
     debugPager(10); 
 
     int headofdisk = 0;  
-    int sectornumber = sector << 3; 
-    sector = sector >> 1;
+    int sectornumber = sector % 8; 
+    sector = sector / 2;
+
+    buffer = (ROMPAGESTART + (30 * PAGESIZE)) + (3 * PAGESIZE) ;
     /*Seek the Cylinder */
     InterruptsOnOff(FALSE);
     	debugPager(12);
@@ -332,40 +335,21 @@ void DiskIO(int block, int sector, memaddr addr){
     
 
 
-	/*Atomic operation*/
-	InterruptsOnOff(FALSE);
-    	diskDevice->d_command = (headofdisk) | (sectornumber << 8) |  3;
-        diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
-    InterruptsOnOff(TRUE);
 	
-    int t;
-    for(t=1;t<10;t++){
-        writeTerminal((char *) (ROMPAGESTART + (30 * PAGESIZE)) + ((t - 1) * PAGESIZE), 1);
-    }
+	
+    
 
     debugPager(diskStatus);    
 	/*If device is done seaking*/
 	if(diskStatus == READY){
 
-    debugPager(3330);  
-		InterruptsOnOff(FALSE);
-        
-    debugPager(330);  
-		    /*where to read from*/
-		    diskDevice->d_data0 = addr;
-           
-    debugPager(340);  
-            /* Command to write*/
-            diskDevice->d_command = (headofdisk << 16) | ((sectornumber) << 8) | 4;
-	
-    debugPager(306);  
-    	InterruptsOnOff(TRUE);										   
-		
-    debugPager(3077);  
-        /*Wait for disk write I/O*/
-		diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
+    /*Atomic operation*/
+	InterruptsOnOff(FALSE);
+        diskDevice ->d_data0 = addr; 
+    	diskDevice->d_command = (headofdisk) | (sectornumber << 8) |  rw;
+        diskStatus = SYSCALL(SYSCALL8, DISKINT, 0, 0);
+    InterruptsOnOff(TRUE);
 
-    debugPager(37);  
 	}else{
         
     debugPager(35);  
