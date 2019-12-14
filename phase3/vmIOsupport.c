@@ -88,7 +88,7 @@ void pager()
         swapAddr = (memaddr)(thisramtop - ((16 + 3)*PAGESIZE)) + (newFrame * PAGESIZE);
 
     /*Turns VM back off*/    
-    setSTATUS(ALLOFF | IMON | IEON | TEON | VMON2 | UMOFF);
+    /*setSTATUS(ALLOFF | IMON | IEON | TEON | VMON2 | UMOFF);*/
     
 
     /*Who am I?
@@ -100,9 +100,10 @@ void pager()
     /*Why are we here? (Examine the oldMem Cause register)*/
     causeReg = (oldState->s_cause);
   
+  debugProg(666);
     /*If TLB invalid (load or store) continue; o.w. nuke them*/    
-    debugProg(currentProcessID);
-    if((currentProcessID+1) < 2 || (currentProcessID+1) > 3){
+    debugProg(causeReg);
+    if(causeReg < 2 || currentProcessID > 3){
         /*Screwed Up. Nuke the process*/
         SYSCALL(SYSCALL2,0,0,0);
     }
