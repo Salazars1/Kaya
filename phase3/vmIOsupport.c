@@ -101,7 +101,7 @@ void pager()
   debugProg(666);
     /*If TLB invalid (load or store) continue; o.w. nuke them*/    
     debugProg(causeReg);
-    if(causeReg < 2 || currentProcessID > 3){
+    if(causeReg < 2 || causeReg > 3){
         /*Screwed Up. Nuke the process*/
         SYSCALL(SYSCALL2,0,0,0);
     }
@@ -128,8 +128,6 @@ void pager()
         missPage = KUSEGSIZE - 1;
     }
 
-    /*Pick a frame to use*/
-    newFrame = tableLookUp();
     currentASID = (int)((getENTRYHI() & GETASID) >> 6);
     
     /*    If frame is currently occupied
@@ -139,7 +137,7 @@ void pager()
     if(swapPool[newFrame].sw_asid != -1){
         /*Atomic Operation*/
         InterruptsOnOff(FALSE);
-            swapPool[newFrame].sw_pte -> entryLO = ((swapPool[newFrame].sw_pte -> entryLO) & (0 << 9));
+            swapPool[newFrame].sw_pte -> entryLO = ((swapPool[newFrame].sw_pte -> entryLO) & (0xD << 8));
             TLBCLR();
         InterruptsOnOff(TRUE);
         
